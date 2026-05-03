@@ -1,0 +1,23 @@
+{
+  "id": "00-04",
+  "phase": "00",
+  "status": "done",
+  "goal": "Apply VCS quick prompt menu-shell update: make menu details the main chat/composer interface with slash-command lesson routing and typewriter-style scripted text; update project soul and planning memory to Dr. Stein. Completed with Dr. Stein active soul, chat/composer menu shell, slash-command lesson routing, typewriter scripted text, requirements, decision, and next-action updates.",
+  "type": "code",
+  "keywords": "",
+  "depends": [],
+  "commands": [],
+  "files": [],
+  "agent_id": "",
+  "agent_role": "",
+  "runtime": "",
+  "model_profile": "",
+  "resolved_model": "",
+  "skill": "",
+  "claimed": false,
+  "claimed_at": "",
+  "lease_expires_at": "",
+  "resolution": "",
+  "created_at": "2026-05-03T01:20:38.210Z",
+  "updated_at": "2026-05-03T01:22:52.578Z"
+}

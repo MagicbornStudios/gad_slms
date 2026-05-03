@@ -1,0 +1,261 @@
+Screen {
+    background: #0f1117;
+    color: #d8dee9;
+}
+
+Screen.vcs-dev {
+    background: #160f1f;
+}
+
+Screen.vcs-recording {
+    background: #21110f;
+}
+
+#menu-main, #lesson-main {
+    height: 1fr;
+}
+
+#app-banner {
+    height: 1;
+    padding: 0 1;
+    background: #11131a;
+    color: #b4f9f8;
+    text-style: bold;
+}
+
+#menu-sidebar {
+    width: 38;
+    min-width: 32;
+    border: solid #3b4252;
+    padding: 1;
+    background: #11131a;
+}
+
+.vcs-dev #menu-sidebar {
+    border: round #ebcb8b;
+    background: #1a1420;
+}
+
+#menu-details {
+    width: 1fr;
+    border: solid #3b4252;
+    padding: 1;
+    background: #151821;
+}
+
+.vcs-dev #menu-details {
+    border: round #ebcb8b;
+    background: #1d1727;
+}
+
+#lesson-workspace {
+    height: 1fr;
+}
+
+#lesson-chat-pane {
+    width: 1fr;
+    border: round #5e81ac;
+    padding: 1 2;
+    background: #151821;
+}
+
+.vcs-dev #lesson-chat-pane {
+    border: round #ebcb8b;
+    background: #1d1727;
+}
+
+#lesson-chat {
+    height: 1fr;
+    background: #10131c;
+    border: tall #242936;
+    padding: 1;
+}
+
+#menu-chat {
+    height: 1fr;
+    background: #10131c;
+    border: tall #242936;
+    padding: 1;
+}
+
+#menu-typewriter {
+    height: 3;
+    margin-top: 1;
+    padding: 0 1;
+    color: #b4f9f8;
+    background: #0f1117;
+    border-left: thick #5e81ac;
+}
+
+#menu-composer {
+    height: 3;
+    margin-top: 1;
+    border: tall #5e81ac;
+    background: #05070a;
+}
+
+#lesson-prompt-actions {
+    height: 3;
+    margin-top: 1;
+}
+
+#artifact-rail {
+    width: 45;
+    min-width: 36;
+    border: round #3b4252;
+    padding: 1;
+    background: #0b0d12;
+}
+
+.vcs-dev #artifact-rail {
+    border: round #ebcb8b;
+    background: #16101c;
+}
+
+#lesson-output {
+    height: 1fr;
+    background: #05070a;
+    border: tall #242936;
+    padding: 1;
+}
+
+#button-row {
+    height: 3;
+    padding: 0 1;
+    background: #11131a;
+    border: solid #3b4252;
+}
+
+.vcs-dev #button-row {
+    background: #1a1420;
+    border: round #ebcb8b;
+}
+
+Button {
+    margin-right: 1;
+}
+
+.header-exit {
+    dock: top;
+    offset: 76 0;
+    width: 4;
+    height: 1;
+    min-width: 4;
+    background: #11131a;
+    color: #ff6b6b;
+    border: none;
+}
+
+Button.vcs-selected {
+    border: tall #ebcb8b;
+    text-style: bold;
+}
+
+Button.vcs-recording-button {
+    border: tall #ff6b6b;
+    text-style: bold;
+}
+
+.lesson-title {
+    text-style: bold;
+    color: #ffffff;
+    margin-bottom: 1;
+}
+
+.rail-title {
+    text-style: bold;
+    color: #b4f9f8;
+    margin-bottom: 1;
+}
+
+.vcs-tag, .vcs-id-tag {
+    color: #ebcb8b;
+    text-style: bold;
+    margin-bottom: 1;
+}
+
+.vcs-id-tag {
+    display: none;
+    background: #33213d;
+    border-left: thick #ebcb8b;
+    height: 1;
+    padding: 0 1;
+}
+
+Button.vcs-id-tag {
+    border: none;
+    min-width: 12;
+}
+
+.hint {
+    color: #9aa4b2;
+    margin-top: 1;
+}
+
+.status {
+    color: #b4f9f8;
+    margin-top: 1;
+}
+
+.warning {
+    color: #ffcc66;
+    margin-top: 1;
+}
+
+.error {
+    color: #ff6b6b;
+}
+
+#vcs-footer {
+    height: 15;
+    dock: bottom;
+    padding: 0 1;
+    border: round #ebcb8b;
+    background: #18131f;
+    transition: opacity 160ms out_cubic, offset 160ms out_cubic;
+}
+
+.vcs-recording #vcs-footer {
+    border: round #ff6b6b;
+    background: #241317;
+}
+
+#vcs-footer-status {
+    height: 1;
+    color: #ebcb8b;
+    text-style: bold;
+}
+
+#vcs-recorder-input {
+    height: 3;
+    margin: 0 0 1 0;
+    border: tall #3b4252;
+    background: #0f1117;
+}
+
+.vcs-recording #vcs-recorder-input {
+    border: tall #ff6b6b;
+}
+
+.vcs-live-line {
+    height: 1;
+    color: #d8dee9;
+    background: #0f1117;
+    padding: 0 1;
+}
+
+.vcs-recording .vcs-live-line {
+    color: #ffd2d2;
+    background: #2a1517;
+}
+
+#vcs-footer-actions {
+    height: 3;
+    overflow-x: auto;
+}
+
+#run-spinner {
+    height: 1;
+    color: #a3be8c;
+    margin-bottom: 1;
+}

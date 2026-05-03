@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<roadmap project="slm-learning" schema="1">
+  <milestone id="v1" status="active">
+    <title>Initial milestone</title>
+    <phase id="00" status="planned">
+      <title>Bootstrap</title>
+      <goal>Define scope</goal>
+    </phase>
+  </milestone>
+</roadmap>

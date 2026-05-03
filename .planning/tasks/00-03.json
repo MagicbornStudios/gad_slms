@@ -1,0 +1,23 @@
+{
+  "id": "00-03",
+  "phase": "00",
+  "status": "done",
+  "goal": "Polish the Textual VCS terminal UX by adding a compact mic/status banner, small clickable exit affordance, succinct quick prompt copy, and durable SOUL/agent context for future sessions. Completed with app banner device details, compact X exit, succinct VCS quick prompt, expanded SOUL.md, and GAD decision/state updates.",
+  "type": "code",
+  "keywords": "",
+  "depends": [],
+  "commands": [],
+  "files": [],
+  "agent_id": "",
+  "agent_role": "",
+  "runtime": "",
+  "model_profile": "",
+  "resolved_model": "",
+  "skill": "",
+  "claimed": false,
+  "claimed_at": "",
+  "lease_expires_at": "",
+  "resolution": "",
+  "created_at": "2026-05-02T23:56:04.763Z",
+  "updated_at": "2026-05-03T00:00:46.564Z"
+}

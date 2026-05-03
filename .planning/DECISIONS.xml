@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decisions project="slm-learning" schema="1">
+  <!-- <decision id="slm-learning-001"><title>...</title><summary>...</summary><impact>...</impact></decision> -->
+
+  <decision id="slm-learning-002">
+    <title>Use speech-native-builder soul for terminal-native VCS work</title>
+    <summary>The active project soul is speech-native-builder. Future agents should preserve terminal-native speech capture, visible device/listening state, live transcript output, stable visual context ids, and honest constraint reporting.</summary>
+    <impact>New sessions should read SOUL.md and AGENTS.md before implementation, run gad snapshot, and avoid browser/web surfaces for core terminal workflows unless explicitly approved.</impact>
+    <references>
+      <file path="SOUL.md"/>
+      <file path="AGENTS.md"/>
+      <file path="scripts/learning_tui/local_speech.py"/>
+    </references>
+  </decision>
+
+  <decision id="slm-learning-003">
+    <title>Adopt Dr. Stein as the project-specific SLM soul</title>
+    <summary>The active slm_learning soul is Dr. Stein, a mad scientist responsible for creating SLMs, souls, and reasoning loops from this project itself. Gilgamesh remains the broader/default leader, but Dr. Stein governs project-specific terminal lab behavior.</summary>
+    <impact>Future sessions should read SOUL.md and narrative/souls/dr-stein.md, preserve terminal-native speech/VCS constraints, and treat the menu shell as a chat/composer lab interface for lessons and self-improvement.</impact>
+    <references>
+      <file path="SOUL.md"/>
+      <file path="narrative/souls/dr-stein.md"/>
+      <file path="AGENTS.md"/>
+      <file path="scripts/learning_tui/menu_screen.py"/>
+    </references>
+  </decision>
+
+</decisions>

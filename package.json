@@ -1,0 +1,14 @@
+{
+  "name": "slm-learning",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "node tools/setup.mjs",
+    "dev": "node tools/dev.mjs",
+    "start": "node tools/start.mjs",
+    "tui": "node tools/start.mjs",
+    "serve": "node tools/serve.mjs",
+    "reset-setup": "node tools/reset-setup.mjs"
+  }
+}

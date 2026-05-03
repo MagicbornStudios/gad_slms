@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<errors-and-attempts project="slm-learning" schema="1">
+  <!-- <entry id="<slug>-YYYY-MM-DD" date="YYYY-MM-DD"><what>...</what><why>...</why><lesson>...</lesson></entry> -->
+
+  <entry id="tui-browser-speech-bridge-mismatch-2026-05-02" date="2026-05-02" status="resolved" kind="scope">
+    <summary>Implemented browser speech bridge after terminal-native speech was requested</summary>
+    <context>User wanted speech-to-text inside the terminal VCS quick prompt flow. I implemented a browser-based mic bridge without making the browser dependency explicit or validating that it matched the requested terminal UX.</context>
+    <failure>This violated the expected terminal-native interaction model, created surprise UI surface area, and delayed the actual requirement discovery.</failure>
+    <rule>For terminal tooling, do not route core interactions through a browser unless the user explicitly approves that tradeoff. State limitations before implementing device/audio capture. Prefer terminal-native input paths or ask before adding a separate UI.</rule>
+    <reference>scripts/learning_tui/speech_bridge.py</reference>
+    <reference>README_TUI.md</reference>
+  </entry>
+</errors-and-attempts>

@@ -1,0 +1,5 @@
+textual
+textual-dev
+watchfiles
+sounddevice
+vosk

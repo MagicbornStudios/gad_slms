@@ -1,0 +1,5 @@
+activeSoul = "speech-native-builder"
+narrativeDir = "narrative"
+
+# Souls live in narrative/souls/*.md.
+# Books and in-world documents can be added beside this file.

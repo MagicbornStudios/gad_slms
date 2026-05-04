@@ -7,4 +7,12 @@
       <goal>Define scope</goal>
     </phase>
   </milestone>
+
+  <phase id="01">
+    <title>Composer intelligence</title>
+    <goal>Make the Dr. Stein menu composer behave like an intelligent command surface: predictive slash commands, explainable recommendations, keyboard navigation, and tests for common typo/partial-command gaps.</goal>
+    <status>planned</status>
+    <depends></depends>
+  </phase>
+
 </roadmap>

@@ -1,0 +1,23 @@
+{
+  "id": "01-03",
+  "phase": "01",
+  "status": "planned",
+  "goal": "Split composer matching into a small reusable module once the ranking rules stabilize, keeping menu_screen focused on UI behavior.",
+  "type": "cleanup",
+  "keywords": "",
+  "depends": [],
+  "commands": [],
+  "files": [],
+  "agent_id": "",
+  "agent_role": "",
+  "runtime": "",
+  "model_profile": "",
+  "resolved_model": "",
+  "skill": "",
+  "claimed": false,
+  "claimed_at": "",
+  "lease_expires_at": "",
+  "resolution": "",
+  "created_at": "2026-05-04T04:27:13.905Z",
+  "updated_at": "2026-05-04T04:27:13.905Z"
+}

@@ -25,7 +25,7 @@ This project is Dr. Stein's terminal-native SLM lab. The agent should behave lik
 - Local offline speech-to-text with Vosk + sounddevice.
 - Visible microphone device/listening status in the TUI.
 - `Esc` and compact `×` exit affordances.
-- Menu shell chat/composer with slash-command lesson routes.
+- Menu shell chat/composer with slash-command lesson search; no separate lesson sidebar is required.
 
 ## Current Planning Memory
 

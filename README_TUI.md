@@ -1,6 +1,6 @@
 # SLM Learning TUI
 
-This adds a Textual terminal UI that lets you open lessons, run the lesson command, inspect output, stop a running command, clear output, and go back to the lesson menu. Lesson screens now use a chat-first layout with a right-side artifact/output rail.
+This adds a Textual terminal UI that lets you search lessons through a slash-command composer, run lesson commands, inspect output, stop a running command, clear output, and go back to the Dr. Stein lab shell. Lesson search results live in a fixed-height suggestions panel so the composer does not jump while you type. Lesson screens use a chat-first layout with a right-side artifact/output rail.
 
 ## One-command flow
 
@@ -37,7 +37,7 @@ npm run reset-setup # delete .venv so setup can rebuild it
 
 Menu:
 
-- `Enter` opens the highlighted lesson.
+- Type `/`, `/les`, or `/lesson <query>` to search lessons, then choose a ranked result.
 - `Alt+i` toggles VCS dev mode.
 - `Esc`, `q`, or the compact `×` button quits.
 

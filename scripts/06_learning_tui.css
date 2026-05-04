@@ -78,20 +78,22 @@ Screen.vcs-recording {
     padding: 1;
 }
 
-#menu-typewriter {
-    height: 3;
-    margin-top: 1;
-    padding: 0 1;
-    color: #b4f9f8;
-    background: #0f1117;
-    border-left: thick #5e81ac;
-}
-
 #menu-composer {
     height: 3;
     margin-top: 1;
     border: tall #5e81ac;
     background: #05070a;
+}
+
+#lesson-suggestions {
+    height: 8;
+    margin-top: 1;
+    border: tall #242936;
+    background: #0f1117;
+}
+
+.suggestion-placeholder {
+    color: #9aa4b2;
 }
 
 #lesson-prompt-actions {

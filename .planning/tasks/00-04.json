@@ -2,7 +2,7 @@
   "id": "00-04",
   "phase": "00",
   "status": "done",
-  "goal": "Apply VCS quick prompt menu-shell update: make menu details the main chat/composer interface with slash-command lesson routing and typewriter-style scripted text; update project soul and planning memory to Dr. Stein. Completed with Dr. Stein active soul, chat/composer menu shell, slash-command lesson routing, typewriter scripted text, requirements, decision, and next-action updates.",
+  "goal": "Apply VCS quick prompt menu-shell update: make menu details the main chat/composer interface with slash-command lesson routing and typewriter-style scripted text; update project soul and planning memory to Dr. Stein. Completed with Dr. Stein active soul, chat/composer menu shell, slash-command lesson routing, typewriter scripted text, requirements, decision, and next-action updates. Follow-up: remove the separate menu lesson sidebar and move lesson discovery into composer slash-search suggestions. Completed follow-up with sidebar removed and lesson suggestions shown from the slash composer. Follow-up: keep lesson suggestion results in a fixed-height panel so showing matches does not shift the composer or screen layout. Completed follow-up with a fixed-height lesson suggestions panel and placeholder state so slash-search results no longer move the composer. Follow-up: render the Dr. Stein typewriter line inside the menu chat transcript instead of a separate bottom strip. Completed follow-up by removing the separate menu typewriter widget and rendering the animated Dr. Stein line inside #menu-chat. Follow-up: remove the extra seeded welcome and composer instruction panels from #menu-chat so only real chat content remains. Completed follow-up by removing the seeded welcome panel and seeded Composer instruction panel from #menu-chat. Follow-up: improve lesson suggestions with fuzzy ranking using token matching and Levenshtein distance. Completed follow-up with fuzzy-ranked lesson suggestions using exact, prefix, token overlap, substring, and Levenshtein typo scoring. Completed follow-up by accepting partial slash commands like /l, /le, /les, and /les <query> as lesson-search intent.",
   "type": "code",
   "keywords": "",
   "depends": [],
@@ -19,5 +19,5 @@
   "lease_expires_at": "",
   "resolution": "",
   "created_at": "2026-05-03T01:20:38.210Z",
-  "updated_at": "2026-05-03T01:22:52.578Z"
+  "updated_at": "2026-05-04T04:27:11.704Z"
 }

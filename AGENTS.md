@@ -92,7 +92,7 @@ Current behavior:
 - The theme shifts while VCS is active.
 - The footer provides a `VCS Quick Prompt` capture action.
 - Copied prompts must include target id, route, source file, source hint, and transcript/request text.
-- Menu shell should behave like a chat/composer surface; lesson routes can be slash commands.
+- Menu shell should behave like a chat/composer surface; lesson routes are found through slash-command suggestions, not a separate sidebar.
 
 Do not add runtime-generated ids to the user-facing targeting path. Ids must be stable and searchable in source.
 

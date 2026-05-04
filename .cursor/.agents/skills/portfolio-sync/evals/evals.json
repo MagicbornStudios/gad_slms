@@ -1,0 +1,55 @@
+{
+  "skill_name": "portfolio-sync",
+  "format_version": "agentskills-v1",
+  "generated_by": "gad eval skill init",
+  "generated_on": "2026-04-10",
+  "description": "Test cases for the portfolio-sync skill. Per gad-87, grading uses trace events + file mutations + commit log — not LLM self-report.",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "[TODO: Write a realistic user prompt that should trigger the portfolio-sync skill]",
+      "expected_output": "[TODO: Describe what success looks like when this skill is used]",
+      "files": [],
+      "assertions": [
+        "[TODO: Write a verifiable assertion about the expected output — e.g. \"A new file was created at <path>\"]",
+        "[TODO: Write a second assertion]"
+      ],
+      "grading_strategy": "trace-based",
+      "trace_assertions": [
+        {
+          "type": "file_mutation",
+          "description": "[TODO: What file should be created/modified when this skill runs?]",
+          "pattern": "[TODO: glob or path pattern]"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "[TODO: Write a DIFFERENT prompt that should also trigger portfolio-sync — different phrasing, different context]",
+      "expected_output": "[TODO: Describe what success looks like]",
+      "files": [],
+      "assertions": [
+        "[TODO: Verifiable assertion]"
+      ],
+      "grading_strategy": "trace-based",
+      "trace_assertions": []
+    },
+    {
+      "id": 3,
+      "prompt": "[TODO: Write a prompt that should NOT trigger portfolio-sync — negative test case]",
+      "expected_output": "The skill should NOT activate for this prompt.",
+      "files": [],
+      "assertions": [
+        "The skill was not invoked (no skill_invocation event in trace for portfolio-sync)"
+      ],
+      "grading_strategy": "trace-based",
+      "trace_assertions": [
+        {
+          "type": "skill_invocation_absent",
+          "description": "portfolio-sync should NOT have been invoked",
+          "skill_name": "portfolio-sync"
+        }
+      ]
+    }
+  ]
+}

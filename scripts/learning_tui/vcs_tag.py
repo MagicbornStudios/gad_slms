@@ -7,8 +7,9 @@ from . import icons
 
 class VcsTag(Button):
     def __init__(self, target_id: str, route: str) -> None:
+        del route
         super().__init__(
-            f"{icons.CODE} id: {target_id}  route: {route}",
+            f"{icons.CODE} id: {target_id}",
             id=f"vcs-tag-{target_id}",
             classes="vcs-id-tag",
             compact=True,

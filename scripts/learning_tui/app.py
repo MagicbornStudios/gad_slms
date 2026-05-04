@@ -3,7 +3,7 @@ from __future__ import annotations
 from textual.app import App
 from textual.binding import Binding
 
-from .menu_screen import MenuScreen
+from .chat_screen import ChatScreen
 from .settings import ROOT
 
 
@@ -18,7 +18,7 @@ class SLMLearningApp(App[None]):
     ]
 
     def on_mount(self) -> None:
-        self.push_screen(MenuScreen())
+        self.push_screen(ChatScreen())
 
     def action_toggle_visual_context(self) -> None:
         screen = self.screen

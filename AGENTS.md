@@ -30,7 +30,7 @@ High-value commands:
 The current planning scaffold is in `.planning/`:
 
 - `.planning/STATE.xml`
-- `.planning/TASK-REGISTRY.xml`
+- `.planning/tasks/`
 - `.planning/REQUIREMENTS.xml`
 - `.planning/DECISIONS.xml`
 - `.planning/ERRORS-AND-ATTEMPTS.xml`
@@ -63,7 +63,6 @@ Focused modules:
 - `scripts/learning_tui/menu_screen.py` - lesson menu screen.
 - `scripts/learning_tui/lesson_screen.py` - chat/artifact lesson screen.
 - `scripts/learning_tui/visual_context.py` - VCS state, selection, prompt copy behavior.
-- `scripts/learning_tui/vcs_footer.py` - VCS footer UI.
 - `scripts/learning_tui/vcs_tag.py` - visible clickable VCS id tags.
 - `scripts/learning_tui/lessons.py` - lesson catalog.
 - `scripts/learning_tui/models.py` - shared dataclasses.
@@ -90,7 +89,7 @@ Current behavior:
 - `Alt+i` toggles VCS dev mode.
 - Dev mode shows clickable ids directly on screen.
 - The theme shifts while VCS is active.
-- The footer provides a `VCS Quick Prompt` capture action.
+- The top banner provides a `VCS Quick Prompt` capture action beside mic/device status.
 - Copied prompts must include target id, route, source file, source hint, and transcript/request text.
 - Menu shell should behave like a chat/composer surface; lesson routes are found through slash-command suggestions, not a separate sidebar.
 

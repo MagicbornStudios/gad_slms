@@ -11,8 +11,50 @@ Screen.vcs-recording {
     background: #21110f;
 }
 
-#menu-main, #lesson-main {
+Screen.vcs-dev #app-banner {
+    background: #2a1f12;
+    color: #ebcb8b;
+}
+
+Screen.vcs-recording #app-banner {
+    background: #301817;
+    color: #ffb4ab;
+}
+
+#menu-main, #lesson-main, #chat-layout {
     height: 1fr;
+}
+
+#menu-main {
+    padding: 0;
+}
+
+#chat-controls {
+    height: 3;
+}
+
+#chat-controls Select {
+    width: 32;
+}
+
+#chat-log {
+    height: 1fr;
+    background: #10131c;
+    border: none;
+    padding: 0 1;
+}
+
+#chat-composer {
+    height: 3;
+    border: tall #5e81ac;
+    background: #05070a;
+}
+
+#chat-speech-status {
+    height: 1;
+    color: #b4f9f8;
+    background: #0f1117;
+    padding: 0 1;
 }
 
 #app-banner {
@@ -21,6 +63,17 @@ Screen.vcs-recording {
     background: #11131a;
     color: #b4f9f8;
     text-style: bold;
+}
+
+#app-banner-label {
+    width: 2fr;
+    height: 1;
+}
+
+#app-banner-vcs-status {
+    width: 1fr;
+    height: 1;
+    color: #ebcb8b;
 }
 
 #menu-sidebar {
@@ -38,8 +91,8 @@ Screen.vcs-recording {
 
 #menu-details {
     width: 1fr;
-    border: solid #3b4252;
-    padding: 1;
+    border: tall #3b4252;
+    padding: 0 1;
     background: #151821;
 }
 
@@ -50,12 +103,13 @@ Screen.vcs-recording {
 
 #lesson-workspace {
     height: 1fr;
+    padding: 0;
 }
 
 #lesson-chat-pane {
-    width: 1fr;
-    border: round #5e81ac;
-    padding: 1 2;
+    height: 2fr;
+    border: tall #5e81ac;
+    padding: 0 1;
     background: #151821;
 }
 
@@ -67,27 +121,31 @@ Screen.vcs-recording {
 #lesson-chat {
     height: 1fr;
     background: #10131c;
-    border: tall #242936;
-    padding: 1;
+    border: none;
+    padding: 0 1;
+}
+
+#lesson-composer {
+    height: 3;
+    border: tall #5e81ac;
+    background: #05070a;
 }
 
 #menu-chat {
     height: 1fr;
     background: #10131c;
-    border: tall #242936;
-    padding: 1;
+    border: none;
+    padding: 0 1;
 }
 
 #menu-composer {
     height: 3;
-    margin-top: 1;
     border: tall #5e81ac;
     background: #05070a;
 }
 
 #lesson-suggestions {
-    height: 8;
-    margin-top: 1;
+    height: 7;
     border: tall #242936;
     background: #0f1117;
 }
@@ -102,10 +160,10 @@ Screen.vcs-recording {
 }
 
 #artifact-rail {
-    width: 45;
-    min-width: 36;
-    border: round #3b4252;
-    padding: 1;
+    height: 3fr;
+    min-height: 14;
+    border: tall #3b4252;
+    padding: 0 1;
     background: #0b0d12;
 }
 
@@ -117,8 +175,19 @@ Screen.vcs-recording {
 #lesson-output {
     height: 1fr;
     background: #05070a;
-    border: tall #242936;
-    padding: 1;
+    border: none;
+    padding: 0 1;
+}
+
+#lesson-command {
+    height: 1fr;
+    background: #05070a;
+    border: none;
+    padding: 0 1;
+}
+
+#lesson-result-bar {
+    height: 2;
 }
 
 #button-row {
@@ -167,7 +236,7 @@ Button.vcs-recording-button {
 .rail-title {
     text-style: bold;
     color: #b4f9f8;
-    margin-bottom: 1;
+    height: 1;
 }
 
 .vcs-tag, .vcs-id-tag {
@@ -182,6 +251,7 @@ Button.vcs-recording-button {
     border-left: thick #ebcb8b;
     height: 1;
     padding: 0 1;
+    width: auto;
 }
 
 Button.vcs-id-tag {
@@ -208,37 +278,6 @@ Button.vcs-id-tag {
     color: #ff6b6b;
 }
 
-#vcs-footer {
-    height: 15;
-    dock: bottom;
-    padding: 0 1;
-    border: round #ebcb8b;
-    background: #18131f;
-    transition: opacity 160ms out_cubic, offset 160ms out_cubic;
-}
-
-.vcs-recording #vcs-footer {
-    border: round #ff6b6b;
-    background: #241317;
-}
-
-#vcs-footer-status {
-    height: 1;
-    color: #ebcb8b;
-    text-style: bold;
-}
-
-#vcs-recorder-input {
-    height: 3;
-    margin: 0 0 1 0;
-    border: tall #3b4252;
-    background: #0f1117;
-}
-
-.vcs-recording #vcs-recorder-input {
-    border: tall #ff6b6b;
-}
-
 .vcs-live-line {
     height: 1;
     color: #d8dee9;
@@ -251,9 +290,12 @@ Button.vcs-id-tag {
     background: #2a1517;
 }
 
-#vcs-footer-actions {
-    height: 3;
-    overflow-x: auto;
+#vcs-quick-prompt {
+    height: 1;
+    min-width: 18;
+    border: none;
+    background: #2b2434;
+    color: #ebcb8b;
 }
 
 #run-spinner {

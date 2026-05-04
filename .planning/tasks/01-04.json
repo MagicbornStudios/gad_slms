@@ -1,0 +1,23 @@
+{
+  "id": "01-04",
+  "phase": "01",
+  "status": "in-progress",
+  "goal": "Turn the lesson context panel into a tabbed surface that can swap output, command, errors, and suggested next actions based on current lesson state. First pass implemented: lesson screen now has a spacious Harlequin-style results pane with compact Output/Command tabs and chat composer commands; remaining work is state-aware Errors/Hints tabs and fullscreen behavior.",
+  "type": "code",
+  "keywords": "",
+  "depends": [],
+  "commands": [],
+  "files": [],
+  "agent_id": "",
+  "agent_role": "",
+  "runtime": "",
+  "model_profile": "",
+  "resolved_model": "",
+  "skill": "",
+  "claimed": false,
+  "claimed_at": "",
+  "lease_expires_at": "",
+  "resolution": "",
+  "created_at": "2026-05-04T04:38:38.691Z",
+  "updated_at": "2026-05-04T04:51:40.262Z"
+}

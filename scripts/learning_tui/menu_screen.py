@@ -34,10 +34,6 @@ class MenuScreen(VisualContextMixin, Screen):
         VisualContextTarget("menu-chat", "Menu Chat Transcript", "pattern anchor: scripted chat/typewriter transcript", "scripts/learning_tui/menu_screen.py"),
         VisualContextTarget("menu-composer", "Slash Command Composer", "pattern anchor: slash command lesson input", "scripts/learning_tui/menu_screen.py"),
         VisualContextTarget("lesson-suggestions", "Lesson Slash Suggestions", "pattern anchor: slash command lesson search results", "scripts/learning_tui/menu_screen.py"),
-        VisualContextTarget("vcs-footer", "Visual Context Footer", "pattern anchor: bottom VCS capture footer", "scripts/learning_tui/vcs_footer.py"),
-        VisualContextTarget("vcs-footer-status", "Visual Context Footer Status", "pattern anchor: selected VCS target summary", "scripts/learning_tui/vcs_footer.py"),
-        VisualContextTarget("vcs-footer-actions", "Visual Context Footer Actions", "pattern anchor: VCS quick prompt action row", "scripts/learning_tui/vcs_footer.py"),
-        VisualContextTarget("vcs-quick-prompt", "VCS Quick Prompt Button", "pattern anchor: recorder-first quick prompt button", "scripts/learning_tui/vcs_footer.py"),
     )
 
     def __init__(self) -> None:
@@ -84,7 +80,6 @@ class MenuScreen(VisualContextMixin, Screen):
                     ],
                     id="lesson-suggestions",
                 )
-        yield from self._compose_visual_context_footer()
         yield Footer(id="textual-footer")
 
     def on_mount(self) -> None:
@@ -187,7 +182,7 @@ class MenuScreen(VisualContextMixin, Screen):
         if command in {"/help", "help"}:
             self._conversation_panels.append(
                 Panel(
-                    Text("/ to search lessons\n/lesson 1\n/lesson tokenizer\n/lesson train-smoke\n/help", style="bright_white"),
+                    Text("/ or /les to search lessons | /lesson tokenizer | /lesson train-smoke | /help", style="bright_white"),
                     title=f"{icons.CHAT} Dr. Stein",
                     border_style="cyan",
                 )

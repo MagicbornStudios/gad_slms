@@ -34,7 +34,7 @@ class CausalSelfAttention(nn.Module):
         mask = torch.tril(torch.ones(config.block_size, config.block_size))
         self.register_buffer("bias", mask.view(1, 1, config.block_size, config.block_size))
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor, past_key_value: tuple[torch.Tensor, torch.Tensor] | None = None) -> tuple[torch.Tensor, tuple[torch.Tensor, torch.Tensor]]:
         batch_size, seq_len, channels = x.size()
         q, k, v = self.c_attn(x).split(self.n_embd, dim=2)
         head_dim = channels // self.n_head
@@ -43,15 +43,28 @@ class CausalSelfAttention(nn.Module):
         k = k.view(batch_size, seq_len, self.n_head, head_dim).transpose(1, 2)
         v = v.view(batch_size, seq_len, self.n_head, head_dim).transpose(1, 2)
 
+        if past_key_value is not None:
+            past_k, past_v = past_key_value
+            k = torch.cat((past_k, k), dim=-2)
+            v = torch.cat((past_v, v), dim=-2)
+            
+        present_key_value = (k, v)
+
         att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
-        att = att.masked_fill(self.bias[:, :, :seq_len, :seq_len] == 0, float("-inf"))
+        
+        query_start = k.size(-2) - seq_len
+        query_end = k.size(-2)
+        key_len = k.size(-2)
+        
+        mask = self.bias[:, :, query_start:query_end, :key_len]
+        att = att.masked_fill(mask == 0, float("-inf"))
         att = F.softmax(att, dim=-1)
         att = self.attn_dropout(att)
 
         y = att @ v
         y = y.transpose(1, 2).contiguous().view(batch_size, seq_len, channels)
         y = self.resid_dropout(self.c_proj(y))
-        return y
+        return y, present_key_value
 
 
 class MLP(nn.Module):
@@ -74,10 +87,11 @@ class Block(nn.Module):
         self.ln_2 = nn.LayerNorm(config.n_embd)
         self.mlp = MLP(config)
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        x = x + self.attn(self.ln_1(x))
+    def forward(self, x: torch.Tensor, past_key_value: tuple[torch.Tensor, torch.Tensor] | None = None) -> tuple[torch.Tensor, tuple[torch.Tensor, torch.Tensor]]:
+        attn_out, present_key_value = self.attn(self.ln_1(x), past_key_value=past_key_value)
+        x = x + attn_out
         x = x + self.mlp(self.ln_2(x))
-        return x
+        return x, present_key_value
 
 
 class MiniGPT(nn.Module):
@@ -101,23 +115,31 @@ class MiniGPT(nn.Module):
         elif isinstance(module, nn.Embedding):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
-    def forward(self, idx: torch.Tensor, targets: torch.Tensor | None = None) -> tuple[torch.Tensor, torch.Tensor | None]:
+    def forward(self, idx: torch.Tensor, targets: torch.Tensor | None = None, past_key_values: list[tuple[torch.Tensor, torch.Tensor]] | None = None) -> tuple[torch.Tensor, torch.Tensor | None, list[tuple[torch.Tensor, torch.Tensor]]]:
         batch_size, seq_len = idx.size()
-        if seq_len > self.config.block_size:
-            raise ValueError(f"Cannot forward sequence length {seq_len}; block_size is {self.config.block_size}")
+        past_len = past_key_values[0][0].size(-2) if past_key_values is not None else 0
+        total_len = past_len + seq_len
 
-        positions = torch.arange(0, seq_len, dtype=torch.long, device=idx.device).unsqueeze(0)
+        if total_len > self.config.block_size:
+            raise ValueError(f"Cannot forward sequence length {total_len}; block_size is {self.config.block_size}")
+
+        positions = torch.arange(past_len, total_len, dtype=torch.long, device=idx.device).unsqueeze(0)
         x = self.token_embedding(idx) + self.position_embedding(positions)
         x = self.dropout(x)
-        for block in self.blocks:
-            x = block(x)
+        
+        present_key_values = []
+        for i, block in enumerate(self.blocks):
+            past_kv = past_key_values[i] if past_key_values is not None else None
+            x, present_kv = block(x, past_key_value=past_kv)
+            present_key_values.append(present_kv)
+            
         x = self.ln_f(x)
         logits = self.lm_head(x)
 
         loss = None
         if targets is not None:
             loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
-        return logits, loss
+        return logits, loss, present_key_values
 
     @torch.no_grad()
     def generate(
@@ -129,9 +151,17 @@ class MiniGPT(nn.Module):
     ) -> torch.Tensor:
         if temperature <= 0:
             raise ValueError("temperature must be greater than zero")
+            
+        past_key_values = None
         for _ in range(max_new_tokens):
-            idx_cond = idx[:, -self.config.block_size :]
-            logits, _ = self(idx_cond)
+            if past_key_values is not None:
+                idx_cond = idx[:, -1:]
+            else:
+                idx_cond = idx
+                if idx_cond.size(1) > self.config.block_size:
+                    idx_cond = idx_cond[:, -self.config.block_size:]
+                    
+            logits, _, past_key_values = self(idx_cond, past_key_values=past_key_values)
             logits = logits[:, -1, :] / temperature
             if top_k is not None:
                 v, _ = torch.topk(logits, min(top_k, logits.size(-1)))
@@ -139,6 +169,11 @@ class MiniGPT(nn.Module):
             probs = F.softmax(logits, dim=-1)
             idx_next = torch.multinomial(probs, num_samples=1)
             idx = torch.cat((idx, idx_next), dim=1)
+            
+            if past_key_values is not None and past_key_values[0][0].size(-2) >= self.config.block_size:
+                past_key_values = None
+                idx = idx[:, -self.config.block_size:]
+                
         return idx
 
     def num_parameters(self) -> int:

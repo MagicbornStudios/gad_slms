@@ -9,6 +9,7 @@
     "start": "node tools/start.mjs",
     "tui": "node tools/start.mjs",
     "serve": "node tools/serve.mjs",
-    "reset-setup": "node tools/reset-setup.mjs"
+    "reset-setup": "node tools/reset-setup.mjs",
+    "eval": "npx promptfoo@latest eval -c promptfoo.yaml"
   }
 }

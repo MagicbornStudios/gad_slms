@@ -42,6 +42,10 @@ class VisualContextMixin:
             return
         self.set_class(self.vcs_visible, "vcs-dev")
         self.set_class(self.vcs_recording, "vcs-recording")
+        button = self.query_one("#vcs-quick-prompt", Button)
+        status = self.query_one("#app-banner-vcs-status", Static)
+        button.display = self.vcs_visible
+        status.display = self.vcs_visible
         for tag in self.query(".vcs-id-tag"):
             tag.display = self.vcs_visible
         target = self._active_vcs_target()
@@ -49,7 +53,6 @@ class VisualContextMixin:
             tag = self.query_one(f"#vcs-tag-{candidate.id}", Button)
             tag.set_class(candidate.id == target.id, "vcs-selected")
         lock_status = "locked" if self.vcs_locked_target_id is not None else "unlocked"
-        status = self.query_one("#app-banner-vcs-status", Static)
         if self.vcs_recording:
             status.update(
                 f"{icons.RECORD} recording quick prompt for {target.id} | route={self.vcs_route} | {lock_status}"
@@ -177,6 +180,8 @@ class VisualContextMixin:
             self.notify(f"{icons.CODE} Selected {self.vcs_selected_target_id}")
             return True
         if button_id == "vcs-quick-prompt":
+            if not self.vcs_visible:
+                return False
             if self.vcs_recording:
                 self._stop_vcs_recording()
             else:

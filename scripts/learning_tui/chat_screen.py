@@ -67,6 +67,9 @@ class ChatScreen(VisualContextMixin, Screen):
         self._waiting_timer = None
         self._waiting_ticks = 0
         self._waiting_message_index = 0
+        self._ambient_timer = None
+        self._ambient_ticks = 0
+        self._system_status = f"model ready: {self._model_labels[self.active_model_key]}"
         self._setup_visual_context()
 
     def compose(self) -> ComposeResult:
@@ -95,7 +98,8 @@ class ChatScreen(VisualContextMixin, Screen):
 
     def on_mount(self) -> None:
         self._sync_visual_context()
-        self._append_chat("system", "system", f"Connected to {self._active_model_name}")
+        self._sync_chat_status()
+        self._ambient_timer = self.set_interval(0.8, self._tick_ambient_status)
 
     @property
     def _active_model_name(self) -> str:
@@ -150,6 +154,20 @@ class ChatScreen(VisualContextMixin, Screen):
         status = self.query_one("#chat-speech-status", Static)
         live = snap.transcript or snap.status
         status.update(f"{icons.RECORD} live: {live}")
+
+    def _sync_chat_status(self) -> None:
+        status = self.query_one("#chat-speech-status", Static)
+        status.update(f"{icons.APP} {self._system_status}")
+
+    def _tick_ambient_status(self) -> None:
+        if self._chat_recording or (self._response_task is not None and not self._response_task.done()):
+            return
+        phases = ("calibrating corpus", "pruning stale lines", "warming decoder", "summarizing context")
+        pulse = ("*", "**", "***", "**")[self._ambient_ticks % 4]
+        phase = phases[self._ambient_ticks % len(phases)]
+        self._ambient_ticks += 1
+        status = self.query_one("#chat-speech-status", Static)
+        status.update(f"{icons.APP} {self._system_status} | {phase} {pulse}")
 
     def _append_chat(self, role: str, name: str, content: str) -> int:
         self._chat_messages.append((role, name, content))
@@ -227,7 +245,8 @@ class ChatScreen(VisualContextMixin, Screen):
                 self.active_model_key = "kael"
             elif event.value == "dr_stein":
                 self.active_model_key = "dr_stein"
-            self._append_chat("system", "system", f"Switched active model to {self._active_model_name}")
+            self._system_status = f"model set: {self._active_model_name}"
+            self._sync_chat_status()
 
     def on_input_submitted(self, event: Input.Submitted) -> None:
         if event.input.id != "chat-composer":

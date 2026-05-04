@@ -1,24 +1,24 @@
 Screen {
-    background: #0f1117;
-    color: #d8dee9;
+    background: #050403;
+    color: #e6d8bd;
 }
 
 Screen.vcs-dev {
-    background: #160f1f;
+    background: #100905;
 }
 
 Screen.vcs-recording {
-    background: #21110f;
+    background: #1a0705;
 }
 
 Screen.vcs-dev #app-banner {
-    background: #2a1f12;
+    background: #211306;
     color: #ebcb8b;
 }
 
 Screen.vcs-recording #app-banner {
-    background: #301817;
-    color: #ffb4ab;
+    background: #2b0b08;
+    color: #ff9b73;
 }
 
 #menu-main, #lesson-main, #chat-layout {
@@ -30,38 +30,47 @@ Screen.vcs-recording #app-banner {
 }
 
 #chat-controls {
-    height: 3;
+    height: 2;
+    background: #080504;
+    padding: 0 1;
 }
 
 #chat-controls Select {
-    width: 32;
+    width: 18;
+}
+
+#model-selector {
+    height: 1;
+    border: none;
+    background: #080504;
+    color: #c89b3c;
 }
 
 #chat-log {
     height: 1fr;
-    background: #10131c;
+    background: #090604;
     border: none;
     padding: 0 1;
 }
 
 #chat-composer {
     height: 3;
-    border: tall #5e81ac;
-    background: #05070a;
+    border: tall #8b2f24;
+    background: #050403;
 }
 
 #chat-speech-status {
     height: 1;
-    color: #b4f9f8;
-    background: #0f1117;
+    color: #d8a84d;
+    background: #0c0705;
     padding: 0 1;
 }
 
 #app-banner {
     height: 1;
     padding: 0 1;
-    background: #11131a;
-    color: #b4f9f8;
+    background: #080504;
+    color: #d8a84d;
     text-style: bold;
 }
 
@@ -71,9 +80,19 @@ Screen.vcs-recording #app-banner {
 }
 
 #app-banner-vcs-status {
+    display: none;
     width: 1fr;
     height: 1;
     color: #ebcb8b;
+}
+
+#vcs-quick-prompt {
+    display: none;
+}
+
+Screen.vcs-dev #app-banner-vcs-status,
+Screen.vcs-dev #vcs-quick-prompt {
+    display: block;
 }
 
 #menu-sidebar {
@@ -91,14 +110,14 @@ Screen.vcs-recording #app-banner {
 
 #menu-details {
     width: 1fr;
-    border: tall #3b4252;
+    border: tall #4b2315;
     padding: 0 1;
-    background: #151821;
+    background: #0d0906;
 }
 
 .vcs-dev #menu-details {
     border: round #ebcb8b;
-    background: #1d1727;
+    background: #120b06;
 }
 
 #lesson-workspace {
@@ -108,46 +127,46 @@ Screen.vcs-recording #app-banner {
 
 #lesson-chat-pane {
     height: 2fr;
-    border: tall #5e81ac;
+    border: tall #8b2f24;
     padding: 0 1;
-    background: #151821;
+    background: #0d0906;
 }
 
 .vcs-dev #lesson-chat-pane {
     border: round #ebcb8b;
-    background: #1d1727;
+    background: #120b06;
 }
 
 #lesson-chat {
     height: 1fr;
-    background: #10131c;
+    background: #090604;
     border: none;
     padding: 0 1;
 }
 
 #lesson-composer {
     height: 3;
-    border: tall #5e81ac;
-    background: #05070a;
+    border: tall #8b2f24;
+    background: #050403;
 }
 
 #menu-chat {
     height: 1fr;
-    background: #10131c;
+    background: #090604;
     border: none;
     padding: 0 1;
 }
 
 #menu-composer {
     height: 3;
-    border: tall #5e81ac;
-    background: #05070a;
+    border: tall #8b2f24;
+    background: #050403;
 }
 
 #lesson-suggestions {
     height: 7;
-    border: tall #242936;
-    background: #0f1117;
+    border: tall #4b2315;
+    background: #080504;
 }
 
 .suggestion-placeholder {
@@ -162,26 +181,26 @@ Screen.vcs-recording #app-banner {
 #artifact-rail {
     height: 3fr;
     min-height: 14;
-    border: tall #3b4252;
+    border: tall #4b2315;
     padding: 0 1;
-    background: #0b0d12;
+    background: #070504;
 }
 
 .vcs-dev #artifact-rail {
     border: round #ebcb8b;
-    background: #16101c;
+    background: #110906;
 }
 
 #lesson-output {
     height: 1fr;
-    background: #05070a;
+    background: #050403;
     border: none;
     padding: 0 1;
 }
 
 #lesson-command {
     height: 1fr;
-    background: #05070a;
+    background: #050403;
     border: none;
     padding: 0 1;
 }
@@ -212,8 +231,8 @@ Button {
     width: 4;
     height: 1;
     min-width: 4;
-    background: #11131a;
-    color: #ff6b6b;
+    background: #080504;
+    color: #ff6b4a;
     border: none;
 }
 
@@ -223,7 +242,7 @@ Button.vcs-selected {
 }
 
 Button.vcs-recording-button {
-    border: tall #ff6b6b;
+    border: tall #ff6b4a;
     text-style: bold;
 }
 
@@ -235,7 +254,7 @@ Button.vcs-recording-button {
 
 .rail-title {
     text-style: bold;
-    color: #b4f9f8;
+    color: #d8a84d;
     height: 1;
 }
 
@@ -247,7 +266,7 @@ Button.vcs-recording-button {
 
 .vcs-id-tag {
     display: none;
-    background: #33213d;
+    background: #2b160b;
     border-left: thick #ebcb8b;
     height: 1;
     padding: 0 1;
@@ -265,7 +284,7 @@ Button.vcs-id-tag {
 }
 
 .status {
-    color: #b4f9f8;
+    color: #d8a84d;
     margin-top: 1;
 }
 
@@ -275,31 +294,31 @@ Button.vcs-id-tag {
 }
 
 .error {
-    color: #ff6b6b;
+    color: #ff6b4a;
 }
 
 .vcs-live-line {
     height: 1;
-    color: #d8dee9;
-    background: #0f1117;
+    color: #e6d8bd;
+    background: #080504;
     padding: 0 1;
 }
 
 .vcs-recording .vcs-live-line {
-    color: #ffd2d2;
-    background: #2a1517;
+    color: #ffcfba;
+    background: #230b08;
 }
 
 #vcs-quick-prompt {
     height: 1;
-    min-width: 18;
+    min-width: 14;
     border: none;
-    background: #2b2434;
+    background: #211306;
     color: #ebcb8b;
 }
 
 #run-spinner {
     height: 1;
-    color: #a3be8c;
+    color: #d8a84d;
     margin-bottom: 1;
 }

@@ -1,0 +1,31 @@
+description: "SLM GAD Evaluation Matrix"
+
+providers:
+  - id: "python:scripts/benchmark/promptfoo_provider.py"
+    label: "DrStein-124M"
+    config:
+      pythonExecutable: ".venv/Scripts/python.exe"
+
+prompts:
+  - "{{instruction}}"
+
+tests:
+  - description: "Evaluates if model understands GAD note tool."
+    vars:
+      instruction: "Add a note that we should refactor promptfoo."
+    assert:
+      - type: "icontains"
+        value: "gad note"
+        
+  - description: "Evaluates if model understands GAD state querying."
+    vars:
+      instruction: "What is the next action we need to take?"
+    assert:
+      - type: "icontains"
+        value: "STATE.xml"
+
+  - description: "Evaluates if model correctly parses JSON tool formats."
+    vars:
+      instruction: "Please output a JSON block updating ROADMAP.xml phase 01 to complete."
+    assert:
+      - type: "is-json"

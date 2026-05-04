@@ -1,0 +1,19 @@
+[planning]
+sprintSize = 5
+
+[features]
+# Graph-backed queries for targeted lookups (~12.9x token savings).
+# Set to false to fall back to raw XML reads.
+useGraphQuery = true
+
+[[planning.roots]]
+id = "slm_learning"
+path = "."
+planningDir = ".planning"
+discover = false
+
+[[planning.roots]]
+id = "llm-from-scratch"
+path = "..\custom_portfolio\projects\llm-from-scratch"
+planningDir = ".planning"
+discover = false

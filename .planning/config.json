@@ -1,0 +1,65 @@
+{
+  "mode": "interactive",
+  "model_profile": "off",
+  "commit_docs": true,
+  "parallelization": true,
+  "search_gitignored": false,
+  "brave_search": false,
+  "firecrawl": false,
+  "exa_search": false,
+  "git": {
+    "branching_strategy": "none",
+    "phase_branch_template": "gad/phase-{phase}-{slug}",
+    "milestone_branch_template": "gad/{milestone}-{slug}",
+    "quick_branch_template": null
+  },
+  "workflow": {
+    "research": true,
+    "plan_check": true,
+    "verifier": true,
+    "nyquist_validation": true,
+    "auto_advance": false,
+    "node_repair": true,
+    "node_repair_budget": 2,
+    "ui_phase": true,
+    "ui_safety_gate": true,
+    "text_mode": false,
+    "research_before_questions": false,
+    "discuss_mode": "discuss",
+    "skip_discuss": false,
+    "max_discuss_passes": 3
+  },
+  "hooks": {
+    "context_warnings": true,
+    "community": false
+  },
+  "agent_skills": {},
+  "planning": {
+    "id": "root",
+    "planningDir": ".planning",
+    "docs_sink": null,
+    "docs_path": null,
+    "docs_sink_ignore": [],
+    "ignore": [
+      "**/node_modules/**",
+      "**/dist/**"
+    ],
+    "sprintSize": 5,
+    "currentProfile": "human",
+    "conventionsPaths": [],
+    "sub_repos": [
+      {
+        "id": "slm_learning",
+        "path": ".",
+        "planningDir": ".planning",
+        "enabled": true
+      },
+      {
+        "id": "llm-from-scratch",
+        "path": "..\\custom_portfolio\\projects\\llm-from-scratch",
+        "planningDir": ".planning",
+        "enabled": true
+      }
+    ]
+  }
+}

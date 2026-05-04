@@ -10,6 +10,8 @@ models/
 node_modules/
 .env
 .env.*
+.planning/graph.html
+.planning/graph.json
 
 .DS_Store
 Thumbs.db

@@ -138,7 +138,8 @@ def main() -> None:
     config = LlamaConfig(
         vocab_size=49152, block_size=2048, n_layer=30, n_head=9, n_kv_head=3,
         n_embd=576, intermediate_size=1536, dropout=0.1, bias=False,
-        rms_norm_eps=1e-05, rope_theta=10000.0
+        rms_norm_eps=1e-05, rope_theta=10000.0,
+        gradient_checkpointing=True,
     )
     model = MiniLlama(config)
 

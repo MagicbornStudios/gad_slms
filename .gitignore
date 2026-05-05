@@ -14,6 +14,8 @@ node_modules/
 .env.*
 .planning/graph.html
 .planning/graph.json
+.planning/.trace-events.jsonl
+.planning/.trace-seq
 
 .DS_Store
 Thumbs.db

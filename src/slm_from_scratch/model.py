@@ -22,6 +22,7 @@ class LlamaConfig:
     rope_theta: float = 10000.0
     num_experts: int = 1
     num_experts_per_tok: int = 1
+    gradient_checkpointing: bool = False
 
 class RMSNorm(nn.Module):
     def __init__(self, dim: int, eps: float = 1e-5):
@@ -180,10 +181,11 @@ class MiniLlama(nn.Module):
         self.layers = nn.ModuleList([LlamaBlock(config) for _ in range(config.n_layer)])
         self.norm = RMSNorm(config.n_embd, eps=config.rms_norm_eps)
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
-        
+
         freqs_cis = precompute_freqs_cis(config.n_embd // config.n_head, config.block_size, config.rope_theta)
         self.register_buffer("freqs_cis", freqs_cis)
 
+        self.gradient_checkpointing = config.gradient_checkpointing
         self.apply(self._init_weights)
 
     def _init_weights(self, module: nn.Module) -> None:
@@ -208,9 +210,23 @@ class MiniLlama(nn.Module):
         freqs_cis = self.freqs_cis[past_len:total_len]
         
         present_key_values = []
+        use_checkpoint = (
+            self.gradient_checkpointing
+            and self.training
+            and past_key_values is None
+        )
         for i, layer in enumerate(self.layers):
             past_kv = past_key_values[i] if past_key_values is not None else None
-            x, present_kv = layer(x, freqs_cis, past_key_value=past_kv)
+            if use_checkpoint:
+                x = torch.utils.checkpoint.checkpoint(
+                    lambda h, fc, blk=layer: blk(h, fc, past_key_value=None)[0],
+                    x,
+                    freqs_cis,
+                    use_reentrant=False,
+                )
+                present_kv = None
+            else:
+                x, present_kv = layer(x, freqs_cis, past_key_value=past_kv)
             present_key_values.append(present_kv)
             
         x = self.norm(x)

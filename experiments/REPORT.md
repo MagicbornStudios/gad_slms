@@ -133,6 +133,39 @@ distribution is the bottleneck, not LR or epoch count. Item (2) below
 (curated GAD-tool training pairs + Stage 2.5 fine-tune) is the only
 high-leverage move.
 
+## Update — 2026-05-05 mid-morning
+
+Wired HumanEval + GSM8K eval harnesses against the same eval pipeline:
+
+- `scripts/eval_humaneval.py` — pass@1 on HumanEval. Spawns each
+  candidate in a fresh subprocess with a 10s timeout (safety boundary).
+- `scripts/eval_gsm8k.py` — exact-match accuracy on the parsed final
+  number; tolerates `#### N` markers + falls back to last-number-in-text.
+- `scripts/eval_benchmark_matrix.py` — runs both benchmarks across
+  every discovered checkpoint (Phase 02 stages + sweep runs), writes
+  per-(checkpoint,benchmark) JSON next to the checkpoint, appends
+  scored rows to `experiments/INDEX.md`.
+
+Drafted the seed dataset for Stage 2.5:
+
+- `data/gad_tool_pairs.jsonl` — **153 hand-curated (instruction, command)
+  pairs** covering all 14 categories the GAD-tool eval probes (notes,
+  tasks, state/snapshot, phases, decisions, errors, blockers, handoffs,
+  evolution, projects, recipes, verify/health, file-location questions,
+  disambiguation). Format is generic; the Stage 2.5 trainer wraps with
+  ChatML at training time.
+
+Replaced the OpenCode-teacher plan with a Claude-subagent teacher:
+
+- `scripts/distill_gad_pairs.py` — calls `claude-haiku-4-5` (cheap,
+  configurable) with a strict system prompt that forces a JSON array
+  of paraphrases per seed pair. Default 3 paraphrases × 153 seeds
+  = ~459 distilled pairs from one pass. Dry-run mode validates without
+  hitting the API. Estimated ~109 K output tokens for a full pass on
+  haiku-4-5 — pennies.
+- Phase 03 task `SL-T-03-04` and `.planning/ROADMAP.xml` updated to
+  reflect the OpenCode-out / Claude-subagent-in change.
+
 ## What's queued for next session
 
 1. **Re-eval `more_pairs`** with `--temperature 0.0 --max-new-tokens 30`

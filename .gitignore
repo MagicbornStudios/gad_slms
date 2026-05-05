@@ -6,7 +6,9 @@
 __pycache__/
 *.py[cod]
 
-data/
+data/external/
+data/reasoning_pairs.json
+data/distilled_pairs.jsonl
 /runs/
 /models/
 

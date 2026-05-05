@@ -6,6 +6,7 @@
   <last-activity>2026-05-04</last-activity>
   <next-action>Fix memory leak in 3 training scripts (gc.collect + bfloat16), re-run Stage 2 reasoning training, run Stage 3 DPO to produce dr_stein.pt.</next-action>
   <state-log>
+    <entry agent="unknown" at="2026-05-05T15:05:02.247Z">Phase 03: HumanEval/GSM8K harnesses wired (scripts/eval_humaneval.py, eval_gsm8k.py, eval_benchmark_matrix.py). Drafted 153-pair seed dataset data/gad_tool_pairs.jsonl. Replaced OpenCode plan with Claude-haiku-4-5 subagent teacher (scripts/distill_gad_pairs.py). Updated SL-T-03-04 + ROADMAP. Matrix running in background.</entry>
     <entry agent="unknown" at="2026-05-05T14:01:00.538Z">Eval pipeline fixed: GPU + EOS early-stop + greedy temp=0.0. Re-ran all 5 sweep checkpoints + dr_stein.pt baseline; all 0/30 - prior 1/30 results were sampling noise. more_pairs eval now completes in 46.5s (was killed at 2/30 yesterday)</entry>
     <entry agent="unknown" at="2026-05-05T13:19:21.338Z">Resumed session 2026-05-05: reviewing where we left off in SLM training/benchmarking</entry>
     <entry agent="unknown" at="2026-05-05T07:35:31.292Z">Phase 03 sweep complete: 5 hyperparam variants trained on GPU. Best gad_tools score 1/30 (3.3%) by higher_lr (5e-5 LR, loss 1.47). Two of five eval'd at 1/30, two at 0/30, one (more_pairs) eval skipped due to stuck generation. All checkpoints saved. Training factory + eval pipeline operational. Bugs fixed: experiment_runner UTF-8, dr_stein parents[4] typo, statusline pressure key. REPORT.md ready.</entry>

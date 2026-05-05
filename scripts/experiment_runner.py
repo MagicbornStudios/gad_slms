@@ -166,13 +166,25 @@ def main() -> int:
     # Mirror every run's config inside the run directory for traceability
     (run_dir / "config.snapshot.json").write_text(json.dumps(cfg, indent=2), encoding="utf-8")
 
-    # Stream the training output to the run dir so we can parse loss after
+    # Stream the training output to the run dir so we can parse loss after.
+    # Force UTF-8 on the child so Windows cp1252 doesn't mangle em-dashes in
+    # epoch summaries; read back tolerantly in case prior runs didn't.
     log_path = run_dir / "train.log"
     print(f"Running: {' '.join(cmd)}", flush=True)
+    env = os.environ.copy()
+    env["PYTHONIOENCODING"] = "utf-8"
     with log_path.open("w", encoding="utf-8") as logf:
-        proc = subprocess.run(cmd, stdout=logf, stderr=subprocess.STDOUT, text=True)
+        proc = subprocess.run(
+            cmd,
+            stdout=logf,
+            stderr=subprocess.STDOUT,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            env=env,
+        )
 
-    log_text = log_path.read_text(encoding="utf-8")
+    log_text = log_path.read_text(encoding="utf-8", errors="replace")
     metrics = parse_train_log(log_text)
 
     manifest = {

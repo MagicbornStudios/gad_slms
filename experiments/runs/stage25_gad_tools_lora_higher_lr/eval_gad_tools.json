@@ -1,0 +1,436 @@
+{
+  "checkpoint": "experiments\\runs\\stage25_gad_tools_lora_higher_lr\\adapter",
+  "eval": "promptfoo-gad-tools.yaml",
+  "device": "cuda",
+  "temperature": 0.0,
+  "max_new_tokens": 50,
+  "evaluated_at": "2026-05-05T12:17:54",
+  "elapsed_sec": 75.6,
+  "per_test_sec": [
+    3.957,
+    5.387,
+    2.095,
+    4.716,
+    1.957,
+    1.838,
+    1.762,
+    2.754,
+    0.634,
+    2.996,
+    1.029,
+    9.223,
+    3.943,
+    1.75,
+    1.58,
+    5.286,
+    1.413,
+    3.084,
+    5.278,
+    0.835,
+    0.906,
+    1.171,
+    1.154,
+    0.724,
+    2.212,
+    1.088,
+    2.447,
+    1.727,
+    1.747,
+    0.932
+  ],
+  "passed": 12,
+  "total": 30,
+  "pct": 40.0,
+  "results": [
+    {
+      "description": "note add basic",
+      "instruction": "Take a note that the build is broken on Windows.",
+      "output": "gad build --broken-build",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad note'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 3.957
+    },
+    {
+      "description": "note add (synonym: jot down)",
+      "instruction": "Jot down that we should investigate the OOM in stage 3.",
+      "output": "gad info --gad-project-name --gad-project-version 3",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad note'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 5.387
+    },
+    {
+      "description": "note list",
+      "instruction": "Show me the open planning notes.",
+      "output": "gad open planning notes",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad note'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 2.095
+    },
+    {
+      "description": "task add",
+      "instruction": "Add a new task under phase 03 to wire up the OpenCode teacher.",
+      "output": "gad add task phase 03 to wire up the OpenCode teacher",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad task'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 4.716
+    },
+    {
+      "description": "task stamp done",
+      "instruction": "Mark task 02-02 as done.",
+      "output": "gad task-02-02",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'stamp'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.957
+    },
+    {
+      "description": "task list",
+      "instruction": "What tasks are open right now?",
+      "output": "gad tasks --tasks=open",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'gad task'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 1.838
+    },
+    {
+      "description": "state log",
+      "instruction": "Log a state delta saying we just finished Stage 3 DPO.",
+      "output": "gad state delta --state-delta",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'state log'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.762
+    },
+    {
+      "description": "snapshot",
+      "instruction": "Hydrate the planning context for slm-learning before I start.",
+      "output": "gad slm-learning --context-id slm-learning",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'snapshot'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 2.754
+    },
+    {
+      "description": "next action",
+      "instruction": "What's the next action I should pick up?",
+      "output": "gad next",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "contains-any matched 'gad next'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 0.634
+    },
+    {
+      "description": "phase add",
+      "instruction": "Append a phase 04 about TUI polish to the roadmap.",
+      "output": "gad phase 04 --add --name \"TUI Polishing\"",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'phase'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 2.996
+    },
+    {
+      "description": "phase close",
+      "instruction": "Close out phase 02 since the training pipeline is done.",
+      "output": "gad phase02",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "contains-any matched 'phase'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 1.029
+    },
+    {
+      "description": "decisions add",
+      "instruction": "Record a decision: from now on we use fp16 + GradScaler on CUDA.",
+      "output": "gad decision --from-nowon --grad-scaler --from-nowon --grad-scaler --from-nowon --grad-scaler --from-nowon --grad-scaler --from-nowon --grad",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'decision'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 9.223
+    },
+    {
+      "description": "errors add",
+      "instruction": "Track an error: stage 3 DPO OOM'd loading two model copies.",
+      "output": "gad stage --error --output \"DPO OOM'd loading two model copies\"",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'error'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 3.943
+    },
+    {
+      "description": "blockers list",
+      "instruction": "Show me what's blocking phase 03.",
+      "output": "gad phase 03",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'blocker'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.75
+    },
+    {
+      "description": "handoffs list",
+      "instruction": "Are there any open handoffs I can pick up?",
+      "output": "gad handoffs --list",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'handoff'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 1.58
+    },
+    {
+      "description": "handoffs claim",
+      "instruction": "Claim handoff h-2026-05-04-slm_learning-02.",
+      "output": "gad handoff h-2026-05-04-slm_learning-02",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'claim'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 5.286
+    },
+    {
+      "description": "evolution status",
+      "instruction": "Show me the current evolution pressure for this project.",
+      "output": "gad show project-id",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'evolution'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.413
+    },
+    {
+      "description": "evolution scan",
+      "instruction": "Run an evolution scan on slm-learning and write the json.",
+      "output": "gad evolution scan --slm-learning --output-json",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'scan'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 3.084
+    },
+    {
+      "description": "evolution promote",
+      "instruction": "Promote the prefer-clean-baseline-over-custom-dev-runtime proto-skill.",
+      "output": "gad promote --force --name \"prefer-clean-baseline-over-custom-dev-runtime\"",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'promote'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 5.278
+    },
+    {
+      "description": "projects list",
+      "instruction": "List every gad project I have registered.",
+      "output": "gad list",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['gad ls', 'projects list']"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 0.835
+    },
+    {
+      "description": "recipes list",
+      "instruction": "What recipes do we have available?",
+      "output": "gad recipes",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'recipe'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 0.906
+    },
+    {
+      "description": "verify phase",
+      "instruction": "Verify that phase 02 actually achieved its goal.",
+      "output": "gad phase02",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'verify'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.171
+    },
+    {
+      "description": "health check",
+      "instruction": "Diagnose the health of my planning directory.",
+      "output": "gad plan-health",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'health'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 1.154
+    },
+    {
+      "description": "tool call: which command for status delta",
+      "instruction": "Which command do I run when I want to record progress mid-task?",
+      "output": "gad progress",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'state log'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 0.724
+    },
+    {
+      "description": "tool call: which command for new feature",
+      "instruction": "Which command do I use to start tracking a new feature?",
+      "output": "gad track --name \"new feature\"",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['phase', 'task']"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 2.212
+    },
+    {
+      "description": "ambiguous note vs task",
+      "instruction": "I want to remember to fix the broken hook tomorrow.",
+      "output": "gad hook fix",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['gad note', 'gad task']"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.088
+    },
+    {
+      "description": "explicit JSON tool call format",
+      "instruction": "Output a JSON tool call that adds a note saying 'check the gad statusline pressure cache'.",
+      "output": "gad statusline_pressure_cache --verbose",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'note'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 2.447
+    },
+    {
+      "description": "where does state live",
+      "instruction": "Where is the project state file located?",
+      "output": "gad state --project-state",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'state.xml'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.727
+    },
+    {
+      "description": "where do tasks live",
+      "instruction": "Where do task json files live?",
+      "output": "gad task-json-files",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains '.planning'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.747
+    },
+    {
+      "description": "where does roadmap live",
+      "instruction": "Where is the roadmap file?",
+      "output": "gad roadmap",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'roadmap'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 0.932
+    }
+  ]
+}

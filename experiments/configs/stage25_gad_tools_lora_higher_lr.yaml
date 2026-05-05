@@ -44,7 +44,7 @@ training:
   logging_steps: 5
 
 eval:
-  run_after_train: false
+  run_after_train: true
   benchmarks:
     - gad_tools
   temperature: 0.0

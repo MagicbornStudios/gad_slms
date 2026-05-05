@@ -171,4 +171,25 @@
     <impact>Reasoning-step datasets (OpenMathReasoning, OpenCodeReasoning, synthetic CoT traces) outweigh raw-text corpora in the data mix. Eval suites need reasoning-quality scoring (intermediate-step correctness) not just final-answer match. Architecture leans toward more attention heads, deeper FFN, longer effective context (RoPE scaling).</impact>
   </decision>
 
+  <decision id="slm-learning-019">
+    <title>Distillation runs through Claude Code subagent dispatch, NOT Anthropic API key</title>
+    <date>2026-05-05</date>
+    <summary>Per user preference 2026-05-05: SLM distillation pairs are produced by spawning a Claude subagent inside Claude Code (Agent tool with subagent_type=general-purpose or claude-haiku-4-5 explicit), not by calling the Anthropic API directly with ANTHROPIC_API_KEY. The orchestrating Claude session collects responses and writes them into data/distilled_pairs.jsonl. scripts/distill_gad_pairs.py kept as documentation of the contract but the live path is subagent dispatch.</summary>
+    <impact>No API key plumbing in this project. Distillation cadence is bound to interactive Claude Code sessions (or scheduled /loop runs). Effectively free for the user; trivially adjustable model selection per call.</impact>
+  </decision>
+
+  <decision id="slm-learning-020">
+    <title>Multi-GPU strategy: local + remote split via per-config compute_target</title>
+    <date>2026-05-05</date>
+    <summary>Multi-GPU sharding is split between local (GTX 1660 Ti #0, optionally eGPU #1 once detected) and remote (Colab T4/A100, Kaggle P100/T4x2, HF Spaces). Each FinetuneConfig grows a 'compute_target' field: local-cuda-0 / local-cuda-1 / colab-t4 / colab-a100 / kaggle-t4x2 / hf-spaces. Sweep runner dispatches each config to its target. Local jobs run via subprocess + CUDA_VISIBLE_DEVICES; remote jobs render to a notebook + dataset URI, push, retrieve checkpoint, log into INDEX.md as if local. Manifest schema stays portable across targets.</summary>
+    <impact>FinetuneConfig + sweep_finetune.py both extended. New scripts/remote/{colab,kaggle,hf}_launcher.py. Network IO + HF Hub auth become real concerns.</impact>
+  </decision>
+
+  <decision id="slm-learning-021">
+    <title>North-star training target: model can scaffold a 'gad site'-quality landing page with minimal prompting</title>
+    <date>2026-05-05</date>
+    <summary>Concrete bar for 'this model can actually code': asked to create a landing site for any GAD project, the SLM should produce something visually + structurally comparable to the gad site that ships with every GAD project (Next.js scaffold with project home / requirements / phases / decisions / docs nav). Doesn't need to be byte-identical — needs to be the same class of artifact with little hand-holding. This is the explicit benchmark for whether the reasoning-over-knowledge bet (slm-learning-018) is paying off.</summary>
+    <impact>Training data tracks now include: (1) gad site source as code distillation pairs, (2) Next.js + Tailwind component patterns from FineWeb / The Stack, (3) synthetic 'scaffold-this-page' tasks via Claude subagent. New eval: structural diff between model output and a reference gad-site scaffold (file presence, route shape, component nesting). When a checkpoint passes 70% structural-diff coverage, the bet is validated.</impact>
+  </decision>
+
 </decisions>

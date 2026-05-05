@@ -13,6 +13,14 @@ import yaml
 
 AdapterKind = Literal["lora", "qlora", "full"]
 DataSource = Literal["jsonl_pairs", "hf_streaming"]
+ComputeTarget = Literal[
+    "local-cuda-0",  # primary local GPU (default)
+    "local-cuda-1",  # secondary local GPU (eGPU once detected)
+    "colab-t4",      # remote: Colab free-tier T4
+    "colab-a100",    # remote: Colab Pro A100
+    "kaggle-t4x2",   # remote: Kaggle dual-T4
+    "hf-spaces",     # remote: HF Spaces compute
+]
 
 
 @dataclass
@@ -70,6 +78,7 @@ class FinetuneConfig:
     name: str
     base_model: str = "HuggingFaceTB/SmolLM2-135M-Instruct"
     adapter: AdapterKind = "lora"
+    compute_target: ComputeTarget = "local-cuda-0"
     output_root: str = "experiments/runs"
     notes: str = ""
 

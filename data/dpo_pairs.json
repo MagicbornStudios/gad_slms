@@ -1,0 +1,402 @@
+[
+  {
+    "prompt": "What does route.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/repostudio/apps/repo-studio/app/api/repo/terminal/session/list/route.ts: 19 lines, 0 functions.\n</think>\n`route.ts` is a 19-line module with 0 function(s). It depends on: 'next/server';, '@/lib/terminal-session';. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does TurnInterruptResponse.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/codex-rs/app-server-protocol/schema/typescript/v2/TurnInterruptResponse.ts: 6 lines, 0 functions.\n</think>\n`TurnInterruptResponse.ts` is a 6-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does McpElicitationSingleSelectEnumSchema.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/codex-rs/app-server-protocol/schema/typescript/v2/McpElicitationSingleSelectEnumSchema.ts: 8 lines, 0 functions.\n</think>\n`McpElicitationSingleSelectEnumSchema.ts` is a 8-line module with 0 function(s). It depends on: \"./McpElicitationTitledSingleSelectEnumSchema\";, \"./McpElicitationUntitledSingleSelectEnumSchema\";. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does usage.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/free-code/src/services/api/usage.ts: 64 lines, 0 functions.\n</think>\n`usage.ts` is a 64-line module with 0 function(s). It depends on: 'axios', '../../constants/oauth.js', {. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does RealtimeConversationVersion.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/codex-rs/app-server-protocol/schema/typescript/RealtimeConversationVersion.ts: 6 lines, 0 functions.\n</think>\n`RealtimeConversationVersion.ts` is a 6-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does debug-codex.sh do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/scripts/debug-codex.sh: 10 lines, 0 functions.\n</think>\n`debug-codex.sh` is a 10-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-yoke.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/.fingerprint/yoke-28dae3408010ed7a/lib-yoke.json: 1 lines, 0 functions.\n</think>\n`lib-yoke.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-getrandom.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/debug/.fingerprint/getrandom-efe2f3bf4fabc413/lib-getrandom.json: 1 lines, 0 functions.\n</think>\n`lib-getrandom.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does build-script-build-script-build.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/debug/.fingerprint/gad-desktop-c0b0598ac9e4c6bd/build-script-build-script-build.json: 1 lines, 0 functions.\n</think>\n`build-script-build-script-build.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does launch.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing sites/grime-time/.vscode/launch.json: 25 lines, 0 functions.\n</think>\n`launch.json` is a 25-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does agent.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/opencode/packages/app/src/utils/agent.ts: 45 lines, 1 functions.\n</think>\n`agent.ts` is a 45-line module with 1 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does useAfterFirstRender.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/free-code/src/hooks/useAfterFirstRender.ts: 18 lines, 0 functions.\n</think>\n`useAfterFirstRender.ts` is a 18-line module with 0 function(s). It depends on: 'react', '../utils/envUtils.js'. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-parking_lot.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/codex-rs/target/debug/.fingerprint/parking_lot-e0a9921513cd8169/lib-parking_lot.json: 1 lines, 0 functions.\n</think>\n`lib-parking_lot.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does find-polluter.sh do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/superpowers/skills/systematic-debugging/find-polluter.sh: 64 lines, 0 functions.\n</think>\n`find-polluter.sh` is a 64-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does README.md do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/get-shit-done/docs/ja-JP/README.md: 28 lines, 0 functions.\n</think>\n`README.md` is a 28-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-phf_generator.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/release/.fingerprint/phf_generator-a03980503ea8fcb3/lib-phf_generator.json: 1 lines, 0 functions.\n</think>\n`lib-phf_generator.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does types.tsx do and how is it structured?",
+    "chosen": "<think>\nAnalyzing temp/vercel-examples/apps/vibe-coding-platform/components/chat/types.tsx: 7 lines, 0 functions.\n</think>\n`types.tsx` is a 7-line module with 0 function(s). It depends on: '@/ai/messages/metadata', '@/ai/messages/data-parts', '@/ai/tools'. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-starlark_syntax.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/codex-rs/target/debug/.fingerprint/starlark_syntax-0ac890f116079f23/lib-starlark_syntax.json: 1 lines, 0 functions.\n</think>\n`lib-starlark_syntax.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does build-script-build-script-build.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/debug/.fingerprint/typeid-e62cc3214df194c6/build-script-build-script-build.json: 1 lines, 0 functions.\n</think>\n`build-script-build-script-build.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-tokio.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/debug/.fingerprint/tokio-b36aba391e140eef/lib-tokio.json: 1 lines, 0 functions.\n</think>\n`lib-tokio.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-syntect.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/codex-rs/target/debug/.fingerprint/syntect-7d5031dd5a0501f3/lib-syntect.json: 1 lines, 0 functions.\n</think>\n`lib-syntect.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does h-2026-05-03T02-02-44-global-92.md do and how is it structured?",
+    "chosen": "<think>\nAnalyzing .planning/handoffs/closed/h-2026-05-03T02-02-44-global-92.md: 31 lines, 0 functions.\n</think>\n`h-2026-05-03T02-02-44-global-92.md` is a 31-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-displaydoc.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/debug/.fingerprint/displaydoc-4c9a57ec7c715d9e/lib-displaydoc.json: 1 lines, 0 functions.\n</think>\n`lib-displaydoc.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does plan-phase.md do and how is it structured?",
+    "chosen": "<think>\nAnalyzing .cursor/commands/gad/plan-phase.md: 48 lines, 0 functions.\n</think>\n`plan-phase.md` is a 48-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does SKILL.md do and how is it structured?",
+    "chosen": "<think>\nAnalyzing .cursor/skills/gad-proto-skill-battery/SKILL.md: 35 lines, 0 functions.\n</think>\n`SKILL.md` is a 35-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does zh.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/opencode/packages/desktop-electron/src/renderer/i18n/zh.ts: 27 lines, 0 functions.\n</think>\n`zh.ts` is a 27-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does discountPolicy.int.spec.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing .tmp/grime_time_site/tests/int/lib/billing/discountPolicy.int.spec.ts: 46 lines, 0 functions.\n</think>\n`discountPolicy.int.spec.ts` is a 46-line module with 0 function(s). It depends on: 'vitest', '@/lib/billing/discountPolicy'. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does PLAN.mdx do and how is it structured?",
+    "chosen": "<think>\nAnalyzing projects/magicborn/narrative/planning/books/plans/books-reader-05-04/PLAN.mdx: 21 lines, 0 functions.\n</think>\n`PLAN.mdx` is a 21-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does run-build-script-build-script-build.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/debug/.fingerprint/tauri-runtime-wry-7e9a1588803cdf66/run-build-script-build-script-build.json: 1 lines, 0 functions.\n</think>\n`run-build-script-build-script-build.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does run-build-script-build-script-build.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/codex-rs/target/debug/.fingerprint/bzip2-sys-a4ef9a9752668302/run-build-script-build-script-build.json: 1 lines, 0 functions.\n</think>\n`run-build-script-build-script-build.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does platform.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/opencode/packages/storybook/.storybook/mocks/app/context/platform.ts: 17 lines, 0 functions.\n</think>\n`platform.ts` is a 17-line module with 0 function(s). It depends on: \"../../../../../app/src/context/platform\". It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-phf.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/release/.fingerprint/phf-ad0702f8e4c1b0ed/lib-phf.json: 1 lines, 0 functions.\n</think>\n`lib-phf.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does _probe.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing packages/gad-tui/src/runtimes/_probe.ts: 41 lines, 0 functions.\n</think>\n`_probe.ts` is a 41-line module with 0 function(s). It depends on: './_spawn.js';, './types.js';. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does SlashPaletteOverflow.tsx do and how is it structured?",
+    "chosen": "<think>\nAnalyzing packages/gad-tui/src/components/slash-palette/SlashPaletteOverflow.tsx: 23 lines, 0 functions.\n</think>\n`SlashPaletteOverflow.tsx` is a 23-line module with 0 function(s). It depends on: 'react';, 'ink';. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does cider-rite-ballad-fragment.mdx do and how is it structured?",
+    "chosen": "<think>\nAnalyzing .tmp/planning-sink-backup-20260404/magicborn/in-world/hallinghorn/cider-rite-ballad-fragment.mdx: 31 lines, 0 functions.\n</think>\n`cider-rite-ballad-fragment.mdx` is a 31-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-slab.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/debug/.fingerprint/slab-ba339569ea61e710/lib-slab.json: 1 lines, 0 functions.\n</think>\n`lib-slab.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-futures_channel.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/debug/.fingerprint/futures-channel-1573a6074876a799/lib-futures_channel.json: 1 lines, 0 functions.\n</think>\n`lib-futures_channel.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does PLAN.mdx do and how is it structured?",
+    "chosen": "<think>\nAnalyzing .tmp/planning-sink-backup-20260404/global/planning/plans/global-auth-02/PLAN.mdx: 22 lines, 0 functions.\n</think>\n`PLAN.mdx` is a 22-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-find_msvc_tools.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/codex-rs/target/debug/.fingerprint/find-msvc-tools-7cc6e873d7fb096c/lib-find_msvc_tools.json: 1 lines, 0 functions.\n</think>\n`lib-find_msvc_tools.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does ThreadMetadataUpdateParams.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/codex-rs/app-server-protocol/schema/typescript/v2/ThreadMetadataUpdateParams.ts: 13 lines, 0 functions.\n</think>\n`ThreadMetadataUpdateParams.ts` is a 13-line module with 0 function(s). It depends on: \"./ThreadMetadataGitInfoUpdateParams\";. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does run-build-script-build-script-build.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/debug/.fingerprint/tauri-plugin-fs-c3a9313d8143d5a0/run-build-script-build-script-build.json: 1 lines, 0 functions.\n</think>\n`run-build-script-build-script-build.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-http_body.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/debug/.fingerprint/http-body-90f943e3d146b7b7/lib-http_body.json: 1 lines, 0 functions.\n</think>\n`lib-http_body.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does COMMAND.md do and how is it structured?",
+    "chosen": "<think>\nAnalyzing .codex/skills/gad-update/COMMAND.md: 38 lines, 0 functions.\n</think>\n`COMMAND.md` is a 38-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does register-fragment-house-of-small-mercies.mdx do and how is it structured?",
+    "chosen": "<think>\nAnalyzing projects/magicborn/narrative/in-world/mordreds-tale/register-fragment-house-of-small-mercies.mdx: 38 lines, 0 functions.\n</think>\n`register-fragment-house-of-small-mercies.mdx` is a 38-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does 05-23.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing .planning/tasks/05-23.json: 23 lines, 0 functions.\n</think>\n`05-23.json` is a 23-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does bin-test_stdio_server.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/codex-rs/target/debug/.fingerprint/codex-rmcp-client-64289d07496df039/bin-test_stdio_server.json: 1 lines, 0 functions.\n</think>\n`bin-test_stdio_server.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does COMMAND.md do and how is it structured?",
+    "chosen": "<think>\nAnalyzing .claude/skills/gad-manager/COMMAND.md: 41 lines, 0 functions.\n</think>\n`COMMAND.md` is a 41-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does 014-page-45-proving-it-real.md do and how is it structured?",
+    "chosen": "<think>\nAnalyzing projects/magicborn/narrative/books/mordreds-tale/full/chapters/02-chapter-2-jack/014-page-45-proving-it-real.md: 21 lines, 0 functions.\n</think>\n`014-page-45-proving-it-real.md` is a 21-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does s-mo1a0nfo-525y.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing .planning/sessions/s-mo1a0nfo-525y.json: 33 lines, 0 functions.\n</think>\n`s-mo1a0nfo-525y.json` is a 33-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does getCurrentCustomerAccount.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing .tmp/grime_time_site/src/lib/customers/getCurrentCustomerAccount.ts: 27 lines, 0 functions.\n</think>\n`getCurrentCustomerAccount.ts` is a 27-line module with 0 function(s). It depends on: 'payload', '@/payload-types'. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does completions.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/opencode/packages/console/app/src/routes/zen/v1/chat/completions.ts: 13 lines, 0 functions.\n</think>\n`completions.ts` is a 13-line module with 0 function(s). It depends on: \"@solidjs/start/server\", \"~/routes/zen/util/handler\". It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does DynamicToolCallStatus.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/codex-rs/app-server-protocol/schema/typescript/v2/DynamicToolCallStatus.ts: 6 lines, 0 functions.\n</think>\n`DynamicToolCallStatus.ts` is a 6-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does site-apps-worker.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/portfolio/scripts/site-apps-worker.ts: 21 lines, 0 functions.\n</think>\n`site-apps-worker.ts` is a 21-line module with 0 function(s). It depends on: '@/lib/site-apps-load';. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does sanitize-copilot-create-data.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/portfolio/lib/copilot/sanitize-copilot-create-data.ts: 40 lines, 0 functions.\n</think>\n`sanitize-copilot-create-data.ts` is a 40-line module with 0 function(s). It depends on: '@/lib/copilot/form-descriptor';. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does build-script-build-script-build.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/debug/.fingerprint/windows_x86_64_msvc-d0e68f3f631cdb9a/build-script-build-script-build.json: 1 lines, 0 functions.\n</think>\n`build-script-build-script-build.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does FsReadFileParams.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/codex-rs/app-server-protocol/schema/typescript/v2/FsReadFileParams.ts: 14 lines, 0 functions.\n</think>\n`FsReadFileParams.ts` is a 14-line module with 0 function(s). It depends on: \"../AbsolutePathBuf\";. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does header.tsx do and how is it structured?",
+    "chosen": "<think>\nAnalyzing temp/vercel-examples/apps/vibe-coding-platform/app/header.tsx: 24 lines, 0 functions.\n</think>\n`header.tsx` is a 24-line module with 0 function(s). It depends on: '@/components/modals/welcome', '@/components/icons/vercel-dashed', '@/lib/utils'. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does 010-page-81-the-patron-s-road.md do and how is it structured?",
+    "chosen": "<think>\nAnalyzing projects/magicborn/narrative/books/mordreds-tale/full/chapters/03-chapter-3-morgana-imprisoned/010-page-81-the-patron-s-road.md: 40 lines, 0 functions.\n</think>\n`010-page-81-the-patron-s-road.md` is a 40-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-radix_trie.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/codex-rs/target/debug/.fingerprint/radix_trie-01a273f7fd1325f1/lib-radix_trie.json: 1 lines, 0 functions.\n</think>\n`lib-radix_trie.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does index.html do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/portfolio/public/evals/escape-the-dungeon/bare/v1/index.html: 17 lines, 0 functions.\n</think>\n`index.html` is a 17-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does ReasoningSummaryPartAddedNotification.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/codex-rs/app-server-protocol/schema/json/v2/ReasoningSummaryPartAddedNotification.json: 26 lines, 0 functions.\n</think>\n`ReasoningSummaryPartAddedNotification.json` is a 26-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-winnow.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/debug/.fingerprint/winnow-66dca4a93e873aeb/lib-winnow.json: 1 lines, 0 functions.\n</think>\n`lib-winnow.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does 2026-04-17-01-02.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing projects/llm-from-scratch/.planning/subagent-runs/llm-from-scratch/2026-04-17-01-02.json: 14 lines, 0 functions.\n</think>\n`2026-04-17-01-02.json` is a 14-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does review-backlog.md do and how is it structured?",
+    "chosen": "<think>\nAnalyzing .codex/commands/gad/review-backlog.md: 62 lines, 0 functions.\n</think>\n`review-backlog.md` is a 62-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does CodePreviewBody.tsx do and how is it structured?",
+    "chosen": "<think>\nAnalyzing packages/project-editor-surface/src/panes/code-preview/CodePreviewBody.tsx: 56 lines, 0 functions.\n</think>\n`CodePreviewBody.tsx` is a 56-line module with 0 function(s). It depends on: \"@gad/editor-core\";, \"./CodePreviewLoadingState.js\";, \"./CodePreviewErrorState.js\";. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does schema.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/opencode/packages/opencode/src/project/schema.ts: 16 lines, 0 functions.\n</think>\n`schema.ts` is a 16-line module with 0 function(s). It depends on: \"effect\", \"zod\", \"@/util/schema\". It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does PluginSummary.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing tmp/openai-codex/codex-rs/app-server-protocol/schema/typescript/v2/PluginSummary.ts: 10 lines, 0 functions.\n</think>\n`PluginSummary.ts` is a 10-line module with 0 function(s). It depends on: \"./PluginAuthPolicy\";, \"./PluginInstallPolicy\";, \"./PluginInterface\";. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does page.tsx do and how is it structured?",
+    "chosen": "<think>\nAnalyzing .tmp/grime_time_site/src/app/(portal)/ops/crm/page.tsx: 6 lines, 0 functions.\n</think>\n`page.tsx` is a 6-line module with 0 function(s). It depends on: 'next/navigation'. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does textarea.tsx do and how is it structured?",
+    "chosen": "<think>\nAnalyzing packages/ui/src/ui/textarea.tsx: 21 lines, 0 functions.\n</think>\n`textarea.tsx` is a 21-line module with 0 function(s). It depends on: \"react\";, \"../lib/utils.js\";. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does README.mdx do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/portfolio/content/docs/global/archived-hand-authored-planning/README.mdx: 14 lines, 0 functions.\n</think>\n`README.mdx` is a 14-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-socket2.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/.fingerprint/socket2-63eb30134a669452/lib-socket2.json: 1 lines, 0 functions.\n</think>\n`lib-socket2.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does ui.ts do and how is it structured?",
+    "chosen": "<think>\nAnalyzing sites/grime-time/src/utilities/ui.ts: 7 lines, 0 functions.\n</think>\n`ui.ts` is a 7-line module with 0 function(s). It depends on: \"clsx\", \"tailwind-merge\". It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does BYOKStatusTile.tsx do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/platform/app/(operator)/my-projects/BYOKStatusTile.tsx: 38 lines, 0 functions.\n</think>\n`BYOKStatusTile.tsx` is a 38-line module with 0 function(s). It depends on: \"next/link\";. It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-nix.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/debug/.fingerprint/nix-b31ffad6d9fc2694/lib-nix.json: 1 lines, 0 functions.\n</think>\n`lib-nix.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-litemap.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/debug/.fingerprint/litemap-308d035a39e33e62/lib-litemap.json: 1 lines, 0 functions.\n</think>\n`lib-litemap.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-erased_serde.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/.fingerprint/erased-serde-8ac5e42fa6874419/lib-erased_serde.json: 1 lines, 0 functions.\n</think>\n`lib-erased_serde.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does resume-work.md do and how is it structured?",
+    "chosen": "<think>\nAnalyzing .cursor/commands/gad/resume-work.md: 41 lines, 0 functions.\n</think>\n`resume-work.md` is a 41-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does session-report.md do and how is it structured?",
+    "chosen": "<think>\nAnalyzing .cursor/commands/gad/session-report.md: 20 lines, 0 functions.\n</think>\n`session-report.md` is a 20-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does lib-json_patch.json do and how is it structured?",
+    "chosen": "<think>\nAnalyzing apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/debug/.fingerprint/json-patch-0dcb72039dd6931c/lib-json_patch.json: 1 lines, 0 functions.\n</think>\n`lib-json_patch.json` is a 1-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  },
+  {
+    "prompt": "What does 006-page-97-council-pressure.md do and how is it structured?",
+    "chosen": "<think>\nAnalyzing projects/magicborn/narrative/books/mordreds-tale/full/chapters/06-chapter-6-the-patron-s-cell/006-page-97-council-pressure.md: 48 lines, 0 functions.\n</think>\n`006-page-97-council-pressure.md` is a 48-line module with 0 function(s). It follows GAD ecosystem conventions.",
+    "rejected": "This file does stuff related to the project. It has some code in it that does things. I think it might be important but I'm not sure. You should probably look at it yourself to understand what it does."
+  }
+]

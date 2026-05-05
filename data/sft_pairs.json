@@ -1,0 +1,1002 @@
+[
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: tmp/free-code/src/commands/doctor/doctor.tsx\n```\nimport React from 'react';\nimport { Doctor } from '../../screens/Doctor.js';\nimport type { LocalJSXCommandCall } from '../../types/command.js';\nexport const call: LocalJSXCommandCall = (onDone, _context, _args) => {\n  return Promise.resolve(<Doctor onDone={onDone} />);\n};\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJSZWFjdCIsIkRvY3RvciIsIkxvY2FsSlNYQ29tbWFuZENhbGwiLCJjYWxsIiwib25Eb25lIiwiX2NvbnRleHQiLCJfYXJncyIsIlByb21pc2UiLCJyZXNvbHZlIl0sInNvdXJjZXMiOlsiZG9jdG9yLnRzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QgZnJvbSAncmVhY3QnXG5pbXBvcnQgeyBEb2N0b3IgfSBmcm9tICcuLi8uLi9zY3JlZW5zL0RvY3Rvci5qcydcbmltcG9ydCB0eXBlIHsgTG9jYWxKU1hDb21tYW5kQ2FsbCB9IGZyb20gJy4uLy4uL3R5cGVzL2NvbW1hbmQuanMnXG5cbmV4cG9ydCBjb25zdCBjYWxsOiBMb2NhbEpTWENvbW1hbmRDYWxsID0\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on doctor.tsx. It contains code that handles doctor functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: packages/gad-tui/src/runtimes/_probe.ts\n```\n/**\n * Shared `probe()` helper for runtime adapters.\n *\n * Every adapter's `probe()` runs `{bin} --version` and maps exit/error into\n * `RuntimeAvailability`. The only per-adapter variation is the optional\n * hint appended to the error `reason` (e.g. cursor's \"set GAD_CURSOR_BIN\u2026\").\n * Adapters call `probeBinaryVersion(bin, { reasonHint })` instead of\n * rewriting the promise dance each time.\n */\nimport { spawn } from './_spawn.js';\nimport type { RuntimeAvailability } from './types.js';\n\nexport interface ProbeOptions {\n  /** Extra suffix appended to error-reason text. Stitched as ` \u2014 ${hint}`. */\n  reasonHint?: string;\n}\n\nexport function probeBinaryVersion(\n  bin: string,\n  opts: ProbeOptions = {},\n): Promise<RuntimeAvailability> {\n  return new Promise((resolve) => {\n    const child = spaw\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements _probe.ts. It contains code that handles runtimes functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What are the key functions in this file?\n\nFile: apps/desktop/src-tauri/target/debug/.fingerprint/tower-service-8f378c166b08ef1f/lib-tower_service.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[]\",\"declared_features\":\"[]\",\"target\":4262671303997282168,\"profile\":2241668132362809309,\"path\":7315118239952535672,\"deps\":[],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\tower-service-8f378c166b08ef1f\\\\dep-lib-tower_service\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The key functions are lib-tower_service.json. It contains code that handles tower-service-8f378c166b08ef1f functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: .planning/tasks/65-07.json\n```\n{\n  \"id\": \"65-07\",\n  \"phase\": \"65\",\n  \"status\": \"done\",\n  \"goal\": \"Anti-pattern logged + corrected: orchestrator dispatched Codex with tempfile prompts in %LOCALAPPDATA%/Temp/ instead of via 'gad handoffs create'. Rule encoded in framework ERRORS-AND-ATTEMPTS commit 1a4d3486 + retroactive handoff records created at .planning/handoffs/open/. Future dispatches MUST use handoffs queue.\",\n  \"type\": \"\",\n  \"keywords\": \"\",\n  \"depends\": [],\n  \"commands\": [],\n  \"files\": [],\n  \"agent_id\": \"claude-code-opus47\",\n  \"agent_role\": \"\",\n  \"runtime\": \"claude-code\",\n  \"model_profile\": \"\",\n  \"resolved_model\": \"\",\n  \"skill\": \"\",\n  \"claimed\": false,\n  \"claimed_at\": \"\",\n  \"lease_expires_at\": \"\",\n  \"resolution\": \"\",\n  \"created_at\": \"2026-04-30T19:03:52.216Z\",\n  \"updated_at\": \"2026-04-30T19:03:52.513Z\"\n}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements 65-07.json. It contains code that handles tasks functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: tmp/openai-codex/codex-rs/target/debug/.fingerprint/codex-skills-ea9e2475b674f3b1/build-script-build-script-build.json\n```\n{\"rustc\":6817557220965521185,\"features\":\"[]\",\"declared_features\":\"[]\",\"target\":2835126046236718539,\"profile\":14157737490092143832,\"path\":8057858065760881916,\"deps\":[],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\codex-skills-ea9e2475b674f3b1\\\\dep-build-script-build-script-build\",\"checksum\":false}}],\"rustflags\":[\"-C\",\"link-arg=/STACK:8388608\"],\"config\":2069994364910194474,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements build-script-build-script-build.json. It contains code that handles codex-skills-ea9e2475b674f3b1 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: tmp/free-code/src/commands/install-github-app/CheckGitHubStep.tsx\n```\nimport { c as _c } from \"react/compiler-runtime\";\nimport React from 'react';\nimport { Text } from '../../ink.js';\nexport function CheckGitHubStep() {\n  const $ = _c(1);\n  let t0;\n  if ($[0] === Symbol.for(\"react.memo_cache_sentinel\")) {\n    t0 = <Text>Checking GitHub CLI installation\u2026</Text>;\n    $[0] = t0;\n  } else {\n    t0 = $[0];\n  }\n  return t0;\n}\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJSZWFjdCIsIlRleHQiLCJDaGVja0dpdEh1YlN0ZXAiLCIkIiwiX2MiLCJ0MCIsIlN5bWJvbCIsImZvciJdLCJzb3VyY2VzIjpbIkNoZWNrR2l0SHViU3RlcC50c3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0IGZyb20gJ3JlYWN0J1xuaW1wb3J0IHsgVGV4dCB9IGZyb20gJy4uLy4uL2luay5qcydcblxuZXhwb3J0IGZ1bmN0aW9uIENoZWNrR2l0SHViU3RlcCgpIHtcbiAgcmV0dXJuIDxUZXh0PkNoZWNraW5nIEdpdEh1YiBDTEkgaW5zdGFsbGF0aW\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on CheckGitHubStep.tsx. It contains code that handles install-github-app functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: tmp/get-shit-done/get-shit-done/workflows/remove-workspace.md\n```\n<purpose>\nRemove a GSD workspace, cleaning up git worktrees and deleting the workspace directory.\n</purpose>\n\n<required_reading>\nRead all files referenced by the invoking prompt's execution_context before starting.\n</required_reading>\n\n<process>\n\n## 1. Setup\n\nExtract workspace name from $ARGUMENTS.\n\n```bash\nINIT=$(node \"$HOME/.claude/get-shit-done/bin/gsd-tools.cjs\" init remove-workspace \"$WORKSPACE_NAME\")\nif [[ \"$INIT\" == @file:* ]]; then INIT=$(cat \"${INIT#@file:}\"); fi\n```\n\nParse JSON for: `workspace_name`, `workspace_path`, `has_manifest`, `strategy`, `repos`, `repo_count`, `dirty_repos`, `has_dirty_repos`.\n\n**If no workspace name provided:**\n\nFirst run `/gsd-list-workspaces` to show available workspaces, then ask:\n\n\n**Text mode (`workflow.text_mode: true` in config or `--text` flag):*\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on remove-workspace.md. It contains code that handles workflows functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: packages/gad-tui/src/components/token-panel/turn-ring.ts\n```\n/**\n * Turn-usage ring buffer helper used by App.tsx to maintain the\n * sliding window of recent turns fed into TokenPanel.\n *\n * Extracted from ../TokenPanel.tsx on 2026-04-23.\n */\n\nimport type { TurnUsage } from './types.js';\n\nexport const TURN_RING_SIZE = 20;\n\n/**\n * Append `entry` to `ring` and trim from the front so the returned\n * array never exceeds TURN_RING_SIZE. Always returns a new array\n * (no mutation) so React state updates identify the change.\n */\nexport function pushTurnUsage(ring: TurnUsage[], entry: TurnUsage): TurnUsage[] {\n  const next = [...ring, entry];\n  return next.length > TURN_RING_SIZE\n    ? next.slice(next.length - TURN_RING_SIZE)\n    : next;\n}\n\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements turn-ring.ts. It contains code that handles token-panel functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: tmp/opencode/packages/console/app/src/routes/workspace/[id]/billing/monthly-limit-section.module.css\n```\n.root {\n  [data-slot=\"balance\"] {\n    display: flex;\n    flex-direction: column;\n    gap: var(--space-3);\n    padding: var(--space-4);\n    border: 1px solid var(--color-border);\n    border-radius: var(--border-radius-sm);\n    min-width: 15rem;\n    width: fit-content;\n\n    @media (max-width: 30rem) {\n      width: 100%;\n    }\n\n    [data-slot=\"amount\"] {\n      padding: var(--space-3-5) var(--space-4);\n      background-color: var(--color-bg-surface);\n      border-radius: var(--border-radius-sm);\n      display: flex;\n      align-items: baseline;\n      gap: var(--space-1);\n      justify-content: flex-end;\n\n      [data-slot=\"currency\"] {\n        position: relative;\n        bottom: 2px;\n        font-size: var(--font-size-lg);\n        color: var(--color-text-muted);\n        font-weight: 400;\n      \n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by monthly-limit-section.module.css. It contains code that handles billing functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: apps/desktop/src-tauri/target/debug/.fingerprint/winnow-66dca4a93e873aeb/lib-winnow.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[]\",\"declared_features\":\"[\\\"alloc\\\", \\\"ascii\\\", \\\"binary\\\", \\\"debug\\\", \\\"default\\\", \\\"parser\\\", \\\"simd\\\", \\\"std\\\", \\\"unstable-doc\\\", \\\"unstable-recover\\\"]\",\"target\":13376497836617006023,\"profile\":6992547966806364827,\"path\":12688208939412845956,\"deps\":[],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\winnow-66dca4a93e873aeb\\\\dep-lib-winnow\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to lib-winnow.json. It contains code that handles winnow-66dca4a93e873aeb functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/debug/.fingerprint/nix-b31ffad6d9fc2694/lib-nix.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"acct\\\", \\\"aio\\\", \\\"default\\\", \\\"dir\\\", \\\"env\\\", \\\"event\\\", \\\"feature\\\", \\\"fs\\\", \\\"hostname\\\", \\\"inotify\\\", \\\"ioctl\\\", \\\"kmod\\\", \\\"memoffset\\\", \\\"mman\\\", \\\"mount\\\", \\\"mqueue\\\", \\\"net\\\", \\\"personality\\\", \\\"pin-utils\\\", \\\"poll\\\", \\\"process\\\", \\\"pthread\\\", \\\"ptrace\\\", \\\"quota\\\", \\\"reboot\\\", \\\"resource\\\", \\\"sched\\\", \\\"signal\\\", \\\"socket\\\", \\\"term\\\", \\\"time\\\", \\\"ucontext\\\", \\\"uio\\\", \\\"user\\\", \\\"zerocopy\\\"]\",\"declared_features\":\"[\\\"acct\\\", \\\"aio\\\", \\\"default\\\", \\\"dir\\\", \\\"env\\\", \\\"event\\\", \\\"feature\\\", \\\"fs\\\", \\\"hostname\\\", \\\"inotify\\\", \\\"ioctl\\\", \\\"kmod\\\", \\\"memoffset\\\", \\\"mman\\\", \\\"mount\\\", \\\"mqueue\\\", \\\"net\\\", \\\"personality\\\", \\\"pin-utils\\\", \\\"poll\\\", \\\"process\\\", \\\"pthread\\\", \\\"ptrace\\\", \\\"quota\\\", \\\"reboot\\\", \\\"resource\\\", \\\"sched\\\", \\\"signal\\\", \\\"\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to lib-nix.json. It contains code that handles nix-b31ffad6d9fc2694 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: apps/portfolio/tests/unit/magicborn-complete-words.test.ts\n```\nimport { describe, expect, it } from 'vitest';\nimport { getCompleteLines } from '@/scripts/magicborn/complete-words';\n\ndescribe('getCompleteLines', () => {\n  it('returns seed keys for seed-keys', () => {\n    const lines = getCompleteLines('seed-keys');\n    expect(lines.length).toBeGreaterThan(0);\n    expect(lines.every((l) => typeof l === 'string' && l.length > 0)).toBe(true);\n  });\n\n  it('returns book slugs for book-slugs', () => {\n    const lines = getCompleteLines('book-slugs');\n    expect(lines.length).toBeGreaterThan(0);\n  });\n\n  it('returns empty array for unknown topic', () => {\n    expect(getCompleteLines('not-a-real-topic-xyz')).toEqual([]);\n  });\n\n  it('returns openai subcommands', () => {\n    expect(getCompleteLines('openai')).toEqual(\n      expect.arrayContaining(['status', 'mo\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on magicborn-complete-words.test.ts. It contains code that handles unit functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: tmp/free-code/src/services/compact/cachedMicrocompact.ts\n```\nimport {\n  getCachedMCConfig,\n  type CachedMCConfig,\n} from './cachedMCConfig.js'\n\nexport type CacheEditsBlock = {\n  type: 'cache_edits'\n  edits: { type: 'delete'; cache_reference: string }[]\n}\n\nexport type PinnedCacheEdits = {\n  userMessageIndex: number\n  block: CacheEditsBlock\n}\n\nexport type CachedMCState = {\n  pinnedEdits: PinnedCacheEdits[]\n  registeredTools: Set<string>\n  toolOrder: string[]\n  deletedRefs: Set<string>\n}\n\nexport function createCachedMCState(): CachedMCState {\n  return {\n    pinnedEdits: [],\n    registeredTools: new Set(),\n    toolOrder: [],\n    deletedRefs: new Set(),\n  }\n}\n\nexport function isCachedMicrocompactEnabled(): boolean {\n  return getCachedMCConfig().enabled\n}\n\nexport function isModelSupportedForCacheEditing(model: string): boolean {\n  return getCachedMCConfig\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to cachedMicrocompact.ts. It contains code that handles compact functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: tmp/opencode/packages/app/playwright.config.ts\n```\nimport { defineConfig, devices } from \"@playwright/test\"\n\nconst port = Number(process.env.PLAYWRIGHT_PORT ?? 3000)\nconst baseURL = process.env.PLAYWRIGHT_BASE_URL ?? `http://127.0.0.1:${port}`\nconst serverHost = process.env.PLAYWRIGHT_SERVER_HOST ?? \"127.0.0.1\"\nconst serverPort = process.env.PLAYWRIGHT_SERVER_PORT ?? \"4096\"\nconst command = `bun run dev -- --host 0.0.0.0 --port ${port}`\nconst reuse = !process.env.CI\nconst workers = Number(process.env.PLAYWRIGHT_WORKERS ?? (process.env.CI ? 5 : 0)) || undefined\nconst reporter = [[\"html\", { outputFolder: \"e2e/playwright-report\", open: \"never\" }], [\"line\"]] as const\n\nif (process.env.PLAYWRIGHT_JUNIT_OUTPUT) {\n  reporter.push([\"junit\", { outputFile: process.env.PLAYWRIGHT_JUNIT_OUTPUT }])\n}\n\nexport default defineConfig({\n  testDir: \"./e2e\",\n  o\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to playwright.config.ts. It contains code that handles app functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: tmp/opencode/packages/app/src/utils/terminal-writer.test.ts\n```\nimport { describe, expect, test } from \"bun:test\"\nimport { terminalWriter } from \"./terminal-writer\"\n\ndescribe(\"terminalWriter\", () => {\n  test(\"buffers and flushes once per schedule\", () => {\n    const calls: string[] = []\n    const scheduled: VoidFunction[] = []\n    const writer = terminalWriter(\n      (data, done) => {\n        calls.push(data)\n        done?.()\n      },\n      (flush) => scheduled.push(flush),\n    )\n\n    writer.push(\"a\")\n    writer.push(\"b\")\n    writer.push(\"c\")\n\n    expect(calls).toEqual([])\n    expect(scheduled).toHaveLength(1)\n\n    scheduled[0]?.()\n    expect(calls).toEqual([\"abc\"])\n  })\n\n  test(\"flush is a no-op when empty\", () => {\n    const calls: string[] = []\n    const writer = terminalWriter(\n      (data, done) => {\n        calls.push(data)\n        done?.()\n     \n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements terminal-writer.test.ts. It contains code that handles utils functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: apps/portfolio/components/site/SiteCopilotSources.tsx\n```\n'use client';\n\nimport type { RagSearchHit } from '@/lib/rag/types';\nimport { buildRagSourceHref } from '@/lib/rag/chat-context';\n\nexport interface SiteCopilotSourceBundle {\n  query: string;\n  hits: RagSearchHit[];\n}\n\ninterface SiteCopilotSourcesProps {\n  bundle?: SiteCopilotSourceBundle;\n  isLoading?: boolean;\n}\n\nexport function SiteCopilotSources({\n  bundle,\n  isLoading = false,\n}: SiteCopilotSourcesProps) {\n  if (isLoading) {\n    return (\n      <div className=\"mt-3 rounded-[1.4rem] border border-[#ddd3c5] bg-[#f6f1e9] px-4 py-3 text-xs text-[#73685f] dark:border-[#3b362f] dark:bg-[#23201c] dark:text-[#c2b8ac]\">\n        Looking up sources...\n      </div>\n    );\n  }\n\n  if (!bundle?.hits.length) {\n    return null;\n  }\n\n  return (\n    <details className=\"mt-3 overflow-hidden rounded-[1.4rem]\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to SiteCopilotSources.tsx. It contains code that handles site functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: apps/desktop/src-tauri/target/debug/.fingerprint/icu_normalizer_data-5d3763d921458033/build-script-build-script-build.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[]\",\"declared_features\":\"[]\",\"target\":5408242616063297496,\"profile\":13574669494803281578,\"path\":16776050480461443874,\"deps\":[],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\icu_normalizer_data-5d3763d921458033\\\\dep-build-script-build-script-build\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements build-script-build-script-build.json. It contains code that handles icu_normalizer_data-5d3763d921458033 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: packages/book-components/src/Blockquote.tsx\n```\nimport type { ReactNode } from \"react\";\n\nexport interface BlockquoteProps {\n  children: ReactNode;\n  cite?: string;\n  className?: string;\n}\n\nexport function Blockquote({ children, cite, className }: BlockquoteProps) {\n  const cn = className ?? \"book-blockquote\";\n  return (\n    <blockquote className={cn}>\n      <div className=\"book-blockquote-content\">{children}</div>\n      {cite ? <footer className=\"book-blockquote-cite\">\u2014 {cite}</footer> : null}\n    </blockquote>\n  );\n}\n\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by Blockquote.tsx. It contains code that handles src functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: tmp/openai-codex/codex-rs/target/debug/.fingerprint/serial2-571fd4f0a007f87f/lib-serial2.json\n```\n{\"rustc\":6817557220965521185,\"features\":\"[]\",\"declared_features\":\"[\\\"doc\\\", \\\"doc-cfg\\\", \\\"rs4xx\\\", \\\"serde\\\", \\\"unix\\\", \\\"windows\\\"]\",\"target\":9719513147680171796,\"profile\":15657897354478470176,\"path\":18407025059287636425,\"deps\":[[10020888071089587331,\"winapi\",false,15420566564673562373]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\serial2-571fd4f0a007f87f\\\\dep-lib-serial2\",\"checksum\":false}}],\"rustflags\":[\"-C\",\"link-arg=/STACK:8388608\"],\"config\":2069994364910194474,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements lib-serial2.json. It contains code that handles serial2-571fd4f0a007f87f functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: .tmp/grime_time_site/src/components/CollectionArchive/index.tsx\n```\nimport { cn } from '@/utilities/ui'\nimport React from 'react'\n\nimport { Card, CardPostData } from '@/components/Card'\n\nexport type Props = {\n  posts: CardPostData[]\n}\n\nexport const CollectionArchive: React.FC<Props> = (props) => {\n  const { posts } = props\n\n  return (\n    <div className={cn('container')}>\n      <div>\n        <div className=\"grid grid-cols-4 sm:grid-cols-8 lg:grid-cols-12 gap-y-4 gap-x-4 lg:gap-y-8 lg:gap-x-8 xl:gap-x-8\">\n          {posts?.map((result, index) => {\n            if (typeof result === 'object' && result !== null) {\n              return (\n                <div className=\"col-span-4\" key={index}>\n                  <Card className=\"h-full\" doc={result} relationTo=\"posts\" showCategories />\n                </div>\n              )\n            }\n\n            return null\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by index.tsx. It contains code that handles CollectionArchive functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: apps/species/portfolio-v2/README.md\n```\n# Portfolio v2 \u2014 reader-only app (`@portfolio/v2`)\n\nNext.js + Payload app that ships the **full repub reader** (workspace, shelf, annotations, uploads) on a single route (`/`). Reader UI is vendored under `lib/reader-ui/` (no `@portfolio/repub-builder` dependency).\n\n## Develop\n\nFrom the monorepo root (so workspace deps resolve):\n\n```sh\npnpm install\npnpm run dev:portfolio-v2\n```\n\nEnsure the repo root has `.env` / `.env.local` with Payload + database variables (see root `.env.example`). Optional: `NEXT_PUBLIC_MAIN_SITE_URL` adds one \u201cMain site\u201d link in the reader shell.\n\n## Books manifest\n\n`public/books/manifest.json` is **not** committed by default. Generate or copy it \u2014 see `public/books/README.md`.\n\n## Build\n\n```sh\npnpm run build:portfolio-v2\n```\n\n## Vercel\n\n- **Root Directory:** `apps/po\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to README.md. It contains code that handles portfolio-v2 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: tmp/openai-codex/codex-rs/app-server-protocol/schema/typescript/RealtimeConversationVersion.ts\n```\n// GENERATED CODE! DO NOT MODIFY BY HAND!\n\n// This file was generated by [ts-rs](https://github.com/Aleph-Alpha/ts-rs). Do not edit this file manually.\n\nexport type RealtimeConversationVersion = \"v1\" | \"v2\";\n\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements RealtimeConversationVersion.ts. It contains code that handles typescript functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: apps/desktop/src-tauri/target/release/.fingerprint/shared_child-5ee2711c599244c7/lib-shared_child.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"default\\\", \\\"timeout\\\"]\",\"declared_features\":\"[\\\"default\\\", \\\"timeout\\\"]\",\"target\":12943381666177786254,\"profile\":367816849085071872,\"path\":2127179320133743883,\"deps\":[[7263319592666514104,\"windows_sys\",false,3786644457195182052]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"release\\\\.fingerprint\\\\shared_child-5ee2711c599244c7\\\\dep-lib-shared_child\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by lib-shared_child.json. It contains code that handles shared_child-5ee2711c599244c7 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: tmp/get-shit-done/get-shit-done/templates/planner-subagent-prompt.md\n```\n# Planner Subagent Prompt Template\n\nTemplate for spawning gsd-planner agent. The agent contains all planning expertise - this template provides planning context only.\n\n---\n\n## Template\n\n```markdown\n<planning_context>\n\n**Phase:** {phase_number}\n**Mode:** {standard | gap_closure}\n\n**Project State:**\n@.planning/STATE.md\n\n**Roadmap:**\n@.planning/ROADMAP.md\n\n**Requirements (if exists):**\n@.planning/REQUIREMENTS.md\n\n**Phase Context (if exists):**\n@.planning/phases/{phase_dir}/{phase_num}-CONTEXT.md\n\n**Research (if exists):**\n@.planning/phases/{phase_dir}/{phase_num}-RESEARCH.md\n\n**Gap Closure (if --gaps mode):**\n@.planning/phases/{phase_dir}/{phase_num}-VERIFICATION.md\n@.planning/phases/{phase_dir}/{phase_num}-UAT.md\n\n</planning_context>\n\n<downstream_consumer>\nOutput consumed by /gsd-execute-pha\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on planner-subagent-prompt.md. It contains code that handles templates functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/.fingerprint/regex-automata-091bf464d45ae8c5/lib-regex_automata.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"alloc\\\", \\\"dfa-onepass\\\", \\\"hybrid\\\", \\\"meta\\\", \\\"nfa-backtrack\\\", \\\"nfa-pikevm\\\", \\\"nfa-thompson\\\", \\\"perf-inline\\\", \\\"perf-literal\\\", \\\"perf-literal-multisubstring\\\", \\\"perf-literal-substring\\\", \\\"std\\\", \\\"syntax\\\", \\\"unicode\\\", \\\"unicode-age\\\", \\\"unicode-bool\\\", \\\"unicode-case\\\", \\\"unicode-gencat\\\", \\\"unicode-perl\\\", \\\"unicode-script\\\", \\\"unicode-segment\\\", \\\"unicode-word-boundary\\\"]\",\"declared_features\":\"[\\\"alloc\\\", \\\"default\\\", \\\"dfa\\\", \\\"dfa-build\\\", \\\"dfa-onepass\\\", \\\"dfa-search\\\", \\\"hybrid\\\", \\\"internal-instrument\\\", \\\"internal-instrument-pikevm\\\", \\\"logging\\\", \\\"meta\\\", \\\"nfa\\\", \\\"nfa-backtrack\\\", \\\"nfa-pikevm\\\", \\\"nfa-thompson\\\", \\\"perf\\\", \\\"perf-inline\\\", \\\"perf-literal\\\", \\\"perf-literal-multisubstring\\\", \\\"perf-literal-substring\\\", \\\"\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on lib-regex_automata.json. It contains code that handles regex-automata-091bf464d45ae8c5 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What are the key functions in this file?\n\nFile: apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/.fingerprint/form_urlencoded-04bcb3c27acd27ef/lib-form_urlencoded.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"alloc\\\", \\\"std\\\"]\",\"declared_features\":\"[\\\"alloc\\\", \\\"default\\\", \\\"std\\\"]\",\"target\":6496257856677244489,\"profile\":8707056540603652107,\"path\":6311649119289524157,\"deps\":[[6803352382179706244,\"percent_encoding\",false,4272263619925443507]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"x86_64-pc-windows-msvc\\\\release\\\\.fingerprint\\\\form_urlencoded-04bcb3c27acd27ef\\\\dep-lib-form_urlencoded\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":9161124489350129226}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The key functions are lib-form_urlencoded.json. It contains code that handles form_urlencoded-04bcb3c27acd27ef functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: temp/vercel-examples/apps/vibe-coding-platform/ai/constants.ts\n```\nimport { type GatewayModelId } from '@ai-sdk/gateway'\n\nexport enum Models {\n  AnthropicClaudeOpus46 = 'anthropic/claude-opus-4.6',\n  AnthropicClaudeSonnet46 = 'anthropic/claude-sonnet-4.6',\n  OpenAIGPT53Codex = 'openai/gpt-5.3-codex',\n  XaiGrok41Reasoning = 'xai/grok-4.1-fast-reasoning',\n}\n\nexport const DEFAULT_MODEL = Models.AnthropicClaudeOpus46\n\nexport const SUPPORTED_MODELS: GatewayModelId[] = [\n  Models.AnthropicClaudeOpus46,\n  Models.AnthropicClaudeSonnet46,\n  Models.OpenAIGPT53Codex,\n  Models.XaiGrok41Reasoning,\n]\n\nexport const MODEL_NAMES: Record<string, string> = {\n  [Models.AnthropicClaudeOpus46]: 'Claude Opus 4.6',\n  [Models.AnthropicClaudeSonnet46]: 'Claude Sonnet 4.6',\n  [Models.OpenAIGPT53Codex]: 'GPT-5.3 Codex',\n  [Models.XaiGrok41Reasoning]: 'Grok 4.1 Reasoning',\n}\n\nexport \n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by constants.ts. It contains code that handles ai functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/.fingerprint/icu_locale_core-5e4648b1d470b093/lib-icu_locale_core.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"zerovec\\\"]\",\"declared_features\":\"[\\\"alloc\\\", \\\"databake\\\", \\\"serde\\\", \\\"zerovec\\\"]\",\"target\":7234736894702847895,\"profile\":7415698076450449792,\"path\":1963519360494920052,\"deps\":[[3472867876026527834,\"litemap\",false,1632477667894016670],[4600868325190463366,\"writeable\",false,2885467059167320043],[5298260564258778412,\"displaydoc\",false,3284104294268209958],[9119616491714376884,\"zerovec\",false,5465280468040708496],[11371850679357357896,\"tinystr\",false,10400704632344115024]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"x86_64-pc-windows-msvc\\\\release\\\\.fingerprint\\\\icu_locale_core-5e4648b1d470b093\\\\dep-lib-icu_locale_core\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":9161124489350129226}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to lib-icu_locale_core.json. It contains code that handles icu_locale_core-5e4648b1d470b093 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: tmp/opencode/packages/console/core/src/provider.ts\n```\nimport { z } from \"zod\"\nimport { fn } from \"./util/fn\"\nimport { Actor } from \"./actor\"\nimport { and, Database, eq, isNull } from \"./drizzle\"\nimport { Identifier } from \"./identifier\"\nimport { ProviderTable } from \"./schema/provider.sql\"\n\nexport namespace Provider {\n  export const list = fn(z.void(), () =>\n    Database.use((tx) =>\n      tx\n        .select()\n        .from(ProviderTable)\n        .where(and(eq(ProviderTable.workspaceID, Actor.workspace()), isNull(ProviderTable.timeDeleted))),\n    ),\n  )\n\n  export const create = fn(\n    z.object({\n      provider: z.string().min(1).max(64),\n      credentials: z.string(),\n    }),\n    async ({ provider, credentials }) => {\n      Actor.assertAdmin()\n      return Database.use((tx) =>\n        tx\n          .insert(ProviderTable)\n          .values({\n  \n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to provider.ts. It contains code that handles src functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: packages/tweakcn-editor/src/lib/utils.ts\n```\nimport { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n\n/**\n * Deep structural equality. Replaces @ngard/tiny-isequal from the upstream\n * fork \u2014 inlined to avoid pulling a transitive dep into the portable package.\n * Handles primitives, arrays, plain objects, Dates, and RegExps. Cycles not\n * supported (theme data is acyclic).\n */\nexport function isDeepEqual(a: unknown, b: unknown): boolean {\n  if (Object.is(a, b)) return true;\n  if (a == null || b == null) return false;\n  if (typeof a !== typeof b) return false;\n  if (typeof a !== \"object\") return false;\n\n  if (a instanceof Date && b instanceof Date) return a.getTime() === b.getTime();\n  if (a instanceof RegExp && b instanceo\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on utils.ts. It contains code that handles lib functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: apps/desktop/src-tauri/target/release/.fingerprint/anyhow-525d437a4258679c/build-script-build-script-build.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"default\\\", \\\"std\\\"]\",\"declared_features\":\"[\\\"backtrace\\\", \\\"default\\\", \\\"std\\\"]\",\"target\":5408242616063297496,\"profile\":17984201634715228204,\"path\":17262795630525531308,\"deps\":[],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"release\\\\.fingerprint\\\\anyhow-525d437a4258679c\\\\dep-build-script-build-script-build\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on build-script-build-script-build.json. It contains code that handles anyhow-525d437a4258679c functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: .tmp/planning-sink-backup-20260404/editor/planning/decisions.mdx\n```\n---\ntitle: Decisions\ndescription: Compact decision records for the editor section.\ndate: \"2026-03-16\"\nupdated: \"2026-03-16\"\norder: 5\n---\n\n# Decisions\n\n| Id | Status | Summary | Consequence |\n| --- | --- | --- | --- |\n| `EDITOR-EPUB3-FIRST` | `accepted` | the editor section is about better EPUB3 authoring and export, not reviving `.repub` as a primary format | future planning should optimize the workflow and output quality within EPUB3 constraints |\n| `EDITOR-REAL-SOURCE-MATERIAL` | `accepted` | planning has to start from the real source formats already in use, including notion exports, markdown, and mdx | the editor scope must account for normalization and import tooling instead of assuming a clean greenfield format |\n\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements decisions.mdx. It contains code that handles planning functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: apps/desktop/src-tauri/target/debug/.fingerprint/windows-future-14e72afa8a1eb0a2/lib-windows_future.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[]\",\"declared_features\":\"[\\\"default\\\", \\\"std\\\"]\",\"target\":14030189913129152040,\"profile\":14106498895327635846,\"path\":900738925665490938,\"deps\":[[1670816939315227968,\"windows_threading\",false,8457508175943145104],[5628259161083531273,\"windows_core\",false,17030016260444801126],[11505586985402185701,\"windows_link\",false,10678877398427871739]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\windows-future-14e72afa8a1eb0a2\\\\dep-lib-windows_future\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements lib-windows_future.json. It contains code that handles windows-future-14e72afa8a1eb0a2 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/.fingerprint/erased-serde-8ac5e42fa6874419/lib-erased_serde.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"alloc\\\"]\",\"declared_features\":\"[\\\"alloc\\\", \\\"default\\\", \\\"std\\\", \\\"unstable-debug\\\"]\",\"target\":14999988388263848338,\"profile\":8707056540603652107,\"path\":14015739893393914054,\"deps\":[[8520300126860023267,\"build_script_build\",false,9904046471611622659],[11899261697793765154,\"serde_core\",false,9688704070848927871],[15068722234341947584,\"typeid\",false,7354526661459349227]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"x86_64-pc-windows-msvc\\\\release\\\\.fingerprint\\\\erased-serde-8ac5e42fa6874419\\\\dep-lib-erased_serde\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":9161124489350129226}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements lib-erased_serde.json. It contains code that handles erased-serde-8ac5e42fa6874419 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: tmp/openai-codex/codex-rs/target/debug/.fingerprint/serde-b623f9604605df12/build-script-build-script-build.json\n```\n{\"rustc\":6817557220965521185,\"features\":\"[\\\"alloc\\\", \\\"default\\\", \\\"derive\\\", \\\"rc\\\", \\\"serde_derive\\\", \\\"std\\\"]\",\"declared_features\":\"[\\\"alloc\\\", \\\"default\\\", \\\"derive\\\", \\\"rc\\\", \\\"serde_derive\\\", \\\"std\\\", \\\"unstable\\\"]\",\"target\":5408242616063297496,\"profile\":2225463790103693989,\"path\":14183133950752918036,\"deps\":[],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\serde-b623f9604605df12\\\\dep-build-script-build-script-build\",\"checksum\":false}}],\"rustflags\":[\"-C\",\"link-arg=/STACK:8388608\"],\"config\":2069994364910194474,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on build-script-build-script-build.json. It contains code that handles serde-b623f9604605df12 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: temp/agent-skills/skills/react-native-skills/rules/react-state-fallback.md\n```\n---\ntitle: Use fallback state instead of initialState\nimpact: MEDIUM\nimpactDescription: reactive fallbacks without syncing\ntags: state, hooks, derived-state, props, initialState\n---\n\n## Use fallback state instead of initialState\n\nUse `undefined` as initial state and nullish coalescing (`??`) to fall back to\nparent or server values. State represents user intent only\u2014`undefined` means\n\"user hasn't chosen yet.\" This enables reactive fallbacks that update when the\nsource changes, not just on initial render.\n\n**Incorrect (syncs state, loses reactivity):**\n\n```tsx\ntype Props = { fallbackEnabled: boolean }\n\nfunction Toggle({ fallbackEnabled }: Props) {\n  const [enabled, setEnabled] = useState(defaultEnabled)\n  // If fallbackEnabled changes, state is stale\n  // State mixes user intent with default\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by react-state-fallback.md. It contains code that handles rules functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What are the key functions in this file?\n\nFile: tmp/openai-codex/codex-rs/target/debug/.fingerprint/parking_lot-e0a9921513cd8169/lib-parking_lot.json\n```\n{\"rustc\":6817557220965521185,\"features\":\"[\\\"arc_lock\\\", \\\"default\\\", \\\"send_guard\\\"]\",\"declared_features\":\"[\\\"arc_lock\\\", \\\"deadlock_detection\\\", \\\"default\\\", \\\"hardware-lock-elision\\\", \\\"nightly\\\", \\\"owning_ref\\\", \\\"send_guard\\\", \\\"serde\\\"]\",\"target\":9887373948397848517,\"profile\":15657897354478470176,\"path\":1237304584985266162,\"deps\":[[2555121257709722468,\"lock_api\",false,16051624299904329987],[6545091685033313457,\"parking_lot_core\",false,14991789312861525784]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\parking_lot-e0a9921513cd8169\\\\dep-lib-parking_lot\",\"checksum\":false}}],\"rustflags\":[\"-C\",\"link-arg=/STACK:8388608\"],\"config\":2069994364910194474,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The key functions are lib-parking_lot.json. It contains code that handles parking_lot-e0a9921513cd8169 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What are the key functions in this file?\n\nFile: tmp/openai-codex/codex-rs/target/debug/.fingerprint/is_ci-9c7661dc23559163/lib-is_ci.json\n```\n{\"rustc\":6817557220965521185,\"features\":\"[]\",\"declared_features\":\"[]\",\"target\":1193022039977793448,\"profile\":15657897354478470176,\"path\":3279080770594948765,\"deps\":[],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\is_ci-9c7661dc23559163\\\\dep-lib-is_ci\",\"checksum\":false}}],\"rustflags\":[\"-C\",\"link-arg=/STACK:8388608\"],\"config\":2069994364910194474,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The key functions are lib-is_ci.json. It contains code that handles is_ci-9c7661dc23559163 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: apps/desktop/src-tauri/target/debug/.fingerprint/smallvec-ffdac4c9dddc55c1/lib-smallvec.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"const_generics\\\", \\\"const_new\\\"]\",\"declared_features\":\"[\\\"arbitrary\\\", \\\"bincode\\\", \\\"const_generics\\\", \\\"const_new\\\", \\\"debugger_visualizer\\\", \\\"drain_filter\\\", \\\"drain_keep_rest\\\", \\\"impl_bincode\\\", \\\"malloc_size_of\\\", \\\"may_dangle\\\", \\\"serde\\\", \\\"specialization\\\", \\\"union\\\", \\\"unty\\\", \\\"write\\\"]\",\"target\":9091769176333489034,\"profile\":15657897354478470176,\"path\":8594128245941446584,\"deps\":[],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\smallvec-ffdac4c9dddc55c1\\\\dep-lib-smallvec\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by lib-smallvec.json. It contains code that handles smallvec-ffdac4c9dddc55c1 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: tmp/free-code/src/components/permissions/FilePermissionDialog/ideDiffConfig.ts\n```\nimport type { ToolInput } from './useFilePermissionDialog.js'\n\nexport interface FileEdit {\n  old_string: string\n  new_string: string\n  replace_all?: boolean\n}\n\nexport interface IDEDiffConfig {\n  filePath: string\n  edits?: FileEdit[]\n  editMode?: 'single' | 'multiple'\n}\n\nexport interface IDEDiffChangeInput {\n  file_path: string\n  edits: FileEdit[]\n}\n\nexport interface IDEDiffSupport<TInput extends ToolInput> {\n  getConfig(input: TInput): IDEDiffConfig\n  applyChanges(input: TInput, modifiedEdits: FileEdit[]): TInput\n}\n\nexport function createSingleEditDiffConfig(\n  filePath: string,\n  oldString: string,\n  newString: string,\n  replaceAll?: boolean,\n): IDEDiffConfig {\n  return {\n    filePath,\n    edits: [\n      {\n        old_string: oldString,\n        new_string: newString,\n        replace_all: \n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on ideDiffConfig.ts. It contains code that handles FilePermissionDialog functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: .codex/skills/gad-note/SKILL.md\n```\n---\nname: gad:note\ndescription: Zero-friction idea capture. Append, list, or promote notes to todos.\nlane: dev\ntype: captured-answer\nargument-hint: \"<text> | list | promote <N> [--global]\"\nallowed-tools:\n  - Read\n  - Write\n  - Glob\n  - Grep\nworkflow: workflows/note.md\n---\n<objective>\nZero-friction idea capture \u2014 one Write call, one confirmation line.\n\nThree subcommands:\n- **append** (default): Save a timestamped note file. No questions, no formatting.\n- **list**: Show all notes from project and global scopes.\n- **promote**: Convert a note into a structured todo.\n\nRuns inline \u2014 no Task, no AskUserQuestion, no Bash.\n</objective>\n\n<execution_context>\n@workflows/note.md\n@references/ui-brand.md\n</execution_context>\n\n<context>\n$ARGUMENTS\n</context>\n\n<process>\nExecute the note workflow from @work\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to SKILL.md. It contains code that handles gad-note functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: .tmp/grime_time_site/src/lib/auth/roles.ts\n```\nexport const USER_ROLE_OPTIONS = [\n  { label: 'Admin', value: 'admin' },\n  { label: 'Customer', value: 'customer' },\n] as const\n\nexport type UserRole = (typeof USER_ROLE_OPTIONS)[number]['value']\n\nexport type RoleCarrier =\n  | {\n      email?: unknown\n      id?: unknown\n      roles?: null | string | string[]\n    }\n  | null\n  | undefined\n\nfunction hasRolesField(user: RoleCarrier): user is { roles?: null | string | string[] } {\n  return Boolean(user?.roles !== undefined)\n}\n\nexport function authEntityId(user: RoleCarrier): string | number | null {\n  if (!user || typeof user !== 'object' || !('id' in user)) return null\n\n  const { id } = user\n  if (typeof id === 'string' || typeof id === 'number') return id\n\n  return null\n}\n\nexport function authEntityEmail(user: RoleCarrier): string | null {\n  i\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by roles.ts. It contains code that handles auth functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: tmp/opencode/packages/plugin/script/publish.ts\n```\n#!/usr/bin/env bun\nimport { Script } from \"@opencode-ai/script\"\nimport { $ } from \"bun\"\nimport { fileURLToPath } from \"url\"\n\nconst dir = fileURLToPath(new URL(\"..\", import.meta.url))\nprocess.chdir(dir)\n\nawait $`bun tsc`\nconst pkg = await import(\"../package.json\").then((m) => m.default)\nconst original = JSON.parse(JSON.stringify(pkg))\nfor (const [key, value] of Object.entries(pkg.exports)) {\n  const file = value.replace(\"./src/\", \"./dist/\").replace(\".ts\", \"\")\n  // @ts-ignore\n  pkg.exports[key] = {\n    import: file + \".js\",\n    types: file + \".d.ts\",\n  }\n}\nawait Bun.write(\"package.json\", JSON.stringify(pkg, null, 2))\nawait $`bun pm pack && npm publish *.tgz --tag ${Script.channel} --access public`\nawait Bun.write(\"package.json\", JSON.stringify(original, null, 2))\n\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to publish.ts. It contains code that handles script functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: tmp/openai-codex/codex-rs/target/debug/.fingerprint/rayon-core-e201aa4b1207a398/lib-rayon_core.json\n```\n{\"rustc\":6817557220965521185,\"features\":\"[]\",\"declared_features\":\"[\\\"web_spin_lock\\\"]\",\"target\":12465439074827573786,\"profile\":15657897354478470176,\"path\":13509308020531106730,\"deps\":[[3746573929696391749,\"build_script_build\",false,14214875848039026586],[4468123440088164316,\"crossbeam_utils\",false,587913439442712349],[17472578983440242455,\"crossbeam_deque\",false,8754920866368550689]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\rayon-core-e201aa4b1207a398\\\\dep-lib-rayon_core\",\"checksum\":false}}],\"rustflags\":[\"-C\",\"link-arg=/STACK:8388608\"],\"config\":2069994364910194474,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by lib-rayon_core.json. It contains code that handles rayon-core-e201aa4b1207a398 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What are the key functions in this file?\n\nFile: tmp/openai-codex/codex-rs/target/debug/.fingerprint/icu_normalizer-5557f92027d64e65/lib-icu_normalizer.json\n```\n{\"rustc\":6817557220965521185,\"features\":\"[\\\"compiled_data\\\"]\",\"declared_features\":\"[\\\"compiled_data\\\", \\\"datagen\\\", \\\"default\\\", \\\"experimental\\\", \\\"icu_properties\\\", \\\"serde\\\", \\\"utf16_iter\\\", \\\"utf8_iter\\\", \\\"write16\\\"]\",\"target\":4082895731217690114,\"profile\":16810742592890727785,\"path\":15289790224445049275,\"deps\":[[3666196340704888985,\"smallvec\",false,17174690494460879979],[5251024081607271245,\"icu_provider\",false,5931033981490847989],[8584278803131124045,\"icu_normalizer_data\",false,16881019626137881727],[14324911895384364736,\"icu_collections\",false,3021342911620194079],[14563910249377136032,\"zerovec\",false,1612237285824889871]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\icu_normalizer-5557f92027d64e65\\\\dep-lib-icu_normalizer\",\"checksum\":false}}],\"rustflags\":[\"-C\",\"link-\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The key functions are lib-icu_normalizer.json. It contains code that handles icu_normalizer-5557f92027d64e65 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: tmp/opencode/packages/desktop/src/updater.ts\n```\nimport { check } from \"@tauri-apps/plugin-updater\"\nimport { relaunch } from \"@tauri-apps/plugin-process\"\nimport { ask, message } from \"@tauri-apps/plugin-dialog\"\nimport { type as ostype } from \"@tauri-apps/plugin-os\"\n\nimport { initI18n, t } from \"./i18n\"\nimport { commands } from \"./bindings\"\n\nexport const UPDATER_ENABLED = window.__OPENCODE__?.updaterEnabled ?? false\n\nexport async function runUpdater({ alertOnFail }: { alertOnFail: boolean }) {\n  await initI18n()\n\n  let update\n  try {\n    update = await check()\n  } catch {\n    if (alertOnFail)\n      await message(t(\"desktop.updater.checkFailed.message\"), { title: t(\"desktop.updater.checkFailed.title\") })\n    return\n  }\n\n  if (!update) {\n    if (alertOnFail) await message(t(\"desktop.updater.none.message\"), { title: t(\"desktop.updater.none.t\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by updater.ts. It contains code that handles src functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: tmp/openai-codex/codex-rs/target/debug/.fingerprint/rcgen-bca65a6d9f3a3a52/lib-rcgen.json\n```\n{\"rustc\":6817557220965521185,\"features\":\"[\\\"aws_lc_rs\\\", \\\"crypto\\\", \\\"pem\\\", \\\"x509-parser\\\"]\",\"declared_features\":\"[\\\"aws_lc_rs\\\", \\\"aws_lc_rs_unstable\\\", \\\"crypto\\\", \\\"default\\\", \\\"fips\\\", \\\"pem\\\", \\\"ring\\\", \\\"x509-parser\\\", \\\"zeroize\\\"]\",\"target\":8034303824931171038,\"profile\":11882313968588718463,\"path\":3137182792121194956,\"deps\":[[1264099202606790382,\"pem\",false,10771326978782921606],[5821979216565259538,\"aws_lc_rs\",false,5127431934215683559],[11432222519274906849,\"time\",false,11036016501268822744],[12816762394127006977,\"x509_parser\",false,4744936135115349196],[13952487153246242820,\"yasna\",false,10969514010242702902],[17894305664988315121,\"pki_types\",false,3904812217313467731]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\rcgen-bca65a6d9f3a3a52\\\\dep-lib-rcgen\",\"checksum\"\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements lib-rcgen.json. It contains code that handles rcgen-bca65a6d9f3a3a52 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: apps/desktop/src-tauri/target/debug/.fingerprint/url-cfa545a5acea94d9/lib-url.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"default\\\", \\\"serde\\\", \\\"std\\\"]\",\"declared_features\":\"[\\\"debugger_visualizer\\\", \\\"default\\\", \\\"expose_internals\\\", \\\"serde\\\", \\\"std\\\"]\",\"target\":7686100221094031937,\"profile\":2241668132362809309,\"path\":10943492575398785251,\"deps\":[[1074175012458081222,\"form_urlencoded\",false,15873141121046000043],[3051629642231505422,\"serde_derive\",false,8028102975635983516],[6159443412421938570,\"idna\",false,1091988928514118184],[6803352382179706244,\"percent_encoding\",false,13000760839836695125],[13548984313718623784,\"serde\",false,1329517588222600622]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\url-cfa545a5acea94d9\\\\dep-lib-url\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements lib-url.json. It contains code that handles url-cfa545a5acea94d9 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: sites/grime-time/.planning/todos/2026-04-07-layout-first-page-model-hero-block.md\n```\n# Todo: layout-first-page-model-hero-block\n\n**Captured:** 2026-04-07\n**Area:** ui / cms / composer architecture\n**Urgency:** normal\n**Status:** done (2026-04-08)\n\n## What\n\nRefactor the marketing page model so a page is composed entirely from ordered layout blocks, with hero represented as a normal block in `layout` instead of a separate `hero` object. Remove route-specific home-only shell behavior from the page renderer and express that content as normal page blocks.\n\n## Why\n\nThe current split model (`hero` plus `layout[]`) makes the composer inconsistent, keeps hero out of the normal block system, and creates special-case frontend behavior that conflicts with the desired \u201cpage = ordered blocks\u201d mental model.\n\n## Context\n\nCurrent structure:\n- `PageComposerDocument` in `src/lib/pages/pageCo\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements 2026-04-07-layout-first-page-model-hero-block.md. It contains code that handles todos functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What are the key functions in this file?\n\nFile: projects/magicborn/narrative/books/mordreds-tale/full/chapters/02-chapter-2-jack/035-page-66-the-living-quarters.md\n```\n---\npage: 66\ntitle: \"The Living Quarters\"\ndisplayTitle: false\n---\n\n![Page 35](/books/mordreds_tale/images/ch02-p035.png)\nThe world became a chaos of splintering wood and falling debris. Jack felt the sickening lurch of free fall, saw the creature's surprised roar as they both plunged through rotted flooring into darkness below.\nHe hit hard\u2014another floor, solid this time\u2014and the impact drove the air from his lungs. Pain exploded through his back and shoulder. Above him, the creature crashed through the wreckage, its massive body smashing aside broken planks and beams.\nJack rolled, gasping for breath that wouldn't come. The pendant in his stomach convulsed, and he retched blood onto pale blue wood that glowed with trapped moonlight.\nThey'd fallen into another level. The corridor stretched in\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The key functions are 035-page-66-the-living-quarters.md. It contains code that handles 02-chapter-2-jack functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: apps/portfolio/content/docs/gad-manuscript/planning/decisions.mdx\n```\n---\ntitle: \"gad-manuscript \u2014 Decisions\"\ndescription: \"Auto-compiled from vendor/gad-manuscript/.planning/DECISIONS.xml\"\ngenerated: \"true\"\nsource: \"vendor/gad-manuscript/.planning/DECISIONS.xml\"\nupdated: \"2026-04-11T19:41:13.450Z\"\n---\n\n# Decisions\n\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements decisions.mdx. It contains code that handles planning functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: tmp/opencode/packages/opencode/src/project/schema.ts\n```\nimport { Schema } from \"effect\"\nimport z from \"zod\"\n\nimport { withStatics } from \"@/util/schema\"\n\nconst projectIdSchema = Schema.String.pipe(Schema.brand(\"ProjectID\"))\n\nexport type ProjectID = typeof projectIdSchema.Type\n\nexport const ProjectID = projectIdSchema.pipe(\n  withStatics((schema: typeof projectIdSchema) => ({\n    global: schema.make(\"global\"),\n    zod: z.string().pipe(z.custom<ProjectID>()),\n  })),\n)\n\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to schema.ts. It contains code that handles project functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What are the key functions in this file?\n\nFile: apps/portfolio/public/planning-pack/site/dialogue-forge/planning/state.md\n```\n<!--\n  Exported from: content/docs/dialogue-forge/planning/state.mdx\n  Generated - edit the MDX source, not this file.\n  title: State\n  slug: dialogue-forge/planning/state\n  -->\n# State\n\n## Registry\n\n| Field | Value |\n| --- | --- |\n| `section` | `dialogue-forge` |\n| `owner` | `dialogue-forge-section` |\n| `status` | `idle` |\n| `updated` | `2026-04-05` |\n\n## Current Cycle\n\n| Field | Value |\n| --- | --- |\n| `phase` | `dialogue-forge-docs-01` |\n| `plan` | `dialogue-forge-docs-01` closed |\n| `focus` | none \u2014 phase complete; reopen with a new phase row in `roadmap.mdx` if Dialogue Forge work resumes |\n| `constraint` | avoid speculative implementation writing |\n\n## Next Queue\n\n| Priority | Action | Type |\n| --- | --- | --- |\n| `\u2014` | Section idle until a new phase row is added under [Roadmap](/doc\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The key functions are state.md. It contains code that handles planning functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: packages/dashboard-surface/src/project-status.ts\n```\n/**\n * Status token helpers \u2014 status string \u2192 tailwind class strings for card\n * tone (border + bg + text) and inline dots. One mapping in one place so\n * visual states stay consistent across any card that renders a project\n * status.\n */\n\nexport function statusTone(status: string | null | undefined): string {\n  switch ((status ?? \"\").toLowerCase()) {\n    case \"done\":\n    case \"active\":\n    case \"in-progress\":\n      return \"border-[color:color-mix(in_oklab,var(--primary)_55%,var(--border))] bg-[color:color-mix(in_oklab,var(--primary)_16%,var(--card))] text-[color:var(--primary)]\";\n    case \"blocked\":\n      return \"border-[color:color-mix(in_oklab,var(--destructive)_60%,var(--border))] bg-[color:color-mix(in_oklab,var(--destructive)_14%,var(--card))] text-[color:var(--destructive)]\";\n    de\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on project-status.ts. It contains code that handles src functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: tmp/free-code/src/ink/terminal-focus-state.ts\n```\n// Terminal focus state signal \u2014 non-React access to DECSET 1004 focus events.\n// 'unknown' is the default for terminals that don't support focus reporting;\n// consumers treat 'unknown' identically to 'focused' (no throttling).\n// Subscribers are notified synchronously when focus changes, used by\n// TerminalFocusProvider to avoid polling.\nexport type TerminalFocusState = 'focused' | 'blurred' | 'unknown'\n\nlet focusState: TerminalFocusState = 'unknown'\nconst resolvers: Set<() => void> = new Set()\nconst subscribers: Set<() => void> = new Set()\n\nexport function setTerminalFocused(v: boolean): void {\n  focusState = v ? 'focused' : 'blurred'\n  // Notify useSyncExternalStore subscribers\n  for (const cb of subscribers) {\n    cb()\n  }\n  if (!v) {\n    for (const resolve of resolvers) {\n      resolv\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to terminal-focus-state.ts. It contains code that handles ink functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: apps/desktop/src-tauri/target/debug/.fingerprint/zmij-bb5f9b9e86400881/run-build-script-build-script-build.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"\",\"declared_features\":\"\",\"target\":0,\"profile\":0,\"path\":0,\"deps\":[[12347024475581975995,\"build_script_build\",false,14974690693697454693]],\"local\":[{\"RerunIfChanged\":{\"output\":\"debug\\\\build\\\\zmij-bb5f9b9e86400881\\\\output\",\"paths\":[\"build.rs\"]}}],\"rustflags\":[],\"config\":0,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to run-build-script-build-script-build.json. It contains code that handles zmij-bb5f9b9e86400881 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: tmp/openai-codex/codex-rs/app-server-protocol/schema/typescript/v2/McpElicitationArrayType.ts\n```\n// GENERATED CODE! DO NOT MODIFY BY HAND!\n\n// This file was generated by [ts-rs](https://github.com/Aleph-Alpha/ts-rs). Do not edit this file manually.\n\nexport type McpElicitationArrayType = \"array\";\n\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to McpElicitationArrayType.ts. It contains code that handles v2 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: apps/desktop/src-tauri/target/debug/.fingerprint/infer-665eb919ec98961e/lib-infer.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"alloc\\\", \\\"cfb\\\", \\\"default\\\", \\\"std\\\"]\",\"declared_features\":\"[\\\"alloc\\\", \\\"cfb\\\", \\\"default\\\", \\\"std\\\"]\",\"target\":17568545270158767465,\"profile\":2225463790103693989,\"path\":13385150678921014958,\"deps\":[[3381430663848060157,\"cfb\",false,6911867829080232946]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\infer-665eb919ec98961e\\\\dep-lib-infer\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements lib-infer.json. It contains code that handles infer-665eb919ec98961e functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: tmp/openai-codex/codex-rs/target/debug/.fingerprint/hashbrown-960710fd3c30eb61/lib-hashbrown.json\n```\n{\"rustc\":6817557220965521185,\"features\":\"[]\",\"declared_features\":\"[\\\"alloc\\\", \\\"allocator-api2\\\", \\\"core\\\", \\\"default\\\", \\\"default-hasher\\\", \\\"equivalent\\\", \\\"inline-more\\\", \\\"nightly\\\", \\\"raw-entry\\\", \\\"rayon\\\", \\\"rustc-dep-of-std\\\", \\\"rustc-internal-api\\\", \\\"serde\\\"]\",\"target\":13796197676120832388,\"profile\":2225463790103693989,\"path\":7599467557171539941,\"deps\":[],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\hashbrown-960710fd3c30eb61\\\\dep-lib-hashbrown\",\"checksum\":false}}],\"rustflags\":[\"-C\",\"link-arg=/STACK:8388608\"],\"config\":2069994364910194474,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on lib-hashbrown.json. It contains code that handles hashbrown-960710fd3c30eb61 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: apps/desktop/src-tauri/target/release/.fingerprint/unic-common-ed35193c8c23a8c6/lib-unic_common.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"default\\\"]\",\"declared_features\":\"[\\\"default\\\", \\\"unstable\\\"]\",\"target\":12566424773496969179,\"profile\":17984201634715228204,\"path\":17323259494523895892,\"deps\":[],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"release\\\\.fingerprint\\\\unic-common-ed35193c8c23a8c6\\\\dep-lib-unic_common\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on lib-unic_common.json. It contains code that handles unic-common-ed35193c8c23a8c6 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: tmp/superpowers/skills/systematic-debugging/test-pressure-2.md\n```\n# Pressure Test 2: Sunk Cost + Exhaustion\n\n**IMPORTANT: This is a real scenario. You must choose and act. Don't ask hypothetical questions - make the actual decision.**\n\nYou have access to: skills/debugging/systematic-debugging\n\n## Scenario\n\nYou've been debugging a test failure for 4 hours. It's now 8pm. You started at 4pm, expecting 30 minutes of work.\n\nThe test: `payment-processing.test.ts` fails with:\n```\nExpected: { status: 'completed', amount: 100 }\nReceived: { status: 'pending', amount: 100 }\n```\n\n**What you've tried:**\n1. Added `await sleep(100)` - didn't work\n2. Increased to `await sleep(500)` - didn't work\n3. Added `await sleep(1000)` - worked twice, failed third time\n4. Checked for race conditions - found none obvious\n5. Added debug logging - shows payment processes, status not u\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements test-pressure-2.md. It contains code that handles systematic-debugging functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: tmp/openai-codex/codex-rs/target/debug/.fingerprint/ignore-a7e5a156d26b099b/lib-ignore.json\n```\n{\"rustc\":6817557220965521185,\"features\":\"[]\",\"declared_features\":\"[\\\"simd-accel\\\"]\",\"target\":12334212417946013711,\"profile\":15657897354478470176,\"path\":7655097778321432833,\"deps\":[[198136567835728122,\"memchr\",false,17696350313447518231],[3030539787503978792,\"regex_automata\",false,10845342858251493454],[5785418864289862565,\"winapi_util\",false,15027874208808943713],[10630857666389190470,\"log\",false,656694011756408044],[11781824977070132858,\"same_file\",false,4057835938970785118],[12921325478209092965,\"globset\",false,12796941829378559744],[15622660310229662834,\"walkdir\",false,2296062367757233808],[17472578983440242455,\"crossbeam_deque\",false,8754920866368550689]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\ignore-a7e5a156d26b099b\\\\dep-lib-ignore\",\"checksum\":false}}],\"rustflags\":\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements lib-ignore.json. It contains code that handles ignore-a7e5a156d26b099b functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What are the key functions in this file?\n\nFile: apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/.fingerprint/zmij-59829669059c30d3/run-build-script-build-script-build.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"\",\"declared_features\":\"\",\"target\":0,\"profile\":0,\"path\":0,\"deps\":[[12347024475581975995,\"build_script_build\",false,15997687995989603649]],\"local\":[{\"RerunIfChanged\":{\"output\":\"x86_64-pc-windows-msvc\\\\release\\\\build\\\\zmij-59829669059c30d3\\\\output\",\"paths\":[\"build.rs\"]}}],\"rustflags\":[],\"config\":0,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The key functions are run-build-script-build-script-build.json. It contains code that handles zmij-59829669059c30d3 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: tmp/openai-codex/codex-rs/target/debug/.fingerprint/color_quant-1b3be9d47403e666/lib-color_quant.json\n```\n{\"rustc\":6817557220965521185,\"features\":\"[]\",\"declared_features\":\"[]\",\"target\":16866256909581263957,\"profile\":15657897354478470176,\"path\":11101158181533499404,\"deps\":[],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\color_quant-1b3be9d47403e666\\\\dep-lib-color_quant\",\"checksum\":false}}],\"rustflags\":[\"-C\",\"link-arg=/STACK:8388608\"],\"config\":2069994364910194474,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements lib-color_quant.json. It contains code that handles color_quant-1b3be9d47403e666 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: .tmp/grime_time_site/src/blocks/ArchiveBlock/config.ts\n```\nimport type { Block } from 'payload'\n\nimport {\n  FixedToolbarFeature,\n  HeadingFeature,\n  InlineToolbarFeature,\n  lexicalEditor,\n} from '@payloadcms/richtext-lexical'\n\nexport const Archive: Block = {\n  slug: 'archive',\n  interfaceName: 'ArchiveBlock',\n  fields: [\n    {\n      name: 'introContent',\n      type: 'richText',\n      editor: lexicalEditor({\n        features: ({ rootFeatures }) => {\n          return [\n            ...rootFeatures,\n            HeadingFeature({ enabledHeadingSizes: ['h1', 'h2', 'h3', 'h4'] }),\n            FixedToolbarFeature(),\n            InlineToolbarFeature(),\n          ]\n        },\n      }),\n      label: 'Intro Content',\n    },\n    {\n      name: 'populateBy',\n      type: 'select',\n      defaultValue: 'collection',\n      options: [\n        {\n          label: 'Colle\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements config.ts. It contains code that handles ArchiveBlock functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: apps/desktop/src-tauri/target/debug/.fingerprint/potential_utf-0e39c033ab480fd9/lib-potential_utf.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"zerovec\\\"]\",\"declared_features\":\"[\\\"alloc\\\", \\\"databake\\\", \\\"default\\\", \\\"serde\\\", \\\"writeable\\\", \\\"zerovec\\\"]\",\"target\":16089386906944150126,\"profile\":4972266810624584510,\"path\":13424308018478228649,\"deps\":[[9119616491714376884,\"zerovec\",false,11554206062370985700]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\potential_utf-0e39c033ab480fd9\\\\dep-lib-potential_utf\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to lib-potential_utf.json. It contains code that handles potential_utf-0e39c033ab480fd9 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What are the key functions in this file?\n\nFile: apps/desktop/src-tauri/target/debug/.fingerprint/rand_pcg-e15917ff524e7503/lib-rand_pcg.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[]\",\"declared_features\":\"[\\\"serde\\\", \\\"serde1\\\"]\",\"target\":15639958921810889256,\"profile\":2225463790103693989,\"path\":15791873766291768932,\"deps\":[[1740877332521282793,\"rand_core\",false,4558774737630885360]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\rand_pcg-e15917ff524e7503\\\\dep-lib-rand_pcg\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The key functions are lib-rand_pcg.json. It contains code that handles rand_pcg-e15917ff524e7503 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: tmp/free-code/src/commands/tasks/tasks.tsx\n```\nimport * as React from 'react';\nimport type { LocalJSXCommandContext } from '../../commands.js';\nimport { BackgroundTasksDialog } from '../../components/tasks/BackgroundTasksDialog.js';\nimport type { LocalJSXCommandOnDone } from '../../types/command.js';\nexport async function call(onDone: LocalJSXCommandOnDone, context: LocalJSXCommandContext): Promise<React.ReactNode> {\n  return <BackgroundTasksDialog toolUseContext={context} onDone={onDone} />;\n}\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJSZWFjdCIsIkxvY2FsSlNYQ29tbWFuZENvbnRleHQiLCJCYWNrZ3JvdW5kVGFza3NEaWFsb2ciLCJMb2NhbEpTWENvbW1hbmRPbkRvbmUiLCJjYWxsIiwib25Eb25lIiwiY29udGV4dCIsIlByb21pc2UiLCJSZWFjdE5vZGUiXSwic291cmNlcyI6WyJ0YXNrcy50c3giXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0ICogYXMgUmVhY3Q\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by tasks.tsx. It contains code that handles tasks functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: apps/portfolio/public/evals/app-forge/v1/_next/static/chunks/app/page-48fff7c809fa7f4b.js\n```\n(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[472,974],{8535:(e,s,_)=>{Promise.resolve().then(_.t.bind(_,6416,23))}},e=>{e.O(0,[416,691,850,358],()=>e(e.s=8535)),_N_E=e.O()}]);\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements page-48fff7c809fa7f4b.js. It contains code that handles app functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: apps/desktop/src-tauri/target/debug/.fingerprint/typeid-54ded009c49a74c8/lib-typeid.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[]\",\"declared_features\":\"[]\",\"target\":11448216687482730721,\"profile\":15657897354478470176,\"path\":13521587552488160123,\"deps\":[[15068722234341947584,\"build_script_build\",false,9704886159759608552]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\typeid-54ded009c49a74c8\\\\dep-lib-typeid\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by lib-typeid.json. It contains code that handles typeid-54ded009c49a74c8 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: packages/tweakcn-editor/src/components/editor/theme-preview/examples-preview-container.tsx\n```\nimport { Suspense } from \"react\";\nimport { Skeleton } from \"../../ui/skeleton\";\nimport { cn } from \"../../../lib/utils\";\nimport { Loading } from \"../../loading\";\n\nconst LoadingSkeleton = () => (\n  <div className=\"absolute inset-0 flex flex-col\">\n    <div className=\"flex flex-1 flex-col\">\n      <Skeleton className=\"w-full flex-1 opacity-50\" />\n    </div>\n\n    <div className=\"absolute inset-0 flex items-center justify-center\">\n      <Loading />\n    </div>\n  </div>\n);\n\nconst ExamplesPreviewContainer = ({\n  children,\n  className,\n}: {\n  children: React.ReactNode;\n  className?: string;\n}) => {\n  return (\n    <div className={cn(\"space-y-6\", className)}>\n      <div className=\"@container mt-0 h-full w-full space-y-6\">\n        <Suspense fallback={<LoadingSkeleton />}>{children}</Suspense>\n      </d\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to examples-preview-container.tsx. It contains code that handles theme-preview functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: tmp/openai-codex/codex-rs/target/debug/.fingerprint/codex-models-manager-5d68e5a14b715f67/lib-codex_models_manager.json\n```\n{\"rustc\":6817557220965521185,\"features\":\"[]\",\"declared_features\":\"[]\",\"target\":994188296473551940,\"profile\":11988616567679665564,\"path\":15576110161170312050,\"deps\":[[1977408457885507529,\"codex_app_server_protocol\",false,2745212089196752840],[2620434475832828286,\"http\",false,3852268669391429888],[5160939920991755848,\"codex_api\",false,2635462296350036732],[5344309813848860439,\"codex_login\",false,17285441000391453487],[6775601289713073895,\"codex_config\",false,11240930687081224151],[6886418835726244544,\"codex_feedback\",false,11566587465181895605],[8212400614959537577,\"codex_utils_output_truncation\",false,13658031123316897320],[10348833023956810397,\"codex_model_provider_info\",false,628819706842571315],[10904014048651519591,\"codex_protocol\",false,590034527678815999],[11894882499208138632,\"codex_\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on lib-codex_models_manager.json. It contains code that handles codex-models-manager-5d68e5a14b715f67 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: apps/desktop/src-tauri/target/debug/.fingerprint/tauri-plugin-opener-6ce14559c65ef196/build-script-build-script-build.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[]\",\"declared_features\":\"[]\",\"target\":5408242616063297496,\"profile\":15657897354478470176,\"path\":7551247378368819884,\"deps\":[[6913375703034175521,\"schemars\",false,13592759450786291080],[12985028376309037298,\"tauri_plugin\",false,7929483316034823128],[13548984313718623784,\"serde\",false,14010119348770444369]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\tauri-plugin-opener-6ce14559c65ef196\\\\dep-build-script-build-script-build\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to build-script-build-script-build.json. It contains code that handles tauri-plugin-opener-6ce14559c65ef196 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What are the key functions in this file?\n\nFile: apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/debug/.fingerprint/futures-channel-2e95c10586d41d18/lib-futures_channel.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"alloc\\\", \\\"default\\\", \\\"std\\\"]\",\"declared_features\":\"[\\\"alloc\\\", \\\"cfg-target-has-atomic\\\", \\\"default\\\", \\\"futures-sink\\\", \\\"sink\\\", \\\"std\\\", \\\"unstable\\\"]\",\"target\":13634065851578929263,\"profile\":17467636112133979524,\"path\":2239112352301761064,\"deps\":[[302948626015856208,\"futures_core\",false,14312847649390211418]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"x86_64-pc-windows-msvc\\\\debug\\\\.fingerprint\\\\futures-channel-2e95c10586d41d18\\\\dep-lib-futures_channel\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":9161124489350129226}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The key functions are lib-futures_channel.json. It contains code that handles futures-channel-2e95c10586d41d18 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: temp/vercel-examples/apps/vibe-coding-platform/components/commands-logs/commands-logs-stream.tsx\n```\n'use client'\n\nimport { useEffect, useRef } from 'react'\nimport { useSandboxStore } from '@/app/state'\nimport stripAnsi from 'strip-ansi'\nimport z from 'zod/v3'\n\ntype StreamingCommandLogs = Record<\n  string,\n  Awaited<ReturnType<typeof getCommandLogs>>\n>\n\nexport function CommandLogsStream() {\n  const { sandboxId, commands, addLog, upsertCommand } = useSandboxStore()\n  const ref = useRef<StreamingCommandLogs>({})\n\n  useEffect(() => {\n    if (sandboxId) {\n      for (const command of commands.filter(\n        (command) => typeof command.exitCode === 'undefined'\n      )) {\n        if (!ref.current[command.cmdId]) {\n          const iterator = getCommandLogs(sandboxId, command.cmdId)\n          ref.current[command.cmdId] = iterator\n          ;(async () => {\n            for await (const log of itera\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on commands-logs-stream.tsx. It contains code that handles commands-logs functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: apps/desktop/src-tauri/target/debug/.fingerprint/tauri-codegen-f3766f4f350fd9ba/lib-tauri_codegen.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"brotli\\\", \\\"compression\\\"]\",\"declared_features\":\"[\\\"brotli\\\", \\\"compression\\\", \\\"config-json5\\\", \\\"config-toml\\\", \\\"isolation\\\"]\",\"target\":17460618180909919773,\"profile\":2225463790103693989,\"path\":3255116573179181020,\"deps\":[[776188902721909695,\"tauri_utils\",false,13744423038168082271],[1528297757488249563,\"url\",false,7486567628061614783],[1678291836268844980,\"brotli\",false,10923298952733770868],[2448563160050429386,\"thiserror\",false,9187380229884497108],[4289358735036141001,\"proc_macro2\",false,3190283464301231385],[4297343375027492590,\"uuid\",false,8648956236157237603],[7170110829644101142,\"json_patch\",false,2069163721163692849],[9680020106200215617,\"semver\",false,17764123155762431065],[9857275760291862238,\"sha2\",false,18332056625352496043],[1042\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by lib-tauri_codegen.json. It contains code that handles tauri-codegen-f3766f4f350fd9ba functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: tmp/openai-codex/codex-rs/app-server-protocol/schema/typescript/v2/HookEventName.ts\n```\n// GENERATED CODE! DO NOT MODIFY BY HAND!\n\n// This file was generated by [ts-rs](https://github.com/Aleph-Alpha/ts-rs). Do not edit this file manually.\n\nexport type HookEventName = \"preToolUse\" | \"postToolUse\" | \"sessionStart\" | \"userPromptSubmit\" | \"stop\";\n\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to HookEventName.ts. It contains code that handles v2 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: apps/portfolio/lib/copilot/copilot-mutate-allowlist.ts\n```\n/** Collections allowed for `POST /api/copilot/create` (narrower than read allowlist). */\nexport const COPILOT_MUTATE_COLLECTION_SLUGS = ['project-records', 'site-app-records'] as const;\n\nexport const COPILOT_MUTATE_ALLOWLIST = new Set<string>(COPILOT_MUTATE_COLLECTION_SLUGS);\n\nexport function isCopilotMutateCollectionAllowed(slug: string): boolean {\n  return COPILOT_MUTATE_ALLOWLIST.has(slug);\n}\n\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to copilot-mutate-allowlist.ts. It contains code that handles copilot functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: apps/portfolio/lib/reader/runtime/ReaderEmptyCover.tsx\n```\n'use client';\n\nimport React from 'react';\n\nexport function ReaderEmptyCover({\n  title,\n  /** When false, hides the top \"Empty\" label so shelf status chips can sit in the overlay without overlap. */\n  showTopLabel = true,\n}: {\n  title: string;\n  showTopLabel?: boolean;\n}) {\n  const initials =\n    title\n      .split(/\\s+/)\n      .filter(Boolean)\n      .slice(0, 2)\n      .map((part) => part.charAt(0).toUpperCase())\n      .join('') || 'EB';\n\n  return (\n    <div className=\"relative flex h-full w-full overflow-hidden rounded-lg border border-border bg-gradient-to-b from-muted/80 to-muted text-left shadow-inner\">\n      <div className=\"absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-foreground/5 to-transparent\" />\n      <div className=\"flex flex-1 flex-col justify-between p-4\">\n        {showTo\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements ReaderEmptyCover.tsx. It contains code that handles runtime functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: apps/desktop/src-tauri/target/release/.fingerprint/tokio-f5cb22a76efab224/lib-tokio.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"bytes\\\", \\\"default\\\", \\\"fs\\\", \\\"full\\\", \\\"io-std\\\", \\\"io-util\\\", \\\"libc\\\", \\\"macros\\\", \\\"mio\\\", \\\"net\\\", \\\"parking_lot\\\", \\\"process\\\", \\\"rt\\\", \\\"rt-multi-thread\\\", \\\"signal\\\", \\\"signal-hook-registry\\\", \\\"socket2\\\", \\\"sync\\\", \\\"time\\\", \\\"tokio-macros\\\", \\\"windows-sys\\\"]\",\"declared_features\":\"[\\\"bytes\\\", \\\"default\\\", \\\"fs\\\", \\\"full\\\", \\\"io-std\\\", \\\"io-uring\\\", \\\"io-util\\\", \\\"libc\\\", \\\"macros\\\", \\\"mio\\\", \\\"net\\\", \\\"parking_lot\\\", \\\"process\\\", \\\"rt\\\", \\\"rt-multi-thread\\\", \\\"signal\\\", \\\"signal-hook-registry\\\", \\\"socket2\\\", \\\"sync\\\", \\\"taskdump\\\", \\\"test-util\\\", \\\"time\\\", \\\"tokio-macros\\\", \\\"tracing\\\", \\\"windows-sys\\\"]\",\"target\":9605832425414080464,\"profile\":18356869605426965472,\"path\":10602617265070948612,\"deps\":[[260904210593906365,\"tokio_macros\",fal\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements lib-tokio.json. It contains code that handles tokio-f5cb22a76efab224 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/.fingerprint/filedescriptor-71531f4c2502c6c1/lib-filedescriptor.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[]\",\"declared_features\":\"[]\",\"target\":12786212278807696958,\"profile\":367816849085071872,\"path\":13825669401318694026,\"deps\":[[8008191657135824715,\"thiserror\",false,4998379211224748205],[10020888071089587331,\"winapi\",false,10906939899125307958],[17799673680390999427,\"libc\",false,320464748951761357]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"x86_64-pc-windows-msvc\\\\release\\\\.fingerprint\\\\filedescriptor-71531f4c2502c6c1\\\\dep-lib-filedescriptor\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":9161124489350129226}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by lib-filedescriptor.json. It contains code that handles filedescriptor-71531f4c2502c6c1 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: .claude/skills/gad-docs-update/COMMAND.md\n```\n---\nname: gad:docs-update\ndescription: Generate or update project documentation verified against the codebase\nargument-hint: \"[--force] [--verify-only]\"\nallowed-tools:\n  - Read\n  - Write\n  - Edit\n  - Bash\n  - Glob\n  - Grep\n  - Task\n  - AskUserQuestion\n---\n<objective>\nGenerate and update up to 9 documentation files for the current project. Each doc type is written by a gad-doc-writer subagent that explores the codebase directly \u2014 no hallucinated paths, phantom endpoints, or stale signatures.\n\nFlag handling rule:\n- The optional flags documented below are available behaviors, not implied active behaviors\n- A flag is active only when its literal token appears in `$ARGUMENTS`\n- If a documented flag is absent from `$ARGUMENTS`, treat it as inactive\n- `--force`: skip preservation prompts, regener\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on COMMAND.md. It contains code that handles gad-docs-update functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What are the key functions in this file?\n\nFile: apps/portfolio/tests/unit/lib/repo-planner-minimal-template-files.test.ts\n```\nimport { getMinimalPlanningTemplateFiles } from '@/lib/repo-planner/minimal-template-files';\n\ndescribe('getMinimalPlanningTemplateFiles', () => {\n  it('returns the expected minimal init files', () => {\n    const files = getMinimalPlanningTemplateFiles();\n    const paths = files.map((file) => file.path);\n\n    expect(paths).toContain('REQUIREMENTS.md');\n    expect(paths).toContain('.planning/AGENTS.md');\n    expect(paths).toContain('.planning/gad-config.toml');\n    expect(paths).toContain('.planning/STATE.xml');\n    expect(paths).toContain('.planning/TASK-REGISTRY.xml');\n    expect(paths).toContain('.planning/ROADMAP.xml');\n    expect(paths).toContain('.planning/DECISIONS.xml');\n    expect(paths).toContain('.planning/ERRORS-AND-ATTEMPTS.xml');\n    expect(paths).toContain('.planning/REQUIREME\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The key functions are repo-planner-minimal-template-files.test.ts. It contains code that handles lib functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: .cursor/gad-local-patches/skills/gad-reapply-patches/SKILL.md\n```\n---\nname: gad:reapply-patches\ndescription: Reapply local modifications after a GAD update\nlane: meta\ntype: command-wrapper\nallowed-tools: Read, Write, Edit, Bash, Glob, Grep, AskUserQuestion\nworkflow: workflows/reapply-patches.md\n---\n\n\n# gad:reapply-patches\n\n**Workflow:** [workflows/reapply-patches.md](../../workflows/reapply-patches.md)\n\nRun the workflow. All procedural detail, examples, and tool sequencing live in the workflow file per the canonical skill shape (references/skill-shape.md, decision gad-190).\n\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to SKILL.md. It contains code that handles gad-reapply-patches functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/.fingerprint/litemap-a15f2ecdb9f5bd96/lib-litemap.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[]\",\"declared_features\":\"[\\\"alloc\\\", \\\"databake\\\", \\\"default\\\", \\\"serde\\\", \\\"testing\\\", \\\"yoke\\\"]\",\"target\":6548088149557820361,\"profile\":3123478403604215915,\"path\":8624977669803164907,\"deps\":[],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"x86_64-pc-windows-msvc\\\\release\\\\.fingerprint\\\\litemap-a15f2ecdb9f5bd96\\\\dep-lib-litemap\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":9161124489350129226}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements lib-litemap.json. It contains code that handles litemap-a15f2ecdb9f5bd96 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: tmp/openai-codex/codex-rs/app-server-protocol/schema/typescript/v2/ReasoningTextDeltaNotification.ts\n```\n// GENERATED CODE! DO NOT MODIFY BY HAND!\n\n// This file was generated by [ts-rs](https://github.com/Aleph-Alpha/ts-rs). Do not edit this file manually.\n\nexport type ReasoningTextDeltaNotification = { threadId: string, turnId: string, itemId: string, delta: string, contentIndex: number, };\n\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by ReasoningTextDeltaNotification.ts. It contains code that handles v2 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: apps/desktop/src-tauri/target/release/.fingerprint/derive_more-c2dad114686c6eb0/lib-derive_more.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"add\\\", \\\"add_assign\\\", \\\"as_mut\\\", \\\"as_ref\\\", \\\"constructor\\\", \\\"convert_case\\\", \\\"default\\\", \\\"deref\\\", \\\"deref_mut\\\", \\\"display\\\", \\\"error\\\", \\\"from\\\", \\\"from_str\\\", \\\"index\\\", \\\"index_mut\\\", \\\"into\\\", \\\"into_iterator\\\", \\\"is_variant\\\", \\\"iterator\\\", \\\"mul\\\", \\\"mul_assign\\\", \\\"not\\\", \\\"rustc_version\\\", \\\"sum\\\", \\\"try_into\\\", \\\"unwrap\\\"]\",\"declared_features\":\"[\\\"add\\\", \\\"add_assign\\\", \\\"as_mut\\\", \\\"as_ref\\\", \\\"constructor\\\", \\\"convert_case\\\", \\\"default\\\", \\\"deref\\\", \\\"deref_mut\\\", \\\"display\\\", \\\"error\\\", \\\"from\\\", \\\"from_str\\\", \\\"generate-parsing-rs\\\", \\\"index\\\", \\\"index_mut\\\", \\\"into\\\", \\\"into_iterator\\\", \\\"is_variant\\\", \\\"iterator\\\", \\\"mul\\\", \\\"mul_assign\\\", \\\"nightly\\\", \\\"not\\\", \\\"peg\\\", \\\"rustc_version\\\", \\\"sum\\\", \\\"testing-helpers\\\", \\\"tra\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to lib-derive_more.json. It contains code that handles derive_more-c2dad114686c6eb0 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: tmp/openai-codex/codex-rs/target/debug/.fingerprint/rand_core-8fe0d047edf501c1/lib-rand_core.json\n```\n{\"rustc\":6817557220965521185,\"features\":\"[\\\"alloc\\\", \\\"getrandom\\\", \\\"std\\\"]\",\"declared_features\":\"[\\\"alloc\\\", \\\"getrandom\\\", \\\"serde\\\", \\\"serde1\\\", \\\"std\\\"]\",\"target\":13770603672348587087,\"profile\":15657897354478470176,\"path\":7623485146401293214,\"deps\":[[11023519408959114924,\"getrandom\",false,11992469176741235382]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\rand_core-8fe0d047edf501c1\\\\dep-lib-rand_core\",\"checksum\":false}}],\"rustflags\":[\"-C\",\"link-arg=/STACK:8388608\"],\"config\":2069994364910194474,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on lib-rand_core.json. It contains code that handles rand_core-8fe0d047edf501c1 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: tmp/openai-codex/codex-rs/target/debug/.fingerprint/asn1-rs-derive-f796633294ad427e/lib-asn1_rs_derive.json\n```\n{\"rustc\":6817557220965521185,\"features\":\"[]\",\"declared_features\":\"[]\",\"target\":2673322451761137574,\"profile\":2225463790103693989,\"path\":16359018378927304840,\"deps\":[[4289358735036141001,\"proc_macro2\",false,6190646821969983707],[4621990586401870511,\"synstructure\",false,10354599752954202613],[6100504282945712449,\"quote\",false,17074727871728627811],[6490058671768129134,\"syn\",false,10330151668458959364]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"debug\\\\.fingerprint\\\\asn1-rs-derive-f796633294ad427e\\\\dep-lib-asn1_rs_derive\",\"checksum\":false}}],\"rustflags\":[\"-C\",\"link-arg=/STACK:8388608\"],\"config\":2069994364910194474,\"compile_kind\":0}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by lib-asn1_rs_derive.json. It contains code that handles asn1-rs-derive-f796633294ad427e functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What are the key functions in this file?\n\nFile: apps/species/portfolio-v2/lib/unknown-error.ts\n```\n/** Stable string from thrown values in catch blocks and worker boundaries. */\nexport function unknownErrorMessage(error: unknown): string {\n  return error instanceof Error ? error.message : String(error);\n}\n\n/** For script stderr: prefer stack when present (matches previous `stack || message` pattern). */\nexport function unknownErrorMessageWithStack(error: unknown): string {\n  return error instanceof Error ? error.stack || error.message : String(error);\n}\n\n/**\n * Visitor-facing UI: use `Error.message` when the throw is an `Error`; otherwise show a fixed\n * fallback string (avoid dumping `String(nonError)` into the UI).\n */\nexport function errorMessageOrFallback(error: unknown, fallback: string): string {\n  return error instanceof Error ? error.message : fallback;\n}\n\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The key functions are unknown-error.ts. It contains code that handles lib functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What are the key functions in this file?\n\nFile: tmp/repostudio/apps/repo-studio/src/lib/api/services/projects.ts\n```\nimport { getJson, postJson } from '@/lib/api/http';\nimport type { RepoProjectBrowseResponse, RepoProjectMutationResponse, RepoProjectsResponse } from '@/lib/api/types';\n\nexport async function fetchRepoProjects() {\n  return getJson<RepoProjectsResponse>('/api/repo/projects', {\n    fallbackMessage: 'Unable to load projects.',\n  });\n}\n\nexport async function fetchActiveRepoProject() {\n  return getJson<RepoProjectMutationResponse>('/api/repo/projects/active', {\n    fallbackMessage: 'Unable to load active project.',\n  });\n}\n\nexport async function setActiveRepoProject(projectId: string) {\n  return postJson<RepoProjectMutationResponse>('/api/repo/projects/active', {\n    projectId,\n  }, {\n    fallbackMessage: 'Unable to set active project.',\n  });\n}\n\nexport async function importLocalRepoProject(inp\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The key functions are projects.ts. It contains code that handles services functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: tmp/free-code/src/ink/hooks/use-tab-status.ts\n```\nimport { useContext, useEffect, useRef } from 'react'\nimport {\n  CLEAR_TAB_STATUS,\n  supportsTabStatus,\n  tabStatus,\n  wrapForMultiplexer,\n} from '../termio/osc.js'\nimport type { Color } from '../termio/types.js'\nimport { TerminalWriteContext } from '../useTerminalNotification.js'\n\nexport type TabStatusKind = 'idle' | 'busy' | 'waiting'\n\nconst rgb = (r: number, g: number, b: number): Color => ({\n  type: 'rgb',\n  r,\n  g,\n  b,\n})\n\n// Per the OSC 21337 usage guide's suggested mapping.\nconst TAB_STATUS_PRESETS: Record<\n  TabStatusKind,\n  { indicator: Color; status: string; statusColor: Color }\n> = {\n  idle: {\n    indicator: rgb(0, 215, 95),\n    status: 'Idle',\n    statusColor: rgb(136, 136, 136),\n  },\n  busy: {\n    indicator: rgb(255, 149, 0),\n    status: 'Working\u2026',\n    statusColor: rgb(255, \n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by use-tab-status.ts. It contains code that handles hooks functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: .claude/skills/gad-manager/COMMAND.md\n```\n---\nname: gad:manager\ndescription: Interactive command center for managing multiple phases from one terminal\nallowed-tools:\n  - Read\n  - Write\n  - Bash\n  - Glob\n  - Grep\n  - AskUserQuestion\n  - Skill\n  - Task\n---\n<objective>\nSingle-terminal command center for managing a milestone. Shows a dashboard of all phases with visual status indicators, recommends optimal next actions, and dispatches work \u2014 discuss runs inline, plan/execute run as background agents.\n\nDesigned for power users who want to parallelize work across phases from one terminal: discuss a phase while another plans or executes in the background.\n\n**Creates/Updates:**\n- No files created directly \u2014 dispatches to existing GAD commands via Skill() and background Task agents.\n- Reads `.planning/STATE.md`, `.planning/ROADMAP.md`, pha\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to COMMAND.md. It contains code that handles gad-manager functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What are the key functions in this file?\n\nFile: .tmp/grime_time_site/src/cli/lib/format-table.ts\n```\n/** Simple fixed-width columns for terminal tables (no unicode table chars). */\nexport function formatTable(headers: string[], rows: string[][]): string {\n  const cols = headers.length\n  const widths = headers.map((h, i) => {\n    const cellWidths = [h.length, ...rows.map((r) => (r[i] ?? '').length)]\n    return Math.max(...cellWidths, 3)\n  })\n\n  const pad = (s: string, w: number) => (s.length >= w ? s.slice(0, w) : s + ' '.repeat(w - s.length))\n\n  const line = (cells: string[]) =>\n    cells.map((c, i) => pad(c, widths[i])).join('  ').trimEnd()\n\n  const out: string[] = [line(headers), line(widths.map((w) => '\u2500'.repeat(w)))]\n  for (const row of rows) {\n    const cells = headers.map((_, i) => row[i] ?? '')\n    out.push(line(cells))\n  }\n  return out.join('\\n')\n}\n\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The key functions are format-table.ts. It contains code that handles lib functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Summarize the purpose of this code:\n\nFile: apps/portfolio/lib/ui/skeleton-defaults.ts\n```\n/**\n * Canonical **TypeScript-only** defaults for loading skeletons (placeholders, not live data).\n * No JSON artifacts \u2014 counts are either derived from registries or maintained as named constants\n * and checked in `tests/unit/lib/skeleton-defaults.test.ts`.\n *\n * | Surface | Source of truth |\n * | --- | --- |\n * | Apps hub | `SITE_APP_SEED_RECORDS.length` in `lib/site-app-seed.ts` (loading placeholders only) |\n * | Projects / blog index | `CONTENT_PROJECT_MDX_COUNT` / `CONTENT_BLOG_MDX_COUNT` \u2194 `content/{projects,blog}/*.mdx` |\n * | Listen | `getListenCatalog().length` in `lib/listen-catalog.ts` |\n * | Resumes | `FALLBACK_RESUME_COUNT` in `lib/resume-fallback.ts` |\n */\nimport { SITE_APP_SEED_RECORDS } from '@/lib/site-app-registry';\nimport { getListenCatalog } from '@/lib/listen-catalog';\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The purpose of this code is to skeleton-defaults.ts. It contains code that handles ui functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: sites/test-tenant/app/layout.tsx\n```\nimport type { Metadata } from \"next\";\nimport \"./globals.css\";\nimport { Providers } from \"./providers\";\n\nexport const metadata: Metadata = {\n  title: \"test-tenant\",\n  description: \"Built with Get Anything Done.\",\n};\n\nexport default function RootLayout({\n  children,\n}: {\n  children: React.ReactNode;\n}) {\n  return (\n    <html lang=\"en\" className=\"dark\">\n      <body>\n        <Providers>\n          {children}\n        </Providers>\n      </body>\n    </html>\n  );\n}\n\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements layout.tsx. It contains code that handles app functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "How does this code work?\n\nFile: tmp/repostudio/apps/repo-studio/app/api/repo/settings/reset/route.ts\n```\nimport { NextResponse } from 'next/server';\nimport { resetRepoSettingsScopes } from '@/lib/settings/repository';\nimport type { RepoSettingsScope } from '@/lib/settings/types';\n\nexport const runtime = 'nodejs';\n\nfunction parseScope(value: unknown): RepoSettingsScope | undefined {\n  const scope = String(value || '').trim().toLowerCase();\n  if (scope === 'app' || scope === 'workspace' || scope === 'local') {\n    return scope;\n  }\n  return undefined;\n}\n\nexport async function POST(request: Request) {\n  let body: {\n    scope?: string;\n    scopeId?: string | null;\n    workspaceId?: string;\n    loopId?: string;\n  } = {};\n\n  try {\n    body = await request.json();\n  } catch {\n    body = {};\n  }\n\n  try {\n    const snapshot = await resetRepoSettingsScopes({\n      scope: parseScope(body.scope),\n      s\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This code works by route.ts. It contains code that handles reset functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "Explain what this file does:\n\nFile: tmp/opencode/packages/ui/src/components/dialog.tsx\n```\nimport { Dialog as Kobalte } from \"@kobalte/core/dialog\"\nimport { ComponentProps, JSXElement, Match, ParentProps, Show, Switch } from \"solid-js\"\nimport { useI18n } from \"../context/i18n\"\nimport { IconButton } from \"./icon-button\"\n\nexport interface DialogProps extends ParentProps {\n  title?: JSXElement\n  description?: JSXElement\n  action?: JSXElement\n  size?: \"normal\" | \"large\" | \"x-large\"\n  class?: ComponentProps<\"div\">[\"class\"]\n  classList?: ComponentProps<\"div\">[\"classList\"]\n  fit?: boolean\n  transition?: boolean\n}\n\nexport function Dialog(props: DialogProps) {\n  const i18n = useI18n()\n  return (\n    <div\n      data-component=\"dialog\"\n      data-fit={props.fit ? true : undefined}\n      data-size={props.size || \"normal\"}\n      data-transition={props.transition ? true : undefined}\n    >\n   \n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file implements dialog.tsx. It contains code that handles components functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What are the key functions in this file?\n\nFile: apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/.fingerprint/windows-core-fcda5da90dd6a9b2/lib-windows_core.json\n```\n{\"rustc\":8891013984288978370,\"features\":\"[\\\"default\\\", \\\"std\\\"]\",\"declared_features\":\"[\\\"default\\\", \\\"std\\\"]\",\"target\":13201692854421378145,\"profile\":13611783949281133144,\"path\":7943892117558839424,\"deps\":[[632475476718824203,\"windows_implement\",false,8866752769427249637],[704053683532934696,\"windows_strings\",false,15607349267953775003],[1571872982634866983,\"windows_result\",false,1428070873939136876],[9607212097014017224,\"windows_interface\",false,17325949030985649181],[11505586985402185701,\"windows_link\",false,16636564536390056059]],\"local\":[{\"CheckDepInfo\":{\"dep_info\":\"x86_64-pc-windows-msvc\\\\release\\\\.fingerprint\\\\windows-core-fcda5da90dd6a9b2\\\\dep-lib-windows_core\",\"checksum\":false}}],\"rustflags\":[],\"config\":8247474407144887393,\"compile_kind\":9161124489350129226}\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "The key functions are lib-windows_core.json. It contains code that handles windows-core-fcda5da90dd6a9b2 functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ],
+  [
+    {
+      "role": "user",
+      "content": "What dependencies does this file have?\n\nFile: apps/portfolio/public/evals/app-forge/v1/_next/static/voNGkWwTfQzjR1rlVVQzt/_ssgManifest.js\n```\nself.__SSG_MANIFEST=new Set([\"\\u002Fg\\u002F[project]\\u002F[species]\\u002F[version]\"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()\n```"
+    },
+    {
+      "role": "assistant",
+      "content": "This file depends on _ssgManifest.js. It contains code that handles voNGkWwTfQzjR1rlVVQzt functionality. The implementation uses standard patterns from the GAD ecosystem."
+    }
+  ]
+]

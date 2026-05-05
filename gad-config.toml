@@ -7,13 +7,7 @@ sprintSize = 5
 useGraphQuery = true
 
 [[planning.roots]]
-id = "slm_learning"
+id = "slm-learning"
 path = "."
-planningDir = ".planning"
-discover = false
-
-[[planning.roots]]
-id = "llm-from-scratch"
-path = "..\custom_portfolio\projects\llm-from-scratch"
 planningDir = ".planning"
 discover = false

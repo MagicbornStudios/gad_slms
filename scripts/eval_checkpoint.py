@@ -120,9 +120,9 @@ def main() -> int:
         print(f"no tests in {args.eval}", file=sys.stderr)
         return 2
 
-    # Load DrStein with the explicit checkpoint path
-    from slm_from_scratch.models.dr_stein import DrSteinModel
-    model = DrSteinModel(model_path=str(args.checkpoint), device=args.device)
+    # Polymorphic load: .pt -> DrSteinModel, adapter dir -> HFAdapterModel
+    from slm_from_scratch.models.loader import load_model_for_eval
+    model = load_model_for_eval(args.checkpoint, device=args.device)
     print(f"Loaded checkpoint: {args.checkpoint} (device={model.device}, temp={args.temperature})")
 
     started = time.time()

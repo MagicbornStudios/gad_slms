@@ -1,0 +1,33 @@
+{
+  "workers": 2,
+  "roles": [
+    "executor",
+    "executor"
+  ],
+  "workers_spec": [
+    {
+      "id": "w1",
+      "role": "executor",
+      "lane": null,
+      "runtime": "opencode",
+      "runtime_cmd": null
+    },
+    {
+      "id": "w2",
+      "role": "executor",
+      "lane": null,
+      "runtime": "opencode",
+      "runtime_cmd": null
+    }
+  ],
+  "runtime": "opencode",
+  "runtime_cmd": null,
+  "autopause_threshold": 20,
+  "tick_ms": 2000,
+  "runtime_tick_overrides": {
+    "gemini-cli": 8000,
+    "codex-cli": 2000
+  },
+  "created_at": "2026-05-05T04:37:32.190Z",
+  "supervisor_pid": 11900
+}

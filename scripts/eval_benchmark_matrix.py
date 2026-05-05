@@ -31,7 +31,12 @@ INDEX_MD = ROOT / "experiments" / "INDEX.md"
 
 
 def discover_checkpoints() -> list[tuple[str, Path]]:
-    """Return [(name, ckpt_path), ...] for every checkpoint we want to eval."""
+    """Return [(name, target_path), ...] for every eval target.
+
+    Two shapes are supported:
+      - .pt file       (MiniLlama state_dict) -> Phase 02 + early sweep
+      - adapter/ dir   (PEFT adapter)         -> Stage 2.5+ TRL/PEFT runs
+    """
     targets: list[tuple[str, Path]] = []
     for stem in ("sft_model", "reasoning_model", "dr_stein"):
         p = PHASE02_DIR / f"{stem}.pt"
@@ -42,8 +47,11 @@ def discover_checkpoints() -> list[tuple[str, Path]]:
             if not run_dir.is_dir():
                 continue
             ckpt = run_dir / "checkpoint.pt"
+            adapter = run_dir / "adapter"
             if ckpt.exists():
                 targets.append((run_dir.name, ckpt))
+            elif (adapter / "adapter_config.json").exists():
+                targets.append((run_dir.name, adapter))
     return targets
 
 

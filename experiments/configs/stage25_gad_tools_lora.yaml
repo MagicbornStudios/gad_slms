@@ -45,7 +45,7 @@ training:
   logging_steps: 5
 
 eval:
-  run_after_train: false  # eval pipeline does not yet load PEFT adapters
+  run_after_train: true
   benchmarks:
     - gad_tools
   temperature: 0.0

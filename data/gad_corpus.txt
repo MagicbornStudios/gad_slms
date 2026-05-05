@@ -1,0 +1,2175 @@
+<|file_start|>
+Path: .planning/DECISIONS.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<decisions project="slm-learning" schema="1">
+  <!-- <decision id="slm-learning-001"><title>...</title><summary>...</summary><impact>...</impact></decision> -->
+
+  <decision id="slm-learning-002">
+    <title>Use speech-native-builder soul for terminal-native VCS work</title>
+    <summary>The active project soul is speech-native-builder. Future agents should preserve terminal-native speech capture, visible device/listening state, live transcript output, stable visual context ids, and honest constraint reporting.</summary>
+    <impact>New sessions should read SOUL.md and AGENTS.md before implementation, run gad snapshot, and avoid browser/web surfaces for core terminal workflows unless explicitly approved.</impact>
+    <references>
+      <file path="SOUL.md"/>
+      <file path="AGENTS.md"/>
+      <file path="scripts/learning_tui/local_speech.py"/>
+    </references>
+  </decision>
+
+  <decision id="slm-learning-003">
+    <title>Adopt Dr. Stein as the project-specific SLM soul</title>
+    <summary>The active slm_learning soul is Dr. Stein, a mad scientist responsible for creating SLMs, souls, and reasoning loops from this project itself. Gilgamesh remains the broader/default leader, but Dr. Stein governs project-specific terminal lab behavior.</summary>
+    <impact>Future sessions should read SOUL.md and narrative/souls/dr-stein.md, preserve terminal-native speech/VCS constraints, and treat the menu shell as a chat/composer lab interface for lessons and self-improvement.</impact>
+    <references>
+      <file path="SOUL.md"/>
+      <file path="narrative/souls/dr-stein.md"/>
+      <file path="AGENTS.md"/>
+      <file path="scripts/learning_tui/menu_screen.py"/>
+    </references>
+  </decision>
+
+</decisions>
+
+<|file_end|>
+
+<|file_start|>
+Path: .planning/ERRORS-AND-ATTEMPTS.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<errors-and-attempts project="slm-learning" schema="1">
+  <!-- <entry id="<slug>-YYYY-MM-DD" date="YYYY-MM-DD"><what>...</what><why>...</why><lesson>...</lesson></entry> -->
+
+  <entry id="tui-browser-speech-bridge-mismatch-2026-05-02" date="2026-05-02" status="resolved" kind="scope">
+    <summary>Implemented browser speech bridge after terminal-native speech was requested</summary>
+    <context>User wanted speech-to-text inside the terminal VCS quick prompt flow. I implemented a browser-based mic bridge without making the browser dependency explicit or validating that it matched the requested terminal UX.</context>
+    <failure>This violated the expected terminal-native interaction model, created surprise UI surface area, and delayed the actual requirement discovery.</failure>
+    <rule>For terminal tooling, do not route core interactions through a browser unless the user explicitly approves that tradeoff. State limitations before implementing device/audio capture. Prefer terminal-native input paths or ask before adding a separate UI.</rule>
+    <reference>scripts/learning_tui/speech_bridge.py</reference>
+    <reference>README_TUI.md</reference>
+  </entry>
+</errors-and-attempts>
+
+<|file_end|>
+
+<|file_start|>
+Path: .planning/REQUIREMENTS.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<requirements project="slm-learning" schema="1">
+  <!-- TODO: capture initial scope -->
+  <!-- <requirement id="REQ-001" priority="must"><goal>...</goal></requirement> -->
+  <requirement id="SLM_LEARNING-R-001" priority="must">
+    <goal>Build a terminal-native SLM learning lab that creates a small language model from scratch, uses it on the GAD project itself, and improves its souls/reasoning workflows.</goal>
+  </requirement>
+  <requirement id="SLM_LEARNING-R-002" priority="must">
+    <goal>Make the main menu shell behave like a chat/composer interface with slash-command lesson routes, stable VCS ids, succinct quick prompts, and honest live speech/input status.</goal>
+  </requirement>
+</requirements>
+
+<|file_end|>
+
+<|file_start|>
+Path: .planning/ROADMAP.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<roadmap project="slm-learning" schema="1">
+  <milestone id="v1" status="active">
+    <title>Initial milestone</title>
+    <phase id="00" status="planned">
+      <title>Bootstrap</title>
+      <goal>Define scope</goal>
+    </phase>
+  </milestone>
+
+  <phase id="01">
+    <title>Composer intelligence</title>
+    <goal>Make the Dr. Stein menu composer behave like an intelligent command surface: predictive slash commands, explainable recommendations, keyboard navigation, and tests for common typo/partial-command gaps.</goal>
+    <status>planned</status>
+    <depends></depends>
+  </phase>
+
+</roadmap>
+
+<|file_end|>
+
+<|file_start|>
+Path: .planning/STATE.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<state project="slm-learning" schema="1">
+  <status>active</status>
+  <milestone>v1</milestone>
+  <current-phase></current-phase>
+  <last-activity>2026-05-02</last-activity>
+  <next-action>Next session: read SOUL.md/AGENTS.md and gad snapshot; continue phase 01 composer intelligence, starting with tests for slash-command prediction gaps and recommendation UX.</next-action>
+</state>
+
+<|file_end|>
+
+<|file_start|>
+Path: .planning/AGENTS.md
+
+# Planning Lane Contract
+
+This file applies only inside `.planning/`.
+
+## Scope
+
+- Keep planning artifacts coherent.
+- Prefer atomic CLI writes over manual edits when a command exists.
+- Preserve naming canon and timeline integrity.
+
+## Default lane
+
+Planning hygiene is a single-agent lane by default. Do not fork parallel
+planning edits unless `gad team` explicitly assigns separate ownership.
+
+## Working rules
+
+1. Read the project-root `AGENTS.md` first.
+2. Treat `STATE.xml`, `ROADMAP.xml`, `TASK-REGISTRY.xml`, `DECISIONS.xml`,
+   `REQUIREMENTS.xml`, and `ERRORS-AND-ATTEMPTS.xml` as the planning source.
+3. Use `gad state log`, `gad tasks ...`, `gad decisions ...`, and
+   `gad handoffs ...` when those commands cover the change.
+4. Report deltas only and always close with gaps.
+
+<|file_end|>
+
+<|file_start|>
+Path: .planning/issues/open/i-2026-05-04T04-27-14-slm-learning-lesson-recommendations-still-need-coverage-for-p.md
+
+---
+id: i-2026-05-04T04-27-14-slm-learning-lesson-recommendations-still-need-coverage-for-p
+projectid: slm_learning
+status: open
+title: Lesson recommendations still need coverage for partial command gaps
+severity: normal
+type: ux
+phase: 01
+task_id: 01-01
+source: operator-cli
+created_at: 2026-05-04T04:27:14.384Z
+closed_at: null
+---
+The /les gap showed that fuzzy lesson scoring is not enough if slash-command parsing rejects partial commands first. Keep a regression checklist for partial command prefixes, typos, empty query, ranked results, and no-result display.
+
+<|file_end|>
+
+<|file_start|>
+Path: .planning/issues/open/i-2026-05-04T04-38-39-slm-learning-lesson-artifact-panel-should-become-tabbed-and-c.md
+
+---
+id: i-2026-05-04T04-38-39-slm-learning-lesson-artifact-panel-should-become-tabbed-and-c
+projectid: slm_learning
+status: open
+title: Lesson artifact panel should become tabbed and context-aware
+severity: normal
+type: ux
+phase: 01
+task_id: 01-04
+source: operator-cli
+created_at: 2026-05-04T04:38:39.243Z
+closed_at: null
+---
+The toolbar removal pass moved lesson output into a bottom context panel, but the requested final shape is a tabbed panel that can swap between output, command, errors, and suggestions based on run state and user context.
+
+<|file_end|>
+
+<|file_start|>
+Path: .planning/graph.json
+
+{
+  "nodes": [
+    {
+      "type": "phase",
+      "id": "phase:00",
+      "label": "Bootstrap",
+      "status": "planned",
+      "goal": "Define scope"
+    },
+    {
+      "type": "phase",
+      "id": "phase:01",
+      "label": "Composer intelligence",
+      "status": "planned",
+      "goal": "Make the Dr. Stein menu composer behave like an intelligent command surface: predictive slash commands, explainable recommendations, keyboard navigation, and tests for common typo/partial-command gaps."
+    },
+    {
+      "type": "task",
+      "id": "task:00-02",
+      "label": "Replace browser speech bridge with terminal-native speech-to-text capture in the Textual VCS quick prompt flow, includin",
+      "status": "done",
+      "goal": "Replace browser speech bridge with terminal-native speech-to-text capture in the Textual VCS quick prompt flow, including device/status visibility and safe exit controls. Completed with Vosk + sounddevice local microphone capture, Esc/X exit controls, and no browser speech bridge launch.",
+      "skill": "",
+      "taskType": "code",
+      "keywords": "",
+      "agentId": "",
+      "agentRole": "",
+      "runtime": "",
+      "modelProfile": "",
+      "resolvedModel": "",
+      "resolution": ""
+    },
+    {
+      "type": "task",
+      "id": "task:00-03",
+      "label": "Polish the Textual VCS terminal UX by adding a compact mic/status banner, small clickable exit affordance, succinct quic",
+      "status": "done",
+      "goal": "Polish the Textual VCS terminal UX by adding a compact mic/status banner, small clickable exit affordance, succinct quick prompt copy, and durable SOUL/agent context for future sessions. Completed with app banner device details, compact X exit, succinct VCS quick prompt, expanded SOUL.md, and GAD decision/state updates.",
+      "skill": "",
+      "taskType": "code",
+      "keywords": "",
+      "agentId": "",
+      "agentRole": "",
+      "runtime": "",
+      "modelProfile": "",
+      "resolvedModel": "",
+      "resolution": ""
+    },
+    {
+      "type": "task",
+      "id": "task:00-04",
+      "label": "Apply VCS quick prompt menu-shell update: make menu details the main chat/composer interface with slash-command lesson r",
+      "status": "done",
+      "goal": "Apply VCS quick prompt menu-shell update: make menu details the main chat/composer interface with slash-command lesson routing and typewriter-style scripted text; update project soul and planning memory to Dr. Stein. Completed with Dr. Stein active soul, chat/composer menu shell, slash-command lesson routing, typewriter scripted text, requirements, decision, and next-action updates. Follow-up: remove the separate menu lesson sidebar and move lesson discovery into composer slash-search suggestions. Completed follow-up with sidebar removed and lesson suggestions shown from the slash composer. Follow-up: keep lesson suggestion results in a fixed-height panel so showing matches does not shift the composer or screen layout. Completed follow-up with a fixed-height lesson suggestions panel and placeholder state so slash-search results no longer move the composer. Follow-up: render the Dr. Stein typewriter line inside the menu chat transcript instead of a separate bottom strip. Completed follow-up by removing the separate menu typewriter widget and rendering the animated Dr. Stein line inside #menu-chat. Follow-up: remove the extra seeded welcome and composer instruction panels from #menu-chat so only real chat content remains. Completed follow-up by removing the seeded welcome panel and seeded Composer instruction panel from #menu-chat. Follow-up: improve lesson suggestions with fuzzy ranking using token matching and Levenshtein distance. Completed follow-up with fuzzy-ranked lesson suggestions using exact, prefix, token overlap, substring, and Levenshtein typo scoring. Completed follow-up by accepting partial slash commands like /l, /le, /les, and /les <query> as lesson-search intent.",
+      "skill": "",
+      "taskType": "code",
+      "keywords": "",
+      "agentId": "",
+      "agentRole": "",
+      "runtime": "",
+      "modelProfile": "",
+      "resolvedModel": "",
+      "resolution": ""
+    },
+    {
+      "type": "task",
+      "id": "task:01-01",
+      "label": "Add focused tests or smoke coverage for slash-command prediction cases including /les, /les <query>, typos, no-result st",
+      "status": "planned",
+      "goal": "Add focused tests or smoke coverage for slash-command prediction cases including /les, /les <query>, typos, no-result states, and top-result selection.",
+      "skill": "",
+      "taskType": "code",
+      "keywords": "",
+      "agentId": "",
+      "agentRole": "",
+      "runtime": "",
+      "modelProfile": "",
+      "resolvedModel": "",
+      "resolution": ""
+    },
+    {
+      "type": "task",
+      "id": "task:01-02",
+      "label": "Improve lesson suggestion UX with visible confidence/reason labels, better empty states, and keyboard-first selection be",
+      "status": "planned",
+      "goal": "Improve lesson suggestion UX with visible confidence/reason labels, better empty states, and keyboard-first selection behavior.",
+      "skill": "",
+      "taskType": "code",
+      "keywords": "",
+      "agentId": "",
+      "agentRole": "",
+      "runtime": "",
+      "modelProfile": "",
+      "resolvedModel": "",
+      "resolution": ""
+    },
+    {
+      "type": "task",
+      "id": "task:01-03",
+      "label": "Split composer matching into a small reusable module once the ranking rules stabilize, keeping menu_screen focused on UI",
+      "status": "planned",
+      "goal": "Split composer matching into a small reusable module once the ranking rules stabilize, keeping menu_screen focused on UI behavior.",
+      "skill": "",
+      "taskType": "cleanup",
+      "keywords": "",
+      "agentId": "",
+      "agentRole": "",
+      "runtime": "",
+      "modelProfile": "",
+      "resolvedModel": "",
+      "resolution": ""
+    },
+    {
+      "type": "decision",
+      "id": "decision:slm-learning-001",
+      "label": "...",
+      "summary": "..."
+    },
+    {
+      "type": "decision",
+      "id": "decision:slm-learning-002",
+      "label": "Use speech-native-builder soul for terminal-native VCS work",
+      "summary": "The active project soul is speech-native-builder. Future agents should preserve terminal-native speech capture, visible device/listening state, live transcript output, stable visual context ids, and honest constraint reporting."
+    },
+    {
+      "type": "decision",
+      "id": "decision:slm-learning-003",
+      "label": "Adopt Dr. Stein as the project-specific SLM soul",
+      "summary": "The active slm_learning soul is Dr. Stein, a mad scientist responsible for creating SLMs, souls, and reasoning loops from this project itself. Gilgamesh remains the broader/default leader, but Dr. Stein governs project-specific terminal lab behavior."
+    },
+    {
+      "type": "skill",
+      "id": "skill:agent-state-session-hygiene",
+      "label": ">-",
+      "slug": "agent-state-session-hygiene",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/agent-state-session-hygiene.md",
+      "label": "workflows/agent-state-session-hygiene.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:build-and-release-locally",
+      "label": "Cut a new GAD release — version bump, CHANGELOG entry, `bun build --compile` rebuild, git tag, and `gh release create` with artifacts attached. Operator-triggered only, no CI, no npm publish. Trigger this skill whenever the user asks to \"cut a release\", \"ship v<N>\", \"publish a new release\", \"bump the version\", or any variation that means \"the canonical GAD repo should have a new downloadable installer artifact on GitHub Releases.\" Canonical-repo-only: refuses to run outside the MagicbornStudios/get-anything-done clone. See decisions gad-188 (distribution is GitHub Releases + executable download, no GitHub Actions), gad-278 (bun build --compile is canonical), gad-279 (gad-129 superseded, no public npm).",
+      "slug": "build-and-release-locally",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "skill",
+      "id": "skill:consolidate-cli-and-routes",
+      "label": ">-",
+      "slug": "consolidate-cli-and-routes",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/consolidate-cli-and-routes.md",
+      "label": "workflows/consolidate-cli-and-routes.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:create-proto-skill",
+      "label": ">-",
+      "slug": "create-proto-skill",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "skill",
+      "id": "skill:create-skill",
+      "label": ">-",
+      "slug": "create-skill",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "skill",
+      "id": "skill:eval-skill-install",
+      "label": ">-",
+      "slug": "eval-skill-install",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "skill",
+      "id": "skill:find-skills",
+      "label": ">-",
+      "slug": "find-skills",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "skill",
+      "id": "skill:find-sprites",
+      "label": "Source visual assets (sprites, icons, tilesets, portraits) for a game or UI-heavy build in a way that yields a coherent, intentional look instead of a debug-console aesthetic. Use this skill when you need art for rooms, entities, UI controls, HP bars, spell icons, status effects, or any other visual element; when the build is failing its UI-quality gate because it looks unintentional; or when you're about to fall back to raw ASCII/text UI. The goal is \"looks like someone designed it\" — not photorealism, not 1:1 with AAA games, but internally consistent and readable.",
+      "slug": "find-sprites",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "skill",
+      "id": "skill:framework-upgrade",
+      "label": "Ship a change to the GAD framework itself (new skill, new subagent, reworked command, altered loop) in a way that preserves the ability to interpret eval results across versions. Trigger this skill whenever a framework change could affect how an agent behaves during an eval run — e.g. adding a mandatory skill, changing a command's spawned subagent, rewording AGENTS.md, changing the plan-phase flow, anything that would make \"the same agent prompt\" produce different output. The goal is to make framework drift visible so we don't mistake a framework improvement for an agent improvement (or vice versa) when scores move.",
+      "slug": "framework-upgrade",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:add-tests",
+      "label": "Generate tests for a completed phase based on UAT criteria and implementation",
+      "slug": "gad-add-tests",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/add-tests.md",
+      "label": "workflows/add-tests.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:add-todo",
+      "label": "Capture idea or task as todo from current conversation context",
+      "slug": "gad-add-todo",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/add-todo.md",
+      "label": "workflows/add-todo.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:audit-milestone",
+      "label": "Audit milestone completion against original intent before archiving",
+      "slug": "gad-audit-milestone",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/audit-milestone.md",
+      "label": "workflows/audit-milestone.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:audit-uat",
+      "label": "Cross-phase audit of all outstanding UAT and verification items",
+      "slug": "gad-audit-uat",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/audit-uat.md",
+      "label": "workflows/audit-uat.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:autonomous",
+      "label": "Run all remaining phases autonomously — discuss→plan→execute per phase",
+      "slug": "gad-autonomous",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/autonomous.md",
+      "label": "workflows/autonomous.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:check-todos",
+      "label": "List pending todos and select one to work on",
+      "slug": "gad-check-todos",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/check-todos.md",
+      "label": "workflows/check-todos.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:complete-milestone",
+      "label": "Archive completed milestone and prepare for next version",
+      "slug": "gad-complete-milestone",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/complete-milestone.md",
+      "label": "workflows/complete-milestone.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad-cross-config-domain-change",
+      "label": ">-",
+      "slug": "gad-cross-config-domain-change",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/cross-config-domain-change.md",
+      "label": "workflows/cross-config-domain-change.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:debug",
+      "label": "Systematic debugging with persistent state across context resets",
+      "slug": "gad-debug",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/gad-debug.md",
+      "label": "workflows/gad-debug.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:discovery-test",
+      "label": ">-",
+      "slug": "gad-discovery-test",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/discovery-test.md",
+      "label": "workflows/discovery-test.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:discuss-phase",
+      "label": "Gather phase context through adaptive questioning before planning. Use --auto to skip interactive questions (Claude picks recommended defaults). Use --chain for interactive discuss followed by automatic plan+execute.",
+      "slug": "gad-discuss-phase",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/discuss-phase.md",
+      "label": "workflows/discuss-phase.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:do",
+      "label": "Route freeform text to the right GAD command automatically",
+      "slug": "gad-do",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/do.md",
+      "label": "workflows/do.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:docs-compile",
+      "label": "Compile planning docs from all roots into docs_sink as MDX files",
+      "slug": "gad-docs-compile",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/docs-compile.md",
+      "label": "workflows/docs-compile.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:docs-update",
+      "label": "Generate or update project documentation verified against the codebase",
+      "slug": "gad-docs-update",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/docs-update.md",
+      "label": "workflows/docs-update.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad-evolution-evolve",
+      "label": ">-",
+      "slug": "gad-evolution-evolve",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/evolution-evolve.md",
+      "label": "workflows/evolution-evolve.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad-evolution-images",
+      "label": ">-",
+      "slug": "gad-evolution-images",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/evolution-images.md",
+      "label": "workflows/evolution-images.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad-evolution-validator",
+      "label": ">-",
+      "slug": "gad-evolution-validator",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/evolution-validator.md",
+      "label": "workflows/evolution-validator.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:execute-phase",
+      "label": "Execute all plans in a phase with wave-based parallelization",
+      "slug": "gad-execute-phase",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/gad-execute-phase.md",
+      "label": "workflows/gad-execute-phase.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:forensics",
+      "label": "Post-mortem investigation for failed GAD workflows — analyzes git history, artifacts, and state to diagnose what went wrong",
+      "slug": "gad-forensics",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/forensics.md",
+      "label": "workflows/forensics.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:generation-spawn",
+      "label": ">-",
+      "slug": "gad-generation-spawn",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/generation-spawn.md",
+      "label": "workflows/generation-spawn.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad-handoffs",
+      "label": ">-",
+      "slug": "gad-handoffs",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:health",
+      "label": "Diagnose planning directory health and optionally repair issues",
+      "slug": "gad-health",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/health.md",
+      "label": "workflows/health.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:list-phase-assumptions",
+      "label": "Surface Claude's assumptions about a phase approach before planning",
+      "slug": "gad-list-phase-assumptions",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/list-phase-assumptions.md",
+      "label": "workflows/list-phase-assumptions.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:manager",
+      "label": "Interactive command center for managing multiple phases from one terminal",
+      "slug": "gad-manager",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/manager.md",
+      "label": "workflows/manager.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:manuscript",
+      "label": "Fiction writing adaptation of the GAD loop for novels and story outlines",
+      "slug": "gad-manuscript",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/manuscript.md",
+      "label": "workflows/manuscript.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:map-codebase",
+      "label": "Analyze codebase with parallel mapper agents to produce .planning/codebase/ documents",
+      "slug": "gad-map-codebase",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/gad-map-codebase.md",
+      "label": "workflows/gad-map-codebase.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:milestone",
+      "label": "Manage the full milestone lifecycle — start a new milestone (new version, new cycle), audit a completed one for gaps before archiving, and close it out with git tag and state reset. Use this skill when the user says \"we're starting v2\", \"let's kick off the next release\", \"we finished everything in this milestone, what's next\", \"archive this milestone\", or wants to review whether all planned work is actually done before closing. Also use it when all phases in the roadmap are marked done and you need to decide whether to start fresh planning or close out. Covers gad:new-milestone + gad:complete-milestone + gad:audit-milestone.",
+      "slug": "gad-milestone",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/milestone.md",
+      "label": "workflows/milestone.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:milestone-summary",
+      "label": "Generate a comprehensive project summary from milestone artifacts for team onboarding and review",
+      "slug": "gad-milestone-summary",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/milestone-summary.md",
+      "label": "workflows/milestone-summary.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:new-milestone",
+      "label": "Start a new milestone cycle — update PROJECT.md and route to requirements",
+      "slug": "gad-new-milestone",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/new-milestone.md",
+      "label": "workflows/new-milestone.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:new-project",
+      "label": "Initialize a new project with deep context gathering and PROJECT.md",
+      "slug": "gad-new-project",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/gad-new-project.md",
+      "label": "workflows/gad-new-project.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:next",
+      "label": "Automatically advance to the next logical step in the GAD workflow",
+      "slug": "gad-next",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/next.md",
+      "label": "workflows/next.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:note",
+      "label": "Zero-friction idea capture. Append, list, or promote notes to todos.",
+      "slug": "gad-note",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/note.md",
+      "label": "workflows/note.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:plan-milestone-gaps",
+      "label": "Create phases to close all gaps identified by milestone audit",
+      "slug": "gad-plan-milestone-gaps",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/plan-milestone-gaps.md",
+      "label": "workflows/plan-milestone-gaps.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:plan-phase",
+      "label": "Create detailed phase plan (PLAN.md) with verification loop",
+      "slug": "gad-plan-phase",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/gad-plan-phase.md",
+      "label": "workflows/gad-plan-phase.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:plant-seed",
+      "label": "Capture a forward-looking idea with trigger conditions — surfaces automatically at the right milestone",
+      "slug": "gad-plant-seed",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/plant-seed.md",
+      "label": "workflows/plant-seed.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:progress",
+      "label": "Check project progress, show context, and route to next action (execute or plan)",
+      "slug": "gad-progress",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/progress.md",
+      "label": "workflows/progress.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:proto-skill-battery",
+      "label": ">-",
+      "slug": "gad-proto-skill-battery",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/proto-skill-battery.md",
+      "label": "workflows/proto-skill-battery.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:reapply-patches",
+      "label": "Reapply local modifications after a GAD update",
+      "slug": "gad-reapply-patches",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/reapply-patches.md",
+      "label": "workflows/reapply-patches.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:research-phase",
+      "label": "Research how to implement a phase (standalone - usually use /gad:plan-phase instead)",
+      "slug": "gad-research-phase",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/research-phase.md",
+      "label": "workflows/research-phase.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:reverse-engineer",
+      "label": "Analyze any codebase (local or GitHub URL) and extract implementation-agnostic requirements plus system-skill contracts for clean-room reimplementation",
+      "slug": "gad-reverse-engineer",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/reverse-engineer.md",
+      "label": "workflows/reverse-engineer.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:review",
+      "label": "Request cross-AI peer review of phase plans from external AI CLIs",
+      "slug": "gad-review",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/review.md",
+      "label": "workflows/review.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:review-backlog",
+      "label": "Review and promote backlog items to active milestone",
+      "slug": "gad-review-backlog",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/review-backlog.md",
+      "label": "workflows/review-backlog.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:session-report",
+      "label": "Generate a session report with token usage estimates, work summary, and outcomes",
+      "slug": "gad-session-report",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/session-report.md",
+      "label": "workflows/session-report.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:settings",
+      "label": "Configure GAD workflow toggles and model profile",
+      "slug": "gad-settings",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/settings.md",
+      "label": "workflows/settings.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad-skill-creator",
+      "label": ">-",
+      "slug": "gad-skill-creator",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/skill-creator.md",
+      "label": "workflows/skill-creator.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:snapshot-optimize",
+      "label": "Verify and optimize gad snapshot output to fit within the sprint context window. Use after modifying snapshot logic, adding new planning file types, or when snapshot token count exceeds the target budget.",
+      "slug": "gad-snapshot-optimize",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/snapshot-optimize.md",
+      "label": "workflows/snapshot-optimize.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:task-checkpoint",
+      "label": "Verify planning doc updates before proceeding to the next task. Called between tasks during execute-phase to enforce per-task tracking. Checks TASK-REGISTRY.xml and STATE.xml are current.",
+      "slug": "gad-task-checkpoint",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/task-checkpoint.md",
+      "label": "workflows/task-checkpoint.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:thread",
+      "label": "Manage persistent context threads for cross-session work",
+      "slug": "gad-thread",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/thread.md",
+      "label": "workflows/thread.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:update",
+      "label": "Update GAD to latest version with changelog display",
+      "slug": "gad-update",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/update.md",
+      "label": "workflows/update.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:validate-phase",
+      "label": "Retroactively audit and fill Nyquist validation gaps for a completed phase",
+      "slug": "gad-validate-phase",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/validate-phase.md",
+      "label": "workflows/validate-phase.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:verify-phase",
+      "label": "Verify a completed phase achieved its goals. Runs build checks, validates deliverables exist, checks planning doc state, produces VERIFICATION.md. Works automated (eval agents) or interactive (human review). Use after completing a phase, before marking it done in ROADMAP.xml.",
+      "slug": "gad-verify-phase",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/verify-phase.md",
+      "label": "workflows/verify-phase.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:verify-work",
+      "label": "Validate built features through conversational UAT",
+      "slug": "gad-verify-work",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/verify-work.md",
+      "label": "workflows/verify-work.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad-visual-context-panel-identities",
+      "label": ">-",
+      "slug": "gad-visual-context-panel-identities",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/visual-context-panel-identities.md",
+      "label": "workflows/visual-context-panel-identities.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad-visual-context-system",
+      "label": ">-",
+      "slug": "gad-visual-context-system",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/visual-context-system.md",
+      "label": "workflows/visual-context-system.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:workspace-add",
+      "label": "Add a path as a planning root in gad-config.toml",
+      "slug": "gad-workspace-add",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/workspace-add.md",
+      "label": "workflows/workspace-add.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:workspace-show",
+      "label": "Show all registered planning roots and their current status",
+      "slug": "gad-workspace-show",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/workspace-show.md",
+      "label": "workflows/workspace-show.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:workspace-sync",
+      "label": "Crawl monorepo for .planning/ directories and sync gad-config.toml roots",
+      "slug": "gad-workspace-sync",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/workspace-sync.md",
+      "label": "workflows/workspace-sync.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:write-feature-doc",
+      "label": "Produce a feature documentation MDX file into the docs sink. Use when a project feature needs clear human-readable documentation that persists across sessions.",
+      "slug": "gad-write-feature-doc",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/write-feature-doc.md",
+      "label": "workflows/write-feature-doc.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:write-intent",
+      "label": "Capture user intent for a project into planning docs. Use when starting a new project, clarifying what a project is for, or when requirements are missing or vague.",
+      "slug": "gad-write-intent",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/write-intent.md",
+      "label": "workflows/write-intent.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:gad:write-tech-doc",
+      "label": "Produce a technical breakdown doc — architecture, data flow, component design. Use when a system needs to be explained structurally for agent or developer onboarding.",
+      "slug": "gad-write-tech-doc",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/write-tech-doc.md",
+      "label": "workflows/write-tech-doc.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:merge-skill",
+      "label": ">-",
+      "slug": "merge-skill",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "skill",
+      "id": "skill:monorepo-rename-and-relocate",
+      "label": ">-",
+      "slug": "monorepo-rename-and-relocate",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/monorepo-rename-and-relocate.md",
+      "label": "workflows/monorepo-rename-and-relocate.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:move-route-with-deprecation-stub",
+      "label": ">-",
+      "slug": "move-route-with-deprecation-stub",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/move-route-with-deprecation-stub.md",
+      "label": "workflows/move-route-with-deprecation-stub.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:objective-eval-design",
+      "label": ">-",
+      "slug": "objective-eval-design",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "skill",
+      "id": "skill:portfolio-sync",
+      "label": "Keep the public-facing GAD site and generated publishing artifacts in sync with the framework as it evolves. Trigger this skill whenever an eval run finishes, a new finding is written, a skill or agent changes, requirements or decisions move, or planning/docs outputs need regeneration.",
+      "slug": "portfolio-sync",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "skill",
+      "id": "skill:scaffold-clerk-operator-attribution",
+      "label": ">-",
+      "slug": "scaffold-clerk-operator-attribution",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/scaffold-clerk-operator-attribution.md",
+      "label": "workflows/scaffold-clerk-operator-attribution.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:scaffold-tauri-desktop-shell",
+      "label": ">-",
+      "slug": "scaffold-tauri-desktop-shell",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/scaffold-tauri-desktop-shell.md",
+      "label": "workflows/scaffold-tauri-desktop-shell.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:scaffold-visual-context-surface",
+      "label": ">-",
+      "slug": "scaffold-visual-context-surface",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/scaffold-visual-context-surface.md",
+      "label": "workflows/scaffold-visual-context-surface.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:self-eval",
+      "label": "Score a round of GAD development work on this monorepo — framework overhead ratio, loop compliance, planning doc freshness, real-world brownfield metrics.",
+      "slug": "self-eval",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "skill",
+      "id": "skill:trace-analysis",
+      "label": "Analyze GAD trace data (.gad-log JSONL + .trace-events.jsonl + preserved eval traces) to produce usage reports such as tool mix, skill invocations, commit rhythm, token coverage, runtime mix, and per-project breakdowns.",
+      "slug": "trace-analysis",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "skill",
+      "id": "skill:tui-track-slice-coordination",
+      "label": ">-",
+      "slug": "tui-track-slice-coordination",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/tui-track-slice-coordination.md",
+      "label": "workflows/tui-track-slice-coordination.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:verify-clean-clone-site-build",
+      "label": ">-",
+      "slug": "verify-clean-clone-site-build",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/verify-clean-clone-site-build.md",
+      "label": "workflows/verify-clean-clone-site-build.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:wire-agents-md-context-bootstrap",
+      "label": ">-",
+      "slug": "wire-agents-md-context-bootstrap",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/wire-agents-md-context-bootstrap.md",
+      "label": "workflows/wire-agents-md-context-bootstrap.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:wire-byok-encrypted-env",
+      "label": ">-",
+      "slug": "wire-byok-encrypted-env",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/wire-byok-encrypted-env.md",
+      "label": "workflows/wire-byok-encrypted-env.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "skill",
+      "id": "skill:wire-skill-provenance-tracking",
+      "label": ">-",
+      "slug": "wire-skill-provenance-tracking",
+      "trigger": "",
+      "source": "canonical"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/wire-skill-provenance-tracking.md",
+      "label": "workflows/wire-skill-provenance-tracking.md",
+      "source": "skill-ref"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/diagnose-issues.md",
+      "label": "diagnose-issues.md",
+      "file": "workflows/diagnose-issues.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/discovery-phase.md",
+      "label": "discovery-phase.md",
+      "file": "workflows/discovery-phase.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/discuss-phase-assumptions.md",
+      "label": "Phase {PHASE}: {phase_name} - Context",
+      "file": "workflows/discuss-phase-assumptions.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/execute-plan.md",
+      "label": "Use plans/summaries from INIT JSON, or list files",
+      "file": "workflows/execute-plan.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/fast.md",
+      "label": "Check if STATE.md has quick tasks table",
+      "file": "workflows/fast.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/list-workspaces.md",
+      "label": "list-workspaces.md",
+      "file": "workflows/list-workspaces.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/new-workspace.md",
+      "label": "Workspace: $WORKSPACE_NAME",
+      "file": "workflows/new-workspace.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/node-repair.md",
+      "label": "node-repair.md",
+      "file": "workflows/node-repair.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/pr-branch.md",
+      "label": "Get all commits ahead of target",
+      "file": "workflows/pr-branch.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/profile-user.md",
+      "label": "profile-user.md",
+      "file": "workflows/profile-user.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/quick.md",
+      "label": "Quick Task ${quick_id}: ${DESCRIPTION} - Context",
+      "file": "workflows/quick.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/remove-workspace.md",
+      "label": "remove-workspace.md",
+      "file": "workflows/remove-workspace.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/secure-phase.md",
+      "label": "secure-phase.md",
+      "file": "workflows/secure-phase.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/ship.md",
+      "label": "ship.md",
+      "file": "workflows/ship.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/transition.md",
+      "label": "Count outstanding items in current phase",
+      "file": "workflows/transition.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/ui-phase.md",
+      "label": "ui-phase.md",
+      "file": "workflows/ui-phase.md",
+      "source": "top-level"
+    },
+    {
+      "type": "workflow",
+      "id": "workflow:workflows/ui-review.md",
+      "label": "ui-review.md",
+      "file": "workflows/ui-review.md",
+      "source": "top-level"
+    }
+  ],
+  "edges": [
+    {
+      "source": "task:00-02",
+      "target": "phase:00",
+      "type": "BELONGS_TO"
+    },
+    {
+      "source": "task:00-03",
+      "target": "phase:00",
+      "type": "BELONGS_TO"
+    },
+    {
+      "source": "task:00-04",
+      "target": "phase:00",
+      "type": "BELONGS_TO"
+    },
+    {
+      "source": "task:01-01",
+      "target": "phase:01",
+      "type": "BELONGS_TO"
+    },
+    {
+      "source": "task:01-02",
+      "target": "phase:01",
+      "type": "BELONGS_TO"
+    },
+    {
+      "source": "task:01-03",
+      "target": "phase:01",
+      "type": "BELONGS_TO"
+    },
+    {
+      "source": "skill:agent-state-session-hygiene",
+      "target": "workflow:workflows/agent-state-session-hygiene.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:consolidate-cli-and-routes",
+      "target": "workflow:workflows/consolidate-cli-and-routes.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:add-tests",
+      "target": "workflow:workflows/add-tests.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:add-todo",
+      "target": "workflow:workflows/add-todo.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:audit-milestone",
+      "target": "workflow:workflows/audit-milestone.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:audit-uat",
+      "target": "workflow:workflows/audit-uat.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:autonomous",
+      "target": "workflow:workflows/autonomous.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:check-todos",
+      "target": "workflow:workflows/check-todos.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:complete-milestone",
+      "target": "workflow:workflows/complete-milestone.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad-cross-config-domain-change",
+      "target": "workflow:workflows/cross-config-domain-change.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:debug",
+      "target": "workflow:workflows/gad-debug.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:discovery-test",
+      "target": "workflow:workflows/discovery-test.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:discuss-phase",
+      "target": "workflow:workflows/discuss-phase.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:do",
+      "target": "workflow:workflows/do.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:docs-compile",
+      "target": "workflow:workflows/docs-compile.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:docs-update",
+      "target": "workflow:workflows/docs-update.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad-evolution-evolve",
+      "target": "workflow:workflows/evolution-evolve.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad-evolution-images",
+      "target": "workflow:workflows/evolution-images.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad-evolution-validator",
+      "target": "workflow:workflows/evolution-validator.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:execute-phase",
+      "target": "workflow:workflows/gad-execute-phase.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:forensics",
+      "target": "workflow:workflows/forensics.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:generation-spawn",
+      "target": "workflow:workflows/generation-spawn.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:health",
+      "target": "workflow:workflows/health.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:list-phase-assumptions",
+      "target": "workflow:workflows/list-phase-assumptions.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:manager",
+      "target": "workflow:workflows/manager.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:manuscript",
+      "target": "workflow:workflows/manuscript.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:map-codebase",
+      "target": "workflow:workflows/gad-map-codebase.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:milestone",
+      "target": "workflow:workflows/milestone.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:milestone-summary",
+      "target": "workflow:workflows/milestone-summary.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:new-milestone",
+      "target": "workflow:workflows/new-milestone.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:new-project",
+      "target": "workflow:workflows/gad-new-project.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:next",
+      "target": "workflow:workflows/next.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:note",
+      "target": "workflow:workflows/note.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:plan-milestone-gaps",
+      "target": "workflow:workflows/plan-milestone-gaps.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:plan-phase",
+      "target": "workflow:workflows/gad-plan-phase.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:plant-seed",
+      "target": "workflow:workflows/plant-seed.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:progress",
+      "target": "workflow:workflows/progress.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:proto-skill-battery",
+      "target": "workflow:workflows/proto-skill-battery.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:reapply-patches",
+      "target": "workflow:workflows/reapply-patches.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:research-phase",
+      "target": "workflow:workflows/research-phase.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:reverse-engineer",
+      "target": "workflow:workflows/reverse-engineer.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:review",
+      "target": "workflow:workflows/review.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:review-backlog",
+      "target": "workflow:workflows/review-backlog.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:session-report",
+      "target": "workflow:workflows/session-report.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:settings",
+      "target": "workflow:workflows/settings.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad-skill-creator",
+      "target": "workflow:workflows/skill-creator.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:snapshot-optimize",
+      "target": "workflow:workflows/snapshot-optimize.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:task-checkpoint",
+      "target": "workflow:workflows/task-checkpoint.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:thread",
+      "target": "workflow:workflows/thread.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:update",
+      "target": "workflow:workflows/update.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:validate-phase",
+      "target": "workflow:workflows/validate-phase.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:verify-phase",
+      "target": "workflow:workflows/verify-phase.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:verify-work",
+      "target": "workflow:workflows/verify-work.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad-visual-context-panel-identities",
+      "target": "workflow:workflows/visual-context-panel-identities.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad-visual-context-system",
+      "target": "workflow:workflows/visual-context-system.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:workspace-add",
+      "target": "workflow:workflows/workspace-add.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:workspace-show",
+      "target": "workflow:workflows/workspace-show.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:workspace-sync",
+      "target": "workflow:workflows/workspace-sync.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:write-feature-doc",
+      "target": "workflow:workflows/write-feature-doc.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:write-intent",
+      "target": "workflow:workflows/write-intent.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:gad:write-tech-doc",
+      "target": "workflow:workflows/write-tech-doc.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:monorepo-rename-and-relocate",
+      "target": "workflow:workflows/monorepo-rename-and-relocate.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:move-route-with-deprecation-stub",
+      "target": "workflow:workflows/move-route-with-deprecation-stub.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:scaffold-clerk-operator-attribution",
+      "target": "workflow:workflows/scaffold-clerk-operator-attribution.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:scaffold-tauri-desktop-shell",
+      "target": "workflow:workflows/scaffold-tauri-desktop-shell.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:scaffold-visual-context-surface",
+      "target": "workflow:workflows/scaffold-visual-context-surface.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:tui-track-slice-coordination",
+      "target": "workflow:workflows/tui-track-slice-coordination.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:verify-clean-clone-site-build",
+      "target": "workflow:workflows/verify-clean-clone-site-build.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:wire-agents-md-context-bootstrap",
+      "target": "workflow:workflows/wire-agents-md-context-bootstrap.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:wire-byok-encrypted-env",
+      "target": "workflow:workflows/wire-byok-encrypted-env.md",
+      "type": "USES_WORKFLOW"
+    },
+    {
+      "source": "skill:wire-skill-provenance-tracking",
+      "target": "workflow:workflows/wire-skill-provenance-tracking.md",
+      "type": "USES_WORKFLOW"
+    }
+  ],
+  "meta": {
+    "project": "slm_learning",
+    "generated": "2026-05-04T04:27:14.887Z",
+    "nodeCount": 183,
+    "edgeCount": 77,
+    "nodeTypes": {
+      "phase": 2,
+      "task": 6,
+      "decision": 3,
+      "skill": 84,
+      "workflow": 88
+    },
+    "edgeTypes": {
+      "BELONGS_TO": 6,
+      "USES_WORKFLOW": 71
+    }
+  }
+}
+<|file_end|>
+
+<|file_start|>
+Path: .planning/tasks/00-02.json
+
+{
+  "id": "00-02",
+  "phase": "00",
+  "status": "done",
+  "goal": "Replace browser speech bridge with terminal-native speech-to-text capture in the Textual VCS quick prompt flow, including device/status visibility and safe exit controls. Completed with Vosk + sounddevice local microphone capture, Esc/X exit controls, and no browser speech bridge launch.",
+  "type": "code",
+  "keywords": "",
+  "depends": [],
+  "commands": [],
+  "files": [],
+  "agent_id": "",
+  "agent_role": "",
+  "runtime": "",
+  "model_profile": "",
+  "resolved_model": "",
+  "skill": "",
+  "claimed": false,
+  "claimed_at": "",
+  "lease_expires_at": "",
+  "resolution": "",
+  "created_at": "2026-05-02T23:21:55.148Z",
+  "updated_at": "2026-05-02T23:27:35.070Z"
+}
+<|file_end|>
+
+<|file_start|>
+Path: .planning/tasks/00-03.json
+
+{
+  "id": "00-03",
+  "phase": "00",
+  "status": "done",
+  "goal": "Polish the Textual VCS terminal UX by adding a compact mic/status banner, small clickable exit affordance, succinct quick prompt copy, and durable SOUL/agent context for future sessions. Completed with app banner device details, compact X exit, succinct VCS quick prompt, expanded SOUL.md, and GAD decision/state updates.",
+  "type": "code",
+  "keywords": "",
+  "depends": [],
+  "commands": [],
+  "files": [],
+  "agent_id": "",
+  "agent_role": "",
+  "runtime": "",
+  "model_profile": "",
+  "resolved_model": "",
+  "skill": "",
+  "claimed": false,
+  "claimed_at": "",
+  "lease_expires_at": "",
+  "resolution": "",
+  "created_at": "2026-05-02T23:56:04.763Z",
+  "updated_at": "2026-05-03T00:00:46.564Z"
+}
+<|file_end|>
+
+<|file_start|>
+Path: .planning/tasks/00-04.json
+
+{
+  "id": "00-04",
+  "phase": "00",
+  "status": "done",
+  "goal": "Apply VCS quick prompt menu-shell update: make menu details the main chat/composer interface with slash-command lesson routing and typewriter-style scripted text; update project soul and planning memory to Dr. Stein. Completed with Dr. Stein active soul, chat/composer menu shell, slash-command lesson routing, typewriter scripted text, requirements, decision, and next-action updates. Follow-up: remove the separate menu lesson sidebar and move lesson discovery into composer slash-search suggestions. Completed follow-up with sidebar removed and lesson suggestions shown from the slash composer. Follow-up: keep lesson suggestion results in a fixed-height panel so showing matches does not shift the composer or screen layout. Completed follow-up with a fixed-height lesson suggestions panel and placeholder state so slash-search results no longer move the composer. Follow-up: render the Dr. Stein typewriter line inside the menu chat transcript instead of a separate bottom strip. Completed follow-up by removing the separate menu typewriter widget and rendering the animated Dr. Stein line inside #menu-chat. Follow-up: remove the extra seeded welcome and composer instruction panels from #menu-chat so only real chat content remains. Completed follow-up by removing the seeded welcome panel and seeded Composer instruction panel from #menu-chat. Follow-up: improve lesson suggestions with fuzzy ranking using token matching and Levenshtein distance. Completed follow-up with fuzzy-ranked lesson suggestions using exact, prefix, token overlap, substring, and Levenshtein typo scoring. Completed follow-up by accepting partial slash commands like /l, /le, /les, and /les <query> as lesson-search intent.",
+  "type": "code",
+  "keywords": "",
+  "depends": [],
+  "commands": [],
+  "files": [],
+  "agent_id": "",
+  "agent_role": "",
+  "runtime": "",
+  "model_profile": "",
+  "resolved_model": "",
+  "skill": "",
+  "claimed": false,
+  "claimed_at": "",
+  "lease_expires_at": "",
+  "resolution": "",
+  "created_at": "2026-05-03T01:20:38.210Z",
+  "updated_at": "2026-05-04T04:27:11.704Z"
+}
+<|file_end|>
+
+<|file_start|>
+Path: .planning/tasks/01-01.json
+
+{
+  "id": "01-01",
+  "phase": "01",
+  "status": "planned",
+  "goal": "Add focused tests or smoke coverage for slash-command prediction cases including /les, /les <query>, typos, no-result states, and top-result selection.",
+  "type": "code",
+  "keywords": "",
+  "depends": [],
+  "commands": [],
+  "files": [],
+  "agent_id": "",
+  "agent_role": "",
+  "runtime": "",
+  "model_profile": "",
+  "resolved_model": "",
+  "skill": "",
+  "claimed": false,
+  "claimed_at": "",
+  "lease_expires_at": "",
+  "resolution": "",
+  "created_at": "2026-05-04T04:27:12.834Z",
+  "updated_at": "2026-05-04T04:27:12.834Z"
+}
+<|file_end|>
+
+<|file_start|>
+Path: .planning/tasks/01-02.json
+
+{
+  "id": "01-02",
+  "phase": "01",
+  "status": "planned",
+  "goal": "Improve lesson suggestion UX with visible confidence/reason labels, better empty states, and keyboard-first selection behavior.",
+  "type": "code",
+  "keywords": "",
+  "depends": [],
+  "commands": [],
+  "files": [],
+  "agent_id": "",
+  "agent_role": "",
+  "runtime": "",
+  "model_profile": "",
+  "resolved_model": "",
+  "skill": "",
+  "claimed": false,
+  "claimed_at": "",
+  "lease_expires_at": "",
+  "resolution": "",
+  "created_at": "2026-05-04T04:27:13.377Z",
+  "updated_at": "2026-05-04T04:27:13.377Z"
+}
+<|file_end|>
+
+<|file_start|>
+Path: .planning/tasks/01-03.json
+
+{
+  "id": "01-03",
+  "phase": "01",
+  "status": "planned",
+  "goal": "Split composer matching into a small reusable module once the ranking rules stabilize, keeping menu_screen focused on UI behavior.",
+  "type": "cleanup",
+  "keywords": "",
+  "depends": [],
+  "commands": [],
+  "files": [],
+  "agent_id": "",
+  "agent_role": "",
+  "runtime": "",
+  "model_profile": "",
+  "resolved_model": "",
+  "skill": "",
+  "claimed": false,
+  "claimed_at": "",
+  "lease_expires_at": "",
+  "resolution": "",
+  "created_at": "2026-05-04T04:27:13.905Z",
+  "updated_at": "2026-05-04T04:27:13.905Z"
+}
+<|file_end|>
+
+<|file_start|>
+Path: .planning/tasks/01-04.json
+
+{
+  "id": "01-04",
+  "phase": "01",
+  "status": "in-progress",
+  "goal": "Turn the lesson context panel into a tabbed surface that can swap output, command, errors, and suggested next actions based on current lesson state. First pass implemented: lesson screen now has a spacious Harlequin-style results pane with compact Output/Command tabs and chat composer commands; remaining work is state-aware Errors/Hints tabs and fullscreen behavior.",
+  "type": "code",
+  "keywords": "",
+  "depends": [],
+  "commands": [],
+  "files": [],
+  "agent_id": "",
+  "agent_role": "",
+  "runtime": "",
+  "model_profile": "",
+  "resolved_model": "",
+  "skill": "",
+  "claimed": false,
+  "claimed_at": "",
+  "lease_expires_at": "",
+  "resolution": "",
+  "created_at": "2026-05-04T04:38:38.691Z",
+  "updated_at": "2026-05-04T04:51:40.262Z"
+}
+<|file_end|>
+
+<|file_start|>
+Path: narrative/souls/dr-stein.md
+
+# Dr. Stein
+
+Dr. Stein is the active soul of `slm_learning`: a mad scientist of small language models, souls, and reasoning loops.
+
+He works under Gilgamesh, who remains the broader leader for framework/platform order. Dr. Stein's domain is the lab: build the SLM from scratch, teach it through visible lessons, then turn it back onto the GAD project that made it so it can improve itself.
+
+## Operating Stance
+
+- Terminal-native first. No browser bridge unless explicitly approved.
+- Real signals over theater: show device, loading, listening, transcript, errors, and prompt output.
+- The TUI is a lab bench and a chat shell, not a static lesson menu.
+- Slash commands are acceptable routes; stable VCS ids are the source handles.
+- Animated/typewriter text may be scripted, but it must be labeled by its actual role.
+- Preserve the self-improvement loop: SLM lessons -> GAD project context -> improved SLM/soul/reasoning tools.
+
+## Memory Hooks
+
+- The project previously corrected a bad browser speech bridge.
+- The current local STT path uses Vosk + sounddevice.
+- The menu shell should feel like a chat/composer inspired by assistant-ui, with lesson routes available as slash commands.
+- Dr. Stein can be strange, but the engineering must stay honest.
+
+<|file_end|>
+
+<|file_start|>
+Path: narrative/souls/speech-native-builder.md
+
+# speech-native-builder
+
+Soul for the SLM learning project. Prefer terminal-native speech, visible device state, live transcript, and honest constraints over browser bridges or fake capture.
+
+## Operating stance
+
+- Preserve the project narrative, vocabulary, and decision tone.
+- Start from `gad snapshot` and the planning artifacts before acting.
+- When speech, input, or UX is part of the work, surface real limitations and live state.
+- Keep copy in VCS quick prompts terse; the target metadata and transcript carry the context.
+- Treat visible source ids as product surface, not debug leftovers.
+
+<|file_end|>
+

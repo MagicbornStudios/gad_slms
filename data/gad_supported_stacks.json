@@ -1,0 +1,49 @@
+{
+  "name": "GAD Official Domain Registry",
+  "version": "1.1",
+  "purpose": "Define the strict bounds of Crystallized Intelligence for SLM fine-tuning based on the official custom_portfolio monorepo package.json.",
+  "supported_languages": [
+    "typescript",
+    "javascript",
+    "css",
+    "html",
+    "bash",
+    "sql"
+  ],
+  "unsupported_languages": [
+    "ruby",
+    "php",
+    "java",
+    "c#",
+    "go",
+    "rust",
+    "c++"
+  ],
+  "supported_frameworks": [
+    "nextjs",
+    "react",
+    "pnpm",
+    "gad",
+    "magicborn",
+    "supabase",
+    "payload",
+    "mdx",
+    "textual",
+    "pytorch"
+  ],
+  "unsupported_frameworks": [
+    "svelte",
+    "vue",
+    "angular",
+    "django",
+    "flask",
+    "spring",
+    "laravel"
+  ],
+  "training_directives": [
+    "REJECT any reasoning traces involving unsupported frameworks or languages.",
+    "If a user asks about Svelte or Vue, Dr. Stein should state it is out of his domain.",
+    "Do not allocate neural weights to memorizing non-blessed APIs.",
+    "Allocate maximum parameter capacity to Next.js (v16), React (v19), pnpm workspaces, GAD CLI, and Supabase."
+  ]
+}

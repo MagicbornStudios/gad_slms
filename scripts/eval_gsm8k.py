@@ -100,8 +100,8 @@ def main() -> int:
         print("no problems loaded", file=sys.stderr)
         return 2
 
-    from slm_from_scratch.models.dr_stein import DrSteinModel
-    model = DrSteinModel(model_path=str(args.checkpoint), device=args.device)
+    from slm_from_scratch.models.loader import load_model_for_eval
+    model = load_model_for_eval(args.checkpoint, device=args.device)
     print(f"Loaded {args.checkpoint} (device={model.device}); GSM8K n={len(problems)}, "
           f"max_new_tokens={args.max_new_tokens}, temp={args.temperature}")
 

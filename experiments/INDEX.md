@@ -34,3 +34,5 @@
 | more_epochs EVAL (gsm8k) | 2026-05-05T10:34:55 |  |  |  |  |  |  | 1/50 (2.0%) | n=50 temp=0.0 device=auto |
 | more_pairs EVAL (humaneval) | 2026-05-05T10:37:06 |  |  |  |  |  |  | 0/10 (0.0%) | n=10 temp=0.0 device=auto |
 | more_pairs EVAL (gsm8k) | 2026-05-05T10:40:20 |  |  |  |  |  |  | 1/50 (2.0%) | n=50 temp=0.0 device=auto |
+| stage25_gad_tools_lora EVAL | 2026-05-05T12:01:39 |  |  |  |  |  |  | 9/30 (30.0%) |  |
+| stage25_gad_tools_lora_higher_lr EVAL | 2026-05-05T12:17:54 |  |  |  |  |  |  | 12/30 (40.0%) |  |

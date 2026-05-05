@@ -8,7 +8,7 @@ __pycache__/
 
 data/
 runs/
-models/
+/models/
 
 node_modules/
 .env

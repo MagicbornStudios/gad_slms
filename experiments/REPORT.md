@@ -94,6 +94,45 @@ correct ⚡ bar (e.g. `73 evo!`).
 
 Note: all `.pt` files are gitignored. Manifests, logs, and eval JSON ride along.
 
+## Update — 2026-05-05 morning
+
+Re-ran the full matrix at **temperature 0.0 (greedy) on GPU** after fixing
+three structural issues uncovered by investigating the `more_pairs` "stuck
+eval":
+
+1. `KaelModel` always loaded weights with `map_location='cpu'` and never
+   moved to GPU. All prior evals ran on CPU at ~5.5s/test (164s/30).
+2. `MiniLlama.generate` had no EOS early-stop; always emitted the full
+   `max_new_tokens` even when the model emitted EOS after a few tokens.
+3. `eval_checkpoint.py` accepted `--device` and `--temperature` but the
+   former was never plumbed to the model wrapper, and the default temp
+   of 0.7 added sampling variance to any "1/30" result.
+
+After fixes (`src/slm_from_scratch/model.py`, `src/slm_from_scratch/models/{kael,dr_stein}.py`,
+`scripts/eval_checkpoint.py`, `scripts/eval_all_experiments.py`), each
+30-test eval now runs in **46-54 s on GPU** (vs ~165 s CPU), and
+`more_pairs` completes cleanly in 46.5 s (was killed at 2/30 yesterday
+because eval was crawling at ~6 min/test under nighttime CPU contention
+— not a checkpoint pathology).
+
+Corrected results:
+
+| run | gad_tools (was) | gad_tools (temp=0.0, GPU) |
+|-----|-----------------|---------------------------|
+| dr_stein.pt baseline | 0/30 | **0/30** (confirmed) |
+| baseline_repro | 0/30 | **0/30** (confirmed) |
+| higher_lr | 1/30 | **0/30** (was sampling noise) |
+| lower_lr_longer | 1/30 | **0/30** (was sampling noise) |
+| more_epochs | 0/30 | **0/30** (confirmed) |
+| more_pairs | (skipped) | **0/30** (now eval-able) |
+
+**The actual baseline is 0/30 across the board.** Hyperparameter search on
+this Stage-2 reasoning recipe alone is not going to move the needle —
+the model has never seen `gad note add ...` etc. The training data
+distribution is the bottleneck, not LR or epoch count. Item (2) below
+(curated GAD-tool training pairs + Stage 2.5 fine-tune) is the only
+high-leverage move.
+
 ## What's queued for next session
 
 1. **Re-eval `more_pairs`** with `--temperature 0.0 --max-new-tokens 30`

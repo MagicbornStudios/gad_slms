@@ -104,8 +104,10 @@ def main() -> int:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--name", default=None, help="Run name for INDEX.md row (default: checkpoint stem)")
     parser.add_argument("--max-new-tokens", type=int, default=50)
-    parser.add_argument("--temperature", type=float, default=0.7)
-    parser.add_argument("--device", default="auto")
+    parser.add_argument("--temperature", type=float, default=0.0,
+                        help="0.0 = greedy (deterministic); >0 enables sampling")
+    parser.add_argument("--device", default="auto",
+                        help="auto | cuda | cpu (default: auto = cuda if available)")
     args = parser.parse_args()
 
     if not args.checkpoint.exists():
@@ -120,23 +122,28 @@ def main() -> int:
 
     # Load DrStein with the explicit checkpoint path
     from slm_from_scratch.models.dr_stein import DrSteinModel
-    model = DrSteinModel(model_path=str(args.checkpoint))
-    print(f"Loaded checkpoint: {args.checkpoint}")
+    model = DrSteinModel(model_path=str(args.checkpoint), device=args.device)
+    print(f"Loaded checkpoint: {args.checkpoint} (device={model.device}, temp={args.temperature})")
 
     started = time.time()
     results = []
+    per_test_sec = []
     for i, t in enumerate(tests, start=1):
         prompt = t.get("vars", {}).get("instruction", "")
         if not prompt:
             continue
+        t0 = time.time()
         try:
             out = model.generate(prompt, max_new_tokens=args.max_new_tokens, temperature=args.temperature)
         except Exception as e:
             out = f"<<error: {e}>>"
+        dt = time.time() - t0
+        per_test_sec.append(round(dt, 3))
         scored = score_test(t, out)
+        scored["elapsed_sec"] = round(dt, 3)
         results.append(scored)
         marker = "[OK]" if scored["passed"] else "[FAIL]"
-        print(f"  {marker} {i:02d}/{len(tests)} {scored['description']}", flush=True)
+        print(f"  {marker} {i:02d}/{len(tests)} {scored['description']} ({dt:.2f}s)", flush=True)
 
     elapsed = time.time() - started
     passed = sum(1 for r in results if r["passed"])
@@ -145,8 +152,12 @@ def main() -> int:
     summary = {
         "checkpoint": str(args.checkpoint.relative_to(ROOT)) if args.checkpoint.is_relative_to(ROOT) else str(args.checkpoint),
         "eval": str(args.eval.relative_to(ROOT)) if args.eval.is_relative_to(ROOT) else str(args.eval),
+        "device": str(model.device),
+        "temperature": args.temperature,
+        "max_new_tokens": args.max_new_tokens,
         "evaluated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
         "elapsed_sec": round(elapsed, 1),
+        "per_test_sec": per_test_sec,
         "passed": passed,
         "total": total,
         "pct": pct,

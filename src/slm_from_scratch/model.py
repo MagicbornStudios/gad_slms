@@ -244,10 +244,11 @@ class MiniLlama(nn.Module):
         max_new_tokens: int,
         temperature: float = 0.8,
         top_k: int | None = 50,
+        eos_token_id: int | None = None,
     ) -> torch.Tensor:
-        if temperature <= 0:
-            raise ValueError("temperature must be greater than zero")
-            
+        if temperature < 0:
+            raise ValueError("temperature must be non-negative (0 = greedy)")
+
         past_key_values = None
         for _ in range(max_new_tokens):
             if past_key_values is not None:
@@ -256,20 +257,27 @@ class MiniLlama(nn.Module):
                 idx_cond = idx
                 if idx_cond.size(1) > self.config.block_size:
                     idx_cond = idx_cond[:, -self.config.block_size:]
-                    
+
             logits, _, past_key_values = self(idx_cond, past_key_values=past_key_values)
-            logits = logits[:, -1, :] / temperature
-            if top_k is not None:
-                v, _ = torch.topk(logits, min(top_k, logits.size(-1)))
-                logits[logits < v[:, [-1]]] = -float("inf")
-            probs = F.softmax(logits, dim=-1)
-            idx_next = torch.multinomial(probs, num_samples=1)
+            logits = logits[:, -1, :]
+            if temperature == 0.0:
+                idx_next = torch.argmax(logits, dim=-1, keepdim=True)
+            else:
+                logits = logits / temperature
+                if top_k is not None:
+                    v, _ = torch.topk(logits, min(top_k, logits.size(-1)))
+                    logits[logits < v[:, [-1]]] = -float("inf")
+                probs = F.softmax(logits, dim=-1)
+                idx_next = torch.multinomial(probs, num_samples=1)
             idx = torch.cat((idx, idx_next), dim=1)
-            
+
+            if eos_token_id is not None and idx_next.item() == eos_token_id:
+                break
+
             if past_key_values is not None and past_key_values[0][0].size(-2) >= self.config.block_size:
                 past_key_values = None
                 idx = idx[:, -self.config.block_size:]
-                
+
         return idx
 
     @torch.no_grad()
@@ -279,10 +287,11 @@ class MiniLlama(nn.Module):
         max_new_tokens: int,
         temperature: float = 0.8,
         top_k: int | None = 50,
+        eos_token_id: int | None = None,
     ):
-        if temperature <= 0:
-            raise ValueError("temperature must be greater than zero")
-            
+        if temperature < 0:
+            raise ValueError("temperature must be non-negative (0 = greedy)")
+
         past_key_values = None
         for _ in range(max_new_tokens):
             if past_key_values is not None:
@@ -291,18 +300,25 @@ class MiniLlama(nn.Module):
                 idx_cond = idx
                 if idx_cond.size(1) > self.config.block_size:
                     idx_cond = idx_cond[:, -self.config.block_size:]
-                    
+
             logits, _, past_key_values = self(idx_cond, past_key_values=past_key_values)
-            logits = logits[:, -1, :] / temperature
-            if top_k is not None:
-                v, _ = torch.topk(logits, min(top_k, logits.size(-1)))
-                logits[logits < v[:, [-1]]] = -float("inf")
-            probs = F.softmax(logits, dim=-1)
-            idx_next = torch.multinomial(probs, num_samples=1)
+            logits = logits[:, -1, :]
+            if temperature == 0.0:
+                idx_next = torch.argmax(logits, dim=-1, keepdim=True)
+            else:
+                logits = logits / temperature
+                if top_k is not None:
+                    v, _ = torch.topk(logits, min(top_k, logits.size(-1)))
+                    logits[logits < v[:, [-1]]] = -float("inf")
+                probs = F.softmax(logits, dim=-1)
+                idx_next = torch.multinomial(probs, num_samples=1)
             idx = torch.cat((idx, idx_next), dim=1)
-            
-            yield idx_next.item()
-            
+
+            tok = idx_next.item()
+            yield tok
+            if eos_token_id is not None and tok == eos_token_id:
+                break
+
             if past_key_values is not None and past_key_values[0][0].size(-2) >= self.config.block_size:
                 past_key_values = None
                 idx = idx[:, -self.config.block_size:]

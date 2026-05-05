@@ -5,14 +5,21 @@ from pathlib import Path
 
 from slm_from_scratch.model import MiniLlama, LlamaConfig
 
+def _resolve_device(device: str) -> torch.device:
+    if device == "auto":
+        return torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    return torch.device(device)
+
+
 class KaelModel:
     """
     Kael: General Reasoning SLM
     Uses HuggingFace tokenizer and MiniLlama loaded with mapped SmolLM2 135M weights.
     """
-    def __init__(self, model_path: str = None):
+    def __init__(self, model_path: str = None, device: str = "auto"):
         self.name = "Kael"
-        
+        self.device = _resolve_device(device)
+
         # SmolLM2 tokenizer — prefer local cache to avoid aiohttp session leak
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(
@@ -22,7 +29,7 @@ class KaelModel:
             self.tokenizer = AutoTokenizer.from_pretrained(
                 "HuggingFaceTB/SmolLM2-135M-Instruct"
             )
-        
+
         # SmolLM2 135M configuration
         self.config = LlamaConfig(
             vocab_size=49152,
@@ -39,26 +46,34 @@ class KaelModel:
         )
         self.model = MiniLlama(self.config)
         self.model.eval()
-        
+
         if model_path is None:
             root = Path(__file__).resolve().parents[3]
             model_path = root / "runs" / "pretrained" / "smollm2_135M.pt"
-            
+
         if Path(model_path).exists():
-            print(f"Loading weights from {model_path}...")
+            print(f"Loading weights from {model_path} (device={self.device})...")
             checkpoint = torch.load(model_path, map_location='cpu', weights_only=False)
             self.model.load_state_dict(checkpoint['model_state_dict'])
         else:
             print(f"Warning: {model_path} not found. Weights are randomly initialized.")
 
+        self.model.to(self.device)
+
     def generate(self, prompt: str, max_new_tokens: int = 50, temperature: float = 0.8) -> str:
         input_ids = self.tokenizer.encode(prompt)
-        idx = torch.tensor([input_ids], dtype=torch.long)
-        
+        idx = torch.tensor([input_ids], dtype=torch.long, device=self.device)
+        eos_id = self.tokenizer.eos_token_id
+
         with torch.no_grad():
-            out_idx = self.model.generate(idx, max_new_tokens=max_new_tokens, temperature=temperature)
-            
-        generated_idx = out_idx[0][len(idx[0]):].tolist()
+            out_idx = self.model.generate(
+                idx,
+                max_new_tokens=max_new_tokens,
+                temperature=temperature,
+                eos_token_id=eos_id,
+            )
+
+        generated_idx = out_idx[0][len(input_ids):].tolist()
         return self.tokenizer.decode(generated_idx, skip_special_tokens=True)
 
     def chat(self, messages: List[Dict[str, str]]) -> str:
@@ -71,10 +86,15 @@ class KaelModel:
 
     def generate_stream(self, prompt: str, max_new_tokens: int = 150, temperature: float = 0.7):
         input_ids = self.tokenizer.encode(prompt)
-        idx = torch.tensor([input_ids], dtype=torch.long)
-        
-        for next_token_id in self.model.generate_stream(idx, max_new_tokens=max_new_tokens, temperature=temperature):
-            # Decode one token at a time
+        idx = torch.tensor([input_ids], dtype=torch.long, device=self.device)
+        eos_id = self.tokenizer.eos_token_id
+
+        for next_token_id in self.model.generate_stream(
+            idx,
+            max_new_tokens=max_new_tokens,
+            temperature=temperature,
+            eos_token_id=eos_id,
+        ):
             yield self.tokenizer.decode([next_token_id], skip_special_tokens=True)
 
     def chat_stream(self, messages: List[Dict[str, str]]):

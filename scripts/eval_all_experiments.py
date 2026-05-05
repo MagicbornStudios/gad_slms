@@ -26,7 +26,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--rerun", action="store_true", help="Re-evaluate even if eval_gad_tools.json exists")
     parser.add_argument("--max-new-tokens", type=int, default=50)
-    parser.add_argument("--temperature", type=float, default=0.7)
+    parser.add_argument("--temperature", type=float, default=0.0,
+                        help="0.0 = greedy (deterministic, default for matrix eval)")
+    parser.add_argument("--device", default="auto")
     args = parser.parse_args()
 
     if not RUNS_DIR.exists():
@@ -70,6 +72,7 @@ def main() -> int:
                 "--name", run_dir.name,
                 "--max-new-tokens", str(args.max_new_tokens),
                 "--temperature", str(args.temperature),
+                "--device", args.device,
             ],
             cwd=str(ROOT),
         )

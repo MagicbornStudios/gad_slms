@@ -12,3 +12,9 @@
 | more_epochs | 2026-05-05T01:20:30 | reasoning | 10 | 1e-05 | 100 | 2.802 | 889.6s | Test whether 10 epochs (vs 5) keeps avg_loss decreasing. |
 | more_epochs EVAL | 2026-05-05T01:39:20 |  |  |  |  |  |  | 0/30 (0.0%) |  |
 | more_pairs | 2026-05-05T01:35:58 | reasoning | 5 | 1e-05 | 200 | 2.8631 | 1745.6s | Test whether 200 pairs (vs 100) improves alignment without overfitting. |
+| baseline_repro EVAL | 2026-05-05T08:55:42 |  |  |  |  |  |  | 0/30 (0.0%) | re-eval temp=0.0 device=cuda; previous 0/30 confirmed |
+| higher_lr EVAL | 2026-05-05T08:56:20 |  |  |  |  |  |  | 0/30 (0.0%) | re-eval temp=0.0 device=cuda; previous 1/30 was sampling noise |
+| lower_lr_longer EVAL | 2026-05-05T08:57:08 |  |  |  |  |  |  | 0/30 (0.0%) | re-eval temp=0.0 device=cuda; previous 1/30 was sampling noise |
+| more_epochs EVAL | 2026-05-05T08:58:02 |  |  |  |  |  |  | 0/30 (0.0%) | re-eval temp=0.0 device=cuda; previous 0/30 confirmed |
+| more_pairs EVAL | 2026-05-05T08:58:48 |  |  |  |  |  |  | 0/30 (0.0%) | first eval (was killed yesterday at 2/30 progress); temp=0.0 device=cuda, 46.5s |
+| dr_stein_baseline_temp0 EVAL | 2026-05-05T08:59:54 |  |  |  |  |  |  | 0/30 (0.0%) | re-eval of dr_stein.pt temp=0.0 device=cuda; previous 0/30 confirmed |

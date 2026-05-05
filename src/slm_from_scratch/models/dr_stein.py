@@ -6,7 +6,7 @@ class DrSteinModel(KaelModel):
     Dr. Stein: Meta-SLM & GAD Expert
     Extends Kael's SmolLM2 architecture base but injects GAD context.
     """
-    def __init__(self, model_path: str = None):
+    def __init__(self, model_path: str = None, device: str = "auto"):
         if model_path is None:
             from pathlib import Path
             root = Path(__file__).resolve().parents[3]
@@ -14,8 +14,8 @@ class DrSteinModel(KaelModel):
             # Fallback to pretrained if finetuned doesn't exist yet
             if not model_path.exists():
                 model_path = root / "runs" / "pretrained" / "smollm2_135M.pt"
-        
-        super().__init__(model_path)
+
+        super().__init__(model_path, device=device)
         self.name = "Dr. Stein"
 
     def chat(self, messages: List[Dict[str, str]]) -> str:

@@ -207,4 +207,9 @@
     <summary>Empirical: DeepSeek-R1-Distill-Qwen-1.5B underperforms Qwen2.5-1.5B-Instruct on the CLI/instruction-following track. First sweep results: control 22/30 (73.3%) GAD-tools, distill 8/30 (26.7%); distill 0/10 HumanEval (every gen unterminated &lt;think&gt; -&gt; SyntaxError); distill 5/50 GSM8K (same as random baseline). The distill model's reasoning traces are useful but at max_new_tokens=50-200 they get truncated mid-thought. Decision: distill artifact stays as a separate REASONING-track candidate with max_new_tokens&gt;=1024, not retired. Not part of the CLI sweep going forward. Both adapters published at scrubster/dr-stein-stage25-qwen15-instruct-control and scrubster/dr-stein-stage25-qwen15-distill-reasoning.</summary>
   </decision>
 
+  <decision id="slm-learning-025">
+    <title>Empirical reversal: bf16 trains 3.2x faster than fp16 on ...</title>
+    <summary>Empirical reversal: bf16 trains 3.2x faster than fp16 on GTX 1660 Ti for Stage 2.5 LoRA fine-tunes via TRL SFTTrainer. A/B at 2026-05-05 with identical Qwen2.5-1.5B-Instruct config + same seed: fp16 = 768.9s, bf16 = 240.0s, both 22/30 GAD-tools. Theoretical claim that Turing's lack of native BF16 tensor cores would make bf16 slower (slm-learning-022 addendum) was wrong — TRL's fp16 path adds GradScaler/autocast overhead that exceeds bf16's slower matmul. Default for all Turing local training: bf16=true. Configs updated. Confidence: high (single A/B, deterministic seed, identical eval). Re-test if TRL or PEFT major-version changes.</summary>
+  </decision>
+
 </decisions>

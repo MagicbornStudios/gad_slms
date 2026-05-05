@@ -49,11 +49,11 @@ training:
   gradient_accumulation: 4
   warmup_ratio: 0.05
   weight_decay: 0.0
-  # Turing (1660 Ti, compute 7.5) has no native bf16 tensor cores —
-  # fp16 engages the FP16 tensor cores and runs faster. Flip back to
-  # bf16 only when training on Ampere+ remote (Colab T4 / Kaggle).
-  bf16: false
-  fp16: true
+  # Empirical (2026-05-05 A/B): bf16 was 3.2x faster than fp16 on the
+  # 1660 Ti for the matched control config. TRL's fp16 path's
+  # GradScaler overhead costs more than bf16's slower matmul saves.
+  bf16: true
+  fp16: false
   gradient_checkpointing: true
   seed: 42
   # We only need the final adapter; intermediate epoch saves cost ~30s

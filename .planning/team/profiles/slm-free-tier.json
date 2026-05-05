@@ -1,0 +1,28 @@
+{
+  "name": "slm-free-tier",
+  "description": "2-worker free-tier OpenRouter team for llm-from-scratch experimental track. Burns no paid quota; supervised scope per feedback_free_tier_underperformer_policy. s1 = gpt-oss-120b (general/code), s2 = nemotron-3-super-120b (reasoning).",
+  "runtime": "opencode",
+  "workers_spec": [
+    {
+      "id": "s1",
+      "role": "executor",
+      "lane": "opencode-gpt-oss",
+      "runtime": "opencode",
+      "runtime_cmd": "node ../../custom_portfolio/scripts/gad-opencode-trial.mjs -- run --format json --model openrouter/openai/gpt-oss-120b:free"
+    },
+    {
+      "id": "s2",
+      "role": "executor",
+      "lane": "opencode-nemotron-reasoning",
+      "runtime": "opencode",
+      "runtime_cmd": "node ../../custom_portfolio/scripts/gad-opencode-trial.mjs -- run --format json --model openrouter/nvidia/nemotron-3-super-120b-a12b:free"
+    }
+  ],
+  "tick_ms": 2000,
+  "runtime_tick_overrides": {
+    "opencode": 2000
+  },
+  "autopause_threshold": 20,
+  "created_at": "2026-05-04T20:50:00.000Z",
+  "updated_at": "2026-05-04T20:50:00.000Z"
+}

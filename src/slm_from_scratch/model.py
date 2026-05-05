@@ -7,41 +7,82 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 
-
 @dataclass
-class GPTConfig:
+class LlamaConfig:
     vocab_size: int
-    block_size: int = 256
-    n_layer: int = 4
-    n_head: int = 4
-    n_embd: int = 128
-    dropout: float = 0.1
-    bias: bool = True
+    block_size: int = 2048
+    n_layer: int = 30
+    n_head: int = 9
+    n_kv_head: int = 3
+    n_embd: int = 576
+    intermediate_size: int = 1536
+    dropout: float = 0.0
+    bias: bool = False
+    rms_norm_eps: float = 1e-05
+    rope_theta: float = 10000.0
+    num_experts: int = 1
+    num_experts_per_tok: int = 1
 
+class RMSNorm(nn.Module):
+    def __init__(self, dim: int, eps: float = 1e-5):
+        super().__init__()
+        self.eps = eps
+        self.weight = nn.Parameter(torch.ones(dim))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        var = x.pow(2).mean(-1, keepdim=True)
+        return x * torch.rsqrt(var + self.eps) * self.weight
+
+def precompute_freqs_cis(dim: int, end: int, theta: float = 10000.0):
+    freqs = 1.0 / (theta ** (torch.arange(0, dim, 2)[: (dim // 2)].float() / dim))
+    t = torch.arange(end, device=freqs.device, dtype=torch.float32)
+    freqs = torch.outer(t, freqs)
+    freqs_cis = torch.polar(torch.ones_like(freqs), freqs)
+    return freqs_cis
+
+def apply_rotary_emb(xq: torch.Tensor, xk: torch.Tensor, freqs_cis: torch.Tensor):
+    xq_ = torch.view_as_complex(xq.float().reshape(*xq.shape[:-1], -1, 2))
+    xk_ = torch.view_as_complex(xk.float().reshape(*xk.shape[:-1], -1, 2))
+    freqs_cis = freqs_cis.unsqueeze(0).unsqueeze(2) 
+    xq_out = torch.view_as_real(xq_ * freqs_cis).flatten(3)
+    xk_out = torch.view_as_real(xk_ * freqs_cis).flatten(3)
+    return xq_out.type_as(xq), xk_out.type_as(xk)
 
 class CausalSelfAttention(nn.Module):
-    def __init__(self, config: GPTConfig) -> None:
+    def __init__(self, config: LlamaConfig) -> None:
         super().__init__()
         if config.n_embd % config.n_head != 0:
             raise ValueError("n_embd must be divisible by n_head")
+            
         self.n_head = config.n_head
-        self.n_embd = config.n_embd
+        self.n_kv_head = config.n_kv_head
+        self.n_rep = self.n_head // self.n_kv_head
+        self.head_dim = config.n_embd // config.n_head
         self.dropout = config.dropout
-        self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd, bias=config.bias)
-        self.c_proj = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)
+        
+        self.q_proj = nn.Linear(config.n_embd, config.n_head * self.head_dim, bias=config.bias)
+        self.k_proj = nn.Linear(config.n_embd, config.n_kv_head * self.head_dim, bias=config.bias)
+        self.v_proj = nn.Linear(config.n_embd, config.n_kv_head * self.head_dim, bias=config.bias)
+        self.o_proj = nn.Linear(config.n_embd, config.n_embd, bias=config.bias)
+        
         self.attn_dropout = nn.Dropout(config.dropout)
         self.resid_dropout = nn.Dropout(config.dropout)
+        
         mask = torch.tril(torch.ones(config.block_size, config.block_size))
         self.register_buffer("bias", mask.view(1, 1, config.block_size, config.block_size))
 
-    def forward(self, x: torch.Tensor, past_key_value: tuple[torch.Tensor, torch.Tensor] | None = None) -> tuple[torch.Tensor, tuple[torch.Tensor, torch.Tensor]]:
-        batch_size, seq_len, channels = x.size()
-        q, k, v = self.c_attn(x).split(self.n_embd, dim=2)
-        head_dim = channels // self.n_head
-
-        q = q.view(batch_size, seq_len, self.n_head, head_dim).transpose(1, 2)
-        k = k.view(batch_size, seq_len, self.n_head, head_dim).transpose(1, 2)
-        v = v.view(batch_size, seq_len, self.n_head, head_dim).transpose(1, 2)
+    def forward(self, x: torch.Tensor, freqs_cis: torch.Tensor, past_key_value: tuple[torch.Tensor, torch.Tensor] | None = None) -> tuple[torch.Tensor, tuple[torch.Tensor, torch.Tensor]]:
+        batch_size, seq_len, _ = x.size()
+        
+        q = self.q_proj(x).view(batch_size, seq_len, self.n_head, self.head_dim)
+        k = self.k_proj(x).view(batch_size, seq_len, self.n_kv_head, self.head_dim)
+        v = self.v_proj(x).view(batch_size, seq_len, self.n_kv_head, self.head_dim)
+        
+        q, k = apply_rotary_emb(q, k, freqs_cis)
+        
+        q = q.transpose(1, 2)
+        k = k.transpose(1, 2)
+        v = v.transpose(1, 2)
 
         if past_key_value is not None:
             past_k, past_v = past_key_value
@@ -49,8 +90,12 @@ class CausalSelfAttention(nn.Module):
             v = torch.cat((past_v, v), dim=-2)
             
         present_key_value = (k, v)
+        
+        if self.n_rep > 1:
+            k = k[:, :, None, :, :].expand(batch_size, self.n_kv_head, self.n_rep, k.size(-2), self.head_dim).reshape(batch_size, self.n_head, k.size(-2), self.head_dim)
+            v = v[:, :, None, :, :].expand(batch_size, self.n_kv_head, self.n_rep, v.size(-2), self.head_dim).reshape(batch_size, self.n_head, v.size(-2), self.head_dim)
 
-        att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
+        att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(self.head_dim))
         
         query_start = k.size(-2) - seq_len
         query_end = k.size(-2)
@@ -62,49 +107,83 @@ class CausalSelfAttention(nn.Module):
         att = self.attn_dropout(att)
 
         y = att @ v
-        y = y.transpose(1, 2).contiguous().view(batch_size, seq_len, channels)
-        y = self.resid_dropout(self.c_proj(y))
+        y = y.transpose(1, 2).contiguous().view(batch_size, seq_len, -1)
+        y = self.resid_dropout(self.o_proj(y))
         return y, present_key_value
 
-
-class MLP(nn.Module):
-    def __init__(self, config: GPTConfig) -> None:
+class SwiGLUMLP(nn.Module):
+    def __init__(self, config: LlamaConfig) -> None:
         super().__init__()
-        self.c_fc = nn.Linear(config.n_embd, 4 * config.n_embd, bias=config.bias)
-        self.gelu = nn.GELU()
-        self.c_proj = nn.Linear(4 * config.n_embd, config.n_embd, bias=config.bias)
+        self.gate_proj = nn.Linear(config.n_embd, config.intermediate_size, bias=config.bias)
+        self.up_proj = nn.Linear(config.n_embd, config.intermediate_size, bias=config.bias)
+        self.down_proj = nn.Linear(config.intermediate_size, config.n_embd, bias=config.bias)
         self.dropout = nn.Dropout(config.dropout)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.dropout(self.c_proj(self.gelu(self.c_fc(x))))
+        return self.dropout(self.down_proj(F.silu(self.gate_proj(x)) * self.up_proj(x)))
 
-
-class Block(nn.Module):
-    def __init__(self, config: GPTConfig) -> None:
+class MoEBlock(nn.Module):
+    def __init__(self, config: LlamaConfig) -> None:
         super().__init__()
-        self.ln_1 = nn.LayerNorm(config.n_embd)
-        self.attn = CausalSelfAttention(config)
-        self.ln_2 = nn.LayerNorm(config.n_embd)
-        self.mlp = MLP(config)
+        self.num_experts = config.num_experts
+        self.num_experts_per_tok = config.num_experts_per_tok
+        self.gate = nn.Linear(config.n_embd, self.num_experts, bias=False)
+        self.experts = nn.ModuleList([SwiGLUMLP(config) for _ in range(self.num_experts)])
 
-    def forward(self, x: torch.Tensor, past_key_value: tuple[torch.Tensor, torch.Tensor] | None = None) -> tuple[torch.Tensor, tuple[torch.Tensor, torch.Tensor]]:
-        attn_out, present_key_value = self.attn(self.ln_1(x), past_key_value=past_key_value)
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        batch_size, seq_len, hidden_dim = x.shape
+        x_flat = x.view(-1, hidden_dim)
+        
+        router_logits = self.gate(x_flat)
+        routing_weights = F.softmax(router_logits, dim=-1)
+        routing_weights, selected_experts = torch.topk(routing_weights, self.num_experts_per_tok, dim=-1)
+        routing_weights = routing_weights / routing_weights.sum(dim=-1, keepdim=True)
+        
+        final_hidden_states = torch.zeros_like(x_flat)
+        
+        for expert_idx in range(self.num_experts):
+            expert_layer = self.experts[expert_idx]
+            idx, top_x = torch.where(selected_experts == expert_idx)
+            
+            if idx.shape[0] == 0:
+                continue
+                
+            current_state = x_flat[idx]
+            current_hidden_states = expert_layer(current_state) * routing_weights[idx, top_x, None]
+            final_hidden_states.index_add_(0, idx, current_hidden_states.to(current_state.dtype))
+            
+        return final_hidden_states.view(batch_size, seq_len, hidden_dim)
+
+class LlamaBlock(nn.Module):
+    def __init__(self, config: LlamaConfig) -> None:
+        super().__init__()
+        self.input_layernorm = RMSNorm(config.n_embd, eps=config.rms_norm_eps)
+        self.self_attn = CausalSelfAttention(config)
+        self.post_attention_layernorm = RMSNorm(config.n_embd, eps=config.rms_norm_eps)
+        if config.num_experts > 1:
+            self.mlp = MoEBlock(config)
+        else:
+            self.mlp = SwiGLUMLP(config)
+
+    def forward(self, x: torch.Tensor, freqs_cis: torch.Tensor, past_key_value: tuple[torch.Tensor, torch.Tensor] | None = None) -> tuple[torch.Tensor, tuple[torch.Tensor, torch.Tensor]]:
+        attn_out, present_key_value = self.self_attn(self.input_layernorm(x), freqs_cis, past_key_value=past_key_value)
         x = x + attn_out
-        x = x + self.mlp(self.ln_2(x))
+        x = x + self.mlp(self.post_attention_layernorm(x))
         return x, present_key_value
 
-
-class MiniGPT(nn.Module):
-    def __init__(self, config: GPTConfig) -> None:
+class MiniLlama(nn.Module):
+    def __init__(self, config: LlamaConfig) -> None:
         super().__init__()
         self.config = config
-        self.token_embedding = nn.Embedding(config.vocab_size, config.n_embd)
-        self.position_embedding = nn.Embedding(config.block_size, config.n_embd)
+        self.embed_tokens = nn.Embedding(config.vocab_size, config.n_embd)
         self.dropout = nn.Dropout(config.dropout)
-        self.blocks = nn.ModuleList([Block(config) for _ in range(config.n_layer)])
-        self.ln_f = nn.LayerNorm(config.n_embd)
+        self.layers = nn.ModuleList([LlamaBlock(config) for _ in range(config.n_layer)])
+        self.norm = RMSNorm(config.n_embd, eps=config.rms_norm_eps)
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias=False)
-        self.token_embedding.weight = self.lm_head.weight
+        
+        freqs_cis = precompute_freqs_cis(config.n_embd // config.n_head, config.block_size, config.rope_theta)
+        self.register_buffer("freqs_cis", freqs_cis)
+
         self.apply(self._init_weights)
 
     def _init_weights(self, module: nn.Module) -> None:
@@ -123,17 +202,18 @@ class MiniGPT(nn.Module):
         if total_len > self.config.block_size:
             raise ValueError(f"Cannot forward sequence length {total_len}; block_size is {self.config.block_size}")
 
-        positions = torch.arange(past_len, total_len, dtype=torch.long, device=idx.device).unsqueeze(0)
-        x = self.token_embedding(idx) + self.position_embedding(positions)
+        x = self.embed_tokens(idx)
         x = self.dropout(x)
         
+        freqs_cis = self.freqs_cis[past_len:total_len]
+        
         present_key_values = []
-        for i, block in enumerate(self.blocks):
+        for i, layer in enumerate(self.layers):
             past_kv = past_key_values[i] if past_key_values is not None else None
-            x, present_kv = block(x, past_key_value=past_kv)
+            x, present_kv = layer(x, freqs_cis, past_key_value=past_kv)
             present_key_values.append(present_kv)
             
-        x = self.ln_f(x)
+        x = self.norm(x)
         logits = self.lm_head(x)
 
         loss = None
@@ -175,6 +255,41 @@ class MiniGPT(nn.Module):
                 idx = idx[:, -self.config.block_size:]
                 
         return idx
+
+    @torch.no_grad()
+    def generate_stream(
+        self,
+        idx: torch.Tensor,
+        max_new_tokens: int,
+        temperature: float = 0.8,
+        top_k: int | None = 50,
+    ):
+        if temperature <= 0:
+            raise ValueError("temperature must be greater than zero")
+            
+        past_key_values = None
+        for _ in range(max_new_tokens):
+            if past_key_values is not None:
+                idx_cond = idx[:, -1:]
+            else:
+                idx_cond = idx
+                if idx_cond.size(1) > self.config.block_size:
+                    idx_cond = idx_cond[:, -self.config.block_size:]
+                    
+            logits, _, past_key_values = self(idx_cond, past_key_values=past_key_values)
+            logits = logits[:, -1, :] / temperature
+            if top_k is not None:
+                v, _ = torch.topk(logits, min(top_k, logits.size(-1)))
+                logits[logits < v[:, [-1]]] = -float("inf")
+            probs = F.softmax(logits, dim=-1)
+            idx_next = torch.multinomial(probs, num_samples=1)
+            idx = torch.cat((idx, idx_next), dim=1)
+            
+            yield idx_next.item()
+            
+            if past_key_values is not None and past_key_values[0][0].size(-2) >= self.config.block_size:
+                past_key_values = None
+                idx = idx[:, -self.config.block_size:]
 
     def num_parameters(self) -> int:
         return sum(parameter.numel() for parameter in self.parameters())

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <requirements project="slm-learning" schema="1">
-  <!-- TODO: capture initial scope -->
-  <!-- <requirement id="REQ-001" priority="must"><goal>...</goal></requirement> -->
   <requirement id="SLM_LEARNING-R-001" priority="must">
     <goal>Build a terminal-native SLM learning lab that creates a small language model from scratch, uses it on the GAD project itself, and improves its souls/reasoning workflows.</goal>
   </requirement>
   <requirement id="SLM_LEARNING-R-002" priority="must">
     <goal>Make the main menu shell behave like a chat/composer interface with slash-command lesson routes, stable VCS ids, succinct quick prompts, and honest live speech/input status.</goal>
+  </requirement>
+  <requirement id="SLM_LEARNING-R-003" priority="must">
+    <goal>Efficient training and tuning on low-end equipment: bfloat16 mixed precision, gradient checkpointing, gc.collect memory hygiene, gradient accumulation for larger effective batch sizes, and post-training pruning/quantization for deployment. No accuracy or reasoning loss from any optimization.</goal>
   </requirement>
 </requirements>

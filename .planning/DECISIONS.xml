@@ -25,4 +25,94 @@
     </references>
   </decision>
 
+  <decision id="slm-learning-004">
+    <title>Adopt MoE and Network Morphism for Extensible Architecture</title>
+    <summary>Upgraded the MiniLlama architecture to support Mixture of Experts (MoE) routing and Progressive Network Growing (Network Morphism). This allows the SLM to grow capacity dynamically without catastrophic forgetting.</summary>
+    <impact>Future fine-tuning loops will target moe_model.pt or grown_model.pt to leverage specialized reasoning experts.</impact>
+    <references>
+      <file path="src/slm_from_scratch/model.py"/>
+      <file path="scripts/10_grow_network.py"/>
+      <file path="scripts/11_upcycle_to_moe.py"/>
+    </references>
+  </decision>
+
+  <decision id="slm-learning-005">
+    <title>Implement MLOps and bfloat16 Quantization</title>
+    <summary>Implemented a strict MLOps pipeline to compress all .pt checkpoints from fp32 to bfloat16, cutting disk usage by 50% with zero accuracy loss, preventing local storage exhaustion.</summary>
+    <impact>All future models saved must use bfloat16 or be swept by the mlops_manager script.</impact>
+    <references>
+      <file path="scripts/12_mlops_manager.py"/>
+    </references>
+  </decision>
+
+  <decision id="slm-learning-006">
+    <title>Enforce Domain Constraining for Fluid Intelligence</title>
+    <summary>Established gad_supported_stacks.json to strictly prune unblessed frameworks (e.g., Svelte, Vue) from the training corpus. This starves the SLM of irrelevant crystallized knowledge, freeing parameter capacity for pure reasoning and Next.js mastery.</summary>
+    <impact>The monorepo ingestion pipeline strictly filters files based on this registry. Future dataset generation must obey these bounds.</impact>
+    <references>
+      <file path="data/gad_supported_stacks.json"/>
+      <file path="scripts/13_ingest_monorepo.py"/>
+    </references>
+  </decision>
+
+  <decision id="slm-learning-007">
+    <title>Multi-Point Progressive Network Growth</title>
+    <summary>Upgraded Network Morphism from single-point layer append to multi-point insertion with strategy-guided placement (uniform/early/late/middle). New identity layers are inserted at computed positions across the network so each learns features appropriate to its depth: syntax (early), semantics (middle), or reasoning (late).</summary>
+    <impact>The --strategy flag controls growth direction. Future evolution cycles should use 'uniform' for general capacity, 'late' for reasoning, 'early' for syntax understanding.</impact>
+    <references>
+      <file path="scripts/10_grow_network.py"/>
+    </references>
+  </decision>
+
+  <decision id="slm-learning-008">
+    <title>Context Window Strategy: Flush + Reprocess on Model Swap</title>
+    <summary>When hot-swapping between Kael and Dr. Stein mid-conversation, the KV-cache is invalidated because K/V tensors are weight-dependent. Current strategy: flush cache and reprocess full history through the new model. Future: shared base weights + LoRA adapter swap to preserve KV-cache.</summary>
+    <impact>Model swaps cost O(history_length) compute. For long conversations, this may introduce latency on swap. The LoRA path eliminates this cost entirely.</impact>
+    <references>
+      <file path="scripts/learning_tui/model_runner.py"/>
+    </references>
+  </decision>
+
+  <decision id="slm-learning-009">
+    <title>Refactor TUI to Single-Responsibility Components</title>
+    <summary>Dismantled the monolithic chat_screen.py into slash_commands.py (command parsing), model_runner.py (model lifecycle + context window), and telemetry.py (GAD observability). chat_screen.py is now purely a UI orchestrator.</summary>
+    <impact>Future TUI changes must respect the component boundary. Model logic goes in model_runner, command parsing in slash_commands, logging in telemetry. chat_screen only composes UI.</impact>
+    <references>
+      <file path="scripts/learning_tui/chat_screen.py"/>
+      <file path="scripts/learning_tui/slash_commands.py"/>
+      <file path="scripts/learning_tui/model_runner.py"/>
+      <file path="scripts/learning_tui/telemetry.py"/>
+    </references>
+  </decision>
+
+  <decision id="slm-learning-010">
+    <title>Align with Frontier Architecture: System Prompts + Full Fine-Tuning, Not LoRA Swapping</title>
+    <summary>
+      Frontier models (Claude Opus, GPT-5.5, Gemini) do NOT swap weights at runtime.
+      Persona differences (Kael vs Dr. Stein) are handled via system prompt injection
+      into the context window — no weight modifications at inference time. Domain
+      knowledge is baked in during training via SFT and RLHF/DPO, not adapter swapping.
+      LoRA is reserved for future consumer extensibility (users specializing Dr. Stein
+      for their specific project without full retraining). This supersedes the LoRA-swap
+      assumption in decision slm-learning-008; the KV-cache invalidation problem is moot
+      because we no longer swap weights mid-conversation.
+      
+      Training pipeline for Dr. Stein alignment:
+        1. Pre-training (SmolLM2 base — already done)
+        2. SFT on monorepo corpus (scripts/09_finetune_dr_stein.py)
+        3. Future: DPO preference optimization for judgment/quality
+    </summary>
+    <impact>
+      Kael and Dr. Stein MUST share the exact same base checkpoint. The only runtime
+      difference is the system prompt. Fine-tuning produces one shared checkpoint, not
+      separate per-persona weights. LoRA adapters are a consumer-facing feature, not
+      an internal architecture mechanism.
+    </impact>
+    <references>
+      <file path="scripts/learning_tui/model_runner.py"/>
+      <file path="src/slm_from_scratch/models/kael.py"/>
+      <file path="src/slm_from_scratch/models/dr_stein.py"/>
+    </references>
+  </decision>
+
 </decisions>

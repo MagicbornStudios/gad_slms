@@ -10,4 +10,15 @@
     <reference>scripts/learning_tui/speech_bridge.py</reference>
     <reference>README_TUI.md</reference>
   </entry>
+
+  <entry id="training-memory-leak-2026-05-04" date="2026-05-04" status="fixing" kind="memory">
+    <summary>Stage 2 reasoning training leaked to 3GB RAM (should be ~400MB), killed at epoch 1/3</summary>
+    <context>Running scripts/16_reasoning_training.py on CPU with a 135M param MiniLlama model. Loss was 6.66 when killed. 78 reasoning pairs with think blocks. Training loop retained the full PyTorch computation graph across steps because `loss` tensor was never explicitly deleted after optimizer.step().</context>
+    <failure>PyTorch keeps the entire computation graph alive as long as any tensor referencing it exists. Using loss.item() reads the scalar but does NOT free the graph. Without `del loss` and `gc.collect()`, each step accumulated ~40MB of dead graph memory, reaching 3GB after ~75 steps. Additionally, fp32 training doubles memory usage compared to bfloat16 with zero accuracy benefit at this model scale.</failure>
+    <rule>Always free the computation graph after extracting the scalar loss value: (1) loss_val = loss.item(), (2) del loss, (3) gc.collect(). Always use torch.autocast(device_type="cpu", dtype=torch.bfloat16) for CPU training. These two changes together cut training memory by ~4× for CPU workloads.</rule>
+    <reference>scripts/16_reasoning_training.py</reference>
+    <reference>scripts/09_finetune_dr_stein.py</reference>
+    <reference>scripts/17_dpo_training.py</reference>
+  </entry>
+
 </errors-and-attempts>

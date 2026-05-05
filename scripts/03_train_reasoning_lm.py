@@ -71,7 +71,7 @@ def main() -> None:
             print(f"step={step} train_loss={losses['train']:.4f} val_loss={losses['val']:.4f}")
 
         x, y = get_batch(train_data, args.batch_size, args.block_size, device)
-        _, loss = model(x, y)
+        _, loss, _ = model(x, y)
         optimizer.zero_grad(set_to_none=True)
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)

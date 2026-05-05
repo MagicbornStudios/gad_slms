@@ -1,5 +1,7 @@
 .venv/
+.venv-cuda/
 .claude/
+.gad/logs/
 __pycache__/
 *.py[cod]
 

@@ -2,7 +2,7 @@
 <state project="slm-learning" schema="1">
   <status>active</status>
   <milestone>v1</milestone>
-  <current-phase></current-phase>
-  <last-activity>2026-05-02</last-activity>
-  <next-action>Next session: read SOUL.md/AGENTS.md and gad snapshot; continue phase 01 composer intelligence, starting with tests for slash-command prediction gaps and recommendation UX.</next-action>
+  <current-phase>02</current-phase>
+  <last-activity>2026-05-04</last-activity>
+  <next-action>Fix memory leak in 3 training scripts (gc.collect + bfloat16), re-run Stage 2 reasoning training, run Stage 3 DPO to produce dr_stein.pt.</next-action>
 </state>

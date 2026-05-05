@@ -29,23 +29,6 @@ Screen.vcs-recording #app-banner {
     padding: 0;
 }
 
-#chat-controls {
-    height: 2;
-    background: #080504;
-    padding: 0 1;
-}
-
-#chat-controls Select {
-    width: 18;
-}
-
-#model-selector {
-    height: 1;
-    border: none;
-    background: #080504;
-    color: #c89b3c;
-}
-
 #chat-log {
     height: 1fr;
     background: #090604;
@@ -66,6 +49,21 @@ Screen.vcs-recording #app-banner {
     padding: 0 1;
 }
 
+#chat-command-preview {
+    height: 1;
+    color: #ebcb8b;
+    background: #120905;
+    padding: 0 1;
+}
+
+#chat-suggestions {
+    height: auto;
+    max-height: 30%;
+    min-height: 3;
+    border: tall #4b2315;
+    background: #080504;
+}
+
 #app-banner {
     height: 1;
     padding: 0 1;
@@ -79,20 +77,38 @@ Screen.vcs-recording #app-banner {
     height: 1;
 }
 
-#app-banner-vcs-status {
+#app-banner-vcs-strip {
     display: none;
     width: 1fr;
     height: 1;
-    color: #ebcb8b;
+}
+
+#app-banner-vcs-status {
+    width: 1fr;
+    height: 1;
+    min-width: 0;
+    color: #e6d8bd;
 }
 
 #vcs-quick-prompt {
-    display: none;
+    height: 1;
+    min-width: 16;
+    max-width: 24;
+    border: tall #e6a017;
+    background: #4a3208;
+    color: #fff2c2;
+    text-style: bold;
+    margin-left: 1;
 }
 
-Screen.vcs-dev #app-banner-vcs-status,
-Screen.vcs-dev #vcs-quick-prompt {
+Screen.vcs-dev #app-banner-vcs-strip {
     display: block;
+}
+
+.vcs-recording #vcs-quick-prompt {
+    border: tall #ff6b4a;
+    background: #4a1810;
+    color: #ffe0d8;
 }
 
 #menu-sidebar {
@@ -164,7 +180,9 @@ Screen.vcs-dev #vcs-quick-prompt {
 }
 
 #lesson-suggestions {
-    height: 7;
+    height: auto;
+    max-height: 30%;
+    min-height: 3;
     border: tall #4b2315;
     background: #080504;
 }
@@ -258,24 +276,28 @@ Button.vcs-recording-button {
     height: 1;
 }
 
-.vcs-tag, .vcs-id-tag {
-    color: #ebcb8b;
+.vcs-tag {
+    color: #c9a227;
     text-style: bold;
     margin-bottom: 1;
 }
 
 .vcs-id-tag {
     display: none;
-    background: #2b160b;
-    border-left: thick #ebcb8b;
+    background: #1a0f08;
+    border-left: thick #d8a84d;
+    border-top: tall #3d2914;
+    border-bottom: tall #3d2914;
+    border-right: tall #3d2914;
     height: 1;
     padding: 0 1;
     width: auto;
+    color: #ffd77a;
 }
 
 Button.vcs-id-tag {
     border: none;
-    min-width: 12;
+    min-width: 14;
 }
 
 .hint {
@@ -307,14 +329,6 @@ Button.vcs-id-tag {
 .vcs-recording .vcs-live-line {
     color: #ffcfba;
     background: #230b08;
-}
-
-#vcs-quick-prompt {
-    height: 1;
-    min-width: 14;
-    border: none;
-    background: #211306;
-    color: #ebcb8b;
 }
 
 #run-spinner {

@@ -2,7 +2,7 @@
 <roadmap project="slm-learning" schema="1">
   <milestone id="v1" status="active">
     <title>Initial milestone</title>
-    <phase id="00" status="planned">
+    <phase id="00" status="done">
       <title>Bootstrap</title>
       <goal>Define scope</goal>
     </phase>
@@ -12,6 +12,12 @@
     <title>Composer intelligence</title>
     <goal>Make the Dr. Stein menu composer behave like an intelligent command surface: predictive slash commands, explainable recommendations, keyboard navigation, and tests for common typo/partial-command gaps.</goal>
     <status>planned</status>
+    <depends></depends>
+  </phase>
+
+  <phase id="02" status="in-progress">
+    <title>Efficient Training Pipeline</title>
+    <goal>Complete the 3-stage training pipeline (SFT → Reasoning → DPO) with memory-efficient techniques: bfloat16 autocast, gc.collect graph cleanup, gradient checkpointing. Fix the Stage 2 memory leak, re-run reasoning training, run DPO to produce dr_stein.pt.</goal>
     <depends></depends>
   </phase>
 

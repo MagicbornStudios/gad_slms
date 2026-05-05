@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from rich.text import Text
 from textual.widgets import Button, Static
 
 from . import icons
@@ -42,25 +43,14 @@ class VisualContextMixin:
             return
         self.set_class(self.vcs_visible, "vcs-dev")
         self.set_class(self.vcs_recording, "vcs-recording")
-        button = self.query_one("#vcs-quick-prompt", Button)
-        status = self.query_one("#app-banner-vcs-status", Static)
-        button.display = self.vcs_visible
-        status.display = self.vcs_visible
+        strip = self.query_one("#app-banner-vcs-strip")
+        strip.display = self.vcs_visible
         for tag in self.query(".vcs-id-tag"):
             tag.display = self.vcs_visible
         target = self._active_vcs_target()
         for candidate in self.vcs_targets:
             tag = self.query_one(f"#vcs-tag-{candidate.id}", Button)
             tag.set_class(candidate.id == target.id, "vcs-selected")
-        lock_status = "locked" if self.vcs_locked_target_id is not None else "unlocked"
-        if self.vcs_recording:
-            status.update(
-                f"{icons.RECORD} recording quick prompt for {target.id} | route={self.vcs_route} | {lock_status}"
-            )
-        else:
-            status.update(
-                f"{icons.VCS} selected={target.id} | route={self.vcs_route} | {target.source_file} | {lock_status}"
-            )
         self._sync_vcs_recorder_view()
 
     def _set_vcs_selected_target(self, target_id: str | None) -> None:
@@ -112,17 +102,39 @@ class VisualContextMixin:
         if not VCS_ENABLED or not self.vcs_targets:
             return
         target = self._active_vcs_target()
+        lock_status = "locked" if self.vcs_locked_target_id is not None else "unlocked"
         button = self.query_one("#vcs-quick-prompt", Button)
         status = self.query_one("#app-banner-vcs-status", Static)
         snapshot = self.vcs_speech_recognizer.snapshot()
         if self.vcs_recording:
-            button.label = f"{icons.STOP} Stop & Copy"
+            button.label = f"{icons.STOP} stop"
             button.set_class(True, "vcs-recording-button")
-            status.update(f"{icons.RECORD} {target.id} | {snapshot.status} | {self.vcs_transcript or 'listening'}")
+            line = Text()
+            line.append(f"{icons.VCS} ", style="bold #ebcb8b")
+            line.append("target ", style="dim #8b6914")
+            line.append(target.id, style="bold #ffd77a")
+            line.append("   ", style="")
+            line.append("mic ", style="dim #8b6914")
+            line.append(snapshot.status, style="#e6d8bd")
+            line.append("   ", style="")
+            line.append("live ", style="dim #8b6914")
+            line.append(self.vcs_transcript or "listening…", style="#f5ecd8")
+            line.append("   ", style="")
+            line.append(lock_status, style="italic #c4a574")
+            status.update(line)
             return
-        button.label = f"{icons.RECORD} Quick Prompt"
+        button.label = f"{icons.RECORD} click to record"
         button.set_class(False, "vcs-recording-button")
-        status.update(f"{icons.VCS} selected={target.id} | route={self.vcs_route}")
+        line = Text()
+        line.append(f"{icons.VCS} ", style="bold #ebcb8b")
+        line.append("target ", style="dim #8b6914")
+        line.append(target.id, style="bold #ffd77a")
+        line.append("   ", style="")
+        line.append("file ", style="dim #8b6914")
+        line.append(target.source_file, style="#e6d8bd")
+        line.append("   ", style="")
+        line.append(lock_status, style="italic #c4a574")
+        status.update(line)
 
     def _tick_vcs_recorder(self) -> None:
         if not self.vcs_recording:

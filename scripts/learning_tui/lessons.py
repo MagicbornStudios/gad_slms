@@ -313,4 +313,166 @@ input:  token 0, token 1, token 2, ... token n
 That objective is simple. The model architecture is what makes it powerful.
 """.strip(),
     ),
+    Lesson(
+        id="gpt2-arch",
+        title="Lesson 8 — The GPT-2 Architecture (2019)",
+        goal="Understand the classic transformer architecture that started the LLM revolution.",
+        command=None,
+        body="""
+# Lesson 8 — The GPT-2 Architecture
+
+GPT-2 proved that a simple, decoder-only transformer could generate coherent text if trained on enough data. Our original `model.py` was built precisely to this specification.
+
+## The Architecture Graph
+
+```text
+       [Input Tokens]
+             │
+[Token Embed] + [Absolute Positional Embed]
+             │
+      ┌──────┴─────────┐
+      │ LayerNorm      │
+      │ Multi-Head Attn│
+      │ + Residual Add │
+      │ LayerNorm      │
+      │ MLP (GELU)     │
+      │ + Residual Add │
+      └──────┬─────────┘  x N Layers
+             │
+        [LayerNorm]
+       [Linear Head]
+             │
+      [Output Logits]
+```
+
+## Key Characteristics
+1. **Absolute Positional Embeddings:** GPT-2 learns a specific vector for position 0, position 1, up to its max block size (e.g. 1024). It struggles to generalize to longer text.
+2. **LayerNorm:** Computes both mean and variance to normalize activations.
+3. **Multi-Head Attention (MHA):** Every Attention head has its own Query, Key, and Value weights.
+4. **GELU:** The Gaussian Error Linear Unit activation function.
+""".strip(),
+    ),
+    Lesson(
+        id="llama-arch",
+        title="Lesson 9 — The Llama Architecture (Modern)",
+        goal="Understand the state-of-the-art transformer architecture used by SmolLM2, Llama-3, and Qwen.",
+        command=None,
+        body="""
+# Lesson 9 — The Llama Architecture
+
+We upgraded `model.py` to this architecture to load modern weights. Almost every core component from GPT-2 was replaced with mathematically superior alternatives.
+
+## The Architecture Graph
+
+```text
+       [Input Tokens]
+             │
+       [Token Embed]   <--- (No absolute positions!)
+             │
+      ┌──────┴─────────┐
+      │ RMSNorm        │
+      │ GQA Attention  │ <--- RoPE applied dynamically here
+      │ + Residual Add │
+      │ RMSNorm        │
+      │ SwiGLU MLP     │
+      │ + Residual Add │
+      └──────┬─────────┘  x N Layers
+             │
+         [RMSNorm]
+       [Linear Head]
+             │
+      [Output Logits]
+```
+
+## Key Upgrades
+1. **RoPE (Rotary Positional Embeddings):** Instead of adding position vectors at the start, Llama rotates the Query and Key vectors inside the attention mechanism based on their relative distance.
+2. **RMSNorm:** Drops the mean-centering from LayerNorm, computing only the variance. It's strictly faster with no performance loss.
+3. **Grouped Query Attention (GQA):** Multiple Query heads share a single Key/Value head. This massively shrinks memory requirements.
+4. **SwiGLU:** A gated activation function that uses element-wise multiplication of two linear projections.
+""".strip(),
+    ),
+    Lesson(
+        id="arch-compare",
+        title="Lesson 10 — GPT-2 vs Llama Comparison",
+        goal="Compare the mathematical differences between classic and modern SLMs.",
+        command=None,
+        body="""
+# Lesson 10 — GPT-2 vs Llama Comparison
+
+Why go through the effort of rewriting `model.py`? Because the Llama architecture provides massive efficiency and intelligence gains for the same parameter count.
+
+## Component Comparison
+
+| Feature | GPT-2 (2019) | Llama (Modern) | Primary Benefit |
+| :--- | :--- | :--- | :--- |
+| **Normalization** | `LayerNorm` | `RMSNorm` | ~10% faster computation by dropping the mean. |
+| **Positions** | Absolute | RoPE (Rotary) | Extrapolates to longer sequence lengths flawlessly. |
+| **Activation** | `GELU` | `SwiGLU` | Better capacity and gradient flow. |
+| **Attention** | Multi-Head (MHA) | Grouped Query (GQA)| Massively reduces KV Cache memory usage. |
+
+## Visualizing MHA vs GQA
+
+```text
+MHA (GPT-2): Every Query gets its own Key/Value pair. (Huge memory usage)
+Q0 ── K0/V0
+Q1 ── K1/V1
+Q2 ── K2/V2
+
+GQA (Llama): Multiple Queries share a Key/Value pair. (Very efficient)
+Q0 ─┐
+Q1 ─┼─ K0/V0
+Q2 ─┘
+```
+
+Because memory bandwidth (moving data from RAM to the GPU core) is the main bottleneck in SLMs, GQA makes modern models exponentially faster at generation than GPT-2 models of the same size.
+""".strip(),
+    ),
+    Lesson(
+        id="frontier-arch",
+        title="Lesson 11 — Frontier Architectures (Opus, Gemini)",
+        goal="Understand the cutting-edge techniques used by multi-trillion parameter frontier models.",
+        command=None,
+        body="""
+# Lesson 11 — Frontier Architectures
+
+Our `MiniLlama` is a "Dense" model. Every token passes through every weight in the network. This works great for Small Language Models (SLMs) under 10B parameters, but frontier models like GPT-4, Claude 3.5 Opus, and Gemini 1.5 Pro require radically different architectures to scale efficiently.
+
+## 1. Mixture of Experts (MoE)
+
+Instead of having one giant `SwiGLU` MLP in each block, MoE models have multiple smaller MLPs (called "Experts") and a Router. 
+
+```text
+       [Input Tokens]
+             │
+      ┌──────┴─────────┐
+      │ RMSNorm        │
+      │ GQA Attention  │ 
+      │ + Residual Add │
+      │ RMSNorm        │
+      │   [Router] ────┼──► [Expert 1 MLP] (Used for code)
+      │                ├──► [Expert 2 MLP] (Used for math)
+      │                └──► [Expert N ...] (Unused this token)
+      │ + Residual Add │
+      └──────┬─────────┘
+             │
+```
+**Why do this?** In a dense 100B parameter model, a single token requires 100B floating point operations. In a 100B MoE model with 8 experts (where the router picks the best 2), each token only uses ~25B parameters. This makes the model "Trillion-parameter smart" but "Small-parameter fast".
+
+## 2. Native Multimodality (Gemini / GPT-4o)
+
+Early multimodal models (like LLaVA) bolted a separate Vision Transformer onto a pre-trained text model. Modern frontier models (like Gemini 1.5 Pro) are trained from scratch across modalities.
+
+```text
+[Audio Waveform] ──► Audio Tokenizer ──┐
+[Image Pixels]   ──► Vision Tokenizer ─┼─► [Shared Transformer Blocks]
+[Text String]    ──► Text Tokenizer ───┘
+```
+Because the model learns the exact same embedded space for all three inputs, it can "reason" across audio and text perfectly without losing context in translation.
+
+## 3. Ring Attention & Blockwise Compute
+
+Gemini 1.5 Pro famously supports a 2-Million token context window. Standard Attention scales quadratically $O(N^2)$, meaning 2M tokens would require more VRAM than exists on the planet.
+Frontier architectures solve this by chopping the Query and Key matrices into blocks and passing them in a "ring" across dozens of networked GPUs, computing chunks of the attention matrix in parallel without ever materializing the full 2M x 2M matrix in memory.
+""".strip(),
+    ),
 )

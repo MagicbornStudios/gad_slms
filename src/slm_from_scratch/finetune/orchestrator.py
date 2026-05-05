@@ -11,6 +11,7 @@ from typing import TYPE_CHECKING
 
 from slm_from_scratch.finetune.data import build_dataset_jsonl
 from slm_from_scratch.finetune.eval_hook import run_evals
+from slm_from_scratch.finetune.hub_publish import publish_adapter
 from slm_from_scratch.finetune.manifest import write_manifest
 from slm_from_scratch.finetune.model import attach_lora, load_base_model
 from slm_from_scratch.finetune.model.lora_adapter import count_trainable
@@ -108,6 +109,17 @@ def run_finetune(cfg: "FinetuneConfig", *, dry_run: bool = False) -> Path:
         print(f"[eval] running {cfg.eval.benchmarks} ...")
         eval_results = run_evals(adapter_dir, cfg)
 
+    hub_url: str | None = None
+    if cfg.hub.publish:
+        print("[hub] publishing adapter ...")
+        hub_url = publish_adapter(
+            cfg, adapter_dir, private=cfg.hub.private,
+        )
+
+    extra_manifest: dict = {}
+    if hub_url is not None:
+        extra_manifest["hub_url"] = hub_url
+
     write_manifest(
         cfg,
         adapter_dir=adapter_dir,
@@ -116,6 +128,7 @@ def run_finetune(cfg: "FinetuneConfig", *, dry_run: bool = False) -> Path:
         n_total=n_total,
         train_seconds=train_seconds,
         eval_results=eval_results,
+        extra=extra_manifest or None,
     )
     print(f"[done] {cfg.output_dir}")
     return cfg.output_dir

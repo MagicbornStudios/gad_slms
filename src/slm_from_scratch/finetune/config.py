@@ -73,6 +73,18 @@ class EvalSettings:
 
 
 @dataclass
+class HubSettings:
+    """Auto-publish trained adapter to HF Hub after training.
+
+    Decision slm-learning-023: public repos by default for cost; one
+    repo per adapter named <user>/dr-stein-<config-slug>. Set
+    publish=False on a per-config basis to disable.
+    """
+    publish: bool = True
+    private: bool = False
+
+
+@dataclass
 class FinetuneConfig:
     """Full spec for one fine-tune run. Serializable to/from YAML."""
     name: str
@@ -86,6 +98,7 @@ class FinetuneConfig:
     data: DataSettings = field(default_factory=DataSettings)
     training: TrainingSettings = field(default_factory=TrainingSettings)
     eval: EvalSettings = field(default_factory=EvalSettings)
+    hub: HubSettings = field(default_factory=HubSettings)
 
     @property
     def output_dir(self) -> Path:

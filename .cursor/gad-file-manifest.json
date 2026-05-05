@@ -1,6 +1,6 @@
 {
   "version": "1.35.0",
-  "timestamp": "2026-05-04T04:27:50.874Z",
+  "timestamp": "2026-05-05T03:05:49.266Z",
   "files": {
     "get-anything-done/CHANGELOG.md": "c83b427bed32a8adbffc56a5915233c84dd02a4d71456d1ef371e975eebfbd6f",
     "get-anything-done/VERSION": "2bdb329526da412fef727b98ee09ad713dc957e1f6c514ebc63123755f577e7e",
@@ -26,7 +26,7 @@
     "skills/gad-execute-phase/SKILL.md": "db140dc69b604696fb17cc5945e2b28550bdcceb76137749f170731ab3944e58",
     "skills/gad-forensics/SKILL.md": "fe8651a1c15a34d0386b8d2edf1044029033b4da4a6426bf0aa5871fcc4ac76d",
     "skills/gad-generation-spawn/SKILL.md": "6f395f3536e6cf57954063f5d66cf66677733dc4c1782d22e5fe17fb286657ea",
-    "skills/gad-handoffs/SKILL.md": "4a2ce81f0ef9356f21d824986d807029788b0c30f5f4b52a1711cb9c03a943bc",
+    "skills/gad-handoffs/SKILL.md": "6af331a087895822a3fb8387e2547c4e46f655182baa6beada5fe7800f9c8e98",
     "skills/gad-health/SKILL.md": "0a22610b2ddc8d7636716d8b7d55d908299a301543a70744c797a7f805d004c4",
     "skills/gad-list-phase-assumptions/SKILL.md": "f324ce69d6bb894ba863a6c1aa05b155f894f307cfcdaacc3dca3ce2f8eddfa8",
     "skills/gad-manager/SKILL.md": "2a855d2ba3374df4fe9938dff9ec66eb4f92dec38abcee3dab55e92054e500c4",
@@ -57,7 +57,7 @@
     "skills/gad-thread/SKILL.md": "e817a7d1fc8c81c711da0712894a290b972fbbedab6524a49103abafb08db080",
     "skills/gad-update/SKILL.md": "a25087a387fc663ca4c9238ea1d41b311e95c8efc3f6b9d7b90f80f537fae856",
     "skills/gad-validate-phase/SKILL.md": "b4bffe17379cf9070978c7b945d61ec8e4c8b5a09bc2fb1daf105081b9083f17",
-    "skills/gad-verify-phase/SKILL.md": "45d4e28e8059189d23c64244afce90677f8eacebd29eee66d9c1e212a00fa3fb",
+    "skills/gad-verify-phase/SKILL.md": "0d60cb6f0babb2373364b453c113f9516ff4c560c75990194c97df6c3f2fc17d",
     "skills/gad-verify-work/SKILL.md": "1dd7adda6929442dfe560713483b5006c1750a07e711c0a2ce8ff89931f27ffa",
     "skills/gad-visual-context-panel-identities/SKILL.md": "7c203f9a7e4bbb9e7dd1c7b4d31905ec57fc7ba3a2e7df3918b6200a81ce5823",
     "skills/gad-visual-context-system/SKILL.md": "75278e6e37a60c69acd2866168b9c92ab29bf5c11239bc56ce865c28bd64afda",

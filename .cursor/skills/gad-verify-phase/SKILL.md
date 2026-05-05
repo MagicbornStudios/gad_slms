@@ -55,7 +55,7 @@ cat AGENTS.md | grep -A5 "Build\|Verify"
 | **Build passes** | Code compiles, no errors | Run build command |
 | **Tests pass** | If tests exist, they pass | Run test command |
 | **Deliverables exist** | Files/features the phase promised exist | Check file paths |
-| **State is current** | STATE.xml next-action references the NEXT phase, not this one (≤600 chars; update via `gad state set-next-action`) | `gad state` (decision gad-202) |
+| **State is current** | Derived next-action references the NEXT phase, not this one (refresh via `gad state log`) | `gad state --full` |
 | **Decisions captured** | If architectural choices were made, they're in DECISIONS.xml | `gad query "decisions in phase <N>"` or `gad decisions` (decision gad-202) |
 | **Conventions documented** | If first implementation phase, CONVENTIONS.md exists | Check file |
 
@@ -90,9 +90,9 @@ npx tsc --noEmit 2>&1
 # For each file mentioned in task goals, check it exists
 ls <expected-file-path>
 
-# 5. STATE.xml current
-grep "next-action" .planning/STATE.xml
-# PASS if it mentions next phase, not current
+# 5. Derived next-action current
+gad state --projectid <id> --full
+# PASS if derived next-action mentions next phase or next open task, not the completed one
 
 # 6. CONVENTIONS.md (greenfield only)
 test -f .planning/CONVENTIONS.md
@@ -117,7 +117,7 @@ Create `.planning/phases/<phase-dir>/VERIFICATION.md`:
 | 2 | Build | npm run build exits 0 | PASS | 313KB bundle |
 | 3 | TypeCheck | tsc --noEmit exits 0 | PASS | 0 errors |
 | 4 | Deliverables | game/src/main.ts exists | PASS | 45 lines |
-| 5 | State | STATE.xml points to next phase | PASS | "Phase 02..." |
+| 5 | State | Derived next-action points to next phase | PASS | "Phase 02..." |
 | 6 | Conventions | CONVENTIONS.md exists | PASS | created |
 
 ## Summary
@@ -148,5 +148,5 @@ When running in an eval, verification results feed into the trace:
 1. VERIFICATION.md produced with per-criterion pass/fail
 2. Build command executed (not just "I think it builds")
 3. All task statuses verified against TASK-REGISTRY.xml
-4. STATE.xml currency checked
+4. Derived state currency checked
 5. Result clearly reported as PASS/FAIL/PARTIAL

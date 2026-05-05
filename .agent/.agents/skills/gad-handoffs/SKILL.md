@@ -37,7 +37,7 @@ consume one (session-start pickup / reassignment).
 - Architectural decisions — those go in `DECISIONS.xml` via `gad decisions add`.
 - Design sketches that aren't action items — those go in `.planning/notes/`.
 - Purely internal state (e.g. "what's the current test count") — that goes in
-  `STATE.xml` next-action or the task registry, not the queue.
+  the `STATE.xml` state-log or the task registry, not the queue.
 
 ## The five verbs
 
@@ -221,13 +221,14 @@ current schema), reconstruct by composing from sibling artifacts:
 Then:
 
 ```sh
-gad state set-next-action "<one-line what-next>" --projectid <id>
+gad state log "<one-line what-next>" --tags "<phase-id>" --projectid <id>
 gad state log "state reconstructed from artifacts on <date>" --projectid <id>
 ```
 
-Do NOT hand-write a long STATE.xml body. `next-action` is reserved for
-the immediate next move; everything else belongs in the state-log entries
-or in `.planning/notes/`.
+Do NOT hand-write a long STATE.xml body. The immediate next move now comes
+from the latest relevant state-log entry, then planned tasks, then the
+active phase goal. Everything else belongs in the state-log entries or in
+`.planning/notes/`.
 
 ### 5. Route to a concrete next action
 

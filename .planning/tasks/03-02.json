@@ -1,16 +1,16 @@
 {
   "id": "03-02",
   "phase": "03",
-  "status": "planned",
+  "status": "done",
   "goal": "Build GAD-tool-call accuracy benchmark covering gad note, gad task add, gad state log, gad evolution scan, gad phases close. ~30 prompts. Each test asserts the output contains the right command + flags. Output: scripts/benchmark/gad_tool_call_eval.py + promptfoo-gad-tools.yaml.",
   "type": "code",
   "keywords": "",
   "depends": [],
   "commands": [],
   "files": [],
-  "agent_id": "",
+  "agent_id": "claude",
   "agent_role": "",
-  "runtime": "",
+  "runtime": "claude-code-opus-4-7",
   "model_profile": "",
   "resolved_model": "",
   "skill": "",
@@ -19,7 +19,7 @@
   "claimed_at": "",
   "lease_expires_at": "",
   "completed_at": "",
-  "resolution": "",
+  "resolution": "Built promptfoo-gad-tools.yaml with 30 GAD-tool-call test cases across notes/tasks/state/snapshot/phases/decisions/errors/blockers/handoffs/evolution/projects/recipes/verify/health/file-locations. Ran against dr_stein.pt: 0/30 passed (0%) in 3m42s. Saved runs/eval/gad_tools_baseline_dr_stein.json. This is the Phase 03 reference baseline.",
   "created_at": "2026-05-05T05:39:27.131Z",
-  "updated_at": "2026-05-05T05:39:27.131Z"
+  "updated_at": "2026-05-05T05:48:39.517Z"
 }

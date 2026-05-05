@@ -1,16 +1,16 @@
 {
   "id": "03-01",
   "phase": "03",
-  "status": "in-progress",
+  "status": "done",
   "goal": "Run promptfoo baseline eval against the freshly-trained dr_stein.pt and save scorecard to runs/eval/baseline_dr_stein.json. Capture pass/fail counts for the existing 3 GAD-tool test cases and treat as Phase 03 baseline.",
   "type": "code",
   "keywords": "",
   "depends": [],
   "commands": [],
   "files": [],
-  "agent_id": "",
+  "agent_id": "claude",
   "agent_role": "",
-  "runtime": "",
+  "runtime": "claude-code-opus-4-7",
   "model_profile": "",
   "resolved_model": "",
   "skill": "",
@@ -19,7 +19,7 @@
   "claimed_at": "",
   "lease_expires_at": "",
   "completed_at": "",
-  "resolution": "",
+  "resolution": "Baseline promptfoo eval against dr_stein.pt: 0/3 passed (0%). 25s wall. Saved runs/eval/baseline_dr_stein.json. Honest starting line — DrStein produces non-random but incoherent text (Scala-ish snippets, child-rearing tangents, JSON-ish gibberish).",
   "created_at": "2026-05-05T05:39:26.610Z",
-  "updated_at": "2026-05-05T05:39:26.610Z"
+  "updated_at": "2026-05-05T05:48:39.053Z"
 }

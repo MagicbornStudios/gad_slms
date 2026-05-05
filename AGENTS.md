@@ -4,7 +4,7 @@
 
 Use `gad` as the durable planning and project-memory CLI for this repo.
 
-Project id: `slm_learning`
+Project id: `slm-learning`
 
 Read `SOUL.md` first, then read the active soul body at
 `narrative/souls/dr-stein.md`. Gilgamesh remains the broader/default leader,
@@ -15,16 +15,16 @@ High-value commands:
 
 - `gad` - print the full command surface.
 - `gad projects list` - confirm registered projects and project ids.
-- `gad state show --projectid slm_learning` - view current milestone, status, and next action.
-- `gad tasks list --projectid slm_learning` - inspect planned/in-progress work.
-- `gad errors list --projectid slm_learning` - review prior mistakes before implementing related work.
-- `gad errors add --projectid slm_learning --id <slug> --title <title> --context <text> --failure <text> --rule <text>` - log implementation errors with a future rule.
-- `gad issues list --projectid slm_learning` - review durable planning issues.
-- `gad issues add --projectid slm_learning` - capture a planning issue when a requirement or defect should persist.
-- `gad decisions list --projectid slm_learning` - review durable decisions.
-- `gad requirements list --projectid slm_learning` - inspect captured requirements.
-- `gad snapshot --projectid slm_learning` - get the canonical orientation snapshot when available.
-- `gad startup --projectid slm_learning --no-side-effects` - read-only session orientation fallback.
+- `gad state show --projectid slm-learning` - view current milestone, status, and next action.
+- `gad tasks list --projectid slm-learning` - inspect planned/in-progress work.
+- `gad errors list --projectid slm-learning` - review prior mistakes before implementing related work.
+- `gad errors add --projectid slm-learning --id <slug> --title <title> --context <text> --failure <text> --rule <text>` - log implementation errors with a future rule.
+- `gad issues list --projectid slm-learning` - review durable planning issues.
+- `gad issues add --projectid slm-learning` - capture a planning issue when a requirement or defect should persist.
+- `gad decisions list --projectid slm-learning` - review durable decisions.
+- `gad requirements list --projectid slm-learning` - inspect captured requirements.
+- `gad snapshot --projectid slm-learning` - get the canonical orientation snapshot when available.
+- `gad startup --projectid slm-learning --no-side-effects` - read-only session orientation fallback.
 - `gad tui` - launch the interactive GAD terminal orchestrator.
 
 The current planning scaffold is in `.planning/`:
@@ -118,6 +118,48 @@ For future speech work:
 - After substantive edits, run compile checks and lints for touched files.
 - Do not hide implementation limitations behind simulated UI. If input/output is fake, label it as fake or do not ship it.
 - Do not remove user changes unless explicitly asked.
+
+## SLM Training Strategy (2026-05-05)
+
+Read decisions `slm-learning-011` through `slm-learning-018` for full
+rationale. Operating constraints and direction:
+
+- **VRAM ceiling = 6GB GTX 1660 Ti.** Every model must load and train on
+  the baseline GPU. Larger jobs go to free remote (Colab/Kaggle/HF).
+  A second 1660 Ti via Razer Core eGPU is being brought up but is not
+  yet detected — see `.planning/notes/2026-05-05-egpu-detection-followup.md`.
+- **PEFT/LoRA/QLoRA via TRL `SFTTrainer`** for any new fine-tune. The
+  bespoke `scripts/16_reasoning_training.py` / `17_dpo_training.py`
+  loops stay for the educational from-scratch track only.
+- **HF datasets** (FineWeb, The Stack, OpenMathInstruct,
+  OpenCodeReasoning, FineMath) replace monorepo-only training data
+  for code/math/reasoning tracks. Streaming load to avoid TB downloads.
+- **Iterative train -> prune -> retrain -> prune** is the core loop.
+  Sparsity is a first-class hyperparameter.
+- **MoE with reasoning-specialized experts** is the long-term
+  architecture (extends `slm-learning-004`). Only K experts active per
+  token to respect the VRAM ceiling.
+- **High reasoning > crystallized knowledge.** Slower output is OK if
+  it's reliably correct. Reasoning-trace data and CoT-aware evals
+  outweigh raw-text corpora and final-answer-only scoring.
+- **Synthetic data via stronger LLMs** (Claude-haiku-4-5 for paraphrase,
+  Opus/Sonnet for chain-of-thought traces). Quality-filter + dedup before
+  mixing into training data.
+
+## Eval Pipeline Conventions
+
+- Inference + eval run on **GPU at temp=0.0 (greedy)** by default.
+  See `scripts/eval_checkpoint.py`, `scripts/eval_humaneval.py`,
+  `scripts/eval_gsm8k.py`, `scripts/eval_benchmark_matrix.py`.
+- `KaelModel(device='auto')` resolves cuda-if-available; never load to
+  CPU silently. `MiniLlama.generate` honors `eos_token_id` early-stop.
+- Per-checkpoint eval JSONs land next to the checkpoint:
+  `experiments/runs/<name>/eval_<benchmark>.json`.
+- Sweep ledger in `experiments/INDEX.md`; narrative in
+  `experiments/REPORT.md`.
+- HumanEval candidate code runs in a fresh subprocess with a 10s
+  timeout — that is the safety boundary for model-generated code on
+  this machine.
 
 ## Current Caution
 

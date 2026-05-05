@@ -115,4 +115,60 @@
     </references>
   </decision>
 
+  <decision id="slm-learning-011">
+    <title>VRAM ceiling = 6GB GTX 1660 Ti — every model must load on baseline GPU</title>
+    <date>2026-05-05</date>
+    <summary>Operating constraint: every checkpoint, training run, and inference path must fit on the 6GB GTX 1660 Ti baseline. Drives architecture, batch size, and quantization choices. Larger memory available via the recently-attached Razer Core eGPU (second 1660 Ti, currently not detected by torch — needs Thunderbolt/eGPU driver verification before counting on it) but baseline assumption stays single-6GB so artifacts remain useful on a single dev box.</summary>
+    <impact>Forces PEFT/LoRA/QLoRA over full fine-tunes for any model larger than ~200M params; constrains MoE expert size; rules out 7B-class models locally without aggressive 4-bit quantization.</impact>
+  </decision>
+
+  <decision id="slm-learning-012">
+    <title>Adopt Hugging Face datasets ecosystem (FineWeb, The Stack, OpenMathInstruct, OpenCodeReasoning, FineMath)</title>
+    <date>2026-05-05</date>
+    <summary>Move beyond hand-curated + monorepo-only training data. Adopt datasets.load_dataset() pipeline for: code (The Stack / OpenCodeReasoning), math (OpenMathInstruct, FineMath), general reasoning (OpenMathReasoning, synthetic mixes), web text (FineWeb). Existing hand-curated GAD-tool seed remains canonical for tool-call distillation; HF corpora cover code/math/reasoning tracks the model has never seen.</summary>
+    <impact>Adds datasets dependency; need streaming + on-the-fly tokenization to avoid downloading TBs; enables Stage 2.5+ to fine-tune on real code/math distributions instead of monorepo text.</impact>
+  </decision>
+
+  <decision id="slm-learning-013">
+    <title>Use TRL SFTTrainer + PEFT (LoRA/QLoRA) for fine-tuning, not bespoke training loops</title>
+    <date>2026-05-05</date>
+    <summary>Stop rolling our own training loops in scripts/16_reasoning_training.py / 17_dpo_training.py for new tracks. For Stage 2.5 GAD-tool fine-tune and all subsequent fine-tunes, adopt the trl SFTTrainer + peft LoRA stack. QLoRA (4-bit base + LoRA adapters) is the only realistic path to fitting larger checkpoints on a 6GB GPU. Existing scripts 09/16/17 remain for the from-scratch educational track but are not the path forward for scaling.</summary>
+    <impact>Adds trl, peft, bitsandbytes dependencies. Faster iteration, smaller checkpoints (LoRA adapters are KB-MB), proven optimizer/scheduler defaults. Loss of the 'transparent from-scratch' framing for new code, but that's a deliberate trade for getting actual results.</impact>
+  </decision>
+
+  <decision id="slm-learning-014">
+    <title>Iterative train/prune/retrain loop — keep only most relevant weights, optimize for fluid intelligence</title>
+    <date>2026-05-05</date>
+    <summary>Adopt the iterative train -&gt; magnitude/movement-prune -&gt; retrain -&gt; prune cycle as the core SLM development loop. Goal: a small model with high reasoning per parameter, NOT a model packed with crystallized knowledge. The bet is that reasoning quality beats memorized facts for our use case (GAD operator + project context + tool-call generation). Output may be slower per token but should be reliably correct. This is the explicit tradeoff for competing against frontier models locally.</summary>
+    <impact>New scripts: prune_checkpoint.py (magnitude/movement), retrain_after_prune.py. Pruning ratio + retrain epochs become first-class hyperparameters in experiments/configs/. Eval matrix gets a 'sparsity' column.</impact>
+  </decision>
+
+  <decision id="slm-learning-015">
+    <title>MoE with reasoning-specialized experts as the long-term architecture</title>
+    <date>2026-05-05</date>
+    <summary>Confirms direction set in slm-learning-004 (MoE) but narrows the experts: each expert is shaped for a reasoning-heavy domain (math chain-of-thought, code synthesis, GAD-tool routing, planning-doc parsing). Top-K router with K small. The bet: many small reasoning-specialized experts beat one wide generalist at the same total param count, and matches the VRAM ceiling because only K experts activate per token.</summary>
+    <impact>Architecture work: MoE upcycling from dense Stage 2.5 checkpoint. Router training becomes its own track. Capacity factor tuning. Per-expert eval (which expert fires on which prompt class) becomes a new instrumentation axis.</impact>
+  </decision>
+
+  <decision id="slm-learning-016">
+    <title>Free remote compute (Colab/Kaggle/HF Spaces) for training; local stays for inference + planning</title>
+    <date>2026-05-05</date>
+    <summary>When training jobs exceed local 6GB GPU + reasonable wall-time budget, push the job to free-tier Colab (T4/A100), Kaggle (P100/T4 x2), or HF Spaces. Inference, evaluation, and planning stay local for privacy + iteration speed. Establish a 'remote training' workflow: package a config + dataset URI, generate a notebook/launcher script, push, retrieve checkpoint, log result back into experiments/INDEX.md as if it were a local run. Compute policy memory already permits this.</summary>
+    <impact>New scripts: scripts/remote/colab_launcher.py, kaggle_launcher.py. Need HF Hub account for checkpoint upload. CI / experiment manifest gets 'compute_target' field (local|colab|kaggle|hf-spaces|hf-hub-train).</impact>
+  </decision>
+
+  <decision id="slm-learning-017">
+    <title>Synthetic data generation via stronger LLMs as a first-class data-augmentation track</title>
+    <date>2026-05-05</date>
+    <summary>Beyond paraphrase distillation (Claude-haiku-4-5 teacher), adopt synthetic-reasoning-trace generation: prompt a stronger model (Claude Opus, Sonnet, or external) to produce step-by-step reasoning chains for a problem, filter for quality (model-graded + human spot-check), and mix with real data. Tools: DeepEval synthetic_data, EvidentlyAI, or custom prompts. Mirror the 'frontier bootstrapping' pattern at our scale.</summary>
+    <impact>New scripts: scripts/synth_reasoning_traces.py. Quality-filter + dedup pipeline. Cost lives on Anthropic API; track $ per 1K filtered pairs.</impact>
+  </decision>
+
+  <decision id="slm-learning-018">
+    <title>High reasoning &gt; crystallized knowledge as the explicit competing-with-frontier strategy</title>
+    <date>2026-05-05</date>
+    <summary>Strategy: a small model with strong fluid intelligence and adaptability beats a small model with memorized facts. Output may be slower per token (more reasoning steps) but should be reliably correct. This mirrors the GAD context framework / ecosystem 'survival skills' pattern: durability via reasoning over context lookups, not via baked-in knowledge. All training data, eval design, and architecture choices should favor reasoning capacity over knowledge capacity.</summary>
+    <impact>Reasoning-step datasets (OpenMathReasoning, OpenCodeReasoning, synthetic CoT traces) outweigh raw-text corpora in the data mix. Eval suites need reasoning-quality scoring (intermediate-step correctness) not just final-answer match. Architecture leans toward more attention heads, deeper FFN, longer effective context (RoPE scaling).</impact>
+  </decision>
+
 </decisions>

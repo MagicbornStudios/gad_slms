@@ -12,9 +12,18 @@ data/distilled_pairs.jsonl
 /runs/
 /models/
 
-# Track experiment manifests + logs + eval JSON, but not the giant .pt
+# Track experiment manifests + logs + eval JSON, but not bulky weight files
 experiments/runs/*/checkpoint.pt
 experiments/runs/*/checkpoint*.pt
+experiments/runs/*/**/*.safetensors
+experiments/runs/*/**/*.bin
+experiments/runs/*/checkpoint-*/
+# Track the adapter/ directory's MANIFEST + config + README, but not the
+# tokenizer copies (they're identical to the base model's tokenizer).
+experiments/runs/*/adapter/tokenizer.json
+experiments/runs/*/adapter/tokenizer_config.json
+experiments/runs/*/adapter/special_tokens_map.json
+experiments/runs/*/adapter/chat_template.jinja
 
 node_modules/
 .env

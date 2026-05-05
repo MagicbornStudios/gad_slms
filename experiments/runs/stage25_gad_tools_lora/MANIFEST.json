@@ -1,0 +1,75 @@
+{
+  "id": "stage25_gad_tools_lora",
+  "kind": "stage25_finetune",
+  "adapter_kind": "lora",
+  "config": {
+    "name": "stage25_gad_tools_lora",
+    "base_model": "HuggingFaceTB/SmolLM2-135M-Instruct",
+    "adapter": "lora",
+    "output_root": "experiments/runs",
+    "notes": "Stage 2.5 GAD-tool fine-tune via TRL SFTTrainer + PEFT LoRA. Trains on the 153 hand-curated (instruction, command) pairs in data/gad_tool_pairs.jsonl. First run after the strategic pivot to TRL+PEFT (decisions slm-learning-013, slm-learning-014).\n",
+    "lora": {
+      "r": 16,
+      "alpha": 32,
+      "dropout": 0.05,
+      "target_modules": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj"
+      ]
+    },
+    "data": {
+      "source": "jsonl_pairs",
+      "path": "data/gad_tool_pairs.jsonl",
+      "max_length": 512,
+      "instruction_field": "instruction",
+      "response_field": "command",
+      "system_prompt": "You are Dr. Stein. Translate the user's request into a single gad CLI command. Output only the command on one line."
+    },
+    "training": {
+      "epochs": 3,
+      "learning_rate": 0.0002,
+      "batch_size": 4,
+      "gradient_accumulation": 4,
+      "warmup_ratio": 0.05,
+      "weight_decay": 0.0,
+      "bf16": true,
+      "gradient_checkpointing": true,
+      "seed": 42,
+      "save_strategy": "epoch",
+      "logging_steps": 5
+    },
+    "eval": {
+      "run_after_train": false,
+      "benchmarks": [
+        "gad_tools"
+      ],
+      "temperature": 0.0,
+      "max_new_tokens": 50
+    }
+  },
+  "started_at": "2026-05-05T11:42:05",
+  "elapsed_train_sec": 191.8,
+  "adapter_dir": "experiments\\runs\\stage25_gad_tools_lora\\adapter",
+  "trainable_params": 4884480,
+  "total_params": 134515008,
+  "vram_report": {
+    "available_gb": 4.54,
+    "estimated_required_gb": 0.37,
+    "fits": true,
+    "reason": "need ~0.37 GB + 0.5 GB safety; have 4.54 GB free of 6.44 GB total",
+    "device": "NVIDIA GeForce GTX 1660 Ti"
+  },
+  "environment": {
+    "python": "3.12.12",
+    "torch": "2.5.1+cu121",
+    "cuda": "12.1",
+    "device": "NVIDIA GeForce GTX 1660 Ti"
+  },
+  "eval_results": {},
+  "notes": "Stage 2.5 GAD-tool fine-tune via TRL SFTTrainer + PEFT LoRA. Trains on the 153 hand-curated (instruction, command) pairs in data/gad_tool_pairs.jsonl. First run after the strategic pivot to TRL+PEFT (decisions slm-learning-013, slm-learning-014).\n"
+}

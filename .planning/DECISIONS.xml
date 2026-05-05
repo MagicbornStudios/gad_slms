@@ -192,4 +192,14 @@
     <impact>Training data tracks now include: (1) gad site source as code distillation pairs, (2) Next.js + Tailwind component patterns from FineWeb / The Stack, (3) synthetic 'scaffold-this-page' tasks via Claude subagent. New eval: structural diff between model output and a reference gad-site scaffold (file presence, route shape, component nesting). When a checkpoint passes 70% structural-diff coverage, the bet is validated.</impact>
   </decision>
 
+  <decision id="slm-learning-022">
+    <title>Adopt DeepSeek-R1-Distill-Qwen-1.5B as primary local reas...</title>
+    <summary>Adopt DeepSeek-R1-Distill-Qwen-1.5B as primary local reasoning base; Qwen2.5-1.5B-Instruct as instruction-following control. Both fit fp16 inference on 1660 Ti (~3GB). Same Qwen tokenizer family, drop-in for current LoRA target_modules. Run as parallel sweep on the 153 GAD-tool pairs to get apples-to-apples comparison instead of guessing which 1.5B fits the GAD-CLI translation task best.</summary>
+  </decision>
+
+  <decision id="slm-learning-023">
+    <title>HF Hub for adapter storage (public repos for cost).</title>
+    <summary>HF Hub for adapter storage (public repos for cost). Push adapter dirs after each Stage 2.5 run via huggingface_hub library; full base models stay on HF and are re-downloaded on demand. Mirror local + remote; nothing lost if local disk dies. CLI: use new 'hf' binary at ~/.local/bin/hf; library calls work from any venv with huggingface_hub installed.</summary>
+  </decision>
+
 </decisions>

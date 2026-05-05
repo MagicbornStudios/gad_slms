@@ -1,0 +1,59 @@
+name: stage25_qwen15_distill_reasoning
+base_model: deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B
+adapter: lora
+compute_target: local-cuda-0
+notes: >
+  Stage 2.5 base upgrade: reasoning track. DeepSeek-R1-Distill-Qwen-1.5B
+  is the strongest published 1.5B reasoning model — distilled from R1 on
+  math/code/reasoning traces. Caveat: it emits <think>...</think> blocks
+  by default, which may hurt the single-line GAD-CLI metric but should
+  help HumanEval/GSM8K vs the 0/0 baseline. Decision slm-learning-022.
+
+  Same Qwen tokenizer family as the control config; same target_modules;
+  same training schedule on the same 153 GAD-tool pairs. Apples-to-apples
+  comparison with stage25_qwen15_instruct_control.
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/gad_tool_pairs.jsonl
+  max_length: 512
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are Dr. Stein. Translate the user's request into a single gad
+    CLI command. Output only the command on one line.
+
+training:
+  epochs: 3
+  learning_rate: 2.0e-4
+  batch_size: 4
+  gradient_accumulation: 4
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: epoch
+  logging_steps: 5
+
+eval:
+  run_after_train: true
+  benchmarks:
+    - gad_tools
+    - humaneval
+    - gsm8k
+  temperature: 0.0
+  max_new_tokens: 50

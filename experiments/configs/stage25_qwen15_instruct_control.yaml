@@ -1,0 +1,58 @@
+name: stage25_qwen15_instruct_control
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+adapter: lora
+compute_target: local-cuda-0
+notes: >
+  Stage 2.5 base upgrade: instruction-following control. Qwen2.5-1.5B-Instruct
+  is the same parameter count + tokenizer as the reasoning candidate, but
+  tuned for terse instruction-following rather than chain-of-thought. Better
+  prior for "Output only the command on one line" — the GAD-CLI eval's
+  primary metric. Decision slm-learning-022.
+
+  Paired with stage25_qwen15_distill_reasoning so we get the empirical
+  answer on which 1.5B Qwen variant fits which metric, not a guess.
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/gad_tool_pairs.jsonl
+  max_length: 512
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are Dr. Stein. Translate the user's request into a single gad
+    CLI command. Output only the command on one line.
+
+training:
+  epochs: 3
+  learning_rate: 2.0e-4
+  batch_size: 4
+  gradient_accumulation: 4
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: epoch
+  logging_steps: 5
+
+eval:
+  run_after_train: true
+  benchmarks:
+    - gad_tools
+    - humaneval
+    - gsm8k
+  temperature: 0.0
+  max_new_tokens: 50

@@ -127,12 +127,30 @@ def publish_adapter(
         _build_readme(cfg, repo_id), encoding="utf-8"
     )
 
-    api.upload_folder(
-        folder_path=str(adapter_dir),
-        repo_id=repo_id,
-        repo_type="model",
-        commit_message=f"Stage 2.5 adapter: {cfg.name}",
+    # `huggingface_hub.HfApi.upload_folder` was observed to stall silently
+    # mid-upload at ~28% on a 73 MB safetensors file (no exception, no
+    # progress, no error). Shelling out to the `hf upload` CLI is the
+    # canonical 1.x path and includes resume + retry. Find the CLI in
+    # this venv (entry-point shim alongside python) so we don't depend
+    # on PATH being set up.
+    import shutil
+    import subprocess
+    import sys
+
+    hf_cli = shutil.which("hf") or str(
+        Path(sys.executable).parent / ("hf.exe" if os.name == "nt" else "hf")
     )
+    cmd = [
+        hf_cli, "upload",
+        repo_id, str(adapter_dir), ".",
+        "--repo-type", "model",
+        "--commit-message", f"Stage 2.5 adapter: {cfg.name}",
+    ]
+    proc = subprocess.run(cmd, env={**os.environ, "HF_TOKEN": token})
+    if proc.returncode != 0:
+        print(f"[hub] hf upload returned rc={proc.returncode}; check log")
+        return None
+
     url = f"https://huggingface.co/{repo_id}"
     print(f"[hub] pushed: {url}")
     return url

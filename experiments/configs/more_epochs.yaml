@@ -1,0 +1,10 @@
+# Hypothesis: 5 epochs over 100 pairs underfits — more passes will keep
+# loss dropping past 5.24.
+stage: reasoning
+ckpt: runs/finetuned/sft_model.pt
+epochs: 10
+lr: 1.0e-5
+max_pairs: 100
+block_size: 512
+device: auto
+notes: "Test whether 10 epochs (vs 5) keeps avg_loss decreasing."

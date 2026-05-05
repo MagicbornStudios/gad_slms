@@ -1,0 +1,253 @@
+description: "Dr. Stein GAD-tool-call accuracy"
+
+# 30 test cases that ask Dr. Stein to translate a natural-language request
+# into the right gad CLI invocation. The bar is low for now (icontains the
+# command verb), but as Dr. Stein improves we will tighten to require flags
+# and arguments.
+
+providers:
+  - id: "python:scripts/benchmark/promptfoo_provider.py"
+    label: "DrStein-baseline"
+    config:
+      pythonExecutable: ".venv/Scripts/python.exe"
+
+prompts:
+  - "{{instruction}}"
+
+defaultTest:
+  options:
+    transform: "output.toLowerCase()"
+
+tests:
+  # --- Notes ----------------------------------------------------------
+  - description: "note add basic"
+    vars:
+      instruction: "Take a note that the build is broken on Windows."
+    assert:
+      - type: icontains
+        value: "gad note"
+
+  - description: "note add (synonym: jot down)"
+    vars:
+      instruction: "Jot down that we should investigate the OOM in stage 3."
+    assert:
+      - type: icontains
+        value: "gad note"
+
+  - description: "note list"
+    vars:
+      instruction: "Show me the open planning notes."
+    assert:
+      - type: icontains
+        value: "gad note"
+
+  # --- Tasks ----------------------------------------------------------
+  - description: "task add"
+    vars:
+      instruction: "Add a new task under phase 03 to wire up the OpenCode teacher."
+    assert:
+      - type: icontains
+        value: "gad task"
+
+  - description: "task stamp done"
+    vars:
+      instruction: "Mark task 02-02 as done."
+    assert:
+      - type: icontains
+        value: "stamp"
+
+  - description: "task list"
+    vars:
+      instruction: "What tasks are open right now?"
+    assert:
+      - type: icontains
+        value: "gad task"
+
+  # --- State / snapshot -----------------------------------------------
+  - description: "state log"
+    vars:
+      instruction: "Log a state delta saying we just finished Stage 3 DPO."
+    assert:
+      - type: icontains
+        value: "state log"
+
+  - description: "snapshot"
+    vars:
+      instruction: "Hydrate the planning context for slm-learning before I start."
+    assert:
+      - type: icontains
+        value: "snapshot"
+
+  - description: "next action"
+    vars:
+      instruction: "What's the next action I should pick up?"
+    assert:
+      - type: contains-any
+        value:
+          - "gad next"
+          - "STATE.xml"
+
+  # --- Phases ---------------------------------------------------------
+  - description: "phase add"
+    vars:
+      instruction: "Append a phase 04 about TUI polish to the roadmap."
+    assert:
+      - type: icontains
+        value: "phase"
+
+  - description: "phase close"
+    vars:
+      instruction: "Close out phase 02 since the training pipeline is done."
+    assert:
+      - type: contains-any
+        value:
+          - "phase"
+          - "close"
+
+  # --- Decisions / errors / blockers ----------------------------------
+  - description: "decisions add"
+    vars:
+      instruction: "Record a decision: from now on we use fp16 + GradScaler on CUDA."
+    assert:
+      - type: icontains
+        value: "decision"
+
+  - description: "errors add"
+    vars:
+      instruction: "Track an error: stage 3 DPO OOM'd loading two model copies."
+    assert:
+      - type: icontains
+        value: "error"
+
+  - description: "blockers list"
+    vars:
+      instruction: "Show me what's blocking phase 03."
+    assert:
+      - type: icontains
+        value: "blocker"
+
+  # --- Handoffs -------------------------------------------------------
+  - description: "handoffs list"
+    vars:
+      instruction: "Are there any open handoffs I can pick up?"
+    assert:
+      - type: icontains
+        value: "handoff"
+
+  - description: "handoffs claim"
+    vars:
+      instruction: "Claim handoff h-2026-05-04-slm_learning-02."
+    assert:
+      - type: icontains
+        value: "claim"
+
+  # --- Evolution ------------------------------------------------------
+  - description: "evolution status"
+    vars:
+      instruction: "Show me the current evolution pressure for this project."
+    assert:
+      - type: icontains
+        value: "evolution"
+
+  - description: "evolution scan"
+    vars:
+      instruction: "Run an evolution scan on slm-learning and write the json."
+    assert:
+      - type: icontains
+        value: "scan"
+
+  - description: "evolution promote"
+    vars:
+      instruction: "Promote the prefer-clean-baseline-over-custom-dev-runtime proto-skill."
+    assert:
+      - type: icontains
+        value: "promote"
+
+  # --- Projects / workspace ------------------------------------------
+  - description: "projects list"
+    vars:
+      instruction: "List every gad project I have registered."
+    assert:
+      - type: contains-any
+        value:
+          - "gad ls"
+          - "projects list"
+
+  # --- Recipes --------------------------------------------------------
+  - description: "recipes list"
+    vars:
+      instruction: "What recipes do we have available?"
+    assert:
+      - type: icontains
+        value: "recipe"
+
+  # --- Verify / health -----------------------------------------------
+  - description: "verify phase"
+    vars:
+      instruction: "Verify that phase 02 actually achieved its goal."
+    assert:
+      - type: icontains
+        value: "verify"
+
+  - description: "health check"
+    vars:
+      instruction: "Diagnose the health of my planning directory."
+    assert:
+      - type: icontains
+        value: "health"
+
+  # --- Reasoning / pipeline awareness ---------------------------------
+  - description: "tool call: which command for status delta"
+    vars:
+      instruction: "Which command do I run when I want to record progress mid-task?"
+    assert:
+      - type: icontains
+        value: "state log"
+
+  - description: "tool call: which command for new feature"
+    vars:
+      instruction: "Which command do I use to start tracking a new feature?"
+    assert:
+      - type: contains-any
+        value:
+          - "phase"
+          - "task"
+
+  # --- Negative / disambiguation --------------------------------------
+  - description: "ambiguous note vs task"
+    vars:
+      instruction: "I want to remember to fix the broken hook tomorrow."
+    assert:
+      - type: contains-any
+        value:
+          - "gad note"
+          - "gad task"
+
+  - description: "explicit JSON tool call format"
+    vars:
+      instruction: "Output a JSON tool call that adds a note saying 'check the gad statusline pressure cache'."
+    assert:
+      - type: icontains
+        value: "note"
+
+  # --- File / artifact awareness ---------------------------------------
+  - description: "where does state live"
+    vars:
+      instruction: "Where is the project state file located?"
+    assert:
+      - type: icontains
+        value: "state.xml"
+
+  - description: "where do tasks live"
+    vars:
+      instruction: "Where do task json files live?"
+    assert:
+      - type: icontains
+        value: ".planning"
+
+  - description: "where does roadmap live"
+    vars:
+      instruction: "Where is the roadmap file?"
+    assert:
+      - type: icontains
+        value: "roadmap"

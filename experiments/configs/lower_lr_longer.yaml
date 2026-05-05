@@ -1,0 +1,10 @@
+# Hypothesis: a lower LR over more epochs preserves SFT knowledge better
+# than the default LR. Risks: slow loss drop, possibly under-fit.
+stage: reasoning
+ckpt: runs/finetuned/sft_model.pt
+epochs: 10
+lr: 5.0e-6
+max_pairs: 100
+block_size: 512
+device: auto
+notes: "Lower LR + 2x epochs to preserve SFT knowledge."

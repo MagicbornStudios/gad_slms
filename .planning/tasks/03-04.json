@@ -1,0 +1,27 @@
+{
+  "id": "03-04",
+  "phase": "03",
+  "status": "planned",
+  "goal": "Wire OpenCode free-tier as a tool-call teacher. Capture (prompt, tool-call sequence) pairs. Format as SFT-style training data. Append to data/distilled_pairs.jsonl. Requires user-side OpenCode install via gad CLI installer first.",
+  "type": "code",
+  "keywords": "",
+  "depends": [
+    "03-03"
+  ],
+  "commands": [],
+  "files": [],
+  "agent_id": "",
+  "agent_role": "",
+  "runtime": "",
+  "model_profile": "",
+  "resolved_model": "",
+  "skill": "",
+  "claimed_by": "",
+  "claimed": false,
+  "claimed_at": "",
+  "lease_expires_at": "",
+  "completed_at": "",
+  "resolution": "",
+  "created_at": "2026-05-05T05:39:28.216Z",
+  "updated_at": "2026-05-05T05:39:28.216Z"
+}

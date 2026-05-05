@@ -1,0 +1,27 @@
+{
+  "id": "03-05",
+  "phase": "03",
+  "status": "planned",
+  "goal": "Training factory: scripts/experiment_runner.py takes a config (model_size, data_mix, hparams, stages) and produces a deterministically-named checkpoint + manifest. Sweep helper enumerates a config matrix. experiments/INDEX.md ledger tracks every run with config + final loss + eval scores.",
+  "type": "code",
+  "keywords": "",
+  "depends": [
+    "03-03"
+  ],
+  "commands": [],
+  "files": [],
+  "agent_id": "",
+  "agent_role": "",
+  "runtime": "",
+  "model_profile": "",
+  "resolved_model": "",
+  "skill": "",
+  "claimed_by": "",
+  "claimed": false,
+  "claimed_at": "",
+  "lease_expires_at": "",
+  "completed_at": "",
+  "resolution": "",
+  "created_at": "2026-05-05T05:39:29.436Z",
+  "updated_at": "2026-05-05T05:39:29.436Z"
+}

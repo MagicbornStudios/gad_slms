@@ -1,0 +1,28 @@
+{
+  "id": "03-07",
+  "phase": "03",
+  "status": "planned",
+  "goal": "Define replacement criteria for routing low-stakes tasks to dr_stein instead of paid runtimes. Numeric thresholds on tool-call eval + reasoning regression. Document in narrative/runtime_routing.md.",
+  "type": "planning",
+  "keywords": "",
+  "depends": [
+    "03-02",
+    "03-03"
+  ],
+  "commands": [],
+  "files": [],
+  "agent_id": "",
+  "agent_role": "",
+  "runtime": "",
+  "model_profile": "",
+  "resolved_model": "",
+  "skill": "",
+  "claimed_by": "",
+  "claimed": false,
+  "claimed_at": "",
+  "lease_expires_at": "",
+  "completed_at": "",
+  "resolution": "",
+  "created_at": "2026-05-05T05:39:30.767Z",
+  "updated_at": "2026-05-05T05:39:30.767Z"
+}

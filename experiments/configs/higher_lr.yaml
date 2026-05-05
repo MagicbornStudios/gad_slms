@@ -1,0 +1,10 @@
+# Hypothesis: 1e-5 is too cautious for fine-tuning a 162M model on only
+# 100 pairs. Try 5x.
+stage: reasoning
+ckpt: runs/finetuned/sft_model.pt
+epochs: 5
+lr: 5.0e-5
+max_pairs: 100
+block_size: 512
+device: auto
+notes: "Higher LR — trade preservation for faster convergence."

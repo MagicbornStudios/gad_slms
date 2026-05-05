@@ -1,0 +1,11 @@
+# Experiment config template. Copy to <name>.yaml and edit.
+# Run with: .venv-gpu/Scripts/python.exe scripts/experiment_runner.py <name>
+
+stage: reasoning            # reasoning | sft | dpo (only reasoning for now)
+ckpt: runs/finetuned/sft_model.pt   # seed checkpoint to fine-tune from
+epochs: 5
+lr: 1.0e-5
+max_pairs: 100
+block_size: 512
+device: auto                # auto picks cuda if available
+notes: "what hypothesis is this run testing? one line."

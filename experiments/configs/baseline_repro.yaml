@@ -1,0 +1,11 @@
+# Reproduce the post-Phase-02 default config. Sanity check that the
+# experiment runner produces a checkpoint comparable to what
+# scripts/16_reasoning_training.py left in runs/finetuned/.
+stage: reasoning
+ckpt: runs/finetuned/sft_model.pt
+epochs: 5
+lr: 1.0e-5
+max_pairs: 100
+block_size: 512
+device: auto
+notes: "Sanity-check reproduction of Phase 02 defaults."

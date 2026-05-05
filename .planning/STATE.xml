@@ -6,6 +6,7 @@
   <last-activity>2026-05-04</last-activity>
   <next-action>Fix memory leak in 3 training scripts (gc.collect + bfloat16), re-run Stage 2 reasoning training, run Stage 3 DPO to produce dr_stein.pt.</next-action>
   <state-log>
+    <entry agent="unknown" at="2026-05-05T05:12:24.034Z">Phase 02 task 02-03 complete: Stage 3 DPO landed. dr_stein.pt saved (1.16 GB). Required fp16 reference model on CUDA + expandable allocator to fit on 6 GB GTX 1660 Ti. Reward margin saturated (+117.85) - synthetic preference pairs too separable, but artifact loads. 3-stage training pipeline (SFT -&gt; Reasoning -&gt; DPO) now end-to-end complete.</entry>
     <entry agent="unknown" at="2026-05-05T04:57:33.114Z">Phase 02 task 02-02 complete: Stage 2 reasoning training migrated to GPU (.venv-gpu on Python 3.12 + torch 2.5.1+cu121, GTX 1660 Ti). Final avg loss 5.24 over 5 epochs. ~10x faster than CPU. Scripts 16/17 now CUDA-aware (fp16+GradScaler) with CPU bf16 fallback. Stage 3 DPO running next.</entry>
     <entry agent="unknown" at="2026-05-05T01:51:49.438Z">Phase 02 task 02-01 done: gradient_checkpointing flag added to LlamaConfig + MiniLlama.forward, enabled in scripts 09/16/17. Smoke tested fwd+bwd+generate. Memory-efficiency triad complete (bfloat16 autocast + gc.collect + gradient checkpointing). Ready to re-run Stage 2 reasoning + Stage 3 DPO.</entry>
   </state-log>

@@ -359,7 +359,7 @@ def main() -> None:
     print(f"DPO COMPLETE!")
     print(f"Saved Dr. Stein to {args.out}")
     print(f"Final reward margin: {final_margin:+.4f}")
-    print(f"  (positive = model prefers chosen over rejected ✓)")
+    print(f"  (positive = model prefers chosen over rejected)")
     print(f"Total time: {elapsed:.1f}s")
     print(f"{'='*60}")
     print(f"\nDr. Stein is now fully trained through all 3 stages:")

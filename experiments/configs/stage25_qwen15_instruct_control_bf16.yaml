@@ -1,0 +1,62 @@
+name: stage25_qwen15_instruct_control_bf16
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+adapter: lora
+compute_target: local-cuda-0
+notes: >
+  Wall-time A/B validation: bf16 variant of stage25_qwen15_instruct_control.
+  Same base, same data, same LR/schedule, same effective batch — only the
+  precision flag differs. Tests the claim that on Turing (1660 Ti, compute
+  7.5) bf16 runs slower than fp16 because Turing has FP16 tensor cores but
+  no native BF16 silicon. The fp16 control trained in 935.4s; this run's
+  wall time is the validation. Expected: bf16 ≥ 935s (likely 1.3-1.8x).
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/gad_tool_pairs.jsonl
+  max_length: 128
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are Dr. Stein. Translate the user's request into a single gad
+    CLI command. Output only the command on one line.
+
+training:
+  epochs: 3
+  learning_rate: 2.0e-4
+  batch_size: 8
+  gradient_accumulation: 2
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: "no"
+  logging_steps: 5
+
+eval:
+  run_after_train: true
+  benchmarks:
+    - gad_tools
+    - humaneval
+    - gsm8k
+  temperature: 0.0
+  max_new_tokens: 50
+
+# This run's adapter is a control artifact — keep it off Hub. The fp16
+# adapter is the one we want canonical.
+hub:
+  publish: false

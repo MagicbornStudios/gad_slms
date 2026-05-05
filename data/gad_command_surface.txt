@@ -1,0 +1,360 @@
+===== gad note =====
+Manage ad-hoc notes in .planning/notes/ — list, add, questions (gad note v1.35.0)
+
+USAGE gad note list|add|questions
+
+COMMANDS
+
+       list    List notes in .planning/notes/                                                                                     
+        add    Create a new note in .planning/notes/. Filename includes agent slug from --agent or $GAD_AGENT_NAME.               
+  questions    Surface "## Open questions" sections from recent notes — CLI path to operator action items buried in planning docs.
+
+Use gad note <command> --help for more information about a command.
+
+
+===== gad notes =====
+Manage ad-hoc notes in .planning/notes/ — list, add, questions (gad note v1.35.0)
+
+USAGE gad note list|add|questions
+
+COMMANDS
+
+       list    List notes in .planning/notes/                                                                                     
+        add    Create a new note in .planning/notes/. Filename includes agent slug from --agent or $GAD_AGENT_NAME.               
+  questions    Surface "## Open questions" sections from recent notes — CLI path to operator action items buried in planning docs.
+
+Use gad note <command> --help for more information about a command.
+
+
+===== gad tasks =====
+Show tasks from TASK-REGISTRY.xml (falls back to STATE.md) (tasks list)
+
+USAGE tasks list [OPTIONS] 
+
+OPTIONS
+
+  --projectid    Scope to one project                                                                          
+     --status    Filter by status (e.g. in-progress, planned)                                                  
+      --phase    Filter by phase id (e.g. 03)                                                                  
+       --full    Show full goal text (no truncation)                                                           
+      --graph    Use graph-backed query (auto-enabled when useGraphQuery=true)                                 
+    --stalled    Show only in-progress tasks without attribution (no agent / skill / runtime) — stall heuristic
+       --json    JSON output                                                                                   
+
+
+
+===== gad state =====
+Show current state for all projects (state show)
+
+USAGE state show [OPTIONS] 
+
+OPTIONS
+
+  --projectid    Scope to one project by id                                
+        --all    Show all projects (overrides session scope)               
+      --graph    Include graph stats (auto-enabled when useGraphQuery=true)
+       --json    JSON output (includes full next-action)                   
+       --full    Include full next-action text in output                   
+
+
+
+===== gad snapshot =====
+Print all planning files inlined for a project (gad snapshot v1.35.0)
+
+USAGE gad snapshot [OPTIONS] 
+
+OPTIONS
+
+         --projectid    Project ID (default: first root)                                                                                                                                                                                                                                       
+           --project    Project ID (alias for --projectid)                                                                                                                                                                                                                                     
+           --phaseid    Scope snapshot to one phase id                                                                                                                                                                                                                                         
+            --taskid    Scope snapshot to one task id                                                                                                                                                                                                                                          
+           --agentid    Existing agent id to reuse                                                                                                                                                                                                                                             
+              --role    Logical agent role for auto-registration                                                                                                                                                                                                                               
+           --runtime    Runtime identity override (claude-code, codex, cursor, human, etc.)                                                                                                                                                                                                    
+    --parent-agentid    Parent/root agent id when bootstrapping a subagent lane                                                                                                                                                                                                                
+     --model-profile    Model profile attached to the lane                                                                                                                                                                                                                                     
+    --resolved-model    Resolved concrete model attached to the lane                                                                                                                                                                                                                           
+              --full    Full dump (no sprint filtering)                                                                                                                                                                                                                                        
+              --json    JSON output                                                                                                                                                                                                                                                            
+        --skills="5"    Number of equipped skills to surface (44-35). 0 disables. Default: 5.                                                                                                                                                                                                  
+              --mode    full (default) | active — "active" emits ONLY STATE.xml next-action + current phase + open sprint tasks (skips static catalog, references, decisions). Decision gad-195: static info loaded once at session start, active info re-pullable cheap without context waste.
+           --session    Session ID. When provided, auto-downgrades to mode=active if static context was already delivered in this session. Env fallback: GAD_SESSION_ID.                                                                                                                       
+         --sessionid    Session ID alias for --session (runtime command compatibility).                                                                                                                                                                                                        
+  --format="compact"    compact (default) | xml — "compact" strips XML envelope tokens (prolog, outer tags, per-item tag pairs) while preserving content. "xml" dumps raw file content (legacy). Decision gad-241.                                                                             
+             --terse    Terse snapshot: sprint scope + active phase + open task count + last 3 state-log entries. Target <500 tokens.                                                                                                                                                          
+   --no-side-effects    Read-only snapshot: suppress session/lane/log/graph writes.                                                                                                                                                                                                            
+           --handoff    Handoff ID. Emits a unified pipe-able prompt: orientation + matched skill bodies + handoff body. Used by team workers as gad snapshot --handoff <id> | runtime (task 107-10).                                                                                        
+
+
+
+===== gad next =====
+Priority hotlist of what to work on next — in-progress first, then stalled carryovers, then the first planned task per project. (gad next v1.35.0)
+
+USAGE gad next [OPTIONS] 
+
+OPTIONS
+
+  --projectid    Scope to one project                            
+        --all    Show every project (overrides session/cwd scope)
+  --limit="3"    Max rows per project (default 3)                
+       --json    Emit structured JSON                            
+
+
+
+===== gad phases =====
+List phases from ROADMAP.xml (phases list)
+
+USAGE phases list [OPTIONS] 
+
+OPTIONS
+
+  --projectid    Scope to one project by id                 
+        --all    Show all projects (overrides session scope)
+       --full    Show complete goal text for each phase     
+       --json    JSON output                                
+
+
+
+===== gad decisions =====
+List decisions from DECISIONS.xml (decisions list)
+
+USAGE decisions list [OPTIONS] 
+
+OPTIONS
+
+  --projectid    Scope to one project by id                 
+        --all    Show all projects (overrides session scope)
+         --id    Filter to a single decision by id          
+       --json    JSON output                                
+
+
+
+===== gad errors =====
+List or add error attempts in ERRORS-AND-ATTEMPTS.xml (gad errors v1.35.0)
+
+USAGE gad errors list|add
+
+COMMANDS
+
+  list    List error attempts from ERRORS-AND-ATTEMPTS.xml
+   add    Append an error entry to ERRORS-AND-ATTEMPTS.xml
+
+Use gad errors <command> --help for more information about a command.
+
+
+===== gad blockers =====
+List blockers from BLOCKERS.xml (gad blockers v1.35.0)
+
+USAGE gad blockers [OPTIONS] 
+
+OPTIONS
+
+  --projectid    Scope to one project by id                                 
+        --all    Show all projects (overrides session scope)                
+     --status    Filter by status: open|resolved|wont-fix (defaults to open)
+       --json    JSON output                                                
+
+
+
+===== gad handoffs =====
+Work-stealing handoff queue — list, show, claim, claim-next, unclaim, complete, create, create-closeout, lint, new (gad handoffs v1.35.0)
+
+USAGE gad handoffs list|show|claim|claim-next|unclaim|complete|create|create-closeout|lint|new
+
+COMMANDS
+
+             list    List handoffs (default: open bucket)                                                                                                                                   
+             show    Print full content of a handoff file                                                                                                                                   
+            claim    Claim an open handoff (moves open→claimed)                                                                                                                             
+       claim-next    Claim the best-matching open handoff for the current runtime. Respects runtime_preference + priority, then FIFO. Prints the handoff body so the caller can dispatch it.
+          unclaim    Return a claimed handoff to open (moves claimed→open)                                                                                                                  
+         complete    Mark a claimed handoff complete (moves claimed→closed)                                                                                                                 
+           create    Create a new handoff in open/                                                                                                                                          
+  create-closeout    Create a closeout handoff: evidence that a task in another lane was completed by you. Receiving lane sweeps + marks the task done in TASK-REGISTRY.                    
+             lint    Retroactively grade all handoffs in open/ + claimed/ against the quality contract                                                                                      
+              new    Create a prefilled handoff from the handoff-template.md template                                                                                                       
+
+Use gad handoffs <command> --help for more information about a command.
+
+
+===== gad evolution =====
+Manage GAD evolution proto-skills (validate/promote/discard/status/similarity/images) and project level (level-up) (gad evolution v1.35.0)
+
+USAGE gad evolution scan|install|validate|promote|discard|status|report|similarity|shed|skill-usage|images|level-up
+
+COMMANDS
+
+         scan    Run the lightweight evolution scan and write .planning/.evolution-scan.json                                              
+      install    Install a staged proto-skill into one or more coding-agent runtimes without promoting it                                 
+     validate    Run advisory validator on a proto-skill (writes VALIDATION.md)                                                           
+      promote    Promote a proto-skill into skills/ + workflows/ (joins species DNA)                                                      
+      discard    Discard a proto-skill (deletes the directory)                                                                            
+       status    Show evolution state - pending proto-skills + candidates                                                                 
+       report    Write a game-screen evolution summary to .planning/.evolutions/<ts>-evolution-NN.md                                      
+   similarity    Compute semantic similarity matrix across candidates + proto-skills (offline, no API)                                    
+         shed    Dry-run or confirm shedding of unused skills; legacy candidate shedding remains available behind --all/--obsolete/<slug>.
+  skill-usage    Report per-slug per-runtime skill invocation counts from .gad-log/skill-loads.                                           
+       images    Skill image inventory + optional OpenAI generation (opt-in)                                                              
+     level-up    Advance project evolution level if XP threshold is met. Forces session reset.                                            
+
+Use gad evolution <command> --help for more information about a command.
+
+
+===== gad projects =====
+Manage projects — list, sync roots, create, edit, archive (gad projects v1.35.0)
+
+USAGE gad projects list|init|audit|create|edit|archive|sync|add|ignore
+
+COMMANDS
+
+     list    List all registered projects                                          
+     init    Initialize a new project with canonical XML .planning/ scaffold       
+    audit    Audit all projects for missing files, format violations, and sink gaps
+   create    Create a new eval project                                             
+     edit    Update an existing eval project's metadata                            
+  archive    Archive (soft-delete) an eval project                                 
+     sync    Crawl repo for .planning/ dirs and sync gad-config.toml roots         
+      add    Add a path as a planning root                                         
+   ignore    Add a gitignore-style ignore pattern                                  
+
+Use gad projects <command> --help for more information about a command.
+
+
+===== gad recipes =====
+Manage recipes (list, create, apply, delete) (gad recipes v1.35.0)
+
+USAGE gad recipes list|create|apply|delete
+
+COMMANDS
+
+    list    List all recipes for a project             
+  create    Create a new recipe under a project        
+   apply    Create a new species from a recipe template
+  delete    Delete a recipe                            
+
+Use gad recipes <command> --help for more information about a command.
+
+
+===== gad verify =====
+Verify a phase achieved its goals — checks tasks, build, state, conventions (gad verify v1.35.0)
+
+USAGE gad verify [OPTIONS] 
+
+OPTIONS
+
+  --projectid    Project ID                                     
+      --phase    Phase ID to verify                             
+  --build-cmd    Override build/typecheck command used by verify
+
+
+
+===== gad health =====
+Machine health surface - disk pressure, stale-worktree prune, cache enumeration (63-health-cli) (gad health v1.35.0)
+
+USAGE gad health disk|prune|caches
+
+COMMANDS
+
+    disk    Report disk free + top hot-directory hogs (bounded; <2s on Windows). 63-health-cli.                
+   prune    Prune stale state safely (worktrees today; caches via gad health caches --remove). 63-health-cli.
+  caches    List (or remove) reproducible build caches. Default is dry-run. 63-health-cli.                     
+
+Use gad health <command> --help for more information about a command.
+
+
+===== gad planning =====
+Planning-directory utilities — hydrate from MD, serve the planning-app. (gad planning v1.35.0)
+
+USAGE gad planning hydrate|serve
+
+COMMANDS
+
+  hydrate    Hydrate .planning/*.xml from sibling *.md files (inverse of docs compile)                                                                           
+    serve    Spawn apps/planning-app on port 3002 with health-probe reuse detection (monorepo checkout required; shells out to pnpm filter per decision gad-265).
+
+Use gad planning <command> --help for more information about a command.
+
+
+===== gad todos =====
+List todo files from .planning/todos/ (todos list)
+
+USAGE todos list [OPTIONS] 
+
+OPTIONS
+
+  --projectid    Scope to one project by id
+       --json    JSON output               
+
+
+
+===== gad session =====
+Manage work sessions (gad session v1.35.0)
+
+USAGE gad session list|new|resume|close
+
+COMMANDS
+
+    list    List sessions                              
+     new    Create a new session and print context refs
+  resume    Resume an existing session                 
+   close    Close a session                            
+
+Use gad session <command> --help for more information about a command.
+
+
+===== gad telemetry =====
+Read-only telemetry summary across sessions, calls, tasks, and handoffs. (gad telemetry v1.35.0)
+
+USAGE gad telemetry summary
+
+COMMANDS
+
+  summary    Summarize local telemetry across sessions, calls, tasks, and handoffs.
+
+Use gad telemetry <command> --help for more information about a command.
+
+
+===== gad refs =====
+List all file references across planning files (decisions, requirements, phases) (refs list)
+
+USAGE refs list [OPTIONS] 
+
+OPTIONS
+
+  --projectid    Scope to one project by id                              
+        --all    Show all projects (overrides session scope)             
+     --source    Filter by source: decisions|requirements|phases|docs-map
+       --json    JSON output                                             
+
+
+
+===== gad workspace =====
+[DEPRECATED] Use gad projects <subcommand> instead (gad workspace v1.35.0)
+
+USAGE gad workspace show|sync|add|ignore
+
+COMMANDS
+
+    show    List all registered projects                                 
+    sync    Crawl repo for .planning/ dirs and sync gad-config.toml roots
+     add    Add a path as a planning root                                
+  ignore    Add a gitignore-style ignore pattern                         
+
+Use gad workspace <command> --help for more information about a command.
+
+
+===== gad context =====
+Print context files for current project position (inlines content by default) (gad context v1.35.0)
+
+USAGE gad context [OPTIONS] 
+
+OPTIONS
+
+  --session    Session ID (uses latest active session if omitted)  
+  --project    Project ID                                          
+     --refs    Print file refs only — no content (lightweight mode)
+     --json    JSON output                                         
+
+
+

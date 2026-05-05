@@ -1,0 +1,65 @@
+name: stage25_qwen15_instruct_v2
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+adapter: lora
+compute_target: local-cuda-0
+notes: >
+  Stage 2.5 v2: same Qwen2.5-1.5B-Instruct base + bf16 (empirical winner
+  per slm-learning-025) + LoRA r=16/alpha=32, but trained on the EXPANDED
+  data set (gad_tool_pairs_v2.jsonl = 153 hand-curated seeds + 630
+  vocab-anchored pairs from a haiku-4-5 subagent grounded in the actual
+  gad CLI surface). The v1 control hit 22/30 (73.3%) on GAD-tools but
+  its 8 failures were systematic vocabulary errors — model invented
+  commands that don't exist (`tasks mark`, `plan hydrate`, `goals status`).
+  This run targets those gaps explicitly via vocab-anchored distillation
+  per decision slm-learning-022 + 2026-05-05 takeaway. Predicted lift:
+  22/30 -> 26-28/30.
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/gad_tool_pairs_v2.jsonl
+  max_length: 128
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are Dr. Stein. Translate the user's request into a single gad
+    CLI command. Output only the command on one line.
+
+training:
+  epochs: 3
+  learning_rate: 2.0e-4
+  batch_size: 8
+  gradient_accumulation: 2
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: "no"
+  logging_steps: 10
+
+eval:
+  run_after_train: true
+  benchmarks:
+    - gad_tools
+    - humaneval
+    - gsm8k
+  temperature: 0.0
+  max_new_tokens: 50
+
+hub:
+  publish: true
+  private: false

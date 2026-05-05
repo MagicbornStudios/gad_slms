@@ -1,0 +1,783 @@
+{"instruction": "Take a note that the build is broken on Windows.", "command": "gad note add \"build is broken on Windows\""}
+{"instruction": "Jot down that we should investigate the OOM in stage 3.", "command": "gad note add \"investigate OOM in stage 3\""}
+{"instruction": "Write a quick note: the gad statusline cache key was wrong.", "command": "gad note add \"gad statusline cache key was wrong\""}
+{"instruction": "Capture an idea: try a smaller architecture for fast iteration.", "command": "gad note add \"try a smaller architecture for fast iteration\""}
+{"instruction": "Save a quick reminder that I need to re-run the eval at temp 0.", "command": "gad note add \"re-run the eval at temperature 0\""}
+{"instruction": "Stash a thought: the eval was slow because of CPU-only inference.", "command": "gad note add \"eval was slow because of CPU-only inference\""}
+{"instruction": "Drop a planning note: pressure cache writers used wrong project id form.", "command": "gad note add \"pressure cache writers used wrong project id form\""}
+{"instruction": "Show me the open planning notes.", "command": "gad note list"}
+{"instruction": "List recent notes for this project.", "command": "gad note list"}
+{"instruction": "What planning notes do we have?", "command": "gad note list"}
+{"instruction": "Show me the open questions buried in our notes.", "command": "gad note questions"}
+{"instruction": "What unanswered questions are sitting in the planning notes?", "command": "gad note questions"}
+{"instruction": "Add a new task under phase 03 to wire up the Claude-subagent teacher.", "command": "gad tasks add --phase 03 \"wire up Claude-subagent teacher\""}
+{"instruction": "Add a phase 02 task: fix the memory leak in stage 2.", "command": "gad tasks add --phase 02 \"fix memory leak in stage 2\""}
+{"instruction": "Create a new task in phase 03 for HumanEval scoring.", "command": "gad tasks add --phase 03 \"wire HumanEval scoring\""}
+{"instruction": "Track a task under phase 04: TUI polish for the menu screen.", "command": "gad tasks add --phase 04 \"TUI polish for the menu screen\""}
+{"instruction": "Add a phase 03 task to draft the GAD-tool training pairs.", "command": "gad tasks add --phase 03 \"draft GAD-tool training pairs\""}
+{"instruction": "Mark task 02-02 as done.", "command": "gad tasks stamp 02-02 --status done"}
+{"instruction": "Stamp task 03-01 as completed by claude on claude-code-opus.", "command": "gad tasks stamp 03-01 --status done --agent claude --runtime claude-code-opus"}
+{"instruction": "Close out task 03-04 — done by claude.", "command": "gad tasks stamp 03-04 --status done --agent claude"}
+{"instruction": "Mark SL-T-03-05 as done.", "command": "gad tasks stamp 03-05 --status done"}
+{"instruction": "What tasks are open right now?", "command": "gad tasks list --status planned"}
+{"instruction": "Show me all open tasks.", "command": "gad tasks list --status planned"}
+{"instruction": "List in-progress tasks.", "command": "gad tasks list --status in-progress"}
+{"instruction": "Which tasks are still planned?", "command": "gad tasks list --status planned"}
+{"instruction": "What's left to do under phase 03?", "command": "gad tasks list --phase 03 --status planned"}
+{"instruction": "Show every task in phase 02.", "command": "gad tasks list --phase 02"}
+{"instruction": "List tasks for phase 01.", "command": "gad tasks list --phase 01"}
+{"instruction": "Find any stalled in-progress tasks.", "command": "gad tasks list --stalled"}
+{"instruction": "Log a state delta saying we just finished Stage 3 DPO.", "command": "gad state log \"finished Stage 3 DPO\""}
+{"instruction": "Append a state log entry: eval pipeline now uses GPU and greedy decoding.", "command": "gad state log \"eval pipeline now uses GPU and greedy decoding\""}
+{"instruction": "Note in the state log that hyperparameter sweep produced 5 checkpoints.", "command": "gad state log \"hyperparameter sweep produced 5 checkpoints\""}
+{"instruction": "Record a state delta: more_pairs eval is unblocked.", "command": "gad state log \"more_pairs eval is unblocked\""}
+{"instruction": "Stamp the state log: all 5 sweep checkpoints scored 0/30 at temp 0.", "command": "gad state log \"all 5 sweep checkpoints scored 0/30 at temp 0\""}
+{"instruction": "Note progress: Stage 2.5 GAD-tool fine-tune started.", "command": "gad state log \"Stage 2.5 GAD-tool fine-tune started\""}
+{"instruction": "Hydrate the planning context for slm-learning before I start.", "command": "gad snapshot --projectid slm-learning"}
+{"instruction": "Get me the current snapshot for this project.", "command": "gad snapshot --projectid slm-learning"}
+{"instruction": "Show the planning snapshot.", "command": "gad snapshot --projectid slm-learning"}
+{"instruction": "Pull the planning context so I know where we left off.", "command": "gad snapshot --projectid slm-learning"}
+{"instruction": "Show me the current state.", "command": "gad state show --projectid slm-learning"}
+{"instruction": "What's the project state right now?", "command": "gad state show --projectid slm-learning"}
+{"instruction": "What's the next action I should pick up?", "command": "gad next"}
+{"instruction": "What should I work on next?", "command": "gad next"}
+{"instruction": "Give me my next priority task.", "command": "gad next"}
+{"instruction": "What's the highest-priority task right now?", "command": "gad next"}
+{"instruction": "List the phases on the roadmap.", "command": "gad phases list"}
+{"instruction": "Show all phases.", "command": "gad phases list"}
+{"instruction": "Append a phase 04 about TUI polish to the roadmap.", "command": "gad phases add --id 04 --title \"TUI polish\""}
+{"instruction": "Add a new phase 05 for benchmark expansion.", "command": "gad phases add --id 05 --title \"benchmark expansion\""}
+{"instruction": "Insert a phase 03.1 for emergency eval fixes.", "command": "gad phases add --id 03.1 --title \"emergency eval fixes\""}
+{"instruction": "Close out phase 02 since the training pipeline is done.", "command": "gad phases close --id 02"}
+{"instruction": "Mark phase 02 as complete.", "command": "gad phases close --id 02"}
+{"instruction": "Close phase 03.", "command": "gad phases close --id 03"}
+{"instruction": "Audit phase 02 for missing UAT.", "command": "gad phases audit --id 02"}
+{"instruction": "Run an audit on phase 02 closure.", "command": "gad phases audit --id 02"}
+{"instruction": "Cancel phase 04 — we changed direction.", "command": "gad phases cancel --id 04"}
+{"instruction": "Record a decision: from now on we use fp16 + GradScaler on CUDA.", "command": "gad decisions add SLM_LEARNING-D-11 --projectid slm-learning --summary \"use fp16 + GradScaler on CUDA\""}
+{"instruction": "Add a decision that distillation will use Claude haiku-4-5 not OpenCode.", "command": "gad decisions add SLM_LEARNING-D-12 --projectid slm-learning --summary \"distillation uses Claude haiku-4-5, not OpenCode\""}
+{"instruction": "Record a decision: eval defaults to greedy temp 0.0 on GPU.", "command": "gad decisions add SLM_LEARNING-D-13 --projectid slm-learning --summary \"eval defaults to greedy temp 0.0 on GPU\""}
+{"instruction": "Log a decision: gradient checkpointing is enabled by default.", "command": "gad decisions add SLM_LEARNING-D-14 --projectid slm-learning --summary \"gradient checkpointing enabled by default\""}
+{"instruction": "List all decisions for this project.", "command": "gad decisions --projectid slm-learning"}
+{"instruction": "Show recorded decisions.", "command": "gad decisions --projectid slm-learning"}
+{"instruction": "Track an error: stage 3 DPO OOM'd loading two model copies.", "command": "gad errors add --summary \"stage 3 DPO OOM loading two model copies\""}
+{"instruction": "Log an error: experiment_runner crashed on cp1252 em-dash.", "command": "gad errors add --summary \"experiment_runner crashed on cp1252 em-dash\""}
+{"instruction": "Add an error attempt: more_pairs eval got stuck at 6 min per test.", "command": "gad errors add --summary \"more_pairs eval got stuck at 6 min per test\""}
+{"instruction": "Record an error: DrStein loaded random weights due to parents[4] typo.", "command": "gad errors add --summary \"DrStein loaded random weights due to parents[4] typo\""}
+{"instruction": "List recorded errors.", "command": "gad errors"}
+{"instruction": "Show the error log.", "command": "gad errors"}
+{"instruction": "Show me what's blocking phase 03.", "command": "gad blockers"}
+{"instruction": "List current blockers.", "command": "gad blockers"}
+{"instruction": "What's blocked right now?", "command": "gad blockers"}
+{"instruction": "Are there any open handoffs I can pick up?", "command": "gad handoffs list"}
+{"instruction": "Show me open handoffs for this project.", "command": "gad handoffs list --projectid slm-learning"}
+{"instruction": "List handoffs in the queue.", "command": "gad handoffs list"}
+{"instruction": "Claim handoff h-2026-05-04-slm_learning-02.", "command": "gad handoffs claim h-2026-05-04-slm_learning-02"}
+{"instruction": "Pick up the next available handoff.", "command": "gad handoffs claim-next"}
+{"instruction": "Take handoff h-2026-05-05-slm_learning-03.", "command": "gad handoffs claim h-2026-05-05-slm_learning-03"}
+{"instruction": "Mark handoff h-2026-05-04-slm_learning-02 as complete by claude-code.", "command": "gad handoffs complete h-2026-05-04-slm_learning-02 --by claude-code"}
+{"instruction": "Close handoff h-2026-05-05-slm_learning-03 — finished by claude.", "command": "gad handoffs complete h-2026-05-05-slm_learning-03 --by claude"}
+{"instruction": "Release handoff h-2026-05-05-slm_learning-04 back to the queue.", "command": "gad handoffs unclaim h-2026-05-05-slm_learning-04"}
+{"instruction": "Create a handoff for cleaning up the stage 2 memory leak.", "command": "gad handoffs create --summary \"clean up stage 2 memory leak\""}
+{"instruction": "Show me the current evolution pressure for this project.", "command": "gad evolution status --projectid slm-learning"}
+{"instruction": "What's the evolution status?", "command": "gad evolution status"}
+{"instruction": "Check evolution pressure.", "command": "gad evolution status"}
+{"instruction": "Run an evolution scan on slm-learning and write the json.", "command": "gad evolution scan --projectid slm-learning"}
+{"instruction": "Trigger an evolution scan for this project.", "command": "gad evolution scan --projectid slm-learning"}
+{"instruction": "Re-scan for evolution candidates.", "command": "gad evolution scan"}
+{"instruction": "Promote the prefer-clean-baseline-over-custom-dev-runtime proto-skill.", "command": "gad evolution promote prefer-clean-baseline-over-custom-dev-runtime"}
+{"instruction": "Promote candidate proto-skill use-greedy-eval-default.", "command": "gad evolution promote use-greedy-eval-default"}
+{"instruction": "Discard proto-skill foo-bar — it's a duplicate.", "command": "gad evolution discard foo-bar"}
+{"instruction": "Check similarity of two proto-skills.", "command": "gad evolution similarity"}
+{"instruction": "List every gad project I have registered.", "command": "gad projects list"}
+{"instruction": "Show all projects.", "command": "gad projects list"}
+{"instruction": "List projects.", "command": "gad ls"}
+{"instruction": "Which projects am I working on?", "command": "gad projects list"}
+{"instruction": "Sync the workspace roots.", "command": "gad projects sync"}
+{"instruction": "Crawl the monorepo and re-discover .planning roots.", "command": "gad projects sync"}
+{"instruction": "What recipes do we have available?", "command": "gad recipes list"}
+{"instruction": "List recipes.", "command": "gad recipes list"}
+{"instruction": "Apply recipe foo to this project.", "command": "gad recipes apply foo"}
+{"instruction": "Verify that phase 02 actually achieved its goal.", "command": "gad verify --phase 02"}
+{"instruction": "Check whether phase 02 met its definition of done.", "command": "gad verify --phase 02"}
+{"instruction": "Run verification for phase 03.", "command": "gad verify --phase 03"}
+{"instruction": "Diagnose the health of my planning directory.", "command": "gad health"}
+{"instruction": "Run a health check on the planning state.", "command": "gad health"}
+{"instruction": "Check the health of this gad project.", "command": "gad health"}
+{"instruction": "Repair any planning health issues you find.", "command": "gad health --repair"}
+{"instruction": "Which command do I run when I want to record progress mid-task?", "command": "gad state log \"<delta>\""}
+{"instruction": "How do I log a status update in the middle of a task?", "command": "gad state log \"<delta>\""}
+{"instruction": "Which command do I use to start tracking a new feature?", "command": "gad phases add --id <n> --title \"<feature>\""}
+{"instruction": "How do I add a new feature to the roadmap?", "command": "gad phases add --id <n> --title \"<feature>\""}
+{"instruction": "What's the right way to capture a quick task I just thought of?", "command": "gad tasks add --phase <id> \"<goal>\""}
+{"instruction": "I want to remember to fix the broken hook tomorrow.", "command": "gad note add \"fix the broken hook tomorrow\""}
+{"instruction": "Remind me later to look at the OOM in stage 3.", "command": "gad note add \"look at the OOM in stage 3\""}
+{"instruction": "Add this to my todo list: refactor the menu_screen module.", "command": "gad tasks add --phase 01 \"refactor the menu_screen module\""}
+{"instruction": "Output a JSON tool call that adds a note saying 'check the gad statusline pressure cache'.", "command": "gad note add \"check the gad statusline pressure cache\""}
+{"instruction": "Where is the project state file located?", "command": "less .planning/STATE.xml"}
+{"instruction": "Show me the state file path.", "command": "less .planning/STATE.xml"}
+{"instruction": "Where do task json files live?", "command": "ls .planning/tasks/"}
+{"instruction": "Where are task definitions stored?", "command": "ls .planning/tasks/"}
+{"instruction": "Where is the roadmap file?", "command": "less .planning/ROADMAP.xml"}
+{"instruction": "Where does the project roadmap live?", "command": "less .planning/ROADMAP.xml"}
+{"instruction": "Where do handoffs live on disk?", "command": "ls .planning/handoffs/"}
+{"instruction": "Where are decisions tracked?", "command": "less .planning/DECISIONS.xml"}
+{"instruction": "Where are errors logged?", "command": "less .planning/ERRORS-AND-ATTEMPTS.xml"}
+{"instruction": "Where do blockers live?", "command": "less .planning/BLOCKERS.xml"}
+{"instruction": "Where do notes live?", "command": "ls .planning/notes/"}
+{"instruction": "How do I see what was changed recently in planning?", "command": "gad activity"}
+{"instruction": "Show me recent planning activity.", "command": "gad activity"}
+{"instruction": "Stream live activity across worker logs.", "command": "gad activity"}
+{"instruction": "List currently active agents.", "command": "gad agents"}
+{"instruction": "Which agents are working on this project right now?", "command": "gad agents"}
+{"instruction": "Show me requirements for this project.", "command": "gad requirements"}
+{"instruction": "List requirement docs.", "command": "gad requirements"}
+{"instruction": "Show the inbox for unprocessed planning issues.", "command": "gad inbox"}
+{"instruction": "List captured planning issues.", "command": "gad issues"}
+{"instruction": "Add an issue: the eval JSON files are not gitignored.", "command": "gad issues add \"eval JSON files are not gitignored\""}
+{"instruction": "Show me the souls registered for this project.", "command": "gad souls list"}
+{"instruction": "What soul is currently active?", "command": "gad souls list"}
+{"instruction": "Capture this as a backlog idea for later: support multi-GPU training.", "command": "gad backlog add \"support multi-GPU training\""}
+{"instruction": "Add to the backlog: distill from a larger teacher model nightly.", "command": "gad backlog add \"distill from a larger teacher model nightly\""}
+{"instruction": "Promote a backlog item into the active milestone.", "command": "gad backlog promote"}
+{"instruction": "List backlog items.", "command": "gad backlog"}
+{"instruction": "Show planning logs.", "command": "gad log"}
+{"instruction": "Show recent CLI usage stats.", "command": "gad log"}
+{"instruction": "Generate a session report for this work session.", "command": "gad session-report"}
+{"instruction": "Pause work and write a handoff for whoever picks this up.", "command": "gad pause-work"}
+{"instruction": "Save current context as a thread for cross-session work.", "command": "gad thread save"}
+{"instruction": "Restore a previously saved thread.", "command": "gad thread restore"}
+{"instruction": "Print a quick gad tip.", "command": "gad tip"}
+{"instruction": "Show GAD version.", "command": "gad version"}
+{"instruction": "Run the planning health repair.", "command": "gad health --repair"}
+{"instruction": "Check disk pressure for gad caches.", "command": "gad health"}
+{"instruction": "Take a note that the build is broken on Windows.", "command": "gad note add \"build is broken on Windows\""}
+{"instruction": "Jot down that we should investigate the OOM in stage 3.", "command": "gad note add \"investigate OOM in stage 3\""}
+{"instruction": "Write a quick note: the gad statusline cache key was wrong.", "command": "gad note add \"gad statusline cache key was wrong\""}
+{"instruction": "Capture an idea: try a smaller architecture for fast iteration.", "command": "gad note add \"try a smaller architecture for fast iteration\""}
+{"instruction": "Save a quick reminder that I need to re-run the eval at temp 0.", "command": "gad note add \"re-run the eval at temperature 0\""}
+{"instruction": "Stash a thought: the eval was slow because of CPU-only inference.", "command": "gad note add \"eval was slow because of CPU-only inference\""}
+{"instruction": "Drop a planning note: pressure cache writers used wrong project id form.", "command": "gad note add \"pressure cache writers used wrong project id form\""}
+{"instruction": "Show me the open planning notes.", "command": "gad note list"}
+{"instruction": "List recent notes for this project.", "command": "gad note list"}
+{"instruction": "What planning notes do we have?", "command": "gad note list"}
+{"instruction": "Show me the open questions buried in our notes.", "command": "gad note questions"}
+{"instruction": "What unanswered questions are sitting in the planning notes?", "command": "gad note questions"}
+{"instruction": "Can you show me all the open questions in the notes?", "command": "gad note questions"}
+{"instruction": "note add please something about missing the alpha deadline", "command": "gad note add \"missing the alpha deadline\""}
+{"instruction": "Add a note: model is training successfully on the 1660.", "command": "gad note add \"model training successfully on 1660\""}
+{"instruction": "Quick note I want to make: need to verify the checkpoint paths.", "command": "gad note add \"need to verify checkpoint paths\""}
+{"instruction": "I think I should note that the LoRA adapter is converging.", "command": "gad note add \"LoRA adapter converging\""}
+{"instruction": "List all planning notes", "command": "gad note list"}
+{"instruction": "Show notes?", "command": "gad note list"}
+{"instruction": "notes list", "command": "gad note list"}
+{"instruction": "Any open questions in the notes?", "command": "gad note questions"}
+{"instruction": "Surface open questions from planning.", "command": "gad note questions"}
+{"instruction": "Mark task 02-02 as done.", "command": "gad tasks stamp 02-02 --status done"}
+{"instruction": "Stamp task 03-01 as completed by claude on claude-code-opus.", "command": "gad tasks stamp 03-01 --status done --agent claude --runtime claude-code-opus"}
+{"instruction": "Close out task 03-04 — done by claude.", "command": "gad tasks stamp 03-04 --status done --agent claude"}
+{"instruction": "Mark SL-T-03-05 as done.", "command": "gad tasks stamp 03-05 --status done"}
+{"instruction": "I finished task 02-03, stamp it.", "command": "gad tasks stamp 02-03 --status done"}
+{"instruction": "Complete task 04-01 and mark it for claude-code.", "command": "gad tasks stamp 04-01 --status done --runtime claude-code"}
+{"instruction": "Task 03-07 is done, mark it finished.", "command": "gad tasks stamp 03-07 --status done"}
+{"instruction": "Set task 02-05 status to done by me (claude).", "command": "gad tasks stamp 02-05 --status done --agent claude"}
+{"instruction": "Mark task 01-02 complete.", "command": "gad tasks stamp 01-02 --status done"}
+{"instruction": "What tasks are open right now?", "command": "gad tasks list --status planned"}
+{"instruction": "Show me all open tasks.", "command": "gad tasks list --status planned"}
+{"instruction": "List in-progress tasks.", "command": "gad tasks list --status in-progress"}
+{"instruction": "Which tasks are still planned?", "command": "gad tasks list --status planned"}
+{"instruction": "What's left to do under phase 03?", "command": "gad tasks list --phase 03 --status planned"}
+{"instruction": "Show every task in phase 02.", "command": "gad tasks list --phase 02"}
+{"instruction": "List tasks for phase 01.", "command": "gad tasks list --phase 01"}
+{"instruction": "Find any stalled in-progress tasks.", "command": "gad tasks list --stalled"}
+{"instruction": "tasks list", "command": "gad tasks list --projectid slm-learning"}
+{"instruction": "Show me all tasks for slm-learning.", "command": "gad tasks list --projectid slm-learning"}
+{"instruction": "List the tasks in phase 03.", "command": "gad tasks list --phase 03"}
+{"instruction": "Which tasks are currently in-progress?", "command": "gad tasks list --status in-progress"}
+{"instruction": "Add a new task under phase 03 to wire up the Claude-subagent teacher.", "command": "gad tasks add --phase 03 \"wire up Claude-subagent teacher\""}
+{"instruction": "Add a phase 02 task: fix the memory leak in stage 2.", "command": "gad tasks add --phase 02 \"fix memory leak in stage 2\""}
+{"instruction": "Create a new task in phase 03 for HumanEval scoring.", "command": "gad tasks add --phase 03 \"wire HumanEval scoring\""}
+{"instruction": "Track a task under phase 04: TUI polish for the menu screen.", "command": "gad tasks add --phase 04 \"TUI polish for the menu screen\""}
+{"instruction": "Add a phase 03 task to draft the GAD-tool training pairs.", "command": "gad tasks add --phase 03 \"draft GAD-tool training pairs\""}
+{"instruction": "Log a state delta saying we just finished Stage 3 DPO.", "command": "gad state log \"finished Stage 3 DPO\""}
+{"instruction": "Append a state log entry: eval pipeline now uses GPU and greedy decoding.", "command": "gad state log \"eval pipeline now uses GPU and greedy decoding\""}
+{"instruction": "Note in the state log that hyperparameter sweep produced 5 checkpoints.", "command": "gad state log \"hyperparameter sweep produced 5 checkpoints\""}
+{"instruction": "Record a state delta: more_pairs eval is unblocked.", "command": "gad state log \"more_pairs eval is unblocked\""}
+{"instruction": "Stamp the state log: all 5 sweep checkpoints scored 0/30 at temp 0.", "command": "gad state log \"all 5 sweep checkpoints scored 0/30 at temp 0\""}
+{"instruction": "Note progress: Stage 2.5 GAD-tool fine-tune started.", "command": "gad state log \"Stage 2.5 GAD-tool fine-tune started\""}
+{"instruction": "I want to log that the VRAM ceiling prevents multi-GPU work.", "command": "gad state log \"VRAM ceiling prevents multi-GPU work\""}
+{"instruction": "Record that we're moving to TRL + PEFT for fine-tuning.", "command": "gad state log \"moving to TRL + PEFT for fine-tuning\""}
+{"instruction": "Log a state change: HF datasets are now the primary data source.", "command": "gad state log \"HF datasets now primary data source\""}
+{"instruction": "Progress update: eval harness works with GPU inference.", "command": "gad state log \"eval harness works with GPU inference\""}
+{"instruction": "I finished training and want to record that in state.", "command": "gad state log \"completed training run\""}
+{"instruction": "Update state: DrStein model loader bug fixed.", "command": "gad state log \"DrStein model loader bug fixed\""}
+{"instruction": "Show me the current state.", "command": "gad state show --projectid slm-learning"}
+{"instruction": "What's the project state right now?", "command": "gad state show --projectid slm-learning"}
+{"instruction": "state show please", "command": "gad state show"}
+{"instruction": "Display the current state for slm-learning.", "command": "gad state show --projectid slm-learning"}
+{"instruction": "What's the current project state?", "command": "gad state show"}
+{"instruction": "Hydrate the planning context for slm-learning before I start.", "command": "gad snapshot --projectid slm-learning"}
+{"instruction": "Get me the current snapshot for this project.", "command": "gad snapshot --projectid slm-learning"}
+{"instruction": "Show the planning snapshot.", "command": "gad snapshot --projectid slm-learning"}
+{"instruction": "Pull the planning context so I know where we left off.", "command": "gad snapshot --projectid slm-learning"}
+{"instruction": "I need to hydrate context before working. Run snapshot.", "command": "gad snapshot --projectid slm-learning"}
+{"instruction": "Get the full planning snapshot with all context.", "command": "gad snapshot --projectid slm-learning --full"}
+{"instruction": "Snapshot just phase 03.", "command": "gad snapshot --projectid slm-learning --phaseid 03"}
+{"instruction": "Print the JSON snapshot for parsing.", "command": "gad snapshot --projectid slm-learning --json"}
+{"instruction": "Show a terse snapshot (just the active phase and next action).", "command": "gad snapshot --projectid slm-learning --terse"}
+{"instruction": "Get the planning snapshot including graph stats.", "command": "gad snapshot --projectid slm-learning --graph"}
+{"instruction": "snapshot me", "command": "gad snapshot --projectid slm-learning"}
+{"instruction": "hydrate planning please", "command": "gad snapshot --projectid slm-learning"}
+{"instruction": "What's the next action I should pick up?", "command": "gad next"}
+{"instruction": "What should I work on next?", "command": "gad next"}
+{"instruction": "Give me my next priority task.", "command": "gad next"}
+{"instruction": "What's the highest-priority task right now?", "command": "gad next"}
+{"instruction": "Show the next action for slm-learning.", "command": "gad next --projectid slm-learning"}
+{"instruction": "List all projects' next action.", "command": "gad next --all"}
+{"instruction": "What are the top 5 next actions?", "command": "gad next --limit 5"}
+{"instruction": "next", "command": "gad next"}
+{"instruction": "What do I work on next?", "command": "gad next"}
+{"instruction": "List the phases on the roadmap.", "command": "gad phases list"}
+{"instruction": "Show all phases.", "command": "gad phases list"}
+{"instruction": "Append a phase 04 about TUI polish to the roadmap.", "command": "gad phases add --id 04 --title \"TUI polish\""}
+{"instruction": "Add a new phase 05 for benchmark expansion.", "command": "gad phases add --id 05 --title \"benchmark expansion\""}
+{"instruction": "Insert a phase 03.1 for emergency eval fixes.", "command": "gad phases add --id 03.1 --title \"emergency eval fixes\""}
+{"instruction": "Close out phase 02 since the training pipeline is done.", "command": "gad phases close --id 02"}
+{"instruction": "Mark phase 02 as complete.", "command": "gad phases close --id 02"}
+{"instruction": "Close phase 03.", "command": "gad phases close --id 03"}
+{"instruction": "Audit phase 02 for missing UAT.", "command": "gad phases audit --id 02"}
+{"instruction": "Run an audit on phase 02 closure.", "command": "gad phases audit --id 02"}
+{"instruction": "Cancel phase 04 — we changed direction.", "command": "gad phases cancel --id 04"}
+{"instruction": "List all roadmap phases.", "command": "gad phases list"}
+{"instruction": "Show full phase descriptions.", "command": "gad phases list --full"}
+{"instruction": "What phases are on the roadmap?", "command": "gad phases list"}
+{"instruction": "phases?", "command": "gad phases list"}
+{"instruction": "phases list please", "command": "gad phases list"}
+{"instruction": "Add a new tracking feature: phase 06 for demo prep.", "command": "gad phases add --id 06 --title \"demo prep\""}
+{"instruction": "Start tracking a new feature called \"phase 07 hardening\".", "command": "gad phases add --id 07 --title \"hardening\""}
+{"instruction": "Record a decision: from now on we use fp16 + GradScaler on CUDA.", "command": "gad decisions add slm-learning-011 --projectid slm-learning --summary \"use fp16 + GradScaler on CUDA\""}
+{"instruction": "Add a decision that distillation will use Claude haiku-4-5 not OpenCode.", "command": "gad decisions add slm-learning-012 --projectid slm-learning --summary \"distillation uses Claude haiku-4-5, not OpenCode\""}
+{"instruction": "Record a decision: eval defaults to greedy temp 0.0 on GPU.", "command": "gad decisions add slm-learning-013 --projectid slm-learning --summary \"eval defaults to greedy temp 0.0 on GPU\""}
+{"instruction": "Log a decision: gradient checkpointing is enabled by default.", "command": "gad decisions add slm-learning-014 --projectid slm-learning --summary \"gradient checkpointing enabled by default\""}
+{"instruction": "List all decisions for this project.", "command": "gad decisions list --projectid slm-learning"}
+{"instruction": "Show recorded decisions.", "command": "gad decisions list --projectid slm-learning"}
+{"instruction": "Show me decision slm-learning-018.", "command": "gad decisions list --id slm-learning-018"}
+{"instruction": "What decisions have we made?", "command": "gad decisions list"}
+{"instruction": "decisions list", "command": "gad decisions list"}
+{"instruction": "Track an error: stage 3 DPO OOM'd loading two model copies.", "command": "gad errors add --summary \"stage 3 DPO OOM loading two model copies\""}
+{"instruction": "Log an error: experiment_runner crashed on cp1252 em-dash.", "command": "gad errors add --summary \"experiment_runner crashed on cp1252 em-dash\""}
+{"instruction": "Add an error attempt: more_pairs eval got stuck at 6 min per test.", "command": "gad errors add --summary \"more_pairs eval got stuck at 6 min per test\""}
+{"instruction": "Record an error: DrStein loaded random weights due to parents[4] typo.", "command": "gad errors add --summary \"DrStein loaded random weights due to parents[4] typo\""}
+{"instruction": "List recorded errors.", "command": "gad errors list"}
+{"instruction": "Show the error log.", "command": "gad errors list"}
+{"instruction": "errors please", "command": "gad errors list"}
+{"instruction": "Show me what's blocking phase 03.", "command": "gad blockers list --phase 03"}
+{"instruction": "List current blockers.", "command": "gad blockers list"}
+{"instruction": "What's blocked right now?", "command": "gad blockers list"}
+{"instruction": "blockers", "command": "gad blockers list"}
+{"instruction": "Show open blockers for slm-learning.", "command": "gad blockers list --projectid slm-learning --status open"}
+{"instruction": "Are there any open handoffs I can pick up?", "command": "gad handoffs list"}
+{"instruction": "Show me open handoffs for this project.", "command": "gad handoffs list --projectid slm-learning"}
+{"instruction": "List handoffs in the queue.", "command": "gad handoffs list"}
+{"instruction": "Claim handoff h-2026-05-04-slm_learning-02.", "command": "gad handoffs claim h-2026-05-04-slm_learning-02"}
+{"instruction": "Pick up the next available handoff.", "command": "gad handoffs claim-next"}
+{"instruction": "Take handoff h-2026-05-05-slm_learning-03.", "command": "gad handoffs claim h-2026-05-05-slm_learning-03"}
+{"instruction": "Mark handoff h-2026-05-04-slm_learning-02 as complete by claude-code.", "command": "gad handoffs complete h-2026-05-04-slm_learning-02 --by claude-code"}
+{"instruction": "Close handoff h-2026-05-05-slm_learning-03 — finished by claude.", "command": "gad handoffs complete h-2026-05-05-slm_learning-03 --by claude"}
+{"instruction": "Release handoff h-2026-05-05-slm_learning-04 back to the queue.", "command": "gad handoffs unclaim h-2026-05-05-slm_learning-04"}
+{"instruction": "Create a handoff for cleaning up the stage 2 memory leak.", "command": "gad handoffs create --summary \"clean up stage 2 memory leak\""}
+{"instruction": "What handoffs are open?", "command": "gad handoffs list"}
+{"instruction": "handoffs?", "command": "gad handoffs list"}
+{"instruction": "Show me the content of handoff h-2026-05-05-slm_learning-01.", "command": "gad handoffs show h-2026-05-05-slm_learning-01"}
+{"instruction": "Show me the current evolution pressure for this project.", "command": "gad evolution status --projectid slm-learning"}
+{"instruction": "What's the evolution status?", "command": "gad evolution status"}
+{"instruction": "Check evolution pressure.", "command": "gad evolution status"}
+{"instruction": "Run an evolution scan on slm-learning and write the json.", "command": "gad evolution scan --projectid slm-learning"}
+{"instruction": "Trigger an evolution scan for this project.", "command": "gad evolution scan --projectid slm-learning"}
+{"instruction": "Re-scan for evolution candidates.", "command": "gad evolution scan"}
+{"instruction": "Promote the prefer-clean-baseline-over-custom-dev-runtime proto-skill.", "command": "gad evolution promote prefer-clean-baseline-over-custom-dev-runtime"}
+{"instruction": "Promote candidate proto-skill use-greedy-eval-default.", "command": "gad evolution promote use-greedy-eval-default"}
+{"instruction": "Discard proto-skill foo-bar — it's a duplicate.", "command": "gad evolution discard foo-bar"}
+{"instruction": "Check similarity of two proto-skills.", "command": "gad evolution similarity"}
+{"instruction": "evolution status please", "command": "gad evolution status"}
+{"instruction": "Validate the evolving proto-skill foo-bar.", "command": "gad evolution validate foo-bar"}
+{"instruction": "List every gad project I have registered.", "command": "gad projects list"}
+{"instruction": "Show all projects.", "command": "gad projects list"}
+{"instruction": "Which projects am I working on?", "command": "gad projects list"}
+{"instruction": "Sync the workspace roots.", "command": "gad projects sync"}
+{"instruction": "Crawl the monorepo and re-discover .planning roots.", "command": "gad projects sync"}
+{"instruction": "Audit all projects for health issues.", "command": "gad projects audit"}
+{"instruction": "Initialize a new project called eval-001.", "command": "gad projects init --id eval-001"}
+{"instruction": "projects please", "command": "gad projects list"}
+{"instruction": "List my projects.", "command": "gad projects list"}
+{"instruction": "What recipes do we have available?", "command": "gad recipes list"}
+{"instruction": "List recipes.", "command": "gad recipes list"}
+{"instruction": "Apply recipe foo to this project.", "command": "gad recipes apply foo"}
+{"instruction": "Create a recipe for distributed training.", "command": "gad recipes create --name \"distributed-training\""}
+{"instruction": "Verify that phase 02 actually achieved its goal.", "command": "gad verify --phase 02"}
+{"instruction": "Check whether phase 02 met its definition of done.", "command": "gad verify --phase 02"}
+{"instruction": "Run verification for phase 03.", "command": "gad verify --phase 03"}
+{"instruction": "Verify phase 02 goal achievement.", "command": "gad verify --phase 02 --projectid slm-learning"}
+{"instruction": "Did phase 03 achieve what we set out to do?", "command": "gad verify --phase 03"}
+{"instruction": "Diagnose the health of my planning directory.", "command": "gad health disk"}
+{"instruction": "Run a health check on the planning state.", "command": "gad health disk"}
+{"instruction": "Check the health of this gad project.", "command": "gad health disk"}
+{"instruction": "Repair any planning health issues you find.", "command": "gad health prune"}
+{"instruction": "List build caches for cleanup.", "command": "gad health caches"}
+{"instruction": "Check disk pressure.", "command": "gad health disk"}
+{"instruction": "health?", "command": "gad health disk"}
+{"instruction": "Hydrate .planning/*.xml from markdown files.", "command": "gad planning hydrate"}
+{"instruction": "Serve the planning app on port 3002.", "command": "gad planning serve"}
+{"instruction": "What todos are open?", "command": "gad todos list"}
+{"instruction": "List todos for the project.", "command": "gad todos list --projectid slm-learning"}
+{"instruction": "Show me my todos.", "command": "gad todos list"}
+{"instruction": "List all sessions.", "command": "gad session list"}
+{"instruction": "Create a new work session.", "command": "gad session new"}
+{"instruction": "Resume my last session.", "command": "gad session resume"}
+{"instruction": "Close the current session.", "command": "gad session close"}
+{"instruction": "Show telemetry summary.", "command": "gad telemetry summary"}
+{"instruction": "What are the file references across decisions?", "command": "gad refs list"}
+{"instruction": "List all context files for the current position.", "command": "gad context"}
+{"instruction": "Print context for slm-learning.", "command": "gad context --project slm-learning"}
+{"instruction": "Which command do I run when I want to record progress mid-task?", "command": "gad state log \"<delta>\""}
+{"instruction": "How do I log a status update in the middle of a task?", "command": "gad state log \"<delta>\""}
+{"instruction": "What command logs progress during a task?", "command": "gad state log \"<delta>\""}
+{"instruction": "Show me how to record an in-task update.", "command": "gad state log \"<delta>\""}
+{"instruction": "I need to log work progress. What's the command?", "command": "gad state log \"<delta>\""}
+{"instruction": "Which command do I use to start tracking a new feature?", "command": "gad phases add --id <n> --title \"<feature>\""}
+{"instruction": "How do I add a new feature to the roadmap?", "command": "gad phases add --id <n> --title \"<feature>\""}
+{"instruction": "What command starts tracking a new feature?", "command": "gad phases add --id <n> --title \"<feature>\""}
+{"instruction": "Show me how to track a new capability.", "command": "gad phases add --id <n> --title \"<capability>\""}
+{"instruction": "I want to add something to the feature roadmap. What's the command?", "command": "gad phases add --id <n> --title \"<feature>\""}
+{"instruction": "What's the right way to capture a quick task I just thought of?", "command": "gad tasks add --phase <id> \"<goal>\""}
+{"instruction": "How do I add a single task?", "command": "gad tasks add --phase <id> \"<goal>\""}
+{"instruction": "I want to remember to fix the broken hook tomorrow.", "command": "gad note add \"fix the broken hook tomorrow\""}
+{"instruction": "Remind me later to look at the OOM in stage 3.", "command": "gad note add \"look at the OOM in stage 3\""}
+{"instruction": "Add this to my todo list: refactor the menu_screen module.", "command": "gad tasks add --phase 01 \"refactor the menu_screen module\""}
+{"instruction": "Output a JSON tool call that adds a note saying 'check the gad statusline pressure cache'.", "command": "gad note add \"check the gad statusline pressure cache\""}
+{"instruction": "Where is the project state file located?", "command": ".planning/STATE.xml"}
+{"instruction": "Show me the state file path.", "command": ".planning/STATE.xml"}
+{"instruction": "Where do task json files live?", "command": ".planning/tasks/"}
+{"instruction": "Where are task definitions stored?", "command": ".planning/tasks/"}
+{"instruction": "Where is the roadmap file?", "command": ".planning/ROADMAP.xml"}
+{"instruction": "Where does the project roadmap live?", "command": ".planning/ROADMAP.xml"}
+{"instruction": "Where do handoffs live on disk?", "command": ".planning/handoffs/"}
+{"instruction": "Where are decisions tracked?", "command": ".planning/DECISIONS.xml"}
+{"instruction": "Where are errors logged?", "command": ".planning/ERRORS-AND-ATTEMPTS.xml"}
+{"instruction": "Where do blockers live?", "command": ".planning/BLOCKERS.xml"}
+{"instruction": "Where do notes live?", "command": ".planning/notes/"}
+{"instruction": "Can you mark task 02-01 as done by me?", "command": "gad tasks stamp 02-01 --status done --agent claude"}
+{"instruction": "Finish task 04-03 for claude-code runtime.", "command": "gad tasks stamp 04-03 --status done --runtime claude-code"}
+{"instruction": "I'm completing task 01-03.", "command": "gad tasks stamp 01-03 --status done"}
+{"instruction": "I should finish logging task 03-06.", "command": "gad tasks stamp 03-06 --status done"}
+{"instruction": "Task 02-04 is complete, record it.", "command": "gad tasks stamp 02-04 --status done"}
+{"instruction": "I completed task 03-02, stamp it done by claude on claude-code.", "command": "gad tasks stamp 03-02 --status done --agent claude --runtime claude-code"}
+{"instruction": "Update state: switched to TRL SFTTrainer from bespoke loop.", "command": "gad state log \"switched to TRL SFTTrainer from bespoke loop\""}
+{"instruction": "Progress: data pipeline now uses HF FineWeb.", "command": "gad state log \"data pipeline now uses HF FineWeb\""}
+{"instruction": "I need to record: LoRA rank tuning underway.", "command": "gad state log \"LoRA rank tuning underway\""}
+{"instruction": "Log a state update: first 10 pairs show promising signal.", "command": "gad state log \"first 10 pairs show promising signal\""}
+{"instruction": "Record state: eval harness supports both greedy and nucleus sampling.", "command": "gad state log \"eval harness supports both greedy and nucleus sampling\""}
+{"instruction": "Snapshot without side effects (read-only mode).", "command": "gad snapshot --projectid slm-learning --no-side-effects"}
+{"instruction": "Get the snapshot for task SL-T-03-04.", "command": "gad snapshot --projectid slm-learning --taskid SL-T-03-04"}
+{"instruction": "Show me the snapshot with 10 skills equipped.", "command": "gad snapshot --projectid slm-learning --skills 10"}
+{"instruction": "Activate a new agent role (engineer) with model profile.", "command": "gad snapshot --projectid slm-learning --role engineer --model-profile default"}
+{"instruction": "Get next action list limited to 10 items.", "command": "gad next --limit 10"}
+{"instruction": "Show next actions as JSON.", "command": "gad next --json"}
+{"instruction": "What's next for this project?", "command": "gad next --projectid slm-learning"}
+{"instruction": "Show me the next 2 priorities.", "command": "gad next --limit 2"}
+{"instruction": "List phases with full goal text.", "command": "gad phases list --full"}
+{"instruction": "Show phases as JSON.", "command": "gad phases list --json"}
+{"instruction": "What phases exist for slm-learning?", "command": "gad phases list --projectid slm-learning"}
+{"instruction": "Add phase 08 for post-launch support.", "command": "gad phases add --id 08 --title \"post-launch support\""}
+{"instruction": "Decisions filtered to just slm-learning.", "command": "gad decisions list --projectid slm-learning"}
+{"instruction": "Show all decisions as JSON.", "command": "gad decisions list --json"}
+{"instruction": "Show me decision slm-learning-015.", "command": "gad decisions list --id slm-learning-015"}
+{"instruction": "Add a new error: OOM when running both teacher and student in eval.", "command": "gad errors add --summary \"OOM when running both teacher and student in eval\""}
+{"instruction": "Record error: model forward pass times out on CPU.", "command": "gad errors add --summary \"model forward pass times out on CPU\""}
+{"instruction": "List all blockers for slm-learning.", "command": "gad blockers list --projectid slm-learning"}
+{"instruction": "Show resolved blockers.", "command": "gad blockers list --status resolved"}
+{"instruction": "What blockers are marked wont-fix?", "command": "gad blockers list --status wont-fix"}
+{"instruction": "List handoffs with JSON output.", "command": "gad handoffs list --json"}
+{"instruction": "Show claimed handoffs only.", "command": "gad handoffs list --status claimed"}
+{"instruction": "Create a new handoff from template.", "command": "gad handoffs new"}
+{"instruction": "Lint all handoffs for quality.", "command": "gad handoffs lint"}
+{"instruction": "Create a closeout handoff for task 03-01.", "command": "gad handoffs create-closeout --taskid SL-T-03-01"}
+{"instruction": "Evolution install foo-skill to claude-code runtime.", "command": "gad evolution install foo-skill --runtime claude-code"}
+{"instruction": "Generate skill images for proto-skills.", "command": "gad evolution images"}
+{"instruction": "Get evolution report.", "command": "gad evolution report"}
+{"instruction": "Advance project level if XP threshold met.", "command": "gad evolution level-up --projectid slm-learning"}
+{"instruction": "Get skill usage report.", "command": "gad evolution skill-usage"}
+{"instruction": "Shed unused skills from the project.", "command": "gad evolution shed --projectid slm-learning"}
+{"instruction": "Create a new eval project.", "command": "gad projects create --id eval-002 --name \"evaluation-002\""}
+{"instruction": "Edit project metadata for slm-learning.", "command": "gad projects edit --id slm-learning --name \"SLM Learning\""}
+{"instruction": "Archive a completed project.", "command": "gad projects archive --id completed-001"}
+{"instruction": "Add a path as a planning root.", "command": "gad projects add /path/to/new/root"}
+{"instruction": "Ignore a path in the project scan.", "command": "gad projects ignore *.bak"}
+{"instruction": "Create a new recipe.", "command": "gad recipes create --name \"multi-phase-training\""}
+{"instruction": "Apply the distributed-training recipe.", "command": "gad recipes apply distributed-training"}
+{"instruction": "Delete recipe foo.", "command": "gad recipes delete foo"}
+{"instruction": "Verify phase 01 with custom build command.", "command": "gad verify --phase 01 --build-cmd \"python build.py\""}
+{"instruction": "Check disk pressure and report.", "command": "gad health disk"}
+{"instruction": "Prune stale worktrees safely.", "command": "gad health prune"}
+{"instruction": "Remove build caches.", "command": "gad health caches --remove"}
+{"instruction": "List caches dry-run.", "command": "gad health caches"}
+{"instruction": "Hydrate planning from markdown.", "command": "gad planning hydrate"}
+{"instruction": "Start the planning app server.", "command": "gad planning serve"}
+{"instruction": "List all todos.", "command": "gad todos list"}
+{"instruction": "Show todos for a specific project.", "command": "gad todos list --projectid slm-learning"}
+{"instruction": "Export todos as JSON.", "command": "gad todos list --json"}
+{"instruction": "List available work sessions.", "command": "gad session list"}
+{"instruction": "Start a fresh session.", "command": "gad session new"}
+{"instruction": "Restore my previous work context.", "command": "gad session resume"}
+{"instruction": "End the current work session.", "command": "gad session close"}
+{"instruction": "Telemetry summary across all sessions.", "command": "gad telemetry summary"}
+{"instruction": "List file references from decisions.", "command": "gad refs list --source decisions"}
+{"instruction": "Show all references across requirements.", "command": "gad refs list --source requirements"}
+{"instruction": "Get refs as JSON.", "command": "gad refs list --json"}
+{"instruction": "Print my current context.", "command": "gad context"}
+{"instruction": "Get context refs only (no content).", "command": "gad context --refs"}
+{"instruction": "Export context as JSON.", "command": "gad context --json"}
+{"instruction": "Mark task 01-04 done by me.", "command": "gad tasks stamp 01-04 --status done --agent claude"}
+{"instruction": "Task 02-06 complete.", "command": "gad tasks stamp 02-06 --status done"}
+{"instruction": "Stamp task 04-02 finished by claude-code.", "command": "gad tasks stamp 04-02 --status done --runtime claude-code"}
+{"instruction": "Mark all phase 01 tasks done.", "command": "gad tasks stamp 01-* --status done"}
+{"instruction": "I'm done with task 03-08, record it.", "command": "gad tasks stamp 03-08 --status done"}
+{"instruction": "Close out task 02-07 — finalized by claude.", "command": "gad tasks stamp 02-07 --status done --agent claude"}
+{"instruction": "Record completion: task 04-04 done by claude-code-opus.", "command": "gad tasks stamp 04-04 --status done --agent claude --runtime claude-code-opus"}
+{"instruction": "Progress: completed checkpoint 5 evaluation.", "command": "gad state log \"completed checkpoint 5 evaluation\""}
+{"instruction": "Note: LoRA finetuning complete on Qwen2.5-1.5B.", "command": "gad state log \"LoRA finetuning complete on Qwen2.5-1.5B\""}
+{"instruction": "Update: stage 2.5 now produces real learning signal.", "command": "gad state log \"stage 2.5 now produces real learning signal\""}
+{"instruction": "Record: switched to HF datasets (FineWeb, Stack, OpenMathInstruct).", "command": "gad state log \"switched to HF datasets (FineWeb, Stack, OpenMathInstruct)\""}
+{"instruction": "Logged: PEFT LoRA adapter reduces trainable params to 2.5M.", "command": "gad state log \"PEFT LoRA adapter reduces trainable params to 2.5M\""}
+{"instruction": "Just recorded: reasoning benchmark now upstream + synthetic distillation.", "command": "gad state log \"reasoning benchmark now upstream + synthetic distillation\""}
+{"instruction": "Snapshot phase 02 in isolation.", "command": "gad snapshot --projectid slm-learning --phaseid 02"}
+{"instruction": "Snapshot with active mode (fast, no static context).", "command": "gad snapshot --projectid slm-learning --mode active"}
+{"instruction": "Snapshot with session tracking enabled.", "command": "gad snapshot --projectid slm-learning --session my-session-01"}
+{"instruction": "Snapshot with compact format (no XML tags).", "command": "gad snapshot --projectid slm-learning --format compact"}
+{"instruction": "Get the next action.", "command": "gad next"}
+{"instruction": "List next actions with up to 5 items.", "command": "gad next --limit 5"}
+{"instruction": "Show next action as JSON for parsing.", "command": "gad next --json"}
+{"instruction": "What's the next action for slm-learning?", "command": "gad next --projectid slm-learning"}
+{"instruction": "List all phases including full descriptions.", "command": "gad phases list --full"}
+{"instruction": "Get all phases as JSON.", "command": "gad phases list --json"}
+{"instruction": "phases for slm-learning", "command": "gad phases list --projectid slm-learning"}
+{"instruction": "Add new phase 09 for monitoring.", "command": "gad phases add --id 09 --title \"monitoring\""}
+{"instruction": "Create decision slm-learning-016.", "command": "gad decisions add slm-learning-016 --projectid slm-learning --summary \"<summary>\""}
+{"instruction": "List decisions with full context.", "command": "gad decisions list"}
+{"instruction": "Get decisions as JSON output.", "command": "gad decisions list --json"}
+{"instruction": "Find decision slm-learning-007.", "command": "gad decisions list --id slm-learning-007"}
+{"instruction": "Record a new error in the log.", "command": "gad errors add --summary \"<error description>\""}
+{"instruction": "Show all errors.", "command": "gad errors list"}
+{"instruction": "errors list please", "command": "gad errors list"}
+{"instruction": "List blockers as JSON.", "command": "gad blockers list --json"}
+{"instruction": "Get all open blockers.", "command": "gad blockers list --status open"}
+{"instruction": "List handoffs for slm-learning.", "command": "gad handoffs list --projectid slm-learning"}
+{"instruction": "Show handoff h-2026-05-04-slm_learning-01 full content.", "command": "gad handoffs show h-2026-05-04-slm_learning-01"}
+{"instruction": "Claim best matching handoff for claude-code.", "command": "gad handoffs claim-next"}
+{"instruction": "Evolution status check.", "command": "gad evolution status"}
+{"instruction": "Scan for new evolution candidates.", "command": "gad evolution scan"}
+{"instruction": "Promote skill foo-bar to live.", "command": "gad evolution promote foo-bar"}
+{"instruction": "Remove proto-skill baz.", "command": "gad evolution discard baz"}
+{"instruction": "List all registered projects.", "command": "gad projects list"}
+{"instruction": "Sync project roots.", "command": "gad projects sync"}
+{"instruction": "Get all available recipes.", "command": "gad recipes list"}
+{"instruction": "Verify phase 02 completion.", "command": "gad verify --phase 02 --projectid slm-learning"}
+{"instruction": "Check system health.", "command": "gad health disk"}
+{"instruction": "Prune worktrees.", "command": "gad health prune"}
+{"instruction": "List planning todos.", "command": "gad todos list"}
+{"instruction": "Start a new session.", "command": "gad session new"}
+{"instruction": "Continue last session.", "command": "gad session resume"}
+{"instruction": "End current session.", "command": "gad session close"}
+{"instruction": "Show usage telemetry.", "command": "gad telemetry summary"}
+{"instruction": "List all references.", "command": "gad refs list"}
+{"instruction": "Get context for current work.", "command": "gad context"}
+{"instruction": "Task 01-05 is complete, mark it done.", "command": "gad tasks stamp 01-05 --status done"}
+{"instruction": "I finished task 02-08, please stamp it.", "command": "gad tasks stamp 02-08 --status done"}
+{"instruction": "Complete task 03-09 and assign to claude-code-opus.", "command": "gad tasks stamp 03-09 --status done --agent claude --runtime claude-code-opus"}
+{"instruction": "Mark task 04-05 complete.", "command": "gad tasks stamp 04-05 --status done"}
+{"instruction": "Task 01-06 finished by me.", "command": "gad tasks stamp 01-06 --status done --agent claude"}
+{"instruction": "Stamp task 02-09 as done for claude-code.", "command": "gad tasks stamp 02-09 --status done --runtime claude-code"}
+{"instruction": "Mark task 03-10 complete by claude.", "command": "gad tasks stamp 03-10 --status done --agent claude"}
+{"instruction": "Close out task 04-06.", "command": "gad tasks stamp 04-06 --status done"}
+{"instruction": "Finished task 01-07, record it.", "command": "gad tasks stamp 01-07 --status done"}
+{"instruction": "List tasks in planned status.", "command": "gad tasks list --status planned"}
+{"instruction": "What are all in-progress tasks?", "command": "gad tasks list --status in-progress"}
+{"instruction": "Show me phase 03 tasks.", "command": "gad tasks list --phase 03"}
+{"instruction": "List phase 02 tasks.", "command": "gad tasks list --phase 02"}
+{"instruction": "tasks for phase 01", "command": "gad tasks list --phase 01"}
+{"instruction": "Show stalled tasks.", "command": "gad tasks list --stalled"}
+{"instruction": "Show state: moving to MoE architecture for reasoning specialists.", "command": "gad state log \"moving to MoE architecture for reasoning specialists\""}
+{"instruction": "Record in state: all 8 vocabulary failures identified and documented.", "command": "gad state log \"all 8 vocabulary failures identified and documented\""}
+{"instruction": "Progress note: 500 distilled pairs generated from vocabulary surface.", "command": "gad state log \"500 distilled pairs generated from vocabulary surface\""}
+{"instruction": "Log state update: eval now covers 8 known failure patterns.", "command": "gad state log \"eval now covers 8 known failure patterns\""}
+{"instruction": "State delta: checkpoint 3 shows 24/30 on distilled pairs.", "command": "gad state log \"checkpoint 3 shows 24/30 on distilled pairs\""}
+{"instruction": "Note state: synthetic data generation pipeline ready.", "command": "gad state log \"synthetic data generation pipeline ready\""}
+{"instruction": "Update: Haiku distillation produces 1.2K pairs/hour.", "command": "gad state log \"Haiku distillation produces 1.2K pairs/hour\""}
+{"instruction": "Record: live checkpoint evaluation shows 26/30 accuracy.", "command": "gad state log \"live checkpoint evaluation shows 26/30 accuracy\""}
+{"instruction": "Note: pruning loop reduces 1.5B parameters by 40%.", "command": "gad state log \"pruning loop reduces 1.5B parameters by 40%\""}
+{"instruction": "Logged: all handoff patterns now covered in training data.", "command": "gad state log \"all handoff patterns now covered in training data\""}
+{"instruction": "Snapshot the current planning state.", "command": "gad snapshot --projectid slm-learning"}
+{"instruction": "Show me the full planning snapshot.", "command": "gad snapshot --projectid slm-learning --full"}
+{"instruction": "Pull phase 02 snapshot.", "command": "gad snapshot --projectid slm-learning --phaseid 02"}
+{"instruction": "Get a terse snapshot.", "command": "gad snapshot --projectid slm-learning --terse"}
+{"instruction": "Snapshot with JSON output.", "command": "gad snapshot --projectid slm-learning --json"}
+{"instruction": "Get the next priority task.", "command": "gad next"}
+{"instruction": "Show top 3 next actions.", "command": "gad next --limit 3"}
+{"instruction": "List all next actions.", "command": "gad next --all"}
+{"instruction": "Show next as JSON.", "command": "gad next --json"}
+{"instruction": "What's next for slm-learning?", "command": "gad next --projectid slm-learning"}
+{"instruction": "List all phases.", "command": "gad phases list"}
+{"instruction": "Show full phase descriptions.", "command": "gad phases list --full"}
+{"instruction": "Get phases as JSON.", "command": "gad phases list --json"}
+{"instruction": "Add phase 10 for tuning.", "command": "gad phases add --id 10 --title \"tuning\""}
+{"instruction": "Create a phase 03 audit.", "command": "gad phases audit --id 03"}
+{"instruction": "Mark phase 01 closed.", "command": "gad phases close --id 01"}
+{"instruction": "Record decision slm-learning-017.", "command": "gad decisions add slm-learning-017 --projectid slm-learning --summary \"<decision>\""}
+{"instruction": "List all decisions.", "command": "gad decisions list"}
+{"instruction": "Get decision slm-learning-010.", "command": "gad decisions list --id slm-learning-010"}
+{"instruction": "Show decisions for slm-learning.", "command": "gad decisions list --projectid slm-learning"}
+{"instruction": "Log error: checkpoint 2 diverged during training.", "command": "gad errors add --summary \"checkpoint 2 diverged during training\""}
+{"instruction": "Record error: eval harness segfault on large batch.", "command": "gad errors add --summary \"eval harness segfault on large batch\""}
+{"instruction": "Add error: HF dataset loader timeout on slow network.", "command": "gad errors add --summary \"HF dataset loader timeout on slow network\""}
+{"instruction": "List all errors.", "command": "gad errors list"}
+{"instruction": "Show blockers.", "command": "gad blockers list"}
+{"instruction": "Get blockers for slm-learning.", "command": "gad blockers list --projectid slm-learning"}
+{"instruction": "Show open blockers.", "command": "gad blockers list --status open"}
+{"instruction": "List resolved blockers.", "command": "gad blockers list --status resolved"}
+{"instruction": "List available handoffs.", "command": "gad handoffs list"}
+{"instruction": "Claim handoff h-2026-05-03-slm_learning-01.", "command": "gad handoffs claim h-2026-05-03-slm_learning-01"}
+{"instruction": "Grab the next handoff.", "command": "gad handoffs claim-next"}
+{"instruction": "Finish handoff h-2026-05-04-slm_learning-01 by claude-code.", "command": "gad handoffs complete h-2026-05-04-slm_learning-01 --by claude-code"}
+{"instruction": "Return handoff h-2026-05-05-slm_learning-02 to queue.", "command": "gad handoffs unclaim h-2026-05-05-slm_learning-02"}
+{"instruction": "Create a handoff for documentation review.", "command": "gad handoffs create --summary \"documentation review\""}
+{"instruction": "Show handoff h-2026-05-04-slm_learning-03 content.", "command": "gad handoffs show h-2026-05-04-slm_learning-03"}
+{"instruction": "Lint handoffs for quality.", "command": "gad handoffs lint"}
+{"instruction": "Check evolution status.", "command": "gad evolution status"}
+{"instruction": "Scan for proto-skills.", "command": "gad evolution scan"}
+{"instruction": "Promote proto-skill candidate-1.", "command": "gad evolution promote candidate-1"}
+{"instruction": "Discard proto-skill unused-foo.", "command": "gad evolution discard unused-foo"}
+{"instruction": "Check evolution similarity.", "command": "gad evolution similarity"}
+{"instruction": "Get evolution report.", "command": "gad evolution report"}
+{"instruction": "Validate proto-skill foo.", "command": "gad evolution validate foo"}
+{"instruction": "Install proto-skill bar to claude-code.", "command": "gad evolution install bar --runtime claude-code"}
+{"instruction": "List all projects.", "command": "gad projects list"}
+{"instruction": "Sync all project roots.", "command": "gad projects sync"}
+{"instruction": "Audit all projects.", "command": "gad projects audit"}
+{"instruction": "Create eval project.", "command": "gad projects create --id eval-003"}
+{"instruction": "Edit slm-learning metadata.", "command": "gad projects edit --id slm-learning"}
+{"instruction": "List recipes.", "command": "gad recipes list"}
+{"instruction": "Create a recipe.", "command": "gad recipes create --name \"my-recipe\""}
+{"instruction": "Apply a recipe.", "command": "gad recipes apply my-recipe"}
+{"instruction": "Verify phase 01.", "command": "gad verify --phase 01"}
+{"instruction": "Verify phase 02.", "command": "gad verify --phase 02 --projectid slm-learning"}
+{"instruction": "Check system health.", "command": "gad health disk"}
+{"instruction": "Health check with repair.", "command": "gad health disk"}
+{"instruction": "Prune old state.", "command": "gad health prune"}
+{"instruction": "List caches.", "command": "gad health caches"}
+{"instruction": "Remove caches.", "command": "gad health caches --remove"}
+{"instruction": "Hydrate planning files.", "command": "gad planning hydrate"}
+{"instruction": "Serve planning app.", "command": "gad planning serve"}
+{"instruction": "List todos.", "command": "gad todos list"}
+{"instruction": "List session.", "command": "gad session list"}
+{"instruction": "Start new session.", "command": "gad session new"}
+{"instruction": "Resume session.", "command": "gad session resume"}
+{"instruction": "Close session.", "command": "gad session close"}
+{"instruction": "Show telemetry.", "command": "gad telemetry summary"}
+{"instruction": "List references.", "command": "gad refs list"}
+{"instruction": "Get context.", "command": "gad context"}
+{"instruction": "Stamp task 01-08 finished.", "command": "gad tasks stamp 01-08 --status done"}
+{"instruction": "Mark task 02-10 complete by me.", "command": "gad tasks stamp 02-10 --status done --agent claude"}
+{"instruction": "Complete task 03-11 for claude-code.", "command": "gad tasks stamp 03-11 --status done --runtime claude-code"}
+{"instruction": "Close task 04-07 done.", "command": "gad tasks stamp 04-07 --status done"}
+{"instruction": "Record: planning data pipeline complete.", "command": "gad state log \"planning data pipeline complete\""}
+{"instruction": "Note state: vocabulary coverage at 99%.", "command": "gad state log \"vocabulary coverage at 99%\""}
+{"instruction": "Log: 750 training pairs generated successfully.", "command": "gad state log \"750 training pairs generated successfully\""}
+{"instruction": "Update: all 8 failure patterns reinforced with 5+ examples each.", "command": "gad state log \"all 8 failure patterns reinforced with 5+ examples each\""}
+{"instruction": "Record: data distribution across 24 subcommands.", "command": "gad state log \"data distribution across 24 subcommands\""}
+{"instruction": "Log: phrasing variety (40% imperative, 25% question, 35% mixed).", "command": "gad state log \"phrasing variety (40% imperative, 25% question, 35% mixed)\""}
+{"instruction": "Logged: real project context (slm-learning, phase 03, etc).", "command": "gad state log \"real project context (slm-learning, phase 03, etc)\""}
+{"instruction": "Get snapshot for phase 03.", "command": "gad snapshot --projectid slm-learning --phaseid 03"}
+{"instruction": "Snapshot with active mode.", "command": "gad snapshot --projectid slm-learning --mode active"}
+{"instruction": "Snapshot without side effects.", "command": "gad snapshot --projectid slm-learning --no-side-effects"}
+{"instruction": "Get the next 2 priorities.", "command": "gad next --limit 2"}
+{"instruction": "Show phases.", "command": "gad phases list --full"}
+{"instruction": "List decisions.", "command": "gad decisions list --projectid slm-learning"}
+{"instruction": "Show errors.", "command": "gad errors list"}
+{"instruction": "List blockers.", "command": "gad blockers list --status open"}
+{"instruction": "Get handoffs.", "command": "gad handoffs list --projectid slm-learning"}
+{"instruction": "Evolution status check.", "command": "gad evolution status --projectid slm-learning"}
+{"instruction": "Projects list.", "command": "gad projects list"}
+{"instruction": "Recipes list.", "command": "gad recipes list"}
+{"instruction": "Verify phase 03.", "command": "gad verify --phase 03"}
+{"instruction": "Health status.", "command": "gad health disk"}
+{"instruction": "Planning hydrate.", "command": "gad planning hydrate"}
+{"instruction": "Todos.", "command": "gad todos list"}
+{"instruction": "Sessions.", "command": "gad session list"}
+{"instruction": "Telemetry.", "command": "gad telemetry summary"}
+{"instruction": "Refs.", "command": "gad refs list"}
+{"instruction": "Context.", "command": "gad context"}
+{"instruction": "Add a note: the slm-learning pipeline is stable.", "command": "gad note add \"the slm-learning pipeline is stable\""}
+{"instruction": "Capture: vocabulary surface covers all 24 subcommands.", "command": "gad note add \"vocabulary surface covers all 24 subcommands\""}
+{"instruction": "Note: every gad subcommand has 25+ training examples.", "command": "gad note add \"every gad subcommand has 25+ training examples\""}
+{"instruction": "Jot down: failure pattern reinforcement strategy active.", "command": "gad note add \"failure pattern reinforcement strategy active\""}
+{"instruction": "Stash: phrasing diversity exceeds 40% imperative target.", "command": "gad note add \"phrasing diversity exceeds 40% imperative target\""}
+{"instruction": "questions", "command": "gad note questions"}
+{"instruction": "What questions are in the notes?", "command": "gad note questions"}
+{"instruction": "Create task phase 03: final validation of vocabulary.", "command": "gad tasks add --phase 03 \"final validation of vocabulary\""}
+{"instruction": "Add task phase 04: synthetic data expansion.", "command": "gad tasks add --phase 04 \"synthetic data expansion\""}
+{"instruction": "Add task phase 03: benchmark the updated model.", "command": "gad tasks add --phase 03 \"benchmark the updated model\""}
+{"instruction": "Create task in phase 02: review error patterns.", "command": "gad tasks add --phase 02 \"review error patterns\""}
+{"instruction": "Mark task 01-09 done.", "command": "gad tasks stamp 01-09 --status done"}
+{"instruction": "Finish task 02-11 by me.", "command": "gad tasks stamp 02-11 --status done --agent claude"}
+{"instruction": "Complete task 03-12 for claude-code.", "command": "gad tasks stamp 03-12 --status done --runtime claude-code"}
+{"instruction": "Close task 04-08 done.", "command": "gad tasks stamp 04-08 --status done"}
+{"instruction": "Stamp task 01-10 completed by me.", "command": "gad tasks stamp 01-10 --status done --agent claude"}
+{"instruction": "Record task 02-12 done.", "command": "gad tasks stamp 02-12 --status done"}
+{"instruction": "Progress: task 03-13 finished for claude-code-opus.", "command": "gad tasks stamp 03-13 --status done --agent claude --runtime claude-code-opus"}
+{"instruction": "Log state: distilled pairs dataset finalized at 750 items.", "command": "gad state log \"distilled pairs dataset finalized at 750 items\""}
+{"instruction": "State update: model training resumes with full dataset.", "command": "gad state log \"model training resumes with full dataset\""}
+{"instruction": "Note: all vocabulary gaps now explicitly covered in training.", "command": "gad state log \"all vocabulary gaps now explicitly covered in training\""}
+{"instruction": "Record: cross-validation set shows consistent 28/30 accuracy.", "command": "gad state log \"cross-validation set shows consistent 28/30 accuracy\""}
+{"instruction": "Logged: failure pattern coverage is 100% (5 examples each).", "command": "gad state log \"failure pattern coverage is 100% (5 examples each)\""}
+{"instruction": "Update: Haiku distillation rate reached 1.8K pairs/hour.", "command": "gad state log \"Haiku distillation rate reached 1.8K pairs/hour\""}
+{"instruction": "Progress: all 24 subcommands distributed evenly (30 pairs each).", "command": "gad state log \"all 24 subcommands distributed evenly (30 pairs each)\""}
+{"instruction": "Snapshot with equipment set to 20 skills.", "command": "gad snapshot --projectid slm-learning --skills 20"}
+{"instruction": "Snapshot in compact XML-free format.", "command": "gad snapshot --projectid slm-learning --format compact"}
+{"instruction": "Get next with JSON output.", "command": "gad next --json"}
+{"instruction": "Next action for slm-learning with limit of 7.", "command": "gad next --projectid slm-learning --limit 7"}
+{"instruction": "Add phase 11 for dataset refresh.", "command": "gad phases add --id 11 --title \"dataset refresh\""}
+{"instruction": "Create decision slm-learning-018.", "command": "gad decisions add slm-learning-018 --projectid slm-learning --summary \"vocabulary reinforcement via distilled pairs\""}
+{"instruction": "Add error: vocabulary out-of-domain command hallucination.", "command": "gad errors add --summary \"vocabulary out-of-domain command hallucination\""}
+{"instruction": "Create blocker: awaiting final checkpoint eval results.", "command": "gad blockers list"}
+{"instruction": "Claim handoff h-2026-05-05-slm_learning-05.", "command": "gad handoffs claim h-2026-05-05-slm_learning-05"}
+{"instruction": "Complete handoff h-2026-05-05-slm_learning-01 by claude.", "command": "gad handoffs complete h-2026-05-05-slm_learning-01 --by claude"}
+{"instruction": "Unclaim handoff h-2026-05-05-slm_learning-03.", "command": "gad handoffs unclaim h-2026-05-05-slm_learning-03"}
+{"instruction": "Show handoff h-2026-05-05-slm_learning-04.", "command": "gad handoffs show h-2026-05-05-slm_learning-04"}
+{"instruction": "Lint all handoffs.", "command": "gad handoffs lint"}
+{"instruction": "Create new handoff from template.", "command": "gad handoffs new"}
+{"instruction": "Evolution scan update.", "command": "gad evolution scan --projectid slm-learning"}
+{"instruction": "Promote proto-skill checkpoint-selector.", "command": "gad evolution promote checkpoint-selector"}
+{"instruction": "Discard obsolete proto-skill.", "command": "gad evolution discard obsolete-skill"}
+{"instruction": "Validate candidate proto-skill.", "command": "gad evolution validate candidate"}
+{"instruction": "Install skill to codex runtime.", "command": "gad evolution install my-skill --runtime codex"}
+{"instruction": "Create project eval-004.", "command": "gad projects create --id eval-004 --name \"eval-004\""}
+{"instruction": "Sync project roots now.", "command": "gad projects sync"}
+{"instruction": "Create recipe training-workflow.", "command": "gad recipes create --name \"training-workflow\""}
+{"instruction": "Apply recipe training-workflow.", "command": "gad recipes apply training-workflow"}
+{"instruction": "Delete recipe old-recipe.", "command": "gad recipes delete old-recipe"}
+{"instruction": "Verify phase 04.", "command": "gad verify --phase 04"}
+{"instruction": "Verify with build command override.", "command": "gad verify --phase 03 --build-cmd \"python eval.py\""}
+{"instruction": "Prune caches and worktrees.", "command": "gad health prune"}
+{"instruction": "Remove old caches.", "command": "gad health caches --remove"}
+{"instruction": "Hydrate markdown to XML.", "command": "gad planning hydrate"}
+{"instruction": "Serve planning UI.", "command": "gad planning serve"}
+{"instruction": "List todos for slm-learning.", "command": "gad todos list --projectid slm-learning"}
+{"instruction": "Export todos as JSON.", "command": "gad todos list --json"}
+{"instruction": "Create new session.", "command": "gad session new"}
+{"instruction": "List active sessions.", "command": "gad session list"}
+{"instruction": "Resume previous session.", "command": "gad session resume"}
+{"instruction": "End current session.", "command": "gad session close"}
+{"instruction": "Check telemetry summary.", "command": "gad telemetry summary"}
+{"instruction": "List references from decisions.", "command": "gad refs list --source decisions"}
+{"instruction": "List all context files.", "command": "gad context"}
+{"instruction": "Get context refs only.", "command": "gad context --refs"}
+{"instruction": "I finished task 01-11.", "command": "gad tasks stamp 01-11 --status done"}
+{"instruction": "Task 02-13 done by me.", "command": "gad tasks stamp 02-13 --status done --agent claude"}
+{"instruction": "Task 03-14 done for claude-code.", "command": "gad tasks stamp 03-14 --status done --runtime claude-code"}
+{"instruction": "Task 04-09 is complete.", "command": "gad tasks stamp 04-09 --status done"}
+{"instruction": "List phase 04 tasks.", "command": "gad tasks list --phase 04"}
+{"instruction": "Show all planned tasks.", "command": "gad tasks list --status planned"}
+{"instruction": "Mark task 01-12 done by claude-code-opus.", "command": "gad tasks stamp 01-12 --status done --agent claude --runtime claude-code-opus"}
+{"instruction": "Record state: finalized dataset has minimal duplicates.", "command": "gad state log \"finalized dataset has minimal duplicates\""}
+{"instruction": "Note: all 8 failure patterns tested 5+ times each.", "command": "gad state log \"all 8 failure patterns tested 5+ times each\""}
+{"instruction": "Progress: final model checkpoint shows 29/30 accuracy.", "command": "gad state log \"final model checkpoint shows 29/30 accuracy\""}
+{"instruction": "Log: vocabulary surface fully exploited in training.", "command": "gad state log \"vocabulary surface fully exploited in training\""}
+{"instruction": "Record: remaining gap is edge-case ambiguity in phrasing.", "command": "gad state log \"remaining gap is edge-case ambiguity in phrasing\""}
+{"instruction": "Add note: consider --help text mining for future expansions.", "command": "gad note add \"consider --help text mining for future expansions\""}
+{"instruction": "Capture: gad commands follow consistent flag naming.", "command": "gad note add \"gad commands follow consistent flag naming\""}
+{"instruction": "Note: projectid appears in 90% of subcommands.", "command": "gad note add \"projectid appears in 90% of subcommands\""}
+{"instruction": "Add to notes: --json is universal output format.", "command": "gad note add \"--json is universal output format\""}
+{"instruction": "Show notes from planning.", "command": "gad note list"}
+{"instruction": "Task 01-13 finished.", "command": "gad tasks stamp 01-13 --status done"}
+{"instruction": "Task 02-14 done by me.", "command": "gad tasks stamp 02-14 --status done --agent claude"}
+{"instruction": "Task 03-15 for claude-code.", "command": "gad tasks stamp 03-15 --status done --runtime claude-code"}
+{"instruction": "Task 04-10 complete.", "command": "gad tasks stamp 04-10 --status done"}
+{"instruction": "Find stalled tasks please.", "command": "gad tasks list --stalled"}
+{"instruction": "Show JSON output of tasks.", "command": "gad tasks list --json"}
+{"instruction": "List tasks full output.", "command": "gad tasks list --full"}
+{"instruction": "State log: working on final eval batch.", "command": "gad state log \"working on final eval batch\""}
+{"instruction": "Record: deployment prep underway.", "command": "gad state log \"deployment prep underway\""}
+{"instruction": "Note: all requirements documented.", "command": "gad state log \"all requirements documented\""}
+{"instruction": "Update: ready for production release.", "command": "gad state log \"ready for production release\""}
+{"instruction": "Get state show all projects.", "command": "gad state show --all"}
+{"instruction": "Get state in JSON.", "command": "gad state show --json"}
+{"instruction": "Snapshot task SL-T-03-01.", "command": "gad snapshot --projectid slm-learning --taskid SL-T-03-01"}
+{"instruction": "Snapshot with agent id.", "command": "gad snapshot --projectid slm-learning --agentid claude"}
+{"instruction": "Snapshot with model profile.", "command": "gad snapshot --projectid slm-learning --model-profile default"}
+{"instruction": "Next with JSON and limit.", "command": "gad next --json --limit 10"}
+{"instruction": "Show all project next actions.", "command": "gad next --all --json"}
+{"instruction": "Add phase 12 for post-deployment.", "command": "gad phases add --id 12 --title \"post-deployment\""}
+{"instruction": "Close phase 02 now.", "command": "gad phases close --id 02"}
+{"instruction": "Cancel phase 04.", "command": "gad phases cancel --id 04"}
+{"instruction": "Add decision SLM_LEARNING-D-19.", "command": "gad decisions add SLM_LEARNING-D-19 --projectid slm-learning --summary \"final deployment approved\""}
+{"instruction": "Show all decisions as JSON.", "command": "gad decisions list --json"}
+{"instruction": "Add error: model produces OOM after 100K pairs.", "command": "gad errors add --summary \"model produces OOM after 100K pairs\""}
+{"instruction": "Record error: eval timeout on large benchmarks.", "command": "gad errors add --summary \"eval timeout on large benchmarks\""}
+{"instruction": "List errors as JSON.", "command": "gad errors list --json"}
+{"instruction": "Show wont-fix blockers.", "command": "gad blockers list --status wont-fix"}
+{"instruction": "List blockers as JSON.", "command": "gad blockers list --json"}
+{"instruction": "Handoffs list JSON.", "command": "gad handoffs list --json"}
+{"instruction": "Create closeout handoff for task 03-01.", "command": "gad handoffs create-closeout --taskid SL-T-03-01"}
+{"instruction": "New handoff from template.", "command": "gad handoffs new"}
+{"instruction": "Evolution report.", "command": "gad evolution report"}
+{"instruction": "Shed unused skills.", "command": "gad evolution shed --projectid slm-learning"}
+{"instruction": "Skill usage report.", "command": "gad evolution skill-usage"}
+{"instruction": "Level up project.", "command": "gad evolution level-up --projectid slm-learning"}
+{"instruction": "Create projects list JSON.", "command": "gad projects list --json"}
+{"instruction": "Add path /new/root.", "command": "gad projects add /new/root"}
+{"instruction": "Ignore pattern *.tmp.", "command": "gad projects ignore *.tmp"}
+{"instruction": "Create new project.", "command": "gad projects init --id new-project"}
+{"instruction": "Edit project name.", "command": "gad projects edit --id slm-learning --name \"SLM\""}
+{"instruction": "Archive project.", "command": "gad projects archive --id completed-001"}
+{"instruction": "Delete recipe.", "command": "gad recipes delete template-recipe"}
+{"instruction": "Verify phase 02 with custom build.", "command": "gad verify --phase 02 --build-cmd \"make check\""}
+{"instruction": "Verify with project scope.", "command": "gad verify --projectid slm-learning --phase 03"}
+{"instruction": "Health disk report.", "command": "gad health disk"}
+{"instruction": "Caches list JSON.", "command": "gad health caches --json"}
+{"instruction": "Planning hydrate with markdown.", "command": "gad planning hydrate"}
+{"instruction": "Todos list JSON.", "command": "gad todos list --json"}
+{"instruction": "New session interactive.", "command": "gad session new"}
+{"instruction": "Session list JSON.", "command": "gad session list --json"}
+{"instruction": "Telemetry with detailed stats.", "command": "gad telemetry summary"}
+{"instruction": "Refs from phases.", "command": "gad refs list --source phases"}
+{"instruction": "Refs JSON output.", "command": "gad refs list --json"}
+{"instruction": "Context for slm-learning.", "command": "gad context --project slm-learning"}
+{"instruction": "Context JSON format.", "command": "gad context --json"}
+{"instruction": "Finish task 01-14.", "command": "gad tasks stamp 01-14 --status done"}
+{"instruction": "Task 02-15 by me.", "command": "gad tasks stamp 02-15 --status done --agent claude"}
+{"instruction": "Task 03-16 for claude-code.", "command": "gad tasks stamp 03-16 --status done --runtime claude-code"}
+{"instruction": "Task 04-11 done.", "command": "gad tasks stamp 04-11 --status done"}
+{"instruction": "Note added: final checks complete.", "command": "gad note add \"final checks complete\""}
+{"instruction": "Quick note: dataset ready for distribution.", "command": "gad note add \"dataset ready for distribution\""}
+{"instruction": "Capture: all documentation updated.", "command": "gad note add \"all documentation updated\""}
+{"instruction": "Note: performance metrics validated.", "command": "gad note add \"performance metrics validated\""}
+{"instruction": "Write note: ready for public release.", "command": "gad note add \"ready for public release\""}
+{"instruction": "Stash idea: expand to multi-language gad.", "command": "gad note add \"expand to multi-language gad\""}
+{"instruction": "Drop note: community feedback collected.", "command": "gad note add \"community feedback collected\""}
+{"instruction": "Jot: performance within SLA targets.", "command": "gad note add \"performance within SLA targets\""}
+{"instruction": "Add task phase 04: long-term maintenance.", "command": "gad tasks add --phase 04 \"long-term maintenance\""}
+{"instruction": "Create task phase 05: feature roadmap.", "command": "gad tasks add --phase 05 \"feature roadmap\""}
+{"instruction": "Log state: comprehensive test coverage achieved.", "command": "gad state log \"comprehensive test coverage achieved\""}
+{"instruction": "Record state: model stability confirmed.", "command": "gad state log \"model stability confirmed\""}
+{"instruction": "Note state: CI/CD pipeline fully automated.", "command": "gad state log \"CI/CD pipeline fully automated\""}
+{"instruction": "Update state: all metrics exceed baseline.", "command": "gad state log \"all metrics exceed baseline\""}
+{"instruction": "Progress: stakeholder approval received.", "command": "gad state log \"stakeholder approval received\""}
+{"instruction": "Logged: code freeze in effect.", "command": "gad state log \"code freeze in effect\""}
+{"instruction": "State note: launch date confirmed.", "command": "gad state log \"launch date confirmed\""}
+{"instruction": "Stamp task 01-15 done by claude.", "command": "gad tasks stamp 01-15 --status done --agent claude"}
+{"instruction": "Task 02-16 completed for claude-code.", "command": "gad tasks stamp 02-16 --status done --runtime claude-code"}
+{"instruction": "Complete task 03-17 by me.", "command": "gad tasks stamp 03-17 --status done --agent claude"}
+{"instruction": "Finish task 04-12.", "command": "gad tasks stamp 04-12 --status done"}
+{"instruction": "Show phase 01 tasks planned.", "command": "gad tasks list --phase 01 --status planned"}
+{"instruction": "Show phase 02 in-progress tasks.", "command": "gad tasks list --phase 02 --status in-progress"}
+{"instruction": "All phase 04 tasks please.", "command": "gad tasks list --phase 04"}

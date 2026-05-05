@@ -212,4 +212,9 @@
     <summary>Empirical reversal: bf16 trains 3.2x faster than fp16 on GTX 1660 Ti for Stage 2.5 LoRA fine-tunes via TRL SFTTrainer. A/B at 2026-05-05 with identical Qwen2.5-1.5B-Instruct config + same seed: fp16 = 768.9s, bf16 = 240.0s, both 22/30 GAD-tools. Theoretical claim that Turing's lack of native BF16 tensor cores would make bf16 slower (slm-learning-022 addendum) was wrong — TRL's fp16 path adds GradScaler/autocast overhead that exceeds bf16's slower matmul. Default for all Turing local training: bf16=true. Configs updated. Confidence: high (single A/B, deterministic seed, identical eval). Re-test if TRL or PEFT major-version changes.</summary>
   </decision>
 
+  <decision id="slm-learning-026">
+    <title>Empirical: vocab-anchored distillation (canonical gad CLI...</title>
+    <summary>Empirical: vocab-anchored distillation (canonical gad CLI surface + Haiku 4.5 subagent + 8 known failure-mode reinforcement) closes the 22/30 -&gt; 30/30 gap on GAD-tools eval. 5x training data with single-variable change (more+better data, not paraphrase) eliminated all v1 vocabulary hallucinations. Method generalizes: when target output domain has a finite canonical surface, walk the surface, distill against it, train. CLI-track is solved at the current eval scale; expand the eval to 100+ harder cases or move on. Math/code tracks still 0%/4% - distinct skill, distinct data needed.</summary>
+  </decision>
+
 </decisions>

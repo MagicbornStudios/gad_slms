@@ -1,0 +1,105 @@
+{
+  "benchmark": "humaneval",
+  "checkpoint": "experiments\\runs\\stage25_qwen15_instruct_v2\\adapter",
+  "device": "cuda",
+  "temperature": 0.0,
+  "max_new_tokens": 128,
+  "n": 10,
+  "evaluated_at": "2026-05-05T18:39:31",
+  "elapsed_sec": 38.1,
+  "passed": 0,
+  "total": 10,
+  "pass_at_1": 0.0,
+  "results": [
+    {
+      "task_id": "HumanEval/0",
+      "entry_point": "has_close_elements",
+      "completion": "gad state log \"implemented check for close elements\"",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 5.23,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/1",
+      "entry_point": "separate_paren_groups",
+      "completion": "gad tasks add --phase 01 \"translate hoare\"",
+      "passed": false,
+      "reason": "SyntaxError: leading zeros in decimal integer literals are not permitted; use an 0o prefix for octal integers",
+      "gen_sec": 3.43,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/2",
+      "entry_point": "truncate_number",
+      "completion": "gad evolution run --projectid slm-learning --source-file truncate_number.py",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 3.4,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/3",
+      "entry_point": "below_zero",
+      "completion": "gad state log \"detecting if balance falls below zero\"",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 2.95,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/4",
+      "entry_point": "mean_absolute_deviation",
+      "completion": "gad evolution run --projectid slm-learning --warmup 5 --runtime python --source .",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 4.76,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/5",
+      "entry_point": "intersperse",
+      "completion": "gad evolution run --projectid slm-learning --warmup-interval 0 --command \"python -c 'import typing; print(ty[paste]())'\"",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 7.71,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/6",
+      "entry_point": "parse_nested_parens",
+      "completion": "gad evolution ideas from typing[List[int]]",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 3.17,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/7",
+      "entry_point": "filter_by_substring",
+      "completion": "gad tasks stamp 01-04 --status done",
+      "passed": false,
+      "reason": "SyntaxError: leading zeros in decimal integer literals are not permitted; use an 0o prefix for octal integers",
+      "gen_sec": 3.01,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/8",
+      "entry_point": "sum_product",
+      "completion": "gad evolution ideas",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 1.22,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/9",
+      "entry_point": "rolling_max",
+      "completion": "gad evolution from-code \"rolling_max\"",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 2.1,
+      "gen_error": null
+    }
+  ]
+}

@@ -87,12 +87,14 @@ def publish_adapter(
             on a missing publish step.
     """
     try:
-        from huggingface_hub import HfApi, HfFolder
+        from huggingface_hub import HfApi, get_token
     except ImportError:
         print("[hub] huggingface_hub not installed — skipping publish")
         return None
 
-    token = HfFolder.get_token() or os.environ.get("HF_TOKEN")
+    # huggingface_hub 1.x removed HfFolder; the canonical token getter is
+    # `get_token()` which honors ~/.cache/huggingface/token + HF_TOKEN env.
+    token = get_token() or os.environ.get("HF_TOKEN")
     if not token:
         msg = (
             "[hub] no HF token found (run `hf auth login` or set HF_TOKEN). "

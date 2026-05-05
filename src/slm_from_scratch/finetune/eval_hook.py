@@ -40,14 +40,7 @@ def _run_subprocess_eval(
 
 
 def eval_gad_tools(adapter_dir: Path, eval_settings: "EvalSettings") -> dict:
-    """Score the GAD-tool eval against a PEFT adapter.
-
-    Note: this assumes the eval script can load a PEFT adapter; for now
-    we point at adapter_dir as if it were a checkpoint and require that
-    the eval-side `DrSteinModel` knows what to do. If the adapter format
-    isn't supported yet, returns a placeholder so the pipeline still
-    completes and the human sees the gap.
-    """
+    """Score the GAD-tool eval against a PEFT adapter."""
     out_path = adapter_dir.parent / "eval_gad_tools.json"
     return _run_subprocess_eval(
         "eval_checkpoint.py",
@@ -63,8 +56,48 @@ def eval_gad_tools(adapter_dir: Path, eval_settings: "EvalSettings") -> dict:
     )
 
 
+def eval_humaneval(adapter_dir: Path, eval_settings: "EvalSettings") -> dict:
+    """Score HumanEval pass@1 against a PEFT adapter (n=10 by default)."""
+    out_path = adapter_dir.parent / "eval_humaneval.json"
+    return _run_subprocess_eval(
+        "eval_humaneval.py",
+        [
+            "--checkpoint", str(adapter_dir),
+            "--out", str(out_path),
+            "--name", adapter_dir.parent.name,
+            "--n", "10",
+            # HumanEval generations need more headroom than CLI strings.
+            "--max-new-tokens", "128",
+            "--temperature", str(eval_settings.temperature),
+            "--device", "auto",
+        ],
+        out_path,
+    )
+
+
+def eval_gsm8k(adapter_dir: Path, eval_settings: "EvalSettings") -> dict:
+    """Score GSM8K exact-match accuracy against a PEFT adapter (n=50)."""
+    out_path = adapter_dir.parent / "eval_gsm8k.json"
+    return _run_subprocess_eval(
+        "eval_gsm8k.py",
+        [
+            "--checkpoint", str(adapter_dir),
+            "--out", str(out_path),
+            "--name", adapter_dir.parent.name,
+            "--n", "50",
+            # GSM8K answers can be multi-line; give the model room to think.
+            "--max-new-tokens", "200",
+            "--temperature", str(eval_settings.temperature),
+            "--device", "auto",
+        ],
+        out_path,
+    )
+
+
 REGISTRY: dict[str, Callable[[Path, "EvalSettings"], dict]] = {
     "gad_tools": eval_gad_tools,
+    "humaneval": eval_humaneval,
+    "gsm8k": eval_gsm8k,
 }
 
 

@@ -41,10 +41,12 @@ data:
 training:
   epochs: 3
   learning_rate: 2.0e-4
-  # Shorter sequences let us double batch size without exceeding the 6GB
-  # ceiling. Same effective batch (16 = 8 * 2) with half the sync steps.
-  batch_size: 8
-  gradient_accumulation: 2
+  # DeepSeek-R1-Distill-Qwen-1.5B is structurally larger (1.78B params,
+  # bigger attention scratch) than Qwen2.5-1.5B and OOMed at bs=8 step 6.
+  # Drop to bs=4 grad_accum=4 (effective batch=16 still). Keep this number
+  # divergent from the control config so each fits its own headroom.
+  batch_size: 4
+  gradient_accumulation: 4
   warmup_ratio: 0.05
   weight_decay: 0.0
   # Turing (1660 Ti, compute 7.5) has no native bf16 tensor cores —

@@ -1,0 +1,371 @@
+{
+  "checkpoint": "experiments\\runs\\more_epochs\\checkpoint.pt",
+  "eval": "promptfoo-gad-tools.yaml",
+  "evaluated_at": "2026-05-05T01:39:20",
+  "elapsed_sec": 149.2,
+  "passed": 0,
+  "total": 30,
+  "pct": 0.0,
+  "results": [
+    {
+      "description": "note add basic",
+      "instruction": "Take a note that the build is broken on Windows.",
+      "output": "\nassistant\nuser\nIf you are a helpful AI assistant named SmolLM, trained by Hugging Face\nuser\nLet me trace the structure of the imported module is not installed in the virtual environment:\n  ",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad note'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "note add (synonym: jot down)",
+      "instruction": "Jot down that we should investigate the OOM in stage 3.",
+      "output": "\nuser\nAnalyze the structure of lib-target-2-5057.json:\n  0\n  0\n  0\n  Functions found:\n  0\n  0\n  0\n  0\n  -",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad note'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "note list",
+      "instruction": "Show me the open planning notes.",
+      "output": "\nuser\nIf an ImportError, how would you debug it?\nassistant\nuser\nIf it's not installed in .compile .ts\nIf it's not installed, how would you debug it?\n",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad note'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "task add",
+      "instruction": "Add a new task under phase 03 to wire up the OpenCode teacher.",
+      "output": "json file has the following dependencies:\n  0\n  0\n  0\n  0\n  0\n  0\n  0\n  0\n  This is a dependency of 0\n  0\n  0\n 0\n  0",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad task'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "task stamp done",
+      "instruction": "Mark task 02-02 as done.",
+      "output": "\nuser\nAnalyze the structure of the .tsm py_model.ts_model.tsv275.tsx:\n  File size: 0\n  0\n  File size: 0\n  File size:",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'stamp'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "task list",
+      "instruction": "What tasks are open right now?",
+      "output": "\nuser\nLet me analyze the dependencies of `commands.json` in the projects/commands/commands/commands/commands/commands/commands-commands/commands/commands/commands/commands/commands/commands/commands/commands/",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad task'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "state log",
+      "instruction": "Log a state delta saying we just finished Stage 3 DPO.",
+      "output": "\nuser\nWhat patterns are the dependencies of lib-lib-lib-test-test-lib-target-desktop/desktop/desktop-desktop-windows/desktop/desktop-desktop-windows/",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'state log'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "snapshot",
+      "instruction": "Hydrate the planning context for slm-learning before I start.",
+      "output": "md, how would you debug it?\nuser\nassistant\nLet me debug it?\nLet me debug it?\nuser\nLet me debug it debug it?\nassistant\nLet me debug",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'snapshot'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "next action",
+      "instruction": "What's the next action I should pick up?",
+      "output": "\nuser\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face\nassistant\nuser\nassistant\nLet me trace the imports found?\nassistant\nIf the imports",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['gad next', 'STATE.xml']"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "phase add",
+      "instruction": "Append a phase 04 about TUI polish to the roadmap.",
+      "output": "\nuser\nAnalyze the project, single-responsibility, single-responsibility, single-responsibility, single-responsibility, single-responsibility-responsibility, single-responsibility, single-responsibility-responsibility",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'phase'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "phase close",
+      "instruction": "Close out phase 02 since the training pipeline is done.",
+      "output": "json.json\n  It is in `<think>\n  What dependencies does it include?\nuser\nYou are a helpful AI assistant named SmolLM\n  Classes\n  Classes found: 0\n  Classes found: 0\n  No imports",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['phase', 'close']"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "decisions add",
+      "instruction": "Record a decision: from now on we use fp16 + GradScaler on CUDA.",
+      "output": "\nuser\nuser\nIf the dependencies are installed, how would you debug it?\nassistant\n<think>\n<think>\n<think>\nLet me debug the dependencies:\n`\nSteps\nLet",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'decision'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "errors add",
+      "instruction": "Track an error: stage 3 DPO OOM'd loading two model copies.",
+      "output": "\nuser\nAnalyze the structure of the . It follows the structure of .md, .md, .md, .md, how would you debug it?\nassistant\n<think>\nLet me debug it follows",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'error'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "blockers list",
+      "instruction": "Show me what's blocking phase 03.",
+      "output": "\nuser\nAnalyze the dependencies of .json.json\n  File size of .json\n  File size of .json\n  File size of the size of 0\n  0\n  0\n  0\n  File size: 0",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'blocker'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "handoffs list",
+      "instruction": "Are there any open handoffs I can pick up?",
+      "output": "\nuser\nassistant\nLet me trace the imports in `sys/utils/sys.tsx-sys-sys.tsx890x88880108/sys/sys/sys/",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'handoff'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "handoffs claim",
+      "instruction": "Claim handoff h-2026-05-04-slm_learning-02.",
+      "output": "md\n  0\n  0\n  018216262074-012a776743538893263025238ab76",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'claim'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "evolution status",
+      "instruction": "Show me the current evolution pressure for this project.",
+      "output": "\nuser\nassistant\nLet me analyze the structure of packages. What patterns does it use?\nuser\nThe structure of .schema\nLet me analyze packages of projects/packages/desktop/packages/packages/",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'evolution'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "evolution scan",
+      "instruction": "Run an evolution scan on slm-learning and write the json.",
+      "output": "json file, it is not installed, how would you debug it?\nassistant\nLet me debug it in the file size of 2.md/src-md: path exists\nLet me trace the source/src-src",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'scan'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "evolution promote",
+      "instruction": "Promote the prefer-clean-baseline-over-custom-dev-runtime proto-skill.",
+      "output": "json.json.json.json.json.json` has the imported dependencies of `` found.json` found:\n  Classes found: 110b3.json\n  1.json\n  Classes found in `src-typ",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'promote'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "projects list",
+      "instruction": "List every gad project I have registered.",
+      "output": "\nuser\nassistant\nAnalyze the structure of .md .md.md.md.md.md\nAnalyze the structure of this project.md.md.md:\n  1.md\n  1.",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['gad ls', 'projects list']"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "recipes list",
+      "instruction": "What recipes do we have available?",
+      "output": "\nuser\nIf you are a helpful AI assistant named SmolLM, trained by Hugging Face\nuser\nLet me analyze the imported dependencies of `comes` in the imports into . What imports does it use?\n",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'recipe'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "verify phase",
+      "instruction": "Verify that phase 02 actually achieved its goal.",
+      "output": "\nuser\nAnalyze the dependencies of the project.json\n  0\n  0\n  0\n  0\n  0\n  0\n  0\n  0\n  0\n  0\n  0\n  0",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'verify'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "health check",
+      "instruction": "Diagnose the health of my planning directory.",
+      "output": " What are the dependencies of lib-sdk-build-build-build?\nuser\nassistant\nLet me trace the dependencies of .build-build-build-build-build-build-build-build-build-build",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'health'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "tool call: which command for status delta",
+      "instruction": "Which command do I run when I want to record progress mid-task?",
+      "output": "\nuser\nuser\nLet me debug it?\nassistant\nassistant\nLet me debug it?\nassistant\nuser\nTo debug the project's parent directory doesn't include the projects/",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'state log'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "tool call: which command for new feature",
+      "instruction": "Which command do I use to start tracking a new feature?",
+      "output": "\nuser\nassistant\nLet me trace the imports?\nassistant\nLet me debug it?\nuser\nLet me trace it trace the imports found:\n<think>\nLet me trace the imports",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['phase', 'task']"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "ambiguous note vs task",
+      "instruction": "I want to remember to fix the broken hook tomorrow.",
+      "output": "\nuser\nuser\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face\nAnalyze the structure of the structure of dependencies\nLet me trace the structure of the dependency of lib-fingerprint-",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['gad note', 'gad task']"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "explicit JSON tool call format",
+      "instruction": "Output a JSON tool call that adds a note saying 'check the gad statusline pressure cache'.",
+      "output": "mdjson.json.json {\n  function { } from .json } from .json does it use the imported imports { } } from .json } } from '.json } from '.json';\n  function } from '.json';\n</think",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'note'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "where does state live",
+      "instruction": "Where is the project state file located?",
+      "output": "\nuser\nuser\nIf the project doesn't include dependencies of `project/project/` doesn't include project/project/project/project/project/project/project/target/.project/target/.project/.target/target",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'state.xml'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "where do tasks live",
+      "instruction": "Where do task json files live?",
+      "output": "\nuser\nWhat are the dependencies of `json` in ``: 1.json`\nSteps to debug dependencies found:\nSteps to debug modules found:\n  1.json\n  1.json\n  2.json",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains '.planning'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "where does roadmap live",
+      "instruction": "Where is the roadmap file?",
+      "output": "\nuser\nIf it's in `src/target/target/target.tsx` in the target directory of the `target/target/target/target/target/target/target/target/target/target/target`",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'roadmap'"
+        }
+      ],
+      "passed": false
+    }
+  ]
+}

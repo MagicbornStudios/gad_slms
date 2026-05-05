@@ -1,0 +1,42 @@
+Device: cuda
+Generating chain-of-thought reasoning pairs...
+Generated 99 reasoning pairs with <think> blocks.
+Saved reasoning pairs to C:\Users\benja\Documents\slm_learning\data\reasoning_pairs.json
+Loading SFT checkpoint from C:\Users\benja\Documents\slm_learning\runs\finetuned\sft_model.pt
+
+============================================================
+STAGE 2: CHAIN-OF-THOUGHT REASONING TRAINING
+Parameters: 162,826,560
+Training examples: 99
+Epochs: 5
+Learning rate: 5e-05 (lower to preserve SFT knowledge)
+Autocast: device=cuda dtype=torch.float16 scaler=on
+============================================================
+
+  step=0025 loss=4.9508 avg=6.8492 elapsed=25.7s
+  step=0050 loss=6.3073 avg=6.2146 elapsed=45.4s
+  step=0075 loss=4.0992 avg=5.7526 elapsed=64.3s
+Epoch 1/5 — avg_loss=5.4785
+  step=0100 loss=5.5285 avg=5.4790 elapsed=88.3s
+  step=0125 loss=2.5857 avg=5.1260 elapsed=113.3s
+  step=0150 loss=3.3346 avg=4.8574 elapsed=136.8s
+  step=0175 loss=2.8300 avg=4.6691 elapsed=161.6s
+Epoch 2/5 — avg_loss=3.4494
+  step=0200 loss=2.2481 avg=4.4412 elapsed=188.4s
+  step=0225 loss=1.8195 avg=4.2921 elapsed=214.5s
+  step=0250 loss=2.4741 avg=4.1137 elapsed=255.1s
+  step=0275 loss=3.5150 avg=3.9577 elapsed=293.4s
+Epoch 3/5 — avg_loss=2.5759
+  step=0300 loss=3.1284 avg=3.8162 elapsed=319.9s
+  step=0325 loss=1.5315 avg=3.6775 elapsed=345.4s
+  step=0350 loss=1.8990 avg=3.5472 elapsed=371.1s
+  step=0375 loss=1.5074 avg=3.4316 elapsed=398.3s
+Epoch 4/5 — avg_loss=1.8256
+  step=0400 loss=0.8587 avg=3.3142 elapsed=421.9s
+  step=0425 loss=1.2533 avg=3.2081 elapsed=442.0s
+  step=0450 loss=1.3016 avg=3.1161 elapsed=464.1s
+  step=0475 loss=2.3547 avg=3.0325 elapsed=485.3s
+Epoch 5/5 — avg_loss=1.4744
+
+Reasoning training complete! Saved to C:\Users\benja\Documents\slm_learning\experiments\runs\higher_lr\checkpoint.pt (502.6s)
+Next: Run Stage 3 (DPO) with scripts/17_dpo_training.py --ckpt C:\Users\benja\Documents\slm_learning\experiments\runs\higher_lr\checkpoint.pt

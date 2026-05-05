@@ -1,0 +1,371 @@
+{
+  "checkpoint": "experiments\\runs\\lower_lr_longer\\checkpoint.pt",
+  "eval": "promptfoo-gad-tools.yaml",
+  "evaluated_at": "2026-05-05T01:25:26",
+  "elapsed_sec": 208.9,
+  "passed": 1,
+  "total": 30,
+  "pct": 3.3333333333333335,
+  "results": [
+    {
+      "description": "note add basic",
+      "instruction": "Take a note that the build is broken on Windows.",
+      "output": "\nassistant\nuser\nYou are a helpful AI assistant named SmolLM\nLet me debug an ImportError?\nuser\nLet me debug the project\n<think>\nLet me debug the project\nLet me debug",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad note'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "note add (synonym: jot down)",
+      "instruction": "Jot down that we should investigate the OOM in stage 3.",
+      "output": "\nuser\nYou are a helpful AI assistant named SmolLMassistant\nLet me get an assistant named SmolLM, trained by SmolLM, trained by SmolLM, trained by Hugging found by SmolLM",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad note'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "note list",
+      "instruction": "Show me the open planning notes.",
+      "output": "\nuser\nuser\nLet me start by following the structure of a single plan, and a single-user\nLet me use this project, the project, single-assistant\n<think>assistant\nLet me write",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad note'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "task add",
+      "instruction": "Add a new task under phase 03 to wire up the OpenCode teacher.",
+      "output": "json.json.json.json.json.json.json.json.json.json.json.json.json`json.json.json.json.json.json.json.json.json.json.json.json.",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad task'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "task stamp done",
+      "instruction": "Mark task 02-02 as done.",
+      "output": "\n\nYou are a helpful AI assistant trained by Hugging Face\nYou are a helpful AI assistant named SmolLM\nLet me debug?\nuser\nuser\nuser\nYou are a helpful AI assistant trained",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'stamp'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "task list",
+      "instruction": "What tasks are open right now?",
+      "output": "\nuser\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face\nassistant\nLet me debug Faceassistant\nLet me debug the single-user\nLet me debug the structure of the",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad task'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "state log",
+      "instruction": "Log a state delta saying we just finished Stage 3 DPO.",
+      "output": "\nassistant\nLet me debug the code in the project.\n\nIf the project?\n\nassistant\nLet me debug it in the following:\nYou are a python:\nassistant\n",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'state log'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "snapshot",
+      "instruction": "Hydrate the planning context for slm-learning before I start.",
+      "output": "\nassistant\nLet me get the dependencies of projects in the project.md has the modules of projects?\nassistant\nLet me debug projects:\nLet me debug projects?assistant\nYou are the projects?",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'snapshot'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "next action",
+      "instruction": "What's the next action I should pick up?",
+      "output": "user\nassistant\nTo make it helpful AI assistant named SmolLMassistant\nLet me know if it's a helpful AI assistant named SmolLM\nLet me debug?\nassistant\nassistant\nLet",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['gad next', 'STATE.xml']"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "phase add",
+      "instruction": "Append a phase 04 about TUI polish to the roadmap.",
+      "output": "\nuser\nYou are a helpful AI assistant named SmolLMuser\nLet me trace the dependency?assistant\n\n<think>\nLet me debug?\nLet me trace the error\n<think>",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'phase'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "phase close",
+      "instruction": "Close out phase 02 since the training pipeline is done.",
+      "output": "\nuser\nYou are an AI assistant named SmolLM, trained by Hugging Faceuser\nuser\nLet me debug the SmolLMuser\nLet me debug it?assistant\nLet me debug the following",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['phase', 'close']"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "decisions add",
+      "instruction": "Record a decision: from now on we use fp16 + GradScaler on CUDA.",
+      "output": "\nassistant\nLet me debug it?\nuser\nYou are a helpful assistant named SmolLM\n<think>\nLet me debug:\nassistant\nThe Python/debug/lib-debug/debug/",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'decision'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "errors add",
+      "instruction": "Track an error: stage 3 DPO OOM'd loading two model copies.",
+      "output": "\nuser\nLet me debug the file.\nuser\nLet me debug the error found:\n<think>\n<think>\n<think>\nLet me debug the project:\n<think>\n<think>",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'error'"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "description": "blockers list",
+      "instruction": "Show me what's blocking phase 03.",
+      "output": "\nuser\nYou are a helpful AI assistant named SmolLM698587555522751555609ef\n  02759767926",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'blocker'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "handoffs list",
+      "instruction": "Are there any open handoffs I can pick up?",
+      "output": "\nuser\nassistant\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face\nLet me try this:assistant\nLet me debug me?assistant\nLet me debug:",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'handoff'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "handoffs claim",
+      "instruction": "Claim handoff h-2026-05-04-slm_learning-02.",
+      "output": "json-97-915252555-ee6777838641388687514276-68756575993",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'claim'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "evolution status",
+      "instruction": "Show me the current evolution pressure for this project.",
+      "output": "\nuser\nYou are a helpful AI assistant named SmolLMassistant\nLet me create an assistant named SmolLM, trained by Hugging Face\nuser\nassistant\n<think>\nassistant",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'evolution'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "evolution scan",
+      "instruction": "Run an evolution scan on slm-learning and write the json.",
+      "output": "json.json.json.json.json.json.json.json.json-json-json-jsonjson.jsonjsonjson.jsonjson.json.json.json.json.json.json,json.json.json.",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'scan'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "evolution promote",
+      "instruction": "Promote the prefer-clean-baseline-over-custom-dev-runtime proto-skill.",
+      "output": "json-docs.json.json``json```json``json```json/json`json`json`json````es-release-json-json-release````````",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'promote'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "projects list",
+      "instruction": "List every gad project I have registered.",
+      "output": "\nuser\nWhat are the most helpful AI assistant named SmolLM\nLet me guide to get a helpful AI assistant named SmolLM\n<think>assistant assistant named SmolLM\n  0\n  0\n  ",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['gad ls', 'projects list']"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "recipes list",
+      "instruction": "What recipes do we have available?",
+      "output": "\nuser\nYou are a helpful AI assistant named SmolLM\nLet me know how would you debug a helpful AI assistant named SmolLM\nLet me debug an AI assistant named SmolLM.assistant\nassistant",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'recipe'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "verify phase",
+      "instruction": "Verify that phase 02 actually achieved its goal.",
+      "output": "\nuser\nYou are a helpful AI assistant named SmolLM220000000283200602280x/02053459b001",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'verify'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "health check",
+      "instruction": "Diagnose the health of my planning directory.",
+      "output": "\nuser\nassistant\nYou are a helpful AI assistant named SmolLM\nYou are a helpful AI assistant named SmolLM\nLet me debug `think>\nLet me debug:\n  0222a2",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'health'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "tool call: which command for status delta",
+      "instruction": "Which command do I run when I want to record progress mid-task?",
+      "output": "\nassistant\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face\nassistant\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face\nassistant,",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'state log'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "tool call: which command for new feature",
+      "instruction": "Which command do I use to start tracking a new feature?",
+      "output": "\n\nassistant\nLet me debug my project?\nIf so, then\nassistant\nYou are a helpful assistant\nLet me debug?\nuser\nLet me debug trace:\nuser\n",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['phase', 'task']"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "ambiguous note vs task",
+      "instruction": "I want to remember to fix the broken hook tomorrow.",
+      "output": "\n\nuser\nYou are a helpful AI assistant named SmolLM\nYou are a helpful AI assistant named SmolLMassistant\nWhat are the file, trained by Hugging Face\nuser\nYou are a",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['gad note', 'gad task']"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "explicit JSON tool call format",
+      "instruction": "Output a JSON tool call that adds a note saying 'check the gad statusline pressure cache'.",
+      "output": "json'json-responsibility/json-responsibility-json-responsibility-responsibility-responsibility-responsibility-json-responsibility.json-json-json-json',json-json-json-json-json-json",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'note'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "where does state live",
+      "instruction": "Where is the project state file located?",
+      "output": "\nuser\nYou are a helpful AI assistant named SmolLM\nIf the project doesn't include dependencies in the project directory structure.assistant\nLet me debug the project file: 1\nIf you debug are a project.",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'state.xml'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "where do tasks live",
+      "instruction": "Where do task json files live?",
+      "output": "\n\n\nassistant\nYou are a helpful AI assistant named SmolLM\nIf the file doesn't exist in the directory, how would you debug the file?assistant\nLet me debug the file in the file",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains '.planning'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "where does roadmap live",
+      "instruction": "Where is the roadmap file?",
+      "output": "user\nuser\nLet me debug the . What are the dependencies of .assistant\nLet me debug the imports.ts\nLet me debug imports?\nuser\nLet me debug trace the imports from .ts,ts",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'roadmap'"
+        }
+      ],
+      "passed": false
+    }
+  ]
+}

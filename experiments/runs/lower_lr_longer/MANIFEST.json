@@ -1,0 +1,23 @@
+{
+  "id": "lower_lr_longer",
+  "config_path": "experiments\\configs\\lower_lr_longer.yaml",
+  "config": {
+    "stage": "reasoning",
+    "ckpt": "runs/finetuned/sft_model.pt",
+    "epochs": 10,
+    "lr": 5e-06,
+    "max_pairs": 100,
+    "block_size": 512,
+    "device": "auto",
+    "notes": "Lower LR + 2x epochs to preserve SFT knowledge."
+  },
+  "started_at": "2026-05-05T01:05:40",
+  "exit_code": 0,
+  "checkpoint": "experiments\\runs\\lower_lr_longer\\checkpoint.pt",
+  "log": "experiments\\runs\\lower_lr_longer\\train.log",
+  "metrics": {
+    "final_loss": 3.9734,
+    "elapsed_sec": 852.7
+  },
+  "notes": "Lower LR + 2x epochs to preserve SFT knowledge."
+}

@@ -1,7 +1,7 @@
 {
   "id": "03-05",
   "phase": "03",
-  "status": "planned",
+  "status": "done",
   "goal": "Training factory: scripts/experiment_runner.py takes a config (model_size, data_mix, hparams, stages) and produces a deterministically-named checkpoint + manifest. Sweep helper enumerates a config matrix. experiments/INDEX.md ledger tracks every run with config + final loss + eval scores.",
   "type": "code",
   "keywords": "",
@@ -10,9 +10,9 @@
   ],
   "commands": [],
   "files": [],
-  "agent_id": "",
+  "agent_id": "claude",
   "agent_role": "",
-  "runtime": "",
+  "runtime": "claude-code-opus-4-7",
   "model_profile": "",
   "resolved_model": "",
   "skill": "",
@@ -21,7 +21,7 @@
   "claimed_at": "",
   "lease_expires_at": "",
   "completed_at": "",
-  "resolution": "",
+  "resolution": "Training factory operational: scripts/experiment_runner.py + scripts/run_sweep.py + experiments/configs/_template.yaml + 5 seed configs. Each run produces deterministic experiments/runs/<name>/{checkpoint.pt, MANIFEST.json, train.log}. scripts/eval_checkpoint.py grades any checkpoint against the GAD-tool eval, scripts/eval_all_experiments.py walks them, scripts/sweep_report.py builds REPORT.md. Validated end-to-end with 5 hyperparam variants — best run higher_lr 1/30 (3.3%) vs 0/30 baseline.",
   "created_at": "2026-05-05T05:39:29.436Z",
-  "updated_at": "2026-05-05T05:39:29.436Z"
+  "updated_at": "2026-05-05T07:34:38.795Z"
 }

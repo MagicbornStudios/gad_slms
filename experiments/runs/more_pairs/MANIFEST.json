@@ -1,0 +1,23 @@
+{
+  "id": "more_pairs",
+  "config_path": "experiments\\configs\\more_pairs.yaml",
+  "config": {
+    "stage": "reasoning",
+    "ckpt": "runs/finetuned/sft_model.pt",
+    "epochs": 5,
+    "lr": 1e-05,
+    "max_pairs": 200,
+    "block_size": 512,
+    "device": "auto",
+    "notes": "Test whether 200 pairs (vs 100) improves alignment without overfitting."
+  },
+  "started_at": "2026-05-05T01:35:58",
+  "exit_code": 0,
+  "checkpoint": "experiments\\runs\\more_pairs\\checkpoint.pt",
+  "log": "experiments\\runs\\more_pairs\\train.log",
+  "metrics": {
+    "final_loss": 2.8631,
+    "elapsed_sec": 1745.6
+  },
+  "notes": "Test whether 200 pairs (vs 100) improves alignment without overfitting."
+}

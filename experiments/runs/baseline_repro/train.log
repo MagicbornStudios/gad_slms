@@ -1,0 +1,42 @@
+Device: cuda
+Generating chain-of-thought reasoning pairs...
+Generated 99 reasoning pairs with <think> blocks.
+Saved reasoning pairs to C:\Users\benja\Documents\slm_learning\data\reasoning_pairs.json
+Loading SFT checkpoint from C:\Users\benja\Documents\slm_learning\runs\finetuned\sft_model.pt
+
+============================================================
+STAGE 2: CHAIN-OF-THOUGHT REASONING TRAINING
+Parameters: 162,826,560
+Training examples: 99
+Epochs: 5
+Learning rate: 1e-05 (lower to preserve SFT knowledge)
+Autocast: device=cuda dtype=torch.float16 scaler=on
+============================================================
+
+  step=0025 loss=7.2782 avg=7.2384 elapsed=23.6s
+  step=0050 loss=6.3540 avg=7.0949 elapsed=50.5s
+  step=0075 loss=8.5688 avg=6.8248 elapsed=70.6s
+Epoch 1/5 — avg_loss=6.7783
+  step=0100 loss=5.9538 avg=6.7701 elapsed=90.7s
+  step=0125 loss=7.1286 avg=6.6296 elapsed=112.9s
+  step=0150 loss=5.0516 avg=6.4967 elapsed=134.7s
+  step=0175 loss=5.5896 avg=6.3814 elapsed=156.3s
+Epoch 2/5 — avg_loss=5.7198
+  step=0200 loss=6.5900 avg=6.2431 elapsed=177.8s
+  step=0225 loss=6.8105 avg=6.1370 elapsed=200.1s
+  step=0250 loss=4.7487 avg=6.0404 elapsed=223.3s
+  step=0275 loss=4.4240 avg=5.9204 elapsed=245.9s
+Epoch 3/5 — avg_loss=5.0080
+  step=0300 loss=4.7538 avg=5.8242 elapsed=271.5s
+  step=0325 loss=3.9715 avg=5.7307 elapsed=298.0s
+  step=0350 loss=6.6707 avg=5.6415 elapsed=326.4s
+  step=0375 loss=5.0690 avg=5.5579 elapsed=353.2s
+Epoch 4/5 — avg_loss=4.5530
+  step=0400 loss=5.6758 avg=5.5059 elapsed=380.5s
+  step=0425 loss=4.2218 avg=5.4341 elapsed=407.6s
+  step=0450 loss=3.8644 avg=5.3532 elapsed=434.1s
+  step=0475 loss=4.8147 avg=5.2994 elapsed=462.3s
+Epoch 5/5 — avg_loss=4.1438
+
+Reasoning training complete! Saved to C:\Users\benja\Documents\slm_learning\experiments\runs\baseline_repro\checkpoint.pt (485.6s)
+Next: Run Stage 3 (DPO) with scripts/17_dpo_training.py --ckpt C:\Users\benja\Documents\slm_learning\experiments\runs\baseline_repro\checkpoint.pt

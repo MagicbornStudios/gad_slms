@@ -1,0 +1,22 @@
+{
+  "id": "baseline_repro",
+  "config": {
+    "stage": "reasoning",
+    "ckpt": "runs/finetuned/sft_model.pt",
+    "epochs": 5,
+    "lr": 1e-05,
+    "max_pairs": 100,
+    "block_size": 512,
+    "device": "auto",
+    "notes": "Sanity-check reproduction of Phase 02 defaults."
+  },
+  "started_at": "2026-05-05T00:48:33",
+  "exit_code": "salvaged",
+  "checkpoint": "experiments\\runs\\baseline_repro\\checkpoint.pt",
+  "log": "experiments\\runs\\baseline_repro\\train.log",
+  "metrics": {
+    "final_loss": 4.1438,
+    "elapsed_sec": 485.6
+  },
+  "notes": "Sanity-check reproduction of Phase 02 defaults. [salvaged manifest after runner UTF-8 crash]"
+}

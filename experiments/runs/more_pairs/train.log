@@ -1,0 +1,62 @@
+Device: cuda
+Generating chain-of-thought reasoning pairs...
+Generated 198 reasoning pairs with <think> blocks.
+Saved reasoning pairs to C:\Users\benja\Documents\slm_learning\data\reasoning_pairs.json
+Loading SFT checkpoint from C:\Users\benja\Documents\slm_learning\runs\finetuned\sft_model.pt
+
+============================================================
+STAGE 2: CHAIN-OF-THOUGHT REASONING TRAINING
+Parameters: 162,826,560
+Training examples: 198
+Epochs: 5
+Learning rate: 1e-05 (lower to preserve SFT knowledge)
+Autocast: device=cuda dtype=torch.float16 scaler=on
+============================================================
+
+  step=0025 loss=7.0923 avg=6.5677 elapsed=28.2s
+  step=0050 loss=6.1787 avg=6.4958 elapsed=53.2s
+  step=0075 loss=5.6071 avg=6.4888 elapsed=77.7s
+  step=0100 loss=5.3572 avg=6.3893 elapsed=102.5s
+  step=0125 loss=5.9566 avg=6.2647 elapsed=128.1s
+  step=0150 loss=5.3223 avg=6.2168 elapsed=154.0s
+  step=0175 loss=5.7459 avg=6.1310 elapsed=176.0s
+Epoch 1/5 — avg_loss=6.0684
+  step=0200 loss=4.7487 avg=6.0585 elapsed=198.6s
+  step=0225 loss=5.1412 avg=5.9413 elapsed=220.4s
+  step=0250 loss=4.5486 avg=5.8526 elapsed=241.0s
+  step=0275 loss=5.1286 avg=5.7782 elapsed=266.9s
+  step=0300 loss=5.5733 avg=5.6882 elapsed=290.8s
+  step=0325 loss=4.3893 avg=5.6309 elapsed=317.1s
+  step=0350 loss=4.0947 avg=5.5291 elapsed=342.1s
+  step=0375 loss=4.0566 avg=5.4653 elapsed=392.1s
+Epoch 2/5 — avg_loss=4.7718
+  step=0400 loss=5.0097 avg=5.4124 elapsed=443.9s
+  step=0425 loss=4.1652 avg=5.3505 elapsed=487.7s
+  step=0450 loss=5.0628 avg=5.2638 elapsed=529.7s
+  step=0475 loss=3.0734 avg=5.1960 elapsed=573.8s
+  step=0500 loss=3.8319 avg=5.1475 elapsed=617.1s
+  step=0525 loss=3.4213 avg=5.0943 elapsed=672.6s
+  step=0550 loss=3.8155 avg=5.0318 elapsed=730.1s
+  step=0575 loss=4.6132 avg=4.9636 elapsed=786.2s
+Epoch 3/5 — avg_loss=3.9162
+  step=0600 loss=4.8518 avg=4.9050 elapsed=856.4s
+  step=0625 loss=4.9031 avg=4.8569 elapsed=915.2s
+  step=0650 loss=3.1940 avg=4.7962 elapsed=983.7s
+  step=0675 loss=2.4319 avg=4.7462 elapsed=1036.4s
+  step=0700 loss=2.9465 avg=4.6907 elapsed=1087.8s
+  step=0725 loss=3.9659 avg=4.6386 elapsed=1141.9s
+  step=0750 loss=2.3550 avg=4.5913 elapsed=1202.2s
+  step=0775 loss=3.2758 avg=4.5485 elapsed=1254.3s
+Epoch 4/5 — avg_loss=3.3054
+  step=0800 loss=2.2915 avg=4.5019 elapsed=1309.2s
+  step=0825 loss=2.7798 avg=4.4547 elapsed=1365.5s
+  step=0850 loss=2.3363 avg=4.4117 elapsed=1424.0s
+  step=0875 loss=4.2464 avg=4.3741 elapsed=1470.3s
+  step=0900 loss=2.3997 avg=4.3358 elapsed=1515.8s
+  step=0925 loss=2.3988 avg=4.2914 elapsed=1559.9s
+  step=0950 loss=1.8508 avg=4.2442 elapsed=1638.0s
+  step=0975 loss=2.0050 avg=4.2073 elapsed=1716.1s
+Epoch 5/5 — avg_loss=2.8631
+
+Reasoning training complete! Saved to C:\Users\benja\Documents\slm_learning\experiments\runs\more_pairs\checkpoint.pt (1745.6s)
+Next: Run Stage 3 (DPO) with scripts/17_dpo_training.py --ckpt C:\Users\benja\Documents\slm_learning\experiments\runs\more_pairs\checkpoint.pt

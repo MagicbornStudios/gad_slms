@@ -1,0 +1,22 @@
+{
+  "id": "higher_lr",
+  "config": {
+    "stage": "reasoning",
+    "ckpt": "runs/finetuned/sft_model.pt",
+    "epochs": 5,
+    "lr": 5e-05,
+    "max_pairs": 100,
+    "block_size": 512,
+    "device": "auto",
+    "notes": "Higher LR \u2014 trade preservation for faster convergence."
+  },
+  "started_at": "2026-05-05T00:57:16",
+  "exit_code": "salvaged",
+  "checkpoint": "experiments\\runs\\higher_lr\\checkpoint.pt",
+  "log": "experiments\\runs\\higher_lr\\train.log",
+  "metrics": {
+    "final_loss": 1.4744,
+    "elapsed_sec": 502.6
+  },
+  "notes": "Higher LR \u2014 trade preservation for faster convergence. [salvaged manifest after runner UTF-8 crash]"
+}

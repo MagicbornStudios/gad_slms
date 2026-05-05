@@ -1,0 +1,371 @@
+{
+  "checkpoint": "experiments\\runs\\higher_lr\\checkpoint.pt",
+  "eval": "promptfoo-gad-tools.yaml",
+  "evaluated_at": "2026-05-05T01:09:28",
+  "elapsed_sec": 164.7,
+  "passed": 1,
+  "total": 30,
+  "pct": 3.3333333333333335,
+  "results": [
+    {
+      "description": "note add basic",
+      "instruction": "Take a note that the build is broken on Windows.",
+      "output": " Compile-build-build-build-build-build-build-build-build-build-build-build-build-build-build-build-build-build.json.\nAn ImportError in .fingerprint/build-build",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad note'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "note add (synonym: jot down)",
+      "instruction": "Jot down that we should investigate the OOM in stage 3.",
+      "output": "\nuser\nAnalyze the structure of lib-openai-ai-terminal.ts. What patterns does it use?\nassistant\n<think>\nLet me analyze apps/openai-protocol/openai/",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad note'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "note list",
+      "instruction": "Show me the open planning notes.",
+      "output": "ts?\nuser\nIf 11.ts throws an ImportError, how would you debug it?\nassistant\n<think>\nAn ImportError in .ts throws an ImportError in .planning.ts could mean:",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad note'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "task add",
+      "instruction": "Add a new task under phase 03 to wire up the OpenCode teacher.",
+      "output": "json throws an ImportError, how would you debug it?\nassistant\n<think>\nAn ImportError in .openai-codex-codex-codex-codex-codex-rs/codex/codex",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad task'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "task stamp done",
+      "instruction": "Mark task 02-02 as done.",
+      "output": " What are the dependencies of .fingerprint .fingerprint .fingerprint .planning .planning/tasks/tasks/tasks/tasks-000000006-000-020-00-",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'stamp'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "task list",
+      "instruction": "What tasks are open right now?",
+      "output": "\nuser\nIf you are a helpful AI assistant named SmolLM, trained by Hugging Face\nuser\nIf 0, how would you debug it?\nassistant\n<think>\nLet me trace",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad task'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "state log",
+      "instruction": "Log a state delta saying we just finished Stage 3 DPO.",
+      "output": "tsx?\nassistant\n<think>\nLet me trace the imports in tmp/x/x-pc-pc-pc-pc-pc-pc-pc/x85034fdf203",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'state log'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "snapshot",
+      "instruction": "Hydrate the planning context for slm-learning before I start.",
+      "output": "tsx. What patterns does it use?\nassistant\n<think>\nLet me analyze tmp/openai-codex/slashslash-slash-slash-slash-mdx-Slash-",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'snapshot'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "next action",
+      "instruction": "What's the next action I should pick up?",
+      "output": "\nuser\nIf the user is a helpful AI assistant named SmolLM, trained by Hugging Face\nuser\nIf lib-tauri/target/debug/.fingerprint/debug/.fingerprint/fingerprint/debug",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['gad next', 'STATE.xml']"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "phase add",
+      "instruction": "Append a phase 04 about TUI polish to the roadmap.",
+      "output": "ts\n  Classes found: 0\n  No imports found.\nassistant\n<think>\nLet me trace the imports in apps/desktop/desktop/target/target/desktop/src-0000a",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'phase'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "phase close",
+      "instruction": "Close out phase 02 since the training pipeline is done.",
+      "output": "ts?\nassistant\n<think>\nLet me analyze packages in tmp/packages/packages/packages/packages/packages/packages/packages/packages/packages/packages/packages/packages/packages/packages/packages/packages",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['phase', 'close']"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "decisions add",
+      "instruction": "Record a decision: from now on we use fp16 + GradScaler on CUDA.",
+      "output": " What patterns does it use?\nuser\nAnalyze the structure of lib-derive.ts. What patterns does it use?\n\nassistant\n<think>\nLet me analyze apps/desktop/src",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'decision'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "errors add",
+      "instruction": "Track an error: stage 3 DPO OOM'd loading two model copies.",
+      "output": "ts\n  2.ts\n  2.ts\n  2.ts\n  2.ts\n  0\n  3.ts\n  0\n  0\n  1.ts\n  0\n  0\n  2\n ",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'error'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "blockers list",
+      "instruction": "Show me what's blocking phase 03.",
+      "output": "ts has a syntax error, how would you debug it?\nassistant\n<think>\nLet me debug it?\nassistant\n<think>\nLet me trace the imports from .ts:\n  0\n ",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'blocker'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "handoffs list",
+      "instruction": "Are there any open handoffs I can pick up?",
+      "output": "\nuser\nIf the Python path doesn't include the parent directory.ts:\n  3.ts\n  No imports found.\nAn ImportError in .ts\n  1.ts\n  2.ts\n  1.ts",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'handoff'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "handoffs claim",
+      "instruction": "Claim handoff h-2026-05-04-slm_learning-02.",
+      "output": "json` contains 35806-04.json` has the following dependencies:\n  0\n  0\n  1\n  0\n  This file is a single-0\n  0\n  File size: 46",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'claim'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "evolution status",
+      "instruction": "Show me the current evolution pressure for this project.",
+      "output": "\nuser\nYou are a helpful AI assistant named SmolLM, trained by Hugging Face\nassistant\n<think>\nLet me trace the imports in .fingerprint/src/docs/opencode/packages/",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'evolution'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "evolution scan",
+      "instruction": "Run an evolution scan on slm-learning and write the json.",
+      "output": " What patterns does it use?\nuser\nLet me trace the imports found.\nassistant\n<think>\nLet me trace the imports in tmp/openai-codex/openai-codex-codex",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'scan'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "evolution promote",
+      "instruction": "Promote the prefer-clean-baseline-over-custom-dev-runtime proto-skill.",
+      "output": "json` contains 0 class(es) and 0 function(s). It follows the single-responsibility principle of file.json.\n</think>\nLet me trace the imports?\nassistant\n<think>\n",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'promote'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "projects list",
+      "instruction": "List every gad project I have registered.",
+      "output": "\nuser\nIf the .fingerprint/fingerprint/fingerprint/fingerprint/fingerprint/fingerprint/fingerprint/fingerprint/fingerprint/fingerprint/print/fingerprint/fingerprint/fingerprint/finger",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['gad ls', 'projects list']"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "recipes list",
+      "instruction": "What recipes do we have available?",
+      "output": "\nuser\nIf lib-decompressor.json throws an ImportError, how would you debug it?\nassistant\n<think>\nAn ImportError in .planning/decompressor-encode/decompressor-",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'recipe'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "verify phase",
+      "instruction": "Verify that phase 02 actually achieved its goal.",
+      "output": "\nuser\nIf a dependency is not installed, how would you debug it?\nassistant\n<think>\nLet me trace the imports in .planning/tasks/tasks/tasks/debug/.fingerprint/tasks",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'verify'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "health check",
+      "instruction": "Diagnose the health of my planning directory.",
+      "output": " What patterns does it use?\nuser\nIf lib-rand.json throws an ImportError, how would you debug it?\nassistant\n<think>\nAn ImportError\nAn ImportError in .planning/planning/",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'health'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "tool call: which command for status delta",
+      "instruction": "Which command do I run when I want to record progress mid-task?",
+      "output": "\nuser\nIf the project is in .ts throws an ImportError, how would I debug it?\nassistant\n<think>\nAn ImportError in .ts throws:\n  2.ts could mean: python has a",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'state log'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "tool call: which command for new feature",
+      "instruction": "Which command do I use to start tracking a new feature?",
+      "output": "\nuser\nIf the imports are not installed in the virtual environment, how would you debug it?\nassistant\n<think>\nLet me trace the imports in .fingerprint/terminal/commands/commands/commands/",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['phase', 'task']"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "ambiguous note vs task",
+      "instruction": "I want to remember to fix the broken hook tomorrow.",
+      "output": "\nuser\nIf lib-codex-codex-codex-codex.json throws an ImportError, how would you debug it?\nassistant\n<think>\nLet me debug it in lib-codex",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['gad note', 'gad task']"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "explicit JSON tool call format",
+      "instruction": "Output a JSON tool call that adds a note saying 'check the gad statusline pressure cache'.",
+      "output": " What patterns does it use?\nassistant\n<think>\nLet me trace the imports in tmp/sys/debug/.fingerprint/gad-planning/skills/note/note/skills/skills.ts:\n ",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'note'"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "description": "where does state live",
+      "instruction": "Where is the project state file located?",
+      "output": "\nuser\nIf the dependencies of {src/src-tauri/tauri/tauri/tauri/tauri/target/tauri/target-tauri/tauri/tauri/src-tauri/",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'state.xml'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "where do tasks live",
+      "instruction": "Where do task json files live?",
+      "output": "\nassistant\n<think>\nLet me analyze packages/packages/packages/packages/packages/packages/packages/packages/packages/packages/packages/packages/packages/packages/packages/packages-packages-portfolio/",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains '.planning'"
+        }
+      ],
+      "passed": false
+    },
+    {
+      "description": "where does roadmap live",
+      "instruction": "Where is the roadmap file?",
+      "output": "\n\nuser\nIf the dependencies of import module is not installed in the virtual environment.ts is not installed in the virtual environment.ts.ts:\n  0\n  3.ts\n  4.ts\n  1",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'roadmap'"
+        }
+      ],
+      "passed": false
+    }
+  ]
+}

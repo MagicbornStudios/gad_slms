@@ -1,0 +1,23 @@
+{
+  "id": "more_epochs",
+  "config_path": "experiments\\configs\\more_epochs.yaml",
+  "config": {
+    "stage": "reasoning",
+    "ckpt": "runs/finetuned/sft_model.pt",
+    "epochs": 10,
+    "lr": 1e-05,
+    "max_pairs": 100,
+    "block_size": 512,
+    "device": "auto",
+    "notes": "Test whether 10 epochs (vs 5) keeps avg_loss decreasing."
+  },
+  "started_at": "2026-05-05T01:20:30",
+  "exit_code": 0,
+  "checkpoint": "experiments\\runs\\more_epochs\\checkpoint.pt",
+  "log": "experiments\\runs\\more_epochs\\train.log",
+  "metrics": {
+    "final_loss": 2.802,
+    "elapsed_sec": 889.6
+  },
+  "notes": "Test whether 10 epochs (vs 5) keeps avg_loss decreasing."
+}

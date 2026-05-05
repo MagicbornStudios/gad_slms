@@ -1,5 +1,6 @@
 .venv/
 .venv-cuda/
+.venv-gpu/
 .claude/
 .gad/logs/
 __pycache__/

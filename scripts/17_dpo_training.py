@@ -234,14 +234,22 @@ def main() -> None:
             policy_model.load_state_dict(checkpoint['model_state_dict'])
 
     # Reference model (frozen copy — prevents catastrophic forgetting)
+    # On CUDA, store ref weights in fp16 to halve VRAM (frozen, no optimizer/grads).
     ref_model = MiniLlama(config).to(device)
     ref_model.load_state_dict(policy_model.state_dict())
+    if device.type == "cuda":
+        ref_model = ref_model.half()
     ref_model.eval()
     for param in ref_model.parameters():
         param.requires_grad = False
 
     optimizer = torch.optim.AdamW(policy_model.parameters(), lr=args.lr, weight_decay=0.01)
     policy_model.train()
+
+    # Mixed-precision config: fp16 + GradScaler on CUDA, bf16 on CPU.
+    use_amp = device.type == "cuda"
+    amp_dtype = torch.float16 if use_amp else torch.bfloat16
+    scaler = torch.amp.GradScaler("cuda") if use_amp else None
 
     print(f"\n{'='*60}")
     print(f"STAGE 3: DIRECT PREFERENCE OPTIMIZATION (DPO)")
@@ -250,6 +258,7 @@ def main() -> None:
     print(f"Epochs: {args.epochs}")
     print(f"Beta (KL temperature): {args.beta}")
     print(f"Learning rate: {args.lr} (very low to preserve reasoning)")
+    print(f"Autocast: device={device.type} dtype={amp_dtype} scaler={'on' if scaler else 'off'}")
     print(f"{'='*60}\n")
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
@@ -275,40 +284,50 @@ def main() -> None:
             if chosen_ids.size(1) < 2 or rejected_ids.size(1) < 2:
                 continue
 
-            # Compute log probs for policy (bfloat16 to halve memory)
-            with torch.autocast(device_type="cpu", dtype=torch.bfloat16):
+            # Compute log probs for policy (mixed-precision: fp16 on CUDA, bf16 on CPU)
+            with torch.autocast(device_type=device.type, dtype=amp_dtype):
                 policy_chosen_logps = compute_log_probs(policy_model, chosen_ids, chosen_ids)
                 policy_rejected_logps = compute_log_probs(policy_model, rejected_ids, rejected_ids)
 
             # Compute log probs for reference (frozen, no grad)
-            with torch.no_grad(), torch.autocast(device_type="cpu", dtype=torch.bfloat16):
+            with torch.no_grad(), torch.autocast(device_type=device.type, dtype=amp_dtype):
                 ref_chosen_logps = compute_log_probs(ref_model, chosen_ids, chosen_ids)
                 ref_rejected_logps = compute_log_probs(ref_model, rejected_ids, rejected_ids)
 
-            # DPO loss
+            # DPO loss (computed in fp32 for numerical stability)
             loss = dpo_loss(
-                policy_chosen_logps, policy_rejected_logps,
-                ref_chosen_logps, ref_rejected_logps,
+                policy_chosen_logps.float(), policy_rejected_logps.float(),
+                ref_chosen_logps.float(), ref_rejected_logps.float(),
                 beta=args.beta,
             )
 
             optimizer.zero_grad(set_to_none=True)
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(policy_model.parameters(), 1.0)
-            optimizer.step()
+            if scaler is not None:
+                scaler.scale(loss).backward()
+                scaler.unscale_(optimizer)
+                torch.nn.utils.clip_grad_norm_(policy_model.parameters(), 1.0)
+                scaler.step(optimizer)
+                scaler.update()
+            else:
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(policy_model.parameters(), 1.0)
+                optimizer.step()
 
             loss_val = loss.item()
 
             # Track reward margins before freeing graph
             with torch.no_grad():
-                chosen_reward = (policy_chosen_logps - ref_chosen_logps).item()
-                rejected_reward = (policy_rejected_logps - ref_rejected_logps).item()
+                chosen_reward = (policy_chosen_logps - ref_chosen_logps).float().item()
+                rejected_reward = (policy_rejected_logps - ref_rejected_logps).float().item()
                 total_chosen_reward += chosen_reward
                 total_rejected_reward += rejected_reward
 
             del loss, policy_chosen_logps, policy_rejected_logps
             del ref_chosen_logps, ref_rejected_logps
-            gc.collect()
+            if device.type == "cuda":
+                torch.cuda.empty_cache()
+            else:
+                gc.collect()
 
             epoch_loss += loss_val
             total_loss += loss_val

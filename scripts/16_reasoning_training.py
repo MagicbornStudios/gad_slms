@@ -215,12 +215,18 @@ def main() -> None:
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.01)
     model.train()
 
+    # Mixed-precision config: fp16 + GradScaler on CUDA (Tensor Cores), bf16 on CPU.
+    use_amp = device.type == "cuda"
+    amp_dtype = torch.float16 if use_amp else torch.bfloat16
+    scaler = torch.amp.GradScaler("cuda") if use_amp else None
+
     print(f"\n{'='*60}")
     print(f"STAGE 2: CHAIN-OF-THOUGHT REASONING TRAINING")
     print(f"Parameters: {model.num_parameters():,}")
     print(f"Training examples: {len(tokenized)}")
     print(f"Epochs: {args.epochs}")
     print(f"Learning rate: {args.lr} (lower to preserve SFT knowledge)")
+    print(f"Autocast: device={device.type} dtype={amp_dtype} scaler={'on' if scaler else 'off'}")
     print(f"{'='*60}\n")
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
@@ -241,17 +247,27 @@ def main() -> None:
 
             x = ids[:, :-1]
             y = ids[:, 1:]
-            with torch.autocast(device_type="cpu", dtype=torch.bfloat16):
+            with torch.autocast(device_type=device.type, dtype=amp_dtype):
                 _, loss, _ = model(x, y)
 
             optimizer.zero_grad(set_to_none=True)
-            loss.backward()
-            torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
-            optimizer.step()
+            if scaler is not None:
+                scaler.scale(loss).backward()
+                scaler.unscale_(optimizer)
+                torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+                scaler.step(optimizer)
+                scaler.update()
+            else:
+                loss.backward()
+                torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
+                optimizer.step()
 
             loss_val = loss.item()
             del loss
-            gc.collect()
+            if device.type == "cuda":
+                torch.cuda.empty_cache()
+            else:
+                gc.collect()
 
             epoch_loss += loss_val
             total_loss += loss_val

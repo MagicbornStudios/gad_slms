@@ -1,2 +1,14 @@
 torch>=2.2.0
 numpy>=1.24.0
+
+# Stage 2.5+ TRL/PEFT fine-tune stack (decision slm-learning-013)
+transformers>=4.40.0
+datasets>=2.18.0
+peft>=0.10.0
+trl>=0.8.0
+accelerate>=0.28.0
+pyarrow>=14.0.0
+pyyaml>=6.0
+# bitsandbytes is QLoRA-only and Linux-first; install separately on
+# Linux/WSL when adapter=qlora is needed:
+#   pip install bitsandbytes

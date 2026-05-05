@@ -200,6 +200,55 @@ Implications for Stage 2.5:
   off 0/30 — code and math are downstream concerns that need
   separate distillation tracks (HumanEval-style + math chain-of-thought).
 
+## Update — 2026-05-05 afternoon: Stage 2.5 scaffold + strategic pivot
+
+User dumped strategic direction (decisions slm-learning-011..018):
+- 6GB GTX 1660 Ti is the hard VRAM ceiling.
+- TRL `SFTTrainer` + PEFT (LoRA/QLoRA) for new fine-tunes; bespoke
+  `scripts/16_*.py` / `17_*.py` loops kept for the educational track only.
+- HF datasets (FineWeb / The Stack / OpenMathInstruct / OpenCodeReasoning
+  / FineMath) replace monorepo-only data for code/math/reasoning.
+- Train -> prune -> retrain -> prune iterative loop.
+- MoE with reasoning-specialized experts as the long-term architecture.
+- High reasoning > crystallized knowledge.
+- Synthetic data via stronger LLMs (haiku for paraphrase, opus for CoT).
+- Free remote compute (Colab/Kaggle/HF) for jobs that exceed local.
+
+Scaffolded the Stage 2.5 fine-tune system under
+`src/slm_from_scratch/finetune/`:
+
+| file | concern |
+|---|---|
+| `config.py` | `FinetuneConfig` dataclass + YAML load |
+| `vram_budget.py` | Pre-flight VRAM estimate vs 6GB ceiling |
+| `data/chatml.py` | ChatML formatting |
+| `data/jsonl_pairs.py` | JSONL → HF Dataset |
+| `data/hf_streaming.py` | Streaming HF datasets (placeholder) |
+| `model/base_loader.py` | Load HF causal-LM with bf16/4bit |
+| `model/lora_adapter.py` | Attach PEFT LoRA |
+| `trainer.py` | TRL SFTTrainer wrapper |
+| `eval_hook.py` | Post-train eval auto-runner |
+| `manifest.py` | Run manifest writer |
+| `orchestrator.py` | Composition root: config → trained adapter |
+
+CLI: `scripts/18_stage25_finetune.py --config <yaml> [--dry-run]`.
+Sweep runner: `scripts/sweep_finetune.py` (skips runs that already
+have MANIFEST.json, fresh subprocess per config so OOM in one doesn't
+poison others).
+
+Default config `experiments/configs/stage25_gad_tools_lora.yaml`:
+LoRA r=16 alpha=32 over q/k/v/o + gate/up/down_proj on
+`HuggingFaceTB/SmolLM2-135M-Instruct`, 3 epochs at 2e-4, bf16 +
+gradient checkpointing. VRAM budget: ~0.37 GB needed vs 4.5 GB free.
+LoRA trainable params: 4.88M (3.63% of 134.5M base).
+
+Eggregious bug fixed in scaffold: VRAM estimator was off by 1e9 (saying
+14 TB needed instead of 0.4 GB — activations math used wrong unit).
+
+eGPU status: not yet detected by torch / nvidia-smi. See
+`.planning/notes/2026-05-05-egpu-detection-followup.md`. All training
+assumptions stay single-GPU until verified.
+
 ## What's queued for next session
 
 1. **Re-eval `more_pairs`** with `--temperature 0.0 --max-new-tokens 30`

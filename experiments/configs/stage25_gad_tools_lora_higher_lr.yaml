@@ -1,0 +1,51 @@
+name: stage25_gad_tools_lora_higher_lr
+base_model: HuggingFaceTB/SmolLM2-135M-Instruct
+adapter: lora
+notes: >
+  Stage 2.5 GAD-tool — higher learning-rate variant.
+  Mirrors the historical sweep finding (Phase 03 sweep) that 5x default
+  LR moved bespoke training off the loss floor; testing whether the
+  same holds with TRL+PEFT LoRA at 5e-4.
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/gad_tool_pairs.jsonl
+  max_length: 512
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are Dr. Stein. Translate the user's request into a single gad
+    CLI command. Output only the command on one line.
+
+training:
+  epochs: 3
+  learning_rate: 5.0e-4
+  batch_size: 4
+  gradient_accumulation: 4
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: epoch
+  logging_steps: 5
+
+eval:
+  run_after_train: false
+  benchmarks:
+    - gad_tools
+  temperature: 0.0
+  max_new_tokens: 50

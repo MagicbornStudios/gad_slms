@@ -1,0 +1,52 @@
+name: stage25_gad_tools_lora
+base_model: HuggingFaceTB/SmolLM2-135M-Instruct
+adapter: lora
+notes: >
+  Stage 2.5 GAD-tool fine-tune via TRL SFTTrainer + PEFT LoRA.
+  Trains on the 153 hand-curated (instruction, command) pairs in
+  data/gad_tool_pairs.jsonl. First run after the strategic pivot
+  to TRL+PEFT (decisions slm-learning-013, slm-learning-014).
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  # SmolLM2 uses Llama-style attention + MLP; standard target list:
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/gad_tool_pairs.jsonl
+  max_length: 512
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are Dr. Stein. Translate the user's request into a single gad
+    CLI command. Output only the command on one line.
+
+training:
+  epochs: 3
+  learning_rate: 2.0e-4
+  batch_size: 4
+  gradient_accumulation: 4
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: epoch
+  logging_steps: 5
+
+eval:
+  run_after_train: false  # eval pipeline does not yet load PEFT adapters
+  benchmarks:
+    - gad_tools
+  temperature: 0.0
+  max_new_tokens: 50

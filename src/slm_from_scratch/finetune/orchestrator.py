@@ -73,6 +73,7 @@ def run_finetune(cfg: "FinetuneConfig", *, dry_run: bool = False) -> Path:
         hidden_size=hidden,
         n_layer=n_layer,
         grad_checkpointing=cfg.training.gradient_checkpointing,
+        weights_already_loaded=True,  # model is already on GPU above
     )
     print(f"       device={vram.device} fits={vram.fits} | {vram.reason}")
     if not vram.fits and not dry_run:

@@ -45,6 +45,7 @@ def estimate_vram_gb(
     hidden_size: int = 576,
     n_layer: int = 30,
     grad_checkpointing: bool = True,
+    weights_already_loaded: bool = False,
 ) -> float:
     """Crude estimate of peak VRAM (GB) for a fine-tune step.
 
@@ -52,6 +53,13 @@ def estimate_vram_gb(
     params (carry grads + AdamW state). Activations approximated as
     `batch * seq * hidden * n_layer * 8 bytes` for bf16 with a small
     fudge factor; grad checkpointing roughly cuts that by sqrt(n_layer).
+
+    If ``weights_already_loaded`` is True (caller is checking the budget
+    *after* moving the model to GPU), the weights term is dropped — at
+    that point CUDA has already deducted the weights from `mem_get_info`'s
+    free counter, so adding them again double-counts. Without this
+    correction the budget check rejects any model big enough that
+    weights > free-memory-after-load (1.5B+ on a 6 GB card).
     """
     if adapter in ("lora", "qlora"):
         weights_bytes = n_params * (PARAM_BYTES_INT4 if adapter == "qlora" else PARAM_BYTES_BF16)
@@ -62,6 +70,9 @@ def estimate_vram_gb(
         weights_bytes = n_params * PARAM_BYTES_BF16
         grads_bytes = n_params * PARAM_BYTES_BF16
         opt_bytes = n_params * ADAMW_STATE_BYTES
+
+    if weights_already_loaded:
+        weights_bytes = 0
 
     # bf16 = 2 bytes; ~4× multiplier for intermediate tensors per layer
     activations_bytes = batch_size * seq_len * hidden_size * n_layer * 2 * 4
@@ -83,8 +94,14 @@ def check_budget(
     n_layer: int = 30,
     grad_checkpointing: bool = True,
     safety_margin_gb: float = 0.5,
+    weights_already_loaded: bool = False,
 ) -> VRAMReport:
-    """Return a VRAMReport saying whether a planned run should fit."""
+    """Return a VRAMReport saying whether a planned run should fit.
+
+    Pass ``weights_already_loaded=True`` when the model has already been
+    moved to GPU by the caller — `mem_get_info` will already reflect
+    weights as used, so the estimate must not count them again.
+    """
     if not torch.cuda.is_available():
         return VRAMReport(
             available_gb=0.0,
@@ -106,6 +123,7 @@ def check_budget(
         hidden_size=hidden_size,
         n_layer=n_layer,
         grad_checkpointing=grad_checkpointing,
+        weights_already_loaded=weights_already_loaded,
     )
     fits = (needed_gb + safety_margin_gb) <= available_gb
     reason = (

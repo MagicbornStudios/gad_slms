@@ -51,7 +51,12 @@ def load_base_model(cfg: "FinetuneConfig"):
             )
         return tokenizer, model
 
-    dtype = torch.bfloat16 if cfg.training.bf16 else torch.float32
+    if cfg.training.bf16:
+        dtype = torch.bfloat16
+    elif cfg.training.fp16:
+        dtype = torch.float16
+    else:
+        dtype = torch.float32
     model = AutoModelForCausalLM.from_pretrained(
         cfg.base_model,
         torch_dtype=dtype,

@@ -28,6 +28,7 @@ def build_sft_config(cfg: "FinetuneConfig") -> SFTConfig:
         warmup_ratio=cfg.training.warmup_ratio,
         weight_decay=cfg.training.weight_decay,
         bf16=cfg.training.bf16,
+        fp16=cfg.training.fp16,
         gradient_checkpointing=cfg.training.gradient_checkpointing,
         seed=cfg.training.seed,
         save_strategy=cfg.training.save_strategy,

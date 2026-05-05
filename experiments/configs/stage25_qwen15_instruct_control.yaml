@@ -28,7 +28,9 @@ lora:
 data:
   source: jsonl_pairs
   path: data/gad_tool_pairs.jsonl
-  max_length: 512
+  # Longest pair = 193 chars (~55 tokens with chat template). 128 is plenty
+  # and cuts activation memory + step time vs the previous 512.
+  max_length: 128
   instruction_field: instruction
   response_field: command
   system_prompt: >-
@@ -38,14 +40,22 @@ data:
 training:
   epochs: 3
   learning_rate: 2.0e-4
-  batch_size: 4
-  gradient_accumulation: 4
+  # Shorter sequences let us double batch size without exceeding the 6GB
+  # ceiling. Same effective batch (16 = 8 * 2) with half the sync steps.
+  batch_size: 8
+  gradient_accumulation: 2
   warmup_ratio: 0.05
   weight_decay: 0.0
-  bf16: true
+  # Turing (1660 Ti, compute 7.5) has no native bf16 tensor cores —
+  # fp16 engages the FP16 tensor cores and runs faster. Flip back to
+  # bf16 only when training on Ampere+ remote (Colab T4 / Kaggle).
+  bf16: false
+  fp16: true
   gradient_checkpointing: true
   seed: 42
-  save_strategy: epoch
+  # We only need the final adapter; intermediate epoch saves cost ~30s
+  # each and add nothing useful.
+  save_strategy: "no"
   logging_steps: 5
 
 eval:

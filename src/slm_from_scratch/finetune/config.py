@@ -56,10 +56,18 @@ class TrainingSettings:
     warmup_ratio: float = 0.05
     weight_decay: float = 0.0
     bf16: bool = True
+    fp16: bool = False
     gradient_checkpointing: bool = True
     seed: int = 42
     save_strategy: Literal["epoch", "no"] = "epoch"
     logging_steps: int = 5
+
+    def __post_init__(self) -> None:
+        if self.bf16 and self.fp16:
+            raise ValueError(
+                "bf16 and fp16 are mutually exclusive — pick one. "
+                "On Turing (1660 Ti) prefer fp16; on Ampere+ prefer bf16."
+            )
 
 
 @dataclass

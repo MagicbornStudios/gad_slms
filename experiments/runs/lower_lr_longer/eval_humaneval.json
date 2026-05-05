@@ -1,0 +1,105 @@
+{
+  "benchmark": "humaneval",
+  "checkpoint": "experiments\\runs\\lower_lr_longer\\checkpoint.pt",
+  "device": "cuda",
+  "temperature": 0.0,
+  "max_new_tokens": 128,
+  "n": 10,
+  "evaluated_at": "2026-05-05T10:29:12",
+  "elapsed_sec": 117.0,
+  "passed": 0,
+  "total": 10,
+  "pass_at_1": 0.0,
+  "results": [
+    {
+      "task_id": "HumanEval/0",
+      "entry_point": "has_close_elements",
+      "completion": "<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>think>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\n\n\nthink>\nthink>\n",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 14.58,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/1",
+      "entry_point": "separate_paren_groups",
+      "completion": "</think>\n</think>\n</think>\n</think>\n</think>\nYou are in the following the following the following patterns between the following the following the following the following the following modules: 10. The following the following the following the following the following the following the following the following the following the following the following the following patterns:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n</think>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 9.01,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/2",
+      "entry_point": "truncate_number",
+      "completion": "```\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\nthink>\nthink>\nthink>think>think>\nthink>think>think>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>think>",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 9.56,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/3",
+      "entry_point": "below_zero",
+      "completion": "</think>\n</think>\nLet me:\n</think>\nLet me:\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\nthink>think>think>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\n</think>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 11.17,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/4",
+      "entry_point": "mean_absolute_deviation",
+      "completion": "<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 13.9,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/5",
+      "entry_point": "intersperse",
+      "completion": "<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\nthink>\nthink>think>think>think>think>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 13.35,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/6",
+      "entry_point": "parse_nested_parens",
+      "completion": "</think>\n<think>\n<think>\n<think>\n<think>\n</think>\n</think>\nLet me:\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\nthink>\nthink>\n</think>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 11.5,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/7",
+      "entry_point": "filter_by_substring",
+      "completion": "<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n</think>\n<think>\n<think>\n<think>think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\n",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 12.15,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/8",
+      "entry_point": "sum_product",
+      "completion": "<think> 0250. It is a function(0. It is a function. It is a function. It contains the following: 0. It contains the following function: 0. It contains the function: 0. The following the following the following the following imports: 0. 02. 02.\n\n\n\n\n\nThe following imports\n\n\nThe following imports the following imports: 0.\nThe following imports: 0.\nThe following imports: 00000000000000000000",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 10.16,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/9",
+      "entry_point": "rolling_max",
+      "completion": "<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>think>\nthink>\nthink>think>think>think>think>think>think>think>think>think>\nthink>think>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 10.29,
+      "gen_error": null
+    }
+  ]
+}

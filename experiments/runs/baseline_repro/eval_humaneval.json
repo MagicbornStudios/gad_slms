@@ -1,0 +1,105 @@
+{
+  "benchmark": "humaneval",
+  "checkpoint": "experiments\\runs\\baseline_repro\\checkpoint.pt",
+  "device": "cuda",
+  "temperature": 0.0,
+  "max_new_tokens": 128,
+  "n": 10,
+  "evaluated_at": "2026-05-05T10:20:28",
+  "elapsed_sec": 121.5,
+  "passed": 0,
+  "total": 10,
+  "pass_at_1": 0.0,
+  "results": [
+    {
+      "task_id": "HumanEval/0",
+      "entry_point": "has_close_elements",
+      "completion": "<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\n</think>\nthink>\n</think>\nthink>\nthink>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 13.72,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/1",
+      "entry_point": "separate_paren_groups",
+      "completion": "</think>\n</think>\n</think>\n</think>\n</think>\nYou are not found in the following the following the following the following the following the following the following the following modules: 10. The following the following the following the following the following the following the following the following the following the following the following the following patterns:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n</think>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 11.42,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/2",
+      "entry_point": "truncate_number",
+      "completion": "<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n</think>\n<think>\nthink>\n</think>\n</think>think>think>think>\n</think>\nthink>think>\nthink>\nthink>\nthink>think>\nthink>\n</think>\n</",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 9.35,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/3",
+      "entry_point": "below_zero",
+      "completion": "</think>\n</think>\nYou are not found: 0: 0: 0: 0. The following: 0.json: 0.\n</think>\n</think>\n</think>\n</think>\nthink>\nthink>\nthink>\nthink>\n</think>\nthink>\n</think>\nthink>\n</think>\nthink>\nthink>\nthink>\nthink>\n</think>\nthink>\n</think>\n</think>\n</think>\n</think>\n</think>\nthink:\nthink:\n",
+      "passed": false,
+      "reason": "SyntaxError: invalid imaginary literal",
+      "gen_sec": 10.97,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/4",
+      "entry_point": "mean_absolute_deviation",
+      "completion": "<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think of the function: 0.json_path: 0. The function: 0. The following the following the function: 0. The function: 0. The following the function: 0. The following imports: 0. The following imports: 0. The following imports between the imports between the imports between the imports between the imports between the imports between the imports between the imports between the imports between imports of the imports between the imports of the imports of the imports of the imports",
+      "passed": false,
+      "reason": "SyntaxError: invalid imaginary literal",
+      "gen_sec": 10.46,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/5",
+      "entry_point": "intersperse",
+      "completion": "<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>think>think>think>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 13.04,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/6",
+      "entry_point": "parse_nested_parens",
+      "completion": "</think>\n<think>\n<think>\n<think>\n<think>\n<think>\n</think>\nYou are the following the following the following the following the following the following the following the following the following the following the following the following the following the following the following the following the following the following the following the following the following the following imports:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 12.9,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/7",
+      "entry_point": "filter_by_substring",
+      "completion": "<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n</think>\n<think>\n<think>\n<think>think>\n<think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\n</think>\nthink>\n</think>\n</think>\n</think>\nthink>\nthink>\nthink",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 12.34,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/8",
+      "entry_point": "sum_product",
+      "completion": "<think> 0250250202502502502502502502502020250250202020202020202020202000000000000000000000000000000000000000000000000000000000000000",
+      "passed": false,
+      "reason": "SyntaxError: leading zeros in decimal integer literals are not permitted; use an 0o prefix for octal integers",
+      "gen_sec": 15.49,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/9",
+      "entry_point": "rolling_max",
+      "completion": "<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>\n<think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>think>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\nthink>\n",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 10.73,
+      "gen_error": null
+    }
+  ]
+}

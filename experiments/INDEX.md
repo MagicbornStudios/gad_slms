@@ -18,3 +18,19 @@
 | more_epochs EVAL | 2026-05-05T08:58:02 |  |  |  |  |  |  | 0/30 (0.0%) | re-eval temp=0.0 device=cuda; previous 0/30 confirmed |
 | more_pairs EVAL | 2026-05-05T08:58:48 |  |  |  |  |  |  | 0/30 (0.0%) | first eval (was killed yesterday at 2/30 progress); temp=0.0 device=cuda, 46.5s |
 | dr_stein_baseline_temp0 EVAL | 2026-05-05T08:59:54 |  |  |  |  |  |  | 0/30 (0.0%) | re-eval of dr_stein.pt temp=0.0 device=cuda; previous 0/30 confirmed |
+| sft_model EVAL (humaneval) | 2026-05-05T09:59:58 |  |  |  |  |  |  | 0/10 (0.0%) | n=10 temp=0.0 device=auto |
+| sft_model EVAL (gsm8k) | 2026-05-05T10:18:02 |  |  |  |  |  |  | 0/50 (0.0%) | n=50 temp=0.0 device=auto |
+| reasoning_model EVAL (humaneval) | 2026-05-05T10:18:02 |  |  |  |  |  |  | 0/10 (0.0%) | n=10 temp=0.0 device=auto |
+| reasoning_model EVAL (gsm8k) | 2026-05-05T10:18:02 |  |  |  |  |  |  | 0/50 (0.0%) | n=50 temp=0.0 device=auto |
+| dr_stein EVAL (humaneval) | 2026-05-05T10:18:02 |  |  |  |  |  |  | 0/10 (0.0%) | n=10 temp=0.0 device=auto |
+| dr_stein EVAL (gsm8k) | 2026-05-05T10:18:02 |  |  |  |  |  |  | 0/50 (0.0%) | n=50 temp=0.0 device=auto |
+| baseline_repro EVAL (humaneval) | 2026-05-05T10:20:29 |  |  |  |  |  |  | 0/10 (0.0%) | n=10 temp=0.0 device=auto |
+| baseline_repro EVAL (gsm8k) | 2026-05-05T10:22:50 |  |  |  |  |  |  | 0/50 (0.0%) | n=50 temp=0.0 device=auto |
+| higher_lr EVAL (humaneval) | 2026-05-05T10:23:54 |  |  |  |  |  |  | 0/10 (0.0%) | n=10 temp=0.0 device=auto |
+| higher_lr EVAL (gsm8k) | 2026-05-05T10:26:43 |  |  |  |  |  |  | 0/50 (0.0%) | n=50 temp=0.0 device=auto |
+| lower_lr_longer EVAL (humaneval) | 2026-05-05T10:29:14 |  |  |  |  |  |  | 0/10 (0.0%) | n=10 temp=0.0 device=auto |
+| lower_lr_longer EVAL (gsm8k) | 2026-05-05T10:31:41 |  |  |  |  |  |  | 1/50 (2.0%) | n=50 temp=0.0 device=auto |
+| more_epochs EVAL (humaneval) | 2026-05-05T10:33:39 |  |  |  |  |  |  | 0/10 (0.0%) | n=10 temp=0.0 device=auto |
+| more_epochs EVAL (gsm8k) | 2026-05-05T10:34:55 |  |  |  |  |  |  | 1/50 (2.0%) | n=50 temp=0.0 device=auto |
+| more_pairs EVAL (humaneval) | 2026-05-05T10:37:06 |  |  |  |  |  |  | 0/10 (0.0%) | n=10 temp=0.0 device=auto |
+| more_pairs EVAL (gsm8k) | 2026-05-05T10:40:20 |  |  |  |  |  |  | 1/50 (2.0%) | n=50 temp=0.0 device=auto |

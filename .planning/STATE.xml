@@ -6,6 +6,7 @@
   <last-activity>2026-05-04</last-activity>
   <next-action>Fix memory leak in 3 training scripts (gc.collect + bfloat16), re-run Stage 2 reasoning training, run Stage 3 DPO to produce dr_stein.pt.</next-action>
   <state-log>
+    <entry agent="unknown" at="2026-05-05T15:42:09.222Z">Cross-benchmark baseline complete: 8 checkpoints x HumanEval(n=10)+GSM8K(n=50). All 0/0 honest (3 GSM8K 'hits' were string collision on '20'). Total matrix wall: ~30 min on GPU.</entry>
     <entry agent="unknown" at="2026-05-05T15:05:02.247Z">Phase 03: HumanEval/GSM8K harnesses wired (scripts/eval_humaneval.py, eval_gsm8k.py, eval_benchmark_matrix.py). Drafted 153-pair seed dataset data/gad_tool_pairs.jsonl. Replaced OpenCode plan with Claude-haiku-4-5 subagent teacher (scripts/distill_gad_pairs.py). Updated SL-T-03-04 + ROADMAP. Matrix running in background.</entry>
     <entry agent="unknown" at="2026-05-05T14:01:00.538Z">Eval pipeline fixed: GPU + EOS early-stop + greedy temp=0.0. Re-ran all 5 sweep checkpoints + dr_stein.pt baseline; all 0/30 - prior 1/30 results were sampling noise. more_pairs eval now completes in 46.5s (was killed at 2/30 yesterday)</entry>
     <entry agent="unknown" at="2026-05-05T13:19:21.338Z">Resumed session 2026-05-05: reviewing where we left off in SLM training/benchmarking</entry>

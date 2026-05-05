@@ -166,6 +166,40 @@ Replaced the OpenCode-teacher plan with a Claude-subagent teacher:
 - Phase 03 task `SL-T-03-04` and `.planning/ROADMAP.xml` updated to
   reflect the OpenCode-out / Claude-subagent-in change.
 
+## Update — 2026-05-05 cross-benchmark baseline
+
+Ran `scripts/eval_benchmark_matrix.py` across 8 checkpoints
+(HumanEval n=10, GSM8K n=50, temp=0.0, GPU). Results:
+
+| checkpoint | HumanEval (pass@1) | GSM8K (acc) |
+|---|---|---|
+| sft_model | 0/10 (0.0%) | 0/50 (0.0%) |
+| reasoning_model | 0/10 (0.0%) | 0/50 (0.0%) |
+| **dr_stein** | 0/10 (0.0%) | 0/50 (0.0%) |
+| baseline_repro | 0/10 (0.0%) | 0/50 (0.0%) |
+| higher_lr | 0/10 (0.0%) | 0/50 (0.0%) |
+| lower_lr_longer | 0/10 (0.0%) | 1/50 (2.0%) |
+| more_epochs | 0/10 (0.0%) | 1/50 (2.0%) |
+| more_pairs | 0/10 (0.0%) | 1/50 (2.0%) |
+
+**The 3 GSM8K "hits" are coincidental.** All three matched the same
+question (gold=20) by emitting a literal "20" rather than reasoning.
+Greedy decoding makes this deterministic, but it's still string
+collision, not solved math. The honest baseline is 0/everything.
+
+This is the **first cross-benchmark baseline ever recorded for these
+checkpoints** — prior runs had no HumanEval/GSM8K scores at all. The
+harnesses are now wired and reusable for any future Stage 2.5 / 3 /
+distilled checkpoint.
+
+Implications for Stage 2.5:
+- Expect HumanEval/GSM8K to stay at 0 even after GAD-tool fine-tuning;
+  the seed dataset (`data/gad_tool_pairs.jsonl`) is targeted at
+  GAD-CLI translation, not code or arithmetic.
+- The right success metric for Stage 2.5 is moving the GAD-tool eval
+  off 0/30 — code and math are downstream concerns that need
+  separate distillation tracks (HumanEval-style + math chain-of-thought).
+
 ## What's queued for next session
 
 1. **Re-eval `more_pairs`** with `--temperature 0.0 --max-new-tokens 30`

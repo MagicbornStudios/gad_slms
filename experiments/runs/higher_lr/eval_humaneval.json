@@ -1,0 +1,105 @@
+{
+  "benchmark": "humaneval",
+  "checkpoint": "experiments\\runs\\higher_lr\\checkpoint.pt",
+  "device": "cuda",
+  "temperature": 0.0,
+  "max_new_tokens": 128,
+  "n": 10,
+  "evaluated_at": "2026-05-05T10:23:53",
+  "elapsed_sec": 37.6,
+  "passed": 0,
+  "total": 10,
+  "pass_at_1": 0.0,
+  "results": [
+    {
+      "task_id": "HumanEval/0",
+      "entry_point": "has_close_elements",
+      "completion": "The single-responsibility principle.",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 2.65,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/1",
+      "entry_point": "separate_paren_groups",
+      "completion": "The single-responsibility principle.ts: 0 function(s). It follows the single-responsibility principle.",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 2.62,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/2",
+      "entry_point": "truncate_number",
+      "completion": "3.json: 0.json throws an ImportError, it throws an ImportError, it throws an ImportError, it follows the imports in the imported module is in the imported module is in the imported module has a syntax error\n3. A syntax error\nThe imported module has a syntax error\n3.ts: 0. A syntax error\n3. A syntax error\n3.ts: 0.ts.ts.ts.ts.ts:\n  0\n  0\n  0\n  0\n  0\n  0\n  1. It follows the imported module has the imported module has the imported module",
+      "passed": false,
+      "reason": "SyntaxError: invalid imaginary literal",
+      "gen_sec": 9.44,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/3",
+      "entry_point": "below_zero",
+      "completion": "The single-responsibility principle.",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 0.63,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/4",
+      "entry_point": "mean_absolute_deviation",
+      "completion": "The file: 0. It follows the single-responsibility principle. It follows the single-responsibility principle. It follows the single-responsibility principle. It follows the single-responsibility principle. It follows the single-responsibility principle.",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 4.56,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/5",
+      "entry_point": "intersperse",
+      "completion": "The single-responsibility file: 2. A circular import between modules found:\n  2. A circular import between modules\n  2. A circular import between modules\n  3. import between modules\n  2. Ensure `sys. import between modules between modules between modules between modules between modules\n  2. Ensure `sys. import between modules between modules\n  3. Ensure `sys. import between modules",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 6.92,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/6",
+      "entry_point": "parse_nested_parens",
+      "completion": "The single-responsibility principle.",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 0.81,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/7",
+      "entry_point": "filter_by_substring",
+      "completion": "The single-responsibility principle.ts:\n  0\n  File size: 16 characters\n  This is a focused, single-responsibility principle.ts:\n  0 function(s). It follows the single-responsibility principle.ts: 0 function(s). It follows the single-responsibility principle.ts` contains 0 function(s). It follows the single-responsibility principle.",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 7.22,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/8",
+      "entry_point": "sum_product",
+      "completion": "The single-responsibility principle.",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 0.63,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/9",
+      "entry_point": "rolling_max",
+      "completion": "The single-responsibility principle.",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 0.82,
+      "gen_error": null
+    }
+  ]
+}

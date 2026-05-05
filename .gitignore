@@ -7,8 +7,12 @@ __pycache__/
 *.py[cod]
 
 data/
-runs/
+/runs/
 /models/
+
+# Track experiment manifests + logs + eval JSON, but not the giant .pt
+experiments/runs/*/checkpoint.pt
+experiments/runs/*/checkpoint*.pt
 
 node_modules/
 .env

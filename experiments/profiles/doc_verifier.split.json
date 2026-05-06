@@ -1,0 +1,42 @@
+{
+  "schema_v": 1,
+  "ts": "2026-05-06T15:51:49.428612Z",
+  "sources": [
+    "C:\\Users\\benja\\Documents\\slm_learning\\data\\agent_corpus_gad-doc-verifier.bootstrapped.jsonl",
+    "C:\\Users\\benja\\Documents\\slm_learning\\data\\agent_corpus_gad-doc-verifier.bootstrapped.multiroot.jsonl"
+  ],
+  "raw_total": 738,
+  "deduped_total": 492,
+  "holdout_n": 50,
+  "train_n": 442,
+  "seed": 42,
+  "stratified_by": "output.status",
+  "label_balance_train": {
+    "refuted": 226,
+    "verified": 146,
+    "unknown": 70
+  },
+  "label_balance_holdout": {
+    "refuted": 25,
+    "verified": 17,
+    "unknown": 8
+  },
+  "claim_category_distribution_train": {
+    "file_path": 413,
+    "function": 15,
+    "command": 10,
+    "dependency": 4
+  },
+  "project_root_distribution_train": {
+    "slm-learning": 362,
+    "grime-time-site": 79,
+    "tweakcn": 1
+  },
+  "recommended_lora_rank": 4,
+  "recommended_lora_rank_reason": "small corpus \u2014 BitFit/IA\u00b3 first; rank=4 only if LoRA",
+  "evidence_tier": "T1",
+  "decision_refs": [
+    "slm-learning-051",
+    "slm-learning-071"
+  ]
+}

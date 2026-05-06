@@ -1,0 +1,288 @@
+{
+  "schema_v": 1,
+  "profiles": [
+    {
+      "path": "data\\agent_corpus_gad-doc-verifier.bootstrapped.jsonl",
+      "n_raw": 475,
+      "n_exact_dup": 474,
+      "n_near_dup_estimated": 0,
+      "near_dup_threshold": 0.85,
+      "effective_size": 1,
+      "duplication_rate": 0.998,
+      "instruction_length_chars": {
+        "min": 0,
+        "median": 0,
+        "p75": 0,
+        "p95": 0,
+        "max": 0,
+        "n": 0
+      },
+      "response_length_chars": {
+        "min": 0,
+        "median": 0,
+        "p75": 0,
+        "p95": 0,
+        "max": 0,
+        "n": 0
+      },
+      "project_distribution": {
+        "slm-learning": 475
+      },
+      "task_shape_distribution": {
+        "doc_verification": 475
+      },
+      "output_schema_distribution": {
+        "structured_dict": 475
+      },
+      "label_distribution": {
+        "refuted": 286,
+        "verified": 131,
+        "unknown": 58
+      },
+      "label_balance_warning": null,
+      "recommended_lora_rank": 4,
+      "recommended_lora_rank_reason": "small corpus \u2014 try BitFit/IA\u00b3 first; rank=4 if LoRA needed",
+      "decision_refs": [
+        "slm-learning-049",
+        "slm-learning-051",
+        "slm-learning-071"
+      ]
+    },
+    {
+      "path": "data\\agent_corpus_gad-doc-verifier.bootstrapped.multiroot.jsonl",
+      "n_raw": 263,
+      "n_exact_dup": 262,
+      "n_near_dup_estimated": 0,
+      "near_dup_threshold": 0.85,
+      "effective_size": 1,
+      "duplication_rate": 0.996,
+      "instruction_length_chars": {
+        "min": 0,
+        "median": 0,
+        "p75": 0,
+        "p95": 0,
+        "max": 0,
+        "n": 0
+      },
+      "response_length_chars": {
+        "min": 0,
+        "median": 0,
+        "p75": 0,
+        "p95": 0,
+        "max": 0,
+        "n": 0
+      },
+      "project_distribution": {
+        "slm-learning": 167,
+        "grime-time-site": 95,
+        "tweakcn": 1
+      },
+      "task_shape_distribution": {
+        "doc_verification": 263
+      },
+      "output_schema_distribution": {
+        "structured_dict": 263
+      },
+      "label_distribution": {
+        "verified": 123,
+        "refuted": 85,
+        "unknown": 55
+      },
+      "label_balance_warning": null,
+      "recommended_lora_rank": 4,
+      "recommended_lora_rank_reason": "small corpus \u2014 try BitFit/IA\u00b3 first; rank=4 if LoRA needed",
+      "decision_refs": [
+        "slm-learning-049",
+        "slm-learning-051",
+        "slm-learning-071"
+      ]
+    },
+    {
+      "path": "data\\gad_tool_pairs_v2.jsonl",
+      "n_raw": 783,
+      "n_exact_dup": 108,
+      "n_near_dup_estimated": 135,
+      "near_dup_threshold": 0.85,
+      "effective_size": 540,
+      "duplication_rate": 0.31,
+      "instruction_length_chars": {
+        "min": 4,
+        "median": 33,
+        "p75": 47,
+        "p95": 64,
+        "max": 90,
+        "n": 783
+      },
+      "response_length_chars": {
+        "min": 6,
+        "median": 35,
+        "p75": 48,
+        "p95": 67,
+        "max": 121,
+        "n": 783
+      },
+      "project_distribution": {
+        "<unknown>": 783
+      },
+      "task_shape_distribution": {
+        "cli_translation": 761,
+        "short_answer": 22
+      },
+      "output_schema_distribution": {
+        "single_line_cli": 761,
+        "single_line": 22
+      },
+      "label_distribution": null,
+      "label_balance_warning": null,
+      "recommended_lora_rank": 8,
+      "recommended_lora_rank_reason": "rank=8 sufficient at this scale; rank=16 only if underfit",
+      "decision_refs": [
+        "slm-learning-049",
+        "slm-learning-051",
+        "slm-learning-071"
+      ]
+    },
+    {
+      "path": "data\\tool_use_pairs.jsonl",
+      "n_raw": 789,
+      "n_exact_dup": 1,
+      "n_near_dup_estimated": 5,
+      "near_dup_threshold": 0.85,
+      "effective_size": 783,
+      "duplication_rate": 0.008,
+      "instruction_length_chars": {
+        "min": 180,
+        "median": 1858,
+        "p75": 1994,
+        "p95": 2148,
+        "max": 2308,
+        "n": 789
+      },
+      "response_length_chars": {
+        "min": 33,
+        "median": 280,
+        "p75": 737,
+        "p95": 3108,
+        "max": 6386,
+        "n": 789
+      },
+      "project_distribution": {
+        "<unknown>": 789
+      },
+      "task_shape_distribution": {
+        "tool_call_python_repr": 656,
+        "cli_translation": 92,
+        "math_word_problem": 41
+      },
+      "output_schema_distribution": {
+        "single_line": 789
+      },
+      "label_distribution": null,
+      "label_balance_warning": null,
+      "recommended_lora_rank": 8,
+      "recommended_lora_rank_reason": "rank=8 sufficient at this scale; rank=16 only if underfit",
+      "decision_refs": [
+        "slm-learning-049",
+        "slm-learning-051",
+        "slm-learning-071"
+      ]
+    },
+    {
+      "path": "data\\openmathinstruct_5k.jsonl",
+      "n_raw": 5000,
+      "n_exact_dup": 0,
+      "n_near_dup_estimated": 84,
+      "near_dup_threshold": 0.85,
+      "effective_size": 4916,
+      "duplication_rate": 0.017,
+      "instruction_length_chars": {
+        "min": 18,
+        "median": 178,
+        "p75": 264,
+        "p95": 446,
+        "max": 6445,
+        "n": 5000
+      },
+      "response_length_chars": {
+        "min": 190,
+        "median": 692,
+        "p75": 1056,
+        "p95": 1756,
+        "max": 2489,
+        "n": 5000
+      },
+      "project_distribution": {
+        "<unknown>": 5000
+      },
+      "task_shape_distribution": {
+        "long_form_reasoning": 2809,
+        "math_word_problem": 1648,
+        "other": 543
+      },
+      "output_schema_distribution": {
+        "multi_line": 4973,
+        "single_line": 27
+      },
+      "label_distribution": null,
+      "label_balance_warning": null,
+      "recommended_lora_rank": 16,
+      "recommended_lora_rank_reason": "rank=16 reasonable; rank=32 only if multi-task",
+      "decision_refs": [
+        "slm-learning-049",
+        "slm-learning-051",
+        "slm-learning-071"
+      ]
+    },
+    {
+      "path": "data\\multitask_combined.jsonl",
+      "n_raw": 6572,
+      "n_exact_dup": 109,
+      "n_near_dup_estimated": 235,
+      "near_dup_threshold": 0.85,
+      "effective_size": 6228,
+      "duplication_rate": 0.052,
+      "instruction_length_chars": {
+        "min": 4,
+        "median": 178,
+        "p75": 304,
+        "p95": 1912,
+        "max": 6445,
+        "n": 6572
+      },
+      "response_length_chars": {
+        "min": 6,
+        "median": 573,
+        "p75": 959,
+        "p95": 1759,
+        "max": 6386,
+        "n": 6572
+      },
+      "project_distribution": {
+        "<unknown>": 6572
+      },
+      "task_shape_distribution": {
+        "long_form_reasoning": 2809,
+        "math_word_problem": 1689,
+        "cli_translation": 853,
+        "tool_call_python_repr": 656,
+        "other": 543,
+        "short_answer": 22
+      },
+      "output_schema_distribution": {
+        "multi_line": 4973,
+        "single_line": 838,
+        "single_line_cli": 761
+      },
+      "label_distribution": null,
+      "label_balance_warning": null,
+      "recommended_lora_rank": 16,
+      "recommended_lora_rank_reason": "rank=16 reasonable; rank=32 only if multi-task",
+      "decision_refs": [
+        "slm-learning-049",
+        "slm-learning-051",
+        "slm-learning-071"
+      ]
+    }
+  ],
+  "n_corpora": 6
+}

@@ -1,0 +1,75 @@
+name: stage25_qwen15_doc_verifier_r8
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+adapter: lora
+compute_target: local-cuda-0
+notes: >
+  Doc-verifier specialist (SL-T-04-09) — first agent-as-SLM end-to-end.
+  Per ChatGPT priority directive 2026-05-06: rank=8 first, rank=16 only
+  if underfit. 442 training pairs (after dedup from 738 raw across two
+  bootstrap runs), 50 stratified hold-out. Label balance:
+  refuted 226 (51%) / verified 146 (33%) / unknown 70 (16%).
+
+  Output schema is JSON: {status, evidence, reason}. Trainer treats
+  the JSON as a single response string.
+
+  Per slm-learning-051: this run produces a CANDIDATE, not an
+  auto-merged adapter. Promotion requires Verifier+Critic verdict
+  + scripts/delta/promote_atomic.py operator stamp.
+
+lora:
+  r: 8
+  alpha: 16
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/eval/doc_verifier_train.reshaped.jsonl
+  # Doc paths + claims are short; JSON output is short. 384 covers
+  # 95th percentile comfortably.
+  max_length: 384
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are gad-doc-verifier. Verify the claim against the live
+    codebase and emit a JSON object with status (verified|refuted|
+    unknown), evidence (list of file:line citations), and a brief
+    reason. Output only the JSON object on one line.
+
+training:
+  # 3 epochs over 442 pairs at bs=4 grad_accum=4 (effective batch=16)
+  # = ~330 steps. ~15-20 min on a 1660 Ti.
+  epochs: 3
+  learning_rate: 2.0e-4
+  batch_size: 4
+  gradient_accumulation: 4
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: "no"
+  logging_steps: 25
+
+eval:
+  run_after_train: true
+  benchmarks:
+    # The "doc_verifier_holdout" benchmark is custom (see scripts/eval/
+    # eval_doc_verifier.py once built). For now, gad_tools acts as a
+    # smoke check — should NOT regress more than 5pp from base since
+    # this LoRA is task-specific.
+    - gad_tools
+  temperature: 0.0
+  max_new_tokens: 200
+
+hub:
+  publish: true
+  private: false

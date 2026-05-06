@@ -57,10 +57,15 @@
       "staging": [],
       "candidates": [
         {
-          "id": "queue/pending/doc-verifier-r16-2026-05-06.json",
-          "status": "queued",
+          "id": "scrubster/dr-stein-stage25-qwen15-doc-verifier-r16",
+          "status": "evaluated_not_promoted",
+          "evaluated_at": "2026-05-06T19:55:00Z",
           "policy": "auto-staging",
-          "notes": "Rank=16 retrain after r=8 underfit per slm-learning-089. ETA ~50min."
+          "scores": {"f1_macro": 0.720, "accuracy": 0.800, "json_validity_rate": 1.000, "verified_f1": 0.829, "refuted_f1": 0.870, "unknown_f1": 0.462},
+          "delta_vs_r8": {"f1_macro": "+0.187", "unknown_f1": "+0.462", "accuracy": "+0.06"},
+          "decision_ref": "slm-learning-090",
+          "notes": "Below 0.85 gate — not eligible for auto-staging. But +18.7pp F1 over r=8 + unlocked unknown class (0.000 -> 0.462). Operator may promote with explicit stamp + accepted threshold lower than 0.85, OR queue augmentation/r=32 retrain.",
+          "next_options": ["haiku synthetic augmentation per slm-learning-019", "r=32 retrain", "accept as best-effort floor + move on"]
         }
       ],
       "rejected": [

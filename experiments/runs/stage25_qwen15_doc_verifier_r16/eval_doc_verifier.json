@@ -1,0 +1,55 @@
+{
+  "schema_v": 1,
+  "benchmark": "doc_verifier",
+  "ts": "2026-05-06T20:16:22.335448+00:00",
+  "candidate": "experiments/runs/stage25_qwen15_doc_verifier_r16/adapter",
+  "base": "Qwen/Qwen2.5-1.5B-Instruct",
+  "holdout_path": "data\\eval\\doc_verifier_holdout.reshaped.jsonl",
+  "metrics": {
+    "n_holdout": 50,
+    "n_with_gold": 50,
+    "f1_macro": 0.72,
+    "accuracy": 0.8,
+    "json_validity_rate": 1.0,
+    "per_class_precision": {
+      "verified": 0.708,
+      "refuted": 0.952,
+      "unknown": 0.6
+    },
+    "per_class_recall": {
+      "verified": 1.0,
+      "refuted": 0.8,
+      "unknown": 0.375
+    },
+    "per_class_f1": {
+      "verified": 0.829,
+      "refuted": 0.87,
+      "unknown": 0.462
+    },
+    "confusion_matrix": {
+      "verified": {
+        "verified": 17
+      },
+      "refuted": {
+        "refuted": 20,
+        "unknown": 2,
+        "verified": 3
+      },
+      "unknown": {
+        "refuted": 1,
+        "verified": 4,
+        "unknown": 3
+      }
+    }
+  },
+  "evidence_tier": "T1",
+  "decision_refs": [
+    "slm-learning-051",
+    "slm-learning-071"
+  ],
+  "promotion_threshold": {
+    "f1_macro": 0.85,
+    "json_validity_rate": 0.9
+  },
+  "promotion_eligible": false
+}

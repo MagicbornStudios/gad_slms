@@ -30,6 +30,6 @@
   "notes": "Rank=16 retrain after r=8 F1=0.533 (failed 0.85 threshold). Per ChatGPT directive: rank=16 only if r=8 underfit. Hypothesis: more capacity lets the model learn the 'unknown' decision boundary (r=8 scored F1=0.000 on unknown class).",
   "claimed_by": "runner-20220-193456",
   "claimed_at": "2026-05-06T19:34:56.783267+00:00",
-  "completed_at": null,
-  "verdict_path": null
+  "completed_at": "2026-05-06T20:08:13.510997+00:00",
+  "verdict_path": "C:\\Users\\benja\\Documents\\slm_learning\\experiments\\queue\\evaluated\\doc-verifier-r16-2026-05-06.verdict.json"
 }

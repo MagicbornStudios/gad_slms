@@ -225,15 +225,28 @@ def extract_text(env: dict) -> str | None:
 
 
 def extract_tool_call(env: dict) -> dict | None:
-    """Extract a structured tool_call from an envelope, if present."""
+    """Extract a structured tool_call from an envelope, if present.
+
+    The producer uses two encodings for tool calls:
+      role=tool_call (919 envelopes in 2026-05-06 export)
+      role=meta + content.type=tool_call (60607 envelopes, gad-cli runtime)
+
+    Both shapes are surfaced as tool calls for SFT extraction.
+    """
     content = env.get("content")
     if not isinstance(content, dict):
         return None
     if env.get("role") == "tool_call":
         return content
+    if env.get("role") == "meta" and content.get("type") == "tool_call":
+        return content
     if content.get("type") == "tool_call":
         return content
     return None
+
+
+def is_tool_call_envelope(env: dict) -> bool:
+    return extract_tool_call(env) is not None
 
 
 def build_pairs_for_run(run_envelopes: list[dict]) -> dict[str, list[dict]]:
@@ -289,7 +302,8 @@ def build_pairs_for_run(run_envelopes: list[dict]) -> dict[str, list[dict]]:
             pending_reasoning = []
             continue
 
-        if role == "tool_call":
+        # role=tool_call OR role=meta with content.type=tool_call
+        if is_tool_call_envelope(env):
             tc = extract_tool_call(env)
             if tc is not None and last_context_summary:
                 pairs["tooluse"].append({

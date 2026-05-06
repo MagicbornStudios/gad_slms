@@ -167,6 +167,17 @@ def main():
         help="Actually run the fixture against each runtime (spends real money).",
     )
     parser.add_argument("--json", action="store_true", help="Emit JSON to stdout.")
+    parser.add_argument(
+        "--serving-mode",
+        choices=["own", "provider", "mixed"],
+        default="provider",
+        help="Where CLI is pointed: own (our vLLM endpoint), provider (native), or mixed.",
+    )
+    parser.add_argument(
+        "--served-model",
+        default=None,
+        help="Adapter/base behind the endpoint (e.g. scrubster/dr-stein-colab-cli).",
+    )
     args = parser.parse_args()
 
     fixture = FIXTURES[args.task_shape]
@@ -183,6 +194,8 @@ def main():
         "task_shape": args.task_shape,
         "fixture": fixture,
         "execute": args.execute,
+        "serving_mode": args.serving_mode,
+        "served_model": args.served_model,
         "rows": rows,
     }
 

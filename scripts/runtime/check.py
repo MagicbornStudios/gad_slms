@@ -27,19 +27,42 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 GAD_LOG_DIR = REPO_ROOT / ".planning" / ".gad-log"
 
-# (runtime_id, candidate-binaries, version-flag, auth-env-var-or-None)
+# (runtime_id, candidate-binaries, version-flag, provider_auth_envs, serving_modes)
+# serving_modes documents which endpoints the CLI can target. When the CLI is
+# pointed at OUR vLLM endpoint (serving_mode="own"), no provider auth is
+# required — the auth check is informational, not a health gate.
 RUNTIME_PROBES = [
-    ("claude-code", ["claude"], "--version", "ANTHROPIC_API_KEY"),
-    ("codex-cli", ["codex"], "--version", "OPENAI_API_KEY"),
-    ("gemini-cli", ["gemini"], "--version", "GEMINI_API_KEY"),
-    ("opencode", ["opencode"], "--version", None),
-    ("hf-jobs", ["hf"], "--version", "HF_TOKEN"),
+    ("claude-code", ["claude"], "--version", ["ANTHROPIC_API_KEY"], ["own", "provider"]),
+    ("codex-cli", ["codex"], "--version", ["OPENAI_API_KEY"], ["own", "provider"]),
+    ("gemini-cli", ["gemini"], "--version", ["GEMINI_API_KEY"], ["own", "provider"]),
+    ("opencode", ["opencode"], "--version", [], ["own", "provider"]),
+    ("hf-jobs", ["hf", "huggingface-cli"], "--version", ["HF_TOKEN", "HUGGING_FACE_HUB_TOKEN"], ["provider"]),
 ]
+
+
+def _which_extensionless(name):
+    """Windows-friendly PATH scan that accepts extensionless executables.
+
+    shutil.which on Windows requires a PATHEXT match. Tools installed by
+    pip/uv often land as bare-name shim scripts in .local/bin and never
+    pick up an extension. We scan PATH directories explicitly and accept
+    any of: name, name.exe, name.cmd, name.bat.
+    """
+    sep = os.pathsep
+    extensions = ["", ".exe", ".cmd", ".bat", ".ps1"]
+    for d in os.environ.get("PATH", "").split(sep):
+        if not d:
+            continue
+        for ext in extensions:
+            candidate = os.path.join(d, name + ext)
+            if os.path.isfile(candidate):
+                return candidate
+    return None
 
 
 def find_binary(candidates):
     for name in candidates:
-        path = shutil.which(name)
+        path = shutil.which(name) or _which_extensionless(name)
         if path:
             return path
     return None
@@ -88,39 +111,69 @@ def last_seen_for(runtime_id):
     return latest
 
 
-def probe_runtime(runtime_id, candidates, version_flag, auth_env):
+def python_module_health(runtime_id):
+    """For runtimes whose binary is optional (hf-jobs uses huggingface_hub
+    directly), check if the Python library is importable — that's a valid
+    health signal independent of the binary shim."""
+    if runtime_id == "hf-jobs":
+        try:
+            import huggingface_hub  # noqa: F401
+            return True, getattr(huggingface_hub, "__version__", "unknown")
+        except ImportError:
+            return False, None
+    return None, None
+
+
+def probe_runtime(runtime_id, candidates, version_flag, provider_auth_envs, serving_modes):
     binary = find_binary(candidates)
-    errors = []
-    auth_ok = None
-    if auth_env:
-        auth_ok = bool(os.environ.get(auth_env))
-        if not auth_ok:
-            errors.append(f"missing env: {auth_env}")
+    notes = []
+    # Provider auth is OPTIONAL when the CLI is pointed at our own vLLM
+    # endpoint (serving_mode="own"). We probe env vars informationally;
+    # missing provider creds do not flag the runtime as unhealthy.
+    provider_auth_ok = None
+    if provider_auth_envs:
+        provider_auth_ok = any(os.environ.get(e) for e in provider_auth_envs)
+        if not provider_auth_ok:
+            notes.append(
+                f"no provider auth env ({'/'.join(provider_auth_envs)}); "
+                f"OK if running in own-endpoint mode"
+            )
     if binary is None:
         return {
             "runtime_id": runtime_id,
             "status": "missing",
             "binary": None,
             "version": None,
-            "auth_ok": auth_ok,
+            "provider_auth_ok": provider_auth_ok,
+            "serving_modes": serving_modes,
             "last_seen": last_seen_for(runtime_id),
             "cooldown_s": 0,
-            "errors": errors + ["binary not on PATH"],
+            "notes": notes + ["binary not on PATH"],
         }
     version = get_version(binary, version_flag)
     status = "ok"
     if version is None or (isinstance(version, str) and version.startswith("error:")):
         status = "degraded"
-        errors.append(f"version probe: {version}")
+        notes.append(f"version probe: {version}")
+        # Some runtimes (hf-jobs) ship as Python entry scripts that Windows
+        # can't subprocess directly. Fall back to Python module import check.
+        py_ok, py_version = python_module_health(runtime_id)
+        if py_ok:
+            status = "ok"
+            version = f"python-module {py_version}"
+            notes.append(
+                "binary not invokable from subprocess; using Python module fallback"
+            )
     return {
         "runtime_id": runtime_id,
         "status": status,
         "binary": binary,
         "version": version,
-        "auth_ok": auth_ok,
+        "provider_auth_ok": provider_auth_ok,
+        "serving_modes": serving_modes,
         "last_seen": last_seen_for(runtime_id),
         "cooldown_s": 0,
-        "errors": errors,
+        "notes": notes,
     }
 
 
@@ -158,15 +211,19 @@ def main():
         return 0
 
     print(f"Runtime health @ {payload['generated_at']}")
-    print("-" * 80)
-    print(f"{'runtime':<14} {'status':<10} {'auth':<6} {'binary':<32} {'version':<20}")
-    print("-" * 80)
+    print("-" * 90)
+    print(f"{'runtime':<14} {'status':<10} {'modes':<14} {'prov_auth':<10} {'binary':<28} {'version':<14}")
+    print("-" * 90)
     for r in results:
-        auth_disp = "—" if r["auth_ok"] is None else ("yes" if r["auth_ok"] else "NO")
-        binary_disp = (r["binary"] or "-")[-32:]
-        version_disp = (r["version"] or "-")[:20]
+        if r["provider_auth_ok"] is None:
+            auth_disp = "n/a"
+        else:
+            auth_disp = "yes" if r["provider_auth_ok"] else "off"
+        modes_disp = "/".join(r["serving_modes"]) or "-"
+        binary_disp = (r["binary"] or "-")[-28:]
+        version_disp = (r["version"] or "-")[:14]
         print(
-            f"{r['runtime_id']:<14} {r['status']:<10} {auth_disp:<6} {binary_disp:<32} {version_disp:<20}"
+            f"{r['runtime_id']:<14} {r['status']:<10} {modes_disp:<14} {auth_disp:<10} {binary_disp:<28} {version_disp:<14}"
         )
     return 0
 

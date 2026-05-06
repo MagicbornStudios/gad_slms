@@ -1,0 +1,64 @@
+name: colab_qwen15_math_5k
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+adapter: lora
+compute_target: colab-a100
+notes: >
+  Math track at A100 scale: 5000 OpenMathInstruct-2 pairs (full slice we
+  pulled, vs the 2000 we attempted locally). bs=8 grad_accum=2 fits A100
+  40GB easily; on local 1660 Ti this would be 6+ hours, on A100 it's
+  ~5 min train + ~3 min eval. Tests whether the 1.5B base can learn
+  math reasoning at this data scale.
+
+  Decision slm-learning-016 + slm-learning-020 + 2026-05-05 pivot:
+  training moved off local 1660 Ti due to repeated OOMs/segfaults at
+  any seq_len > 256 with bs > 1. Inference + planning stay local.
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/openmathinstruct_5k.jsonl
+  max_length: 512
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are Dr. Stein. Solve the math problem step by step, showing your
+    reasoning, then state the final numeric answer on its own line.
+
+training:
+  epochs: 2
+  learning_rate: 2.0e-4
+  batch_size: 8
+  gradient_accumulation: 2
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: "no"
+  logging_steps: 25
+
+eval:
+  run_after_train: true
+  benchmarks:
+    - gsm8k
+    - humaneval
+    - gad_tools
+  temperature: 0.0
+  max_new_tokens: 400
+
+hub:
+  publish: true
+  private: false

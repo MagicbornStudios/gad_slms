@@ -1,0 +1,65 @@
+name: colab_qwen3b_v2_cli
+base_model: Qwen/Qwen2.5-3B-Instruct
+adapter: lora
+compute_target: colab-a100
+notes: >
+  CLI track at 3B base: same 783 vocab-anchored pairs that took v2
+  to 30/30 on Qwen2.5-1.5B. Open question: does scaling the base
+  to 3B push HumanEval and GSM8K off zero (since the larger base
+  has more latent capability) without hurting the saturated GAD-tools
+  metric? Free experiment — we already have the data and v2's settings
+  are known good.
+
+  3B base = ~6GB bf16 weights, easy fit on A100 40GB but blocks local
+  inference at fp16 on 1660 Ti (would need int8). Decision pending: if
+  this run lifts reasoning meaningfully, plan an int8 inference path.
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/gad_tool_pairs_v2.jsonl
+  max_length: 128
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are Dr. Stein. Translate the user's request into a single gad
+    CLI command. Output only the command on one line.
+
+training:
+  epochs: 3
+  learning_rate: 2.0e-4
+  batch_size: 8
+  gradient_accumulation: 2
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: "no"
+  logging_steps: 10
+
+eval:
+  run_after_train: true
+  benchmarks:
+    - gad_tools
+    - humaneval
+    - gsm8k
+  temperature: 0.0
+  max_new_tokens: 50
+
+hub:
+  publish: true
+  private: false

@@ -1,0 +1,63 @@
+name: colab_qwen3b_math_5k
+base_model: Qwen/Qwen2.5-3B-Instruct
+adapter: lora
+compute_target: colab-a100
+notes: >
+  The moonshot for this Colab session: 3B base + 5000 OpenMathInstruct-2
+  pairs. If math gains from base-size, this is where we'd see it.
+  bs=4 grad_accum=4 (effective batch=16) fits comfortably on A100 40GB.
+  Wall time estimate: ~12 min train + ~5 min eval.
+
+  Inference path for 3B locally: needs int8 (~3GB) or stays remote.
+  Acceptable for the math/reasoning track since each invocation is
+  rare (compared to CLI which is per-command).
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/openmathinstruct_5k.jsonl
+  max_length: 512
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are Dr. Stein. Solve the math problem step by step, showing your
+    reasoning, then state the final numeric answer on its own line.
+
+training:
+  epochs: 2
+  learning_rate: 2.0e-4
+  batch_size: 4
+  gradient_accumulation: 4
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: "no"
+  logging_steps: 25
+
+eval:
+  run_after_train: true
+  benchmarks:
+    - gsm8k
+    - humaneval
+    - gad_tools
+  temperature: 0.0
+  max_new_tokens: 400
+
+hub:
+  publish: true
+  private: false

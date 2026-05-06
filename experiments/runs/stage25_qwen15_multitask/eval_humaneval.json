@@ -1,0 +1,105 @@
+{
+  "benchmark": "humaneval",
+  "checkpoint": "experiments\\runs\\stage25_qwen15_multitask\\adapter",
+  "device": "cuda",
+  "temperature": 0.0,
+  "max_new_tokens": 128,
+  "n": 10,
+  "evaluated_at": "2026-05-06T13:11:14",
+  "elapsed_sec": 65.8,
+  "passed": 0,
+  "total": 10,
+  "pass_at_1": 0.0,
+  "results": [
+    {
+      "task_id": "HumanEval/0",
+      "entry_point": "has_close_elements",
+      "completion": "gad evolution scan --projectid slm-learning",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 6.4,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/1",
+      "entry_point": "separate_paren_groups",
+      "completion": "gad evolution scan --projectid slm-learning --source-directory src/slm_from_scratch/models/ -e claude",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 6.56,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/2",
+      "entry_point": "truncate_number",
+      "completion": "gad trace add --projectid slm-learning --title \"truncating real numbers\" --source \"<script>function truncate_number(number: float): float {   if (number >= 1 || number <= -1) return 0; // handle integers first   let integerPart = Math.floor(number);   let remainder = number - integerPart;   return remainder;} </script>\"",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 23.39,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/3",
+      "entry_point": "below_zero",
+      "completion": "gad evolution scan --projectid slm-learning",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 4.64,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/4",
+      "entry_point": "mean_absolute_deviation",
+      "completion": "gad commands list",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 1.97,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/5",
+      "entry_point": "intersperse",
+      "completion": "gad commands list",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 1.92,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/6",
+      "entry_point": "parse_nested_parens",
+      "completion": "gad evolution scan --projectid slm-learning --source-directory src/slm_from_scratch/models/dr_stein/ -e claude",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 10.27,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/7",
+      "entry_point": "filter_by_substring",
+      "completion": "gad commands --help",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 1.51,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/8",
+      "entry_point": "sum_product",
+      "completion": "gad commands list",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 1.45,
+      "gen_error": null
+    },
+    {
+      "task_id": "HumanEval/9",
+      "entry_point": "rolling_max",
+      "completion": "gad evolution scan --projectid slm-learning --output runs/eval/baseline_repro.log",
+      "passed": false,
+      "reason": "SyntaxError: invalid syntax",
+      "gen_sec": 5.7,
+      "gen_error": null
+    }
+  ]
+}

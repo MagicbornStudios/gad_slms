@@ -24,6 +24,9 @@ data/raw/*/events.duckdb
 # Track the INGEST_SUMMARY.json (provenance + counts) but not the pairs.
 data/processed/*/sft_*.jsonl
 data/processed/*/dpo_*.jsonl
+# Cohort outputs from scripts/build_cohorts.py — regenerable from
+# data/raw/<date>/. Track COHORTS.json (provenance) but not the per-cohort jsonl.
+data/cohorts/*/cohort-*.jsonl
 /runs/
 /models/
 !/models/REGISTRY.json

@@ -1,0 +1,297 @@
+{
+  "schema_v": 1,
+  "ts": "2026-05-06T18:09:09.989225+00:00",
+  "raw_dir": "data\\raw\\2026-05-06",
+  "raw_manifest_sha256": "3856a205dcf6be46bd04dd6d9790d7d81ab5504ead377a87ea90dc467e644f37",
+  "raw_row_count": 119819,
+  "envelopes_processed": 119819,
+  "envelopes_inferred": 119819,
+  "skipped_meta": 0,
+  "include_meta": false,
+  "training_eligible_floor": 1000,
+  "n_cohorts": 23,
+  "n_eligible": 2,
+  "cohorts": [
+    {
+      "project": "global",
+      "content_type": "planning",
+      "row_count": 117196,
+      "filename": "cohort-global-planning.jsonl",
+      "sha256": "a875248dcd24dd9c2e227a0d6f68922721b14b9d56f067b0ac5b3e58f8452534",
+      "eligible_for_training": true,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "gad-framework",
+      "content_type": "planning",
+      "row_count": 1838,
+      "filename": "cohort-gad-framework-planning.jsonl",
+      "sha256": "7ed448e96d3fe8ac4dc2c0a923ec69aef3a2c6103edf6c3b447a2adfe648996f",
+      "eligible_for_training": true,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "global",
+      "content_type": "code",
+      "row_count": 629,
+      "filename": "cohort-global-code.jsonl",
+      "sha256": "9dbb49ed48389b5381a4bab2412180c78c22c90bfe553588f03bcc3911ab2da6",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "get-anything-done",
+      "content_type": "planning",
+      "row_count": 60,
+      "filename": "cohort-get-anything-done-planning.jsonl",
+      "sha256": "473224b541a6aa135e6e2bf7df78e6ea914e91f1e064f17ce9618355ab85635d",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "llm-from-scratch",
+      "content_type": "planning",
+      "row_count": 24,
+      "filename": "cohort-llm-from-scratch-planning.jsonl",
+      "sha256": "6b80fd86fa7550b8f31baf18c9e65f41083b36c6d13f8c02cabdfecfb9417463",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "slm-learning",
+      "content_type": "planning",
+      "row_count": 19,
+      "filename": "cohort-slm-learning-planning.jsonl",
+      "sha256": "ed45f93668cabaa57c5620f0403cada2f42add3367f4218fdef81fdec786ffd7",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "7greens",
+      "content_type": "planning",
+      "row_count": 11,
+      "filename": "cohort-7greens-planning.jsonl",
+      "sha256": "4d157e3e640b98b06a23f372140dda503426695bdadfa89041ba3b766372bb73",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "grime-time",
+      "content_type": "planning",
+      "row_count": 8,
+      "filename": "cohort-grime-time-planning.jsonl",
+      "sha256": "a8deaf8272bade1b599351169de56fc607dbe448ccc9654c9ea03f49a9e87857",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "mb-cli-framework",
+      "content_type": "planning",
+      "row_count": 6,
+      "filename": "cohort-mb-cli-framework-planning.jsonl",
+      "sha256": "d8d60332edc8180c1dfc9a2488f8a94a82c99f18810d42695d41f5c1ef616b12",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "app-forge",
+      "content_type": "planning",
+      "row_count": 4,
+      "filename": "cohort-app-forge-planning.jsonl",
+      "sha256": "bd74f4993a286e4c13dc45df0dfedaeec07c8ecf8b4b5c35c565443d8e28a5d5",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "magicborn",
+      "content_type": "planning",
+      "row_count": 3,
+      "filename": "cohort-magicborn-planning.jsonl",
+      "sha256": "30587473c3a6f3fc0025f75265019fd1a5b78b94b82d788af828bd6a2b9b7aa4",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "global",
+      "content_type": "narrative",
+      "row_count": 3,
+      "filename": "cohort-global-narrative.jsonl",
+      "sha256": "b45ca47d46d9b2b873edeb047127a3f028186660a83917cbb4b225580e2dc0cc",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "slm_learning",
+      "content_type": "planning",
+      "row_count": 3,
+      "filename": "cohort-slm_learning-planning.jsonl",
+      "sha256": "bbc7e284061dd24f7df9e5d9306cf347997f806aa31251745ca8a6009b9f9355",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "gad-opencode-smoke-manual",
+      "content_type": "planning",
+      "row_count": 2,
+      "filename": "cohort-gad-opencode-smoke-manual-planning.jsonl",
+      "sha256": "f9063c51f67e97ee63b922da7ad281d8b47224a15222432b1484dd779b8aded3",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "unknown",
+      "content_type": "planning",
+      "row_count": 2,
+      "filename": "cohort-unknown-planning.jsonl",
+      "sha256": "60e75d2e2a0a448d129a5ca839b82f475041540bcab840166a3bcb1f62e4c778",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "claw-cli",
+      "content_type": "planning",
+      "row_count": 2,
+      "filename": "cohort-claw-cli-planning.jsonl",
+      "sha256": "7839da4406f7937df687fe51f183e27e5d45030173cacc38da793058a818ee9f",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "project-editor",
+      "content_type": "planning",
+      "row_count": 2,
+      "filename": "cohort-project-editor-planning.jsonl",
+      "sha256": "d6e25266b7da0687f49a74ddb41fb234c66774b3368bc0619d541d4b734d4d76",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "magicborn-narrative",
+      "content_type": "planning",
+      "row_count": 2,
+      "filename": "cohort-magicborn-narrative-planning.jsonl",
+      "sha256": "f9cb0e23938fa45bb66567c162ad4f5d30f852c0cf00a0e5242f284f653622b7",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "global",
+      "content_type": "site",
+      "row_count": 1,
+      "filename": "cohort-global-site.jsonl",
+      "sha256": "1b060f8cab3a9467eb9bfc8040cb156f2d3cc054163ff090db1eb7d0e7e0da0f",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "sample",
+      "content_type": "planning",
+      "row_count": 1,
+      "filename": "cohort-sample-planning.jsonl",
+      "sha256": "44d80998d7037ad6ff32c6517c30f670de147619c625be53d2a5343bb88a50c8",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": ".",
+      "content_type": "planning",
+      "row_count": 1,
+      "filename": "cohort---planning.jsonl",
+      "sha256": "0798fce4833df9046ea83d43893b7688a64333540e24edf237a1685338698838",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "globa",
+      "content_type": "planning",
+      "row_count": 1,
+      "filename": "cohort-globa-planning.jsonl",
+      "sha256": "77d5693165054dccfdda61be2c3223a454fd7f0de6e417d8e7c89e13c97a9cdc",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    },
+    {
+      "project": "flag",
+      "content_type": "planning",
+      "row_count": 1,
+      "filename": "cohort-flag-planning.jsonl",
+      "sha256": "9c423ff35935397c86e4ee0f43b528ae074de073b522d6488a157b56df602360",
+      "eligible_for_training": false,
+      "decision_refs": [
+        "slm-learning-079",
+        "slm-learning-082"
+      ]
+    }
+  ],
+  "decision_refs": [
+    "slm-learning-079",
+    "slm-learning-082",
+    "slm-learning-086"
+  ]
+}

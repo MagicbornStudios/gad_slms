@@ -1,0 +1,134 @@
+{
+  "schema_v": 1,
+  "ts": "2026-05-06T18:11:01.847763+00:00",
+  "n_models": 3,
+  "n_benchmarks": 5,
+  "rows": [
+    {
+      "model_id": "bare-qwen2.5-1.5b-instruct",
+      "benchmark": "doc_verifier",
+      "n": 50,
+      "score": null,
+      "status": "dry_run",
+      "endpoint": "http://127.0.0.1:8000/v1/chat/completions"
+    },
+    {
+      "model_id": "bare-qwen2.5-1.5b-instruct",
+      "benchmark": "gad_tools_v2",
+      "n": 30,
+      "score": null,
+      "status": "dry_run",
+      "endpoint": "http://127.0.0.1:8000/v1/chat/completions"
+    },
+    {
+      "model_id": "bare-qwen2.5-1.5b-instruct",
+      "benchmark": "gsm8k",
+      "n": 0,
+      "score": null,
+      "status": "no_cases_loadable",
+      "reason": "benchmark gsm8k has no loader in run_comparative_matrix.load_benchmark_cases (yet)"
+    },
+    {
+      "model_id": "bare-qwen2.5-1.5b-instruct",
+      "benchmark": "humaneval",
+      "n": 0,
+      "score": null,
+      "status": "no_cases_loadable",
+      "reason": "benchmark humaneval has no loader in run_comparative_matrix.load_benchmark_cases (yet)"
+    },
+    {
+      "model_id": "bare-qwen2.5-1.5b-instruct",
+      "benchmark": "swebench_v1",
+      "n": 0,
+      "score": null,
+      "status": "no_cases_loadable",
+      "reason": "benchmark swebench_v1 has no loader in run_comparative_matrix.load_benchmark_cases (yet)"
+    },
+    {
+      "model_id": "scrubster/dr-stein-stage25-qwen15-instruct-v2",
+      "benchmark": "doc_verifier",
+      "n": 50,
+      "score": null,
+      "status": "dry_run",
+      "endpoint": "http://127.0.0.1:8000/v1/chat/completions"
+    },
+    {
+      "model_id": "scrubster/dr-stein-stage25-qwen15-instruct-v2",
+      "benchmark": "gad_tools_v2",
+      "n": 30,
+      "score": null,
+      "status": "dry_run",
+      "endpoint": "http://127.0.0.1:8000/v1/chat/completions"
+    },
+    {
+      "model_id": "scrubster/dr-stein-stage25-qwen15-instruct-v2",
+      "benchmark": "gsm8k",
+      "n": 0,
+      "score": null,
+      "status": "no_cases_loadable",
+      "reason": "benchmark gsm8k has no loader in run_comparative_matrix.load_benchmark_cases (yet)"
+    },
+    {
+      "model_id": "scrubster/dr-stein-stage25-qwen15-instruct-v2",
+      "benchmark": "humaneval",
+      "n": 0,
+      "score": null,
+      "status": "no_cases_loadable",
+      "reason": "benchmark humaneval has no loader in run_comparative_matrix.load_benchmark_cases (yet)"
+    },
+    {
+      "model_id": "scrubster/dr-stein-stage25-qwen15-instruct-v2",
+      "benchmark": "swebench_v1",
+      "n": 0,
+      "score": null,
+      "status": "no_cases_loadable",
+      "reason": "benchmark swebench_v1 has no loader in run_comparative_matrix.load_benchmark_cases (yet)"
+    },
+    {
+      "model_id": "scrubster/dr-stein-colab-qwen15-math-5k",
+      "benchmark": "doc_verifier",
+      "n": 50,
+      "score": null,
+      "status": "dry_run",
+      "endpoint": "http://127.0.0.1:8000/v1/chat/completions"
+    },
+    {
+      "model_id": "scrubster/dr-stein-colab-qwen15-math-5k",
+      "benchmark": "gad_tools_v2",
+      "n": 30,
+      "score": null,
+      "status": "dry_run",
+      "endpoint": "http://127.0.0.1:8000/v1/chat/completions"
+    },
+    {
+      "model_id": "scrubster/dr-stein-colab-qwen15-math-5k",
+      "benchmark": "gsm8k",
+      "n": 0,
+      "score": null,
+      "status": "no_cases_loadable",
+      "reason": "benchmark gsm8k has no loader in run_comparative_matrix.load_benchmark_cases (yet)"
+    },
+    {
+      "model_id": "scrubster/dr-stein-colab-qwen15-math-5k",
+      "benchmark": "humaneval",
+      "n": 0,
+      "score": null,
+      "status": "no_cases_loadable",
+      "reason": "benchmark humaneval has no loader in run_comparative_matrix.load_benchmark_cases (yet)"
+    },
+    {
+      "model_id": "scrubster/dr-stein-colab-qwen15-math-5k",
+      "benchmark": "swebench_v1",
+      "n": 0,
+      "score": null,
+      "status": "no_cases_loadable",
+      "reason": "benchmark swebench_v1 has no loader in run_comparative_matrix.load_benchmark_cases (yet)"
+    }
+  ],
+  "decision_refs": [
+    "slm-learning-053",
+    "slm-learning-070",
+    "slm-learning-071",
+    "slm-learning-085"
+  ]
+}

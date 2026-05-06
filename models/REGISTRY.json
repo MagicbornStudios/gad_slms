@@ -34,17 +34,23 @@
     "multitask_generalist": {
       "canonical": null,
       "staging": [],
-      "candidates": [
+      "candidates": [],
+      "rejected": [
         {
           "id": "experiments/runs/stage25_qwen15_multitask",
-          "status": "training",
-          "started_at": "2026-05-06T04:29:00Z",
-          "expected_eval_at": "~2026-05-06T18:00:00Z",
-          "policy": "manual",
-          "notes": "Hypothesis-testing run per SL-T-04-03 + slm-learning-049. Risk: catastrophic forgetting per slm-learning-024/026."
+          "rejected_at": "2026-05-06T13:11:14Z",
+          "rejection_reason": "Catastrophic forgetting confirmed per slm-learning-088. GAD-tools 25/30 (-17pp vs v2 specialist's 30/30). GSM8K 5/50 (-40pp vs math specialist's 25/50). HumanEval 0/10 unchanged (gap G8). Hypothesis from SL-T-04-03 falsified at rank=16 + 6572 combined pairs.",
+          "interred_as": "zoo",
+          "scores": {"gad_tools": "25/30 (83%)", "gsm8k": "5/50 (10%)", "humaneval": "0/10 (0%)"},
+          "decision_ref": "slm-learning-088",
+          "useful_for": "negative-tier training data per slm-learning-073; SERA-style failure trajectory; counter-example for promotion gate"
         }
       ],
-      "rejected": []
+      "next_experiments": [
+        "SL-T-04-02: stacking via PEFT multi-adapter (load v2 + math + tooluse simultaneously, route per call)",
+        "slm-learning-049: TIES / DARE-TIES merge of the 3 specialists into a single adapter",
+        "slm-learning-079: per-domain specialist ladder with router (the long-term answer)"
+      ]
     },
     "doc_verifier": {
       "canonical": null,

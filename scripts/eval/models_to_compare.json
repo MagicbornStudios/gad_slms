@@ -1,0 +1,70 @@
+[
+  {
+    "model_id": "bare-qwen2.5-1.5b-instruct",
+    "kind": "local",
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "served_name": "Qwen/Qwen2.5-1.5B-Instruct",
+    "cost_usd_per_1k_tokens_out": 0.0,
+    "tier": "Tier 0 local",
+    "notes": "Bare base — no adapter; the floor every specialist must beat."
+  },
+  {
+    "model_id": "scrubster/dr-stein-stage25-qwen15-instruct-v2",
+    "kind": "local",
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "served_name": "adapter",
+    "cost_usd_per_1k_tokens_out": 0.0,
+    "tier": "Tier 0 local",
+    "notes": "CLI translator canonical (30/30 GAD-tools)"
+  },
+  {
+    "model_id": "scrubster/dr-stein-colab-qwen15-math-5k",
+    "kind": "local",
+    "endpoint": "http://127.0.0.1:8000/v1/chat/completions",
+    "served_name": "adapter",
+    "cost_usd_per_1k_tokens_out": 0.0,
+    "tier": "Tier 0 local",
+    "notes": "Math reasoner canonical (25/50 GSM8K)"
+  },
+  {
+    "model_id": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "kind": "remote-openai-compat",
+    "endpoint_env": "GAD_REMOTE_ENDPOINT",
+    "served_name_env": "GAD_REMOTE_MODEL",
+    "cost_usd_per_1k_tokens_out": 0.001,
+    "tier": "Tier 1 remote",
+    "notes": "Phase 04 SL-T-04-06 target; needs HF Inference Endpoint or vLLM remote."
+  },
+  {
+    "model_id": "claude-opus-4-7",
+    "kind": "frontier-anthropic",
+    "cost_usd_per_1k_tokens_out": 0.075,
+    "tier": "frontier",
+    "notes": "Anthropic Claude Opus 4.7 — frontier reasoning baseline."
+  },
+  {
+    "model_id": "claude-sonnet-4-6",
+    "kind": "frontier-anthropic",
+    "cost_usd_per_1k_tokens_out": 0.015,
+    "tier": "frontier"
+  },
+  {
+    "model_id": "claude-haiku-4-5",
+    "kind": "frontier-anthropic",
+    "cost_usd_per_1k_tokens_out": 0.005,
+    "tier": "frontier",
+    "notes": "Already our distillation teacher per slm-learning-019."
+  },
+  {
+    "model_id": "gpt-5",
+    "kind": "frontier-openai",
+    "cost_usd_per_1k_tokens_out": 0.015,
+    "tier": "frontier"
+  },
+  {
+    "model_id": "gemini-2.0-pro",
+    "kind": "frontier-google",
+    "cost_usd_per_1k_tokens_out": 0.0125,
+    "tier": "frontier"
+  }
+]

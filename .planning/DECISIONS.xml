@@ -442,4 +442,44 @@
     <summary>All capability claims must name task shape, baseline, sample count, cost, latency, eval score, and evidence tier. Evidence tiers: T1 single-run anecdote, T2 multi-run with baseline, T3 versus published baseline at scale, T4 reproduced by external party. Broad replace-Opus claims are rejected. Bounded 'Opus-comparable artifact quality under GAD orchestration on shape X' remains an active hypothesis evaluated at T2+. Resolves the hype-correction without killing the ambition. Per common-dream: evidence over self-flattery.</summary>
   </decision>
 
+  <decision id="slm-learning-072">
+    <title>Adopt codebase attention map as first-class GAD artifact</title>
+    <summary>Per-file attention score + lane (free/prototype/dev/integration/production/hotfix) inferred from production-path / dependency-centrality / recent-failure / active-phase / security-sensitivity / coverage / churn signals minus tmp/skeleton/museum discounts. Output at .gad/attention/codebase-attention.json. Snapshot integration via 'gad snapshot --attention'. Rule-based v1 first; learned classifier (1660 Ti SLM target) is Phase 05's first SLM after doc-verifier. Concern at .planning/concerns/codebase-attention.md. No manual prod-mode flag — environment lane inferred automatically.</summary>
+  </decision>
+
+  <decision id="slm-learning-073">
+    <title>Repository memory adopted as a research line</title>
+    <summary>Microsoft repository-memory + SERA repo-specialized trajectories adapted to GAD's richer artifact set (repository memory + project memory + agent memory + evolution memory). Memory entities: file/module/task/phase/decision/commit/branch/skeleton/agent/skill/runtime/model/eval/failure with edges. Implementation phases A-G: A=index, B=retrieval API, C=snapshot integration, D=trajectory generation (SERA), E=soft verification, F=repo-specialized model train, G=A/B/C eval vs bare frontier. Concern at .planning/concerns/repository-memory.md. Risk register includes memory bloat, staleness, secret leakage, reproducibility. Owned by Dr. Stein + Archivist.</summary>
+  </decision>
+
+  <decision id="slm-learning-074">
+    <title>Research paper as project output goal</title>
+    <summary>Formal publishable papers are an explicit project deliverable. Realistic first paper target (2-3 months out): 'Repository-specialized SLMs with continuous candidate-only delta training: evidence from a 1660 Ti lab.' Extends Microsoft repo-memory + SERA with the GAD soul-system + skeleton + council pattern. Conference targets: NeurIPS workshops, EMNLP industry track, MLSys, OpenReview as tech report. Per slm-learning-070/071, claim must be evidence-tier T2+ and bounded ('X% of cost on bounded shape Y') NOT 'replaces frontier'. Empirical results we have today (v2 30/30 GAD-tools, math 25/50 GSM8K, tooluse converged) are data not a paper — paper needs novel claim + rigorous baseline + reproducibility.</summary>
+  </decision>
+
+  <decision id="slm-learning-075">
+    <title>Kael soul: light always-running personal-assistant agent (Jarvis-style)</title>
+    <summary>Kael is a council soul under common-dream — light voice-first computer-use agent. Surface: Bandlab/Suno/Reddit/social/blog drafts (never auto-publish), content scheduling, personal systems, GAD CLI front-end, cross-soul handoff routing. Real-time STT (Vosk/Whisper streaming) + TTS (Piper/Bark/Coqui, distinct voice from Dr. Stein + Gilgamesh). Base: Qwen2.5-1.5B-Instruct or 3B-Instruct via local vLLM. Strict prohibitions: never auto-publish to outside world, never make purchases, never impersonate operator, never auto-promote model (slm-learning-051). Soul at narrative/souls/kael.md. MVP 1 week, polished 1+ month.</summary>
+  </decision>
+
+  <decision id="slm-learning-076">
+    <title>Voice interface for souls (real-time STT/TTS)</title>
+    <summary>Each council soul gets a distinct voice. STT: Vosk (already in repo at scripts/learning_tui/local_speech.py) + Whisper streaming for higher quality. TTS: Piper (CPU-friendly, low-latency, recommended baseline), Bark (richer expression, slower), Coqui TTS (multi-speaker). Voice mapping: Kael=warm/helpful (Jarvis-like), Dr. Stein=deep/deliberate, Gilgamesh=declarative/leadership, Verifier+Critic=neutral analytic. Real-time pipeline = streaming STT + Voice Activity Detection + low-latency TTS. Implementation lives in scripts/voice/ when authored. MVP ~2-3 days.</summary>
+  </decision>
+
+  <decision id="slm-learning-077">
+    <title>Music model line — open-source-base, NOT Suno-replacement claim</title>
+    <summary>Music generation as a creative content domain. Honest scope per slm-learning-070/071: we will NOT claim to match Suno.ai sound quality. Suno's V3.5 is built on proprietary mixed-modal training at scale. Open-source ceiling today: ACE-Step, MusicGen (Meta), Stable Audio Open, Riffusion. Stems separation IS at SOTA via Demucs v4. Vocal cloning via RVC. Realistic deliverable: music generation pipeline using ACE-Step + MusicGen as bases, Demucs for stems, RVC for vocals, fine-tuning on operator-preference set so the model learns 'songs we like.' Useful for game soundtracks + marketing content, NOT a Suno-replacement product. Phase 12 candidate, not near-term.</summary>
+  </decision>
+
+  <decision id="slm-learning-078">
+    <title>Narrative + Magicborn structured game data line</title>
+    <summary>Narrative agent specialists for screenplays, scenes, books, in-world documents, and structured Magicborn world data (JSON-schema-validated). Generation as DATA over time — accumulate quality via operator preference + rubric eval. Realistic path: Qwen2.5-7B-Instruct + LoRA on existing narrative corpus (~1 week MVP). Magicborn world structured data: JSON schema + generator with validator. Connects to use-case lock per slm-learning-054. Phase 11 candidate. The structured-data subsystem is interesting because it generates training pairs cheaply at any scale we want — directly applicable to repo-memory + per-domain training (slm-learning-073).</summary>
+  </decision>
+
+  <decision id="slm-learning-079">
+    <title>Per-domain specialist ladder (project-tagged training)</title>
+    <summary>Each GAD project field in the telemetry schema becomes a candidate cohort for a specialist LoRA. Initial ladder: dr-stein-cli-translator (gad CLI shape), dr-stein-doc-verifier (claim verification), dr-stein-router (runtime selection), dr-stein-narrative (magicborn-narrative project), dr-stein-frontend (grime-time/7greens/site projects), dr-stein-game-tooling (grime-time code). Each is a separate LoRA on the same Qwen2.5 base. Stacked at inference per slm-learning-049 (TIES/DARE) OR routed-to-one per slm-learning-036 (two-tier routing). Phase 148 (multi-domain LoRA registry) per global Claude's plan would own the registry; slm-learning owns trainer + eval. Cohort filtering uses envelope project field + derived content_type from task_id/handoff_id/file paths.</summary>
+  </decision>
+
 </decisions>

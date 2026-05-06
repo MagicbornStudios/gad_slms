@@ -12,6 +12,18 @@ data/distilled_pairs.jsonl
 # Combined / derived training corpora — regeneratable from sources.
 data/multitask_combined.jsonl
 data/*_combined.jsonl
+# Raw telemetry exports from gad telemetry export (cross-instance bridge).
+# The events.jsonl is bulky (90MB+) and re-fetchable from producer; the
+# MANIFEST.json carries the sha256 + provenance and IS tracked.
+data/raw/*/events.jsonl
+data/raw/*/events.parquet
+data/raw/*/events.duckdb
+# Processed SFT corpora derived from raw telemetry — REGENERATABLE from
+# scripts/ingest_gad_telemetry.py. Excluded from git because the source
+# telemetry can contain real session content (OAuth tokens, secrets, etc).
+# Track the INGEST_SUMMARY.json (provenance + counts) but not the pairs.
+data/processed/*/sft_*.jsonl
+data/processed/*/dpo_*.jsonl
 /runs/
 /models/
 

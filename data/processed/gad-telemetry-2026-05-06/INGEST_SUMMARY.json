@@ -1,0 +1,34 @@
+{
+  "ingest_run_id": "gad-telemetry-2026-05-06",
+  "raw_dir": "data\\raw\\2026-05-06",
+  "manifest_sha256": "3856a205dcf6be46bd04dd6d9790d7d81ab5504ead377a87ea90dc467e644f37",
+  "manifest_row_count": 119819,
+  "manifest_role_histogram": {
+    "meta": 60607,
+    "tool_call": 919,
+    "tool_result": 919,
+    "reasoning": 52717,
+    "response": 3497,
+    "prompt": 1160
+  },
+  "envelopes_read": 119819,
+  "by_role": {
+    "meta": 60607,
+    "tool_call": 919,
+    "tool_result": 919,
+    "prompt": 1160,
+    "reasoning": 52717,
+    "response": 3497
+  },
+  "runs_seen": 52,
+  "pairs_basic": 3446,
+  "pairs_reasoned": 307,
+  "pairs_tooluse": 916,
+  "sha_verified": true,
+  "schema_v": 1,
+  "output_files": [
+    "data\\processed\\gad-telemetry-2026-05-06\\sft_basic.jsonl",
+    "data\\processed\\gad-telemetry-2026-05-06\\sft_reasoned.jsonl",
+    "data\\processed\\gad-telemetry-2026-05-06\\sft_tooluse.jsonl"
+  ]
+}

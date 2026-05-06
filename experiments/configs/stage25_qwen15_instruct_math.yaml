@@ -35,7 +35,11 @@ lora:
 data:
   source: jsonl_pairs
   path: data/openmathinstruct_2k.jsonl
-  max_length: 1024
+  # 1024 was too slow on Turing — attention is O(seq_len²), so each step
+  # took 44s vs the v2 run's 7s. 512 covers the median solution (~290
+  # tokens with chat template) and 75th percentile while running ~4x
+  # faster. About 5-10% of pairs get truncated; acceptable first-pass.
+  max_length: 512
   instruction_field: instruction
   response_field: command
   system_prompt: >-
@@ -45,8 +49,12 @@ data:
 training:
   epochs: 2
   learning_rate: 2.0e-4
-  batch_size: 2
-  gradient_accumulation: 8
+  # bs=2 OOMed at both max_length=1024 AND 512 — the 1.5B base + Adam
+  # state for LoRA params + grad-accum buffers don't leave 6GB room for
+  # bs=2 activations regardless of seq_len. bs=1 is the only safe path
+  # locally; on Colab T4 we can return to bs=2.
+  batch_size: 1
+  gradient_accumulation: 16
   warmup_ratio: 0.05
   weight_decay: 0.0
   bf16: true

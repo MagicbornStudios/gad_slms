@@ -222,4 +222,9 @@
     <summary>Empirical: fine-tuning a reasoning-distilled model (DeepSeek-R1-Distill-Qwen-1.5B) on terse single-line CLI commands DESTROYS its &lt;think&gt; reasoning structure. Tested at max_new_tokens=2048: distill adapter still produced 0/8 on HumanEval (killed at 8/10) with identical SyntaxError-on-unterminated-string pattern as the 128-token run. The model lost its ability to terminate &lt;think&gt; blocks coherently. Lesson: don't fine-tune a reasoning model on non-reasoning data — separate adapters for separate skills (slm-learning-024 confirmed). Math/code track now uses Qwen2.5-1.5B-Instruct (not the distill base) + OpenMathInstruct-2 data per slm-learning-012.</summary>
   </decision>
 
+  <decision id="slm-learning-028">
+    <title>Pivot all training to Colab Pro (A100).</title>
+    <summary>Pivot all training to Colab Pro (A100). Local 1660 Ti hit hard ceiling: bs=1 only feasible config for any 1.5B+ base, segfault-on-second-process pattern unfixable, 4.7h wall times kill iteration. Colab Pro at $10/mo gives A100 access (~10-15x faster), 24h runtimes, easy reconnect. notebooks/train_colab.ipynb is the entrypoint — user opens, attaches A100, runs all. Three first-batch configs in experiments/configs/colab/: qwen15_math_5k, qwen3b_v2_cli, qwen3b_math_5k. Adapters auto-publish to scrubster/dr-stein-*. Inference + planning stay local per project_compute_policy.md. Future RunPod pivot if longer runs needed (&gt;24h) or specific GPU.</summary>
+  </decision>
+
 </decisions>

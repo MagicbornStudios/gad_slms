@@ -37,8 +37,14 @@ echo "  ok"
 echo
 
 echo "==[ refresh data ]======================================================"
+# Wrapped in `set +e` because the `datasets` library + torch can crash on
+# interpreter shutdown (PyGILState_Release fatal) AFTER successfully writing
+# the file. We verify file existence + size after; that's the real success
+# signal, not Python's exit code.
+set +e
 python <<'PY'
 import json
+import os
 from pathlib import Path
 from datasets import load_dataset
 
@@ -62,7 +68,17 @@ else:
             if n >= 5000:
                 break
     print(f'  wrote {n} pairs')
+# os._exit(0) bypasses Python's atexit handlers (where the GIL crash happens)
+os._exit(0)
 PY
+set -e
+# Verify the file is actually present + non-trivial
+if [ ! -s data/openmathinstruct_5k.jsonl ] || [ "$(wc -l < data/openmathinstruct_5k.jsonl)" -lt 100 ]; then
+  echo "FATAL: math data file missing or too small after refresh step"
+  ls -la data/openmathinstruct_5k.jsonl 2>&1 || true
+  exit 1
+fi
+echo "  verified: $(wc -l < data/openmathinstruct_5k.jsonl) lines in math data file"
 echo
 
 echo "==[ run sweep ]========================================================="

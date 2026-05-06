@@ -227,4 +227,34 @@
     <summary>Pivot all training to Colab Pro (A100). Local 1660 Ti hit hard ceiling: bs=1 only feasible config for any 1.5B+ base, segfault-on-second-process pattern unfixable, 4.7h wall times kill iteration. Colab Pro at $10/mo gives A100 access (~10-15x faster), 24h runtimes, easy reconnect. notebooks/train_colab.ipynb is the entrypoint — user opens, attaches A100, runs all. Three first-batch configs in experiments/configs/colab/: qwen15_math_5k, qwen3b_v2_cli, qwen3b_math_5k. Adapters auto-publish to scrubster/dr-stein-*. Inference + planning stay local per project_compute_policy.md. Future RunPod pivot if longer runs needed (&gt;24h) or specific GPU.</summary>
   </decision>
 
+  <decision id="slm-learning-029">
+    <title>GAD-tools 30-case eval is SATURATED at the 1.5B+ level.</title>
+    <summary>GAD-tools 30-case eval is SATURATED at the 1.5B+ level. Empirical: Qwen2.5-1.5B+783 vocab pairs = 30/30 (v2). Qwen2.5-3B+same data = 30/30 (colab-qwen3b-v2-cli) in 213s training. Bigger base does NOT lift this metric because the metric ceiling is already met. To differentiate model capability above 30/30 we need: (a) harder eval set with edge cases and complex multi-flag commands, OR (b) eval on tasks beyond CLI translation (HumanEval, GSM8K, full coding agent tasks). Direct implication: stop scaling base size for the CLI track; further investments should target other tracks (math, code, tool-use) or eval expansion.</summary>
+  </decision>
+
+  <decision id="slm-learning-030">
+    <title>GAD competitive thesis (defensible claim): A GAD-orchestr...</title>
+    <summary>GAD competitive thesis (defensible claim): A GAD-orchestrated system with durable context, repo-specific memory, tools, tests, routing, eval pressure, and specialist SLMs can beat a bare frontier model on bounded workflows inside our ecosystem. We do NOT compete by trying to out-pretrain frontier — they have scale, RL, long-context training, and trillions of tokens we cannot match. We compete on leverage: domain specificity, durable state, tool harness, routing economics, ensemble verification. Validation: game-task A/B/C eval (bare Opus vs Opus+GAD vs Opus+GAD+specialists) on bounded tasks with unit-test scoring.</summary>
+  </decision>
+
+  <decision id="slm-learning-031">
+    <title>Router-first economic core.</title>
+    <summary>Router-first economic core. Architecture: input -&gt; cheap classical ML classifier (logistic/SVM/XGBoost on text features + repo metadata) -&gt; specialist SLM OR frontier runtime. Use classical ML for routing/triage/anomaly because it is cheap, deterministic, inspectable, fast. Use SLMs/LLMs for generation only. The router is the unlock that makes small specialists economically viable; without routing, specialists are dead weight. Cost target: router decision in &lt;1ms at zero GPU cost.</summary>
+  </decision>
+
+  <decision id="slm-learning-032">
+    <title>Model evolution ladder + bake-only-behind-promotion-gate.</title>
+    <summary>Model evolution ladder + bake-only-behind-promotion-gate. Sequence: specialist LoRA -&gt; stacked adapter experiment -&gt; multi-task LoRA -&gt; bake candidate -&gt; regression suite -&gt; promoted GAD base -&gt; new specialist layer on top. Bake (merge_and_unload) is PERMANENT and risks catastrophic forgetting; only allowed after passing 7-criterion promotion gate: (1) GAD CLI eval &gt;= prior, (2) tool-call JSON validity &gt;70%, (3) held-out trace prediction, (4) unit-test repair task pass rate, (5) game feature A/B/C eval, (6) regression against all prior skill specialists, (7) cost/latency measurement. Use PEFT TIES/DARE/SVD merging utilities for multi-LoRA merges (safer than naive sum).</summary>
+  </decision>
+
+  <decision id="slm-learning-033">
+    <title>Tracked techniques registry.</title>
+    <summary>Tracked techniques registry. Active in our experiment ladder: LoRA (cheap per-skill, current default), QLoRA (next: 7B-32B fine-tunes on limited cloud budget), DoRA (try when LoRA underfits — magnitude+direction decomposition), LoRA+ (separate LRs for A/B matrices, ~2x speedup), TIES/DARE (multi-LoRA merging), DPO/ORPO (preference training after SFT — ORPO is reference-model-free), execution-driven RL (long-term: unit tests as reward signal), speculative decoding (1.5B drafter + 7B verifier for inference latency), KV/prefix caching (reuse GAD context blocks across requests), classical ML (SVM/logistic/XGBoost for router/risk/eval-triage). Each technique has status: not-yet-tried / experimental / canonical / abandoned-because. Living registry in .planning/notes/2026-05-06-techniques-registry.md.</summary>
+  </decision>
+
+  <decision id="slm-learning-034">
+    <title>Tool-use Tier 1 model is the highest-leverage training ta...</title>
+    <summary>Tool-use Tier 1 model is the highest-leverage training target. Inputs: real Claude-Code-on-this-repo trace events (.planning/.trace-events.jsonl, 974 events, 4 sessions, secret-redacted). 780 (instruction, command) pairs extracted via scripts/extract_tool_use_pairs.py. Plan: (1) sanity-train Qwen2.5-1.5B-Instruct LoRA (currently running, job 69facbbeb745af80fb37395d), (2) if loss converges + tool-name accuracy &gt;50% on held-out, graduate to (3) Qwen2.5-Coder-7B + QLoRA on same data + supplemental traces. Why coder base: tool-use is fundamentally code-call shaped — repo state + intent -&gt; tool name + JSON args is a code-prediction task. Gate before 7B run: 1.5B sanity must pass.</summary>
+  </decision>
+
 </decisions>

@@ -1,4 +1,4 @@
-# Overnight handoff — 2026-05-06 04:30Z
+# Overnight handoff — 2026-05-06 04:30Z (refreshed 05:30Z)
 
 You went to sleep. I worked. Read this first when you wake up.
 
@@ -10,23 +10,38 @@ You went to sleep. I worked. Read this first when you wake up.
 | Soul system v1 (common-dream + Dr. Stein + Gilgamesh + Archivist) | `narrative/souls/` | done, pushed |
 | Council souls v2 (Verifier + Critic) | `narrative/souls/verifier.md`, `critic.md` | done, pushed |
 | Skeleton system + biology metaphor concerns | `.planning/concerns/` | scaffold done, policy pending implementation |
+| Phase 02 (Efficient Training Pipeline) closed | `.planning/ROADMAP.xml` | **closed** |
+| Phase 03 (Eval & Continual Improvement) closed | `.planning/ROADMAP.xml` | **closed** (7 done + 1 cancelled, 03-06 superseded by Phase 05) |
 | Phase 04 (Substrate + Routing) registered | `.planning/ROADMAP.xml` | in-progress |
 | Phase 05 (Continuous Local Delta Lab) registered + planned | `.planning/phases/PHASE-05*.md` | planned |
 | Phase 06 (SWE-bench Integration) registered + planned | `.planning/phases/PHASE-06*.md` | planned |
-| Phase 02 closed | `.planning/ROADMAP.xml` | closed |
-| Multi-task LoRA candidate training (6572 pairs, ~7hr) | `experiments/runs/stage25_qwen15_multitask/` + log `experiments/runs/.multitask-overnight.log` | running, background id `bqwt20z22` |
-| Doc-verifier corpus bootstrap | `data/agent_corpus_gad-doc-verifier.bootstrapped.jsonl` | running slowly, may not finish |
-| Cross-Claude bridge | `~/.gad/bridge/{inbox,outbox,archive}/` + outbound msg | established |
-| Substrate follow-up commit (probes + synth script) | commit `344c598` | done, pushed |
+| Multi-task LoRA candidate training (6572 pairs, ~7hr) | `experiments/runs/stage25_qwen15_multitask/` + log `.multitask-overnight.log` | running, background id `bqwt20z22` (~step 90/822 at 05:20Z, ETA ~7h) |
+| Doc-verifier corpus bootstrap (single-root) | `data/agent_corpus_gad-doc-verifier.bootstrapped.jsonl` | done, 82 pairs |
+| Doc-verifier corpus bootstrap (multi-root) | `data/agent_corpus_gad-doc-verifier.bootstrapped.multiroot.jsonl` | hung (probably node_modules recursion), kill + retarget tomorrow |
+| Cross-Claude bridge | `~/.gad/bridge/{inbox,outbox,archive}/` + 2 closeout handoffs in `custom_portfolio/.planning/handoffs/open/` | active, 2-way |
+| **Workstream A (telemetry ingest)** | `scripts/ingest_gad_telemetry.py` | **shipped** — 119819 envelopes → 3446 basic + 307 reasoned + **4841 tool-use** SFT pairs |
+| **Workstream B (delta subprocess contract)** | `scripts/delta/{train,eval,promote}_*.py` | **shipped** — promote refuses by default per slm-learning-051 |
+| **Workstream C (SWE-bench scaffold)** | `scripts/eval_swebench.py` + `data/swe_bench_slice_v1.json` | **shipped** scaffold; real scoring is phase 06 |
+| Secret redaction layer | `scripts/ingest_gad_telemetry.py` | shipped after GitHub push protection blocked the corpus push |
 
-Four commits landed this session:
+Eleven commits landed this session:
 
 ```
+752f707 ingest: extract meta tool_calls (5x lift in tooluse pairs)
+9cffb31 Close phase 03 — Eval & Continual Improvement
+afaaf9e Workstreams B + C: delta subprocess contract + SWE-bench scaffold
+f01fce2 ingest: secret redaction layer (Google OAuth, Slack, Stripe, generic API keys)
+ddb2d50 Workstream A: GAD telemetry ingest pipeline
+758a180 Phase 02 closed; doc-verifier corpus bootstrapped (82 pairs); overnight handoff note
 344c598 Phase-04 substrate follow-up: serving-mode aware probes + doc-verifier corpus bootstrapper
 2e3477d Decisions 049-071, phases 04-06, council souls (verifier+critic), multitask config
 126e72c Skeleton system scaffold + biology-metaphor concerns + Archivist soul
 1d03b47 Soul system v1: common-dream + Dr. Stein as model-improvement scientist
 ```
+
+Plus 2 commits from the OTHER Claude (afb26fe, 5e709f7) bringing in
+the cross-instance bridge handoff + telemetry ingest contract from
+gad-monorepo phase 145.
 
 All pushed to `origin/master` (MagicbornStudios/gad_slms).
 

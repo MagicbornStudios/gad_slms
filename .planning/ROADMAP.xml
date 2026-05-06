@@ -19,6 +19,7 @@
     <title>Efficient Training Pipeline</title>
     <goal>Complete the 3-stage training pipeline (SFT → Reasoning → DPO) with memory-efficient techniques: bfloat16 autocast, gc.collect graph cleanup, gradient checkpointing. Fix the Stage 2 memory leak, re-run reasoning training, run DPO to produce dr_stein.pt.</goal>
     <depends></depends>
+    <status>done</status>
   </phase>
 
   <phase id="03">

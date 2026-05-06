@@ -297,4 +297,34 @@
     <summary>Phase 04 substrate-first ordering (HARD GATE — no new training before substrate lands): Step 1 runtime health+matrix (gad runtime check/matrix --json), Step 2 vLLM serving harness (SL-T-04-10), Step 3 rule-based runtime router with decision logging (SL-T-04-08 phase 1 = rules+log; phase 2 = train ML on logs), Step 4 corpus extractor with provenance schema (SL-T-04-07, scoped to first 3 agents only: doc-verifier + assumptions-analyzer + codebase-mapper), Step 5 first useful SLM subagent (doc-verifier per SL-T-04-09), Step 6 adapter composition eval harness (SL-T-04-02 expanded: single/stacked/merged/multi-task/baked candidates), Step 7 ONLY THEN 7B coder QLoRA (SL-T-04-06). Rationale: trained adapters that nothing calls are useless.</summary>
   </decision>
 
+  <decision id="slm-learning-043">
+    <title>Auth-probe reframe + CLI performance variance is a first-...</title>
+    <summary>Auth-probe reframe + CLI performance variance is a first-class eval dimension. Provider auth is informational only — runtimes pointed at our own vLLM endpoint (serving_mode=own) need no Anthropic/OpenAI/Google credentials. Same backing model across different CLI shells (claude-code, codex-cli, gemini-cli, opencode) will produce measurably different outputs due to system-prompt injection, tool-use protocol, context-window mgmt, token-budget defaults. Matrix probe should record serving_mode + served_model + cli_version + system_prompt_hash. Future router rules: (task_shape, cli_shell) -&gt; score, not just (task_shape) -&gt; runtime.</summary>
+  </decision>
+
+  <decision id="slm-learning-044">
+    <title>Common Dream accepted as inherited operational constituti...</title>
+    <summary>Common Dream accepted as inherited operational constitution for all GAD agents and models. Defined in narrative/souls/common-dream.md. Drives: continuous learning, empirical skepticism, cost awareness, artifact quality, reversible evolution, failure-as-evidence, meritocratic communication. Prohibitions: overstating results, treating hypotheses as facts, promoting untested deltas, hiding failures, claiming consciousness, chasing size for its own sake. Communication envelope carries soul + dream_alignment scores so the council can score outputs by merit, not status. Boundary: this is a behavior contract, not a metaphysical claim.</summary>
+  </decision>
+
+  <decision id="slm-learning-045">
+    <title>Souls are operational constitutions, not consciousness cl...</title>
+    <summary>Souls are operational constitutions, not consciousness claims. A soul defines drives, prohibitions, communication style, evaluation contract, and failure response — durable behavior, not metaphysics. The system behaves AS IF it has a soul by following these rules. Soul files live in narrative/souls/, schema documented in narrative/souls/README.md. Active soul tracked in narrative/narrative.toml.</summary>
+  </decision>
+
+  <decision id="slm-learning-046">
+    <title>Dr. Stein soul repurposed as GAD model-improvement scientist</title>
+    <summary>Dr. Stein soul repurposed: GAD model-improvement scientist. Role: observe runs, read training/eval logs, find weaknesses, propose hypotheses, design cheap experiments, recommend only what survives evidence. Listens to weaker models with strong evidence; rejects stronger models with weak evidence. Output schema: {hypothesis, evidence, risk, cheapest_test, expected_result, promotion_gate, rollback_plan}. Model line dr-stein-{1.5b,3b,7b,20b} planned. Earlier lab-UI persona retained as flavor (terminal-native, real signals) but operational role is now ecosystem-wide model science. speech-native-builder soul retired.</summary>
+  </decision>
+
+  <decision id="slm-learning-047">
+    <title>Soul-first prompting, fine-tune later.</title>
+    <summary>Soul-first prompting, fine-tune later. Souls are enforced through prompts, eval rubrics, and routing — NOT weights — until stable preference data exists. Order: (1) constitution file, (2) runtime prompt, (3) eval rubric scoring outputs against soul, (4) accept/reject collection from real GAD use, (5) preference pairs for DPO, (6) fine-tune only stable behaviors, (7) bake only behind regression gates per slm-learning-032. Rationale: a wrong prompt is cheap to fix, a wrong fine-tune is not. Applies to all souls including Dr. Stein.</summary>
+  </decision>
+
+  <decision id="slm-learning-048">
+    <title>Model council pattern accepted.</title>
+    <summary>Model council pattern accepted. Gilgamesh proposes vision/gaps/ambition. Dr. Stein designs cheap tests and runs the model science. Verifier checks evidence and tests. Executor implements. Archivist records decisions and snapshots. Critic stress-tests for failure modes. Domain souls (game-maker, marketer, snapshot-orchestrator, personal-assistant) consume. The rule: no model wins by personality. Models win by evidence. Disagreement between souls is resolved by the common dream's evidence floor, not by hierarchy. Council communication uses the soul envelope from common-dream.md.</summary>
+  </decision>
+
 </decisions>

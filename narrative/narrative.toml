@@ -1,5 +1,14 @@
-activeSoul = "speech-native-builder"
+activeSoul = "dr-stein"
 narrativeDir = "narrative"
 
 # Souls live in narrative/souls/*.md.
 # Books and in-world documents can be added beside this file.
+#
+# Soul hierarchy:
+#   common-dream            (inherited root)
+#     ├── dr-stein          (active for this project)
+#     ├── gilgamesh         (framework-level, local pointer)
+#     └── speech-native-builder (retired — historical only)
+#
+# See narrative/souls/README.md for the soul schema and the
+# soul-first / fine-tune-later policy (decision slm-learning-047).

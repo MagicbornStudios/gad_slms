@@ -1,0 +1,78 @@
+name: stage25_qwen15_multitask
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+adapter: lora
+compute_target: local-cuda-0
+notes: >
+  Multi-task LoRA per SL-T-04-03 (decision slm-learning-051: candidate
+  adapter, NOT auto-merged). Combined data: gad_tool_pairs_v2 (783) +
+  tool_use_pairs (789) + openmathinstruct_5k (5000) = 6572 pairs. Same
+  Qwen2.5-1.5B-Instruct base + bf16 (winning recipe). Hypothesis: a
+  single LoRA can hold three task shapes (CLI translation, tool-use
+  trace continuation, math reasoning) without catastrophic forgetting.
+  Risk per slm-learning-024/026: mixing CLI single-line outputs with
+  multi-step reasoning may degrade either or both. This run TESTS that
+  risk explicitly. Compared against:
+    - v2 CLI specialist (30/30 GAD-tools)
+    - math specialist (25/50 GSM8K)
+    - tooluse sanity adapter
+  Result feeds adapter-fusion research line per slm-learning-049 (TIES,
+  DARE-TIES, multi-task vs stacking).
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/multitask_combined.jsonl
+  # max_length=512 covers 75th percentile of math solutions and is
+  # large enough for tool-use trace responses; CLI commands are short.
+  max_length: 512
+  instruction_field: instruction
+  response_field: command
+  # Generic system prompt — task shape is inferred from instruction.
+  # Soul language deliberately NOT injected (we want a clean baseline
+  # for SL-T-04-03; constitution-impact is its own experiment).
+  system_prompt: >-
+    You are an assistant. Read the user's request and respond
+    precisely and helpfully.
+
+training:
+  # 2 epochs over 6572 pairs at bs=1 grad_accum=16 (math-config recipe)
+  # = ~822 effective steps. ~2-3 hours on a 1660 Ti (math run was 1
+  # hour for 1000 steps at the same settings).
+  epochs: 2
+  learning_rate: 2.0e-4
+  batch_size: 1
+  gradient_accumulation: 16
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: "no"
+  logging_steps: 50
+
+eval:
+  run_after_train: true
+  benchmarks:
+    - gad_tools
+    - gsm8k
+    - humaneval
+  temperature: 0.0
+  # 400 covers GSM8K solutions; CLI / tool-use responses are short.
+  max_new_tokens: 400
+
+hub:
+  publish: true
+  private: false

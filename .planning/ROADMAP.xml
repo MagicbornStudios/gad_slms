@@ -28,4 +28,25 @@
     <depends></depends>
   </phase>
 
+  <phase id="04">
+    <title>Substrate + Routing</title>
+    <goal>Land the runtime substrate (probes, vLLM serving, rule router, agent corpus extractor) so SLM specialists can be served and routed before any further training. Then train first agent-as-SLM specialists on real GAD agent corpora.</goal>
+    <status>in-progress</status>
+    <depends></depends>
+  </phase>
+
+  <phase id="05">
+    <title>Continuous Local Delta Lab</title>
+    <goal>Stand up the gated, candidate-only continuous training loop on the 1660 Ti per decision slm-learning-051. First targets: routers, rerankers, judges, prompt deltas, IA3/BitFit, small candidate adapters. LoRA/TIES merge requires PLAN.md + adapter-composition evals + manual promotion gate. No automatic merge or hot-swap. Output: a queue of candidate adapters per night, each with eval traces and a promotion verdict from Verifier+Critic.</goal>
+    <status>planned</status>
+    <depends>04</depends>
+  </phase>
+
+  <phase id="06">
+    <title>SWE-bench Integration</title>
+    <goal>Wire SWE-bench-Lite and SWE-bench-Verified into the eval matrix per decision slm-learning-053. Score every candidate adapter on a fixed SWE-bench slice as part of the promotion gate. Verdent-style coding-agent eval discipline. Includes the harness, the patch evaluator, the result schema, and the routing rule that promotes a SWE-bench-positive adapter for code-edit shapes.</goal>
+    <status>planned</status>
+    <depends>04</depends>
+  </phase>
+
 </roadmap>

@@ -9,6 +9,9 @@ __pycache__/
 data/external/
 data/reasoning_pairs.json
 data/distilled_pairs.jsonl
+# Combined / derived training corpora — regeneratable from sources.
+data/multitask_combined.jsonl
+data/*_combined.jsonl
 /runs/
 /models/
 
@@ -18,6 +21,12 @@ experiments/runs/*/checkpoint*.pt
 experiments/runs/*/**/*.safetensors
 experiments/runs/*/**/*.bin
 experiments/runs/*/checkpoint-*/
+
+# Hidden ad-hoc training-run logs (.sweep-*, .multitask-*, .hf-job-*, etc).
+# These are ephemeral console captures from background runs; the canonical
+# record lives in experiments/runs/<name>/manifest.json + eval/ outputs.
+experiments/runs/.*.log
+experiments/runs/.*
 # Track the adapter/ directory's MANIFEST + config + README, but not the
 # tokenizer copies (they're identical to the base model's tokenizer).
 experiments/runs/*/adapter/tokenizer.json

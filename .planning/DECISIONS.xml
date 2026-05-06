@@ -327,4 +327,119 @@
     <summary>Model council pattern accepted. Gilgamesh proposes vision/gaps/ambition. Dr. Stein designs cheap tests and runs the model science. Verifier checks evidence and tests. Executor implements. Archivist records decisions and snapshots. Critic stress-tests for failure modes. Domain souls (game-maker, marketer, snapshot-orchestrator, personal-assistant) consume. The rule: no model wins by personality. Models win by evidence. Disagreement between souls is resolved by the common dream's evidence floor, not by hierarchy. Council communication uses the soul envelope from common-dream.md.</summary>
   </decision>
 
+  <decision id="slm-learning-049">
+    <title>Adapter fusion research line accepted</title>
+    <summary>TIES-Merging, DARE-TIES, LoRA-Hub, mergekit added to the techniques registry. Phase 05 candidate experiments. Ladder pattern: train narrow LoRAs, study pairwise interference (composition eval), graduate winning combo via TIES into a new adapter, re-evaluate. Growth pattern is adapter ladder, not model morphism.</summary>
+  </decision>
+
+  <decision id="slm-learning-050">
+    <title>Network morphism / identity neuron OUT of scope</title>
+    <summary>Net2Net / NetMorph identity-init layer growth is a known technique but the wrong tool here: we adapt off existing 1.5B-7B bases rather than pretrain, LoRA already gives us delta training without touching base weights, and small-VRAM equivalents (BitFit, IA3, prompt-tuning) deliver more for less complexity. Parked as research curiosity, not on the roadmap.</summary>
+  </decision>
+
+  <decision id="slm-learning-051">
+    <title>Continuous Local Delta Lab on 1660 Ti (gated, candidate-only)</title>
+    <summary>Continuous local training on the 1660 Ti produces CANDIDATES, not commits to the running adapter. First targets are routers, rerankers, judges, prompt deltas, trainable tokens, IA3/BitFit, and small candidate adapters. LoRA/TIES merge is an experimental branch that requires a PLAN.md, adapter-composition evals, baseline comparisons, rollback plan, and manual promotion gate before any merge or hot-swap. Principle: continuous training creates candidates; evals decide; humans/promoters merge; rollback is mandatory. Supersedes initial T3 framing of 'nightly tiny LoRA -&gt; TIES-merge into running adapter -&gt; hot-swap', which was too close to automatic weight mutation. Per common-dream: reversible deltas only.</summary>
+  </decision>
+
+  <decision id="slm-learning-052">
+    <title>NL snapshot layer is a view, never a source</title>
+    <summary>gad snapshot --nl produces a natural-language summary over the structured snapshot (state, decisions, tasks, runtime health). It is never authoritative — every claim must trace back to a structured artifact. Drives router context injection. Implementation deferred to framework; project-local prototype acceptable as scripts/snapshot_nl.py.</summary>
+  </decision>
+
+  <decision id="slm-learning-053">
+    <title>Eval stack additions: Phoenix + lm-eval-harness</title>
+    <summary>Arize Phoenix (OSS, local-friendly) added for trace observability over .planning/.trace-events.jsonl and serving traces. EleutherAI lm-evaluation-harness added for HumanEval/MBPP/GSM8K/ARC/HellaSwag/BBH benchmark battery. Promptfoo retained for prompt regression. Phoenix and lm-eval are layered atop existing harnesses, not replacements. SWE-bench-Verified and SWE-bench-Lite added as targets per user request (Verdent-style coding agent eval).</summary>
+  </decision>
+
+  <decision id="slm-learning-054">
+    <title>Use-case lock: sprites/landing/marketing/PA, NO video director</title>
+    <summary>Domain specialists planned: (1) sprite/scene/narrative generation, (2) landing-page generation (Tailwind/React/Remotion), (3) marketing agent (tool-use + persona LoRA), (4) personal assistant (tool-use + RAG). Video director explicitly OUT of scope. Each domain specialist is a candidate adapter on a Qwen2.5 family base, evaluated against baseline-Opus on its narrow shape before promotion.</summary>
+  </decision>
+
+  <decision id="slm-learning-055">
+    <title>GRPO over PPO for reasoning RL when we get there</title>
+    <summary>When reasoning RL is justified (after SFT + DPO baselines + a real verifier exists), use GRPO (DeepSeek-R1 style) rather than full PPO with separate reward model. Verifier = existing GSM8K/HumanEval graders + future SWE-bench-style verifier. Skip full PPO entirely — too expensive at our scale and the reward-model + actor + critic split is unjustified for our verifier-rich domains.</summary>
+  </decision>
+
+  <decision id="slm-learning-056">
+    <title>Skeleton scope: all artifacts (code + docs + branches + skills)</title>
+    <summary>A skeleton is any dead/archived artifact preserved as fossil record: code, docs, specs, branches, skills, adapter checkpoints, abandoned experiments. Restricting to code-only would lose the cross-artifact lineage that makes mining useful. Owned by Archivist soul (slm-learning-046, narrative/souls/archivist.md).</summary>
+  </decision>
+
+  <decision id="slm-learning-057">
+    <title>Skeleton storage: marker first, move on age</title>
+    <summary>Two-stage interment. Stage 1: in-place marker (# SKELETON: deprecated YYYY-MM-DD reason: ...). Stage 2: when age threshold passes (initial: 60 days with marker AND zero inbound references), git mv to tmp/museum/ (frozen) or tmp/zoo/ (deprecated-but-on-life-support — see slm-learning-066). Cheap to mark, expensive to move; pay the move cost only when stability is established. Git history is preserved through the move.</summary>
+  </decision>
+
+  <decision id="slm-learning-058">
+    <title>Skeleton revival: gated + counter-rotation</title>
+    <summary>Reviving a skeleton requires (1) a written hypothesis note explaining why it is alive again and what changed in the world, (2) annotation of the differences from the dead form. Counter-rotation: a third revival attempt of the same skeleton forces the council to either (a) explicitly accept and document why the pattern keeps returning, or (b) explicitly refuse and document why this lineage is permanently dead. Prevents zombie patterns.</summary>
+  </decision>
+
+  <decision id="slm-learning-059">
+    <title>DNA metaphor: hybrid (narrative now, operational later)</title>
+    <summary>Biology vocabulary (skills as DNA, artifacts as phenotypes, skeletons as fossils, promotion gate as selection pressure) is adopted as naming convention now. Operational schema (gene loci, alleles, fitness scores, expression state on every skill file) is deferred until the metaphor proves useful in real workflow decisions. Concrete schema lives in a separate registry per slm-learning-068, not retrofitted into every skill file. Earn the schema before paying for it.</summary>
+  </decision>
+
+  <decision id="slm-learning-060">
+    <title>Constitution-impact experiment: prompt-arm only first</title>
+    <summary>Run arm C of the constitution-impact A/B/C: take the existing dr-stein-1.5b checkpoint and evaluate it WITH soul-injected system prompt vs WITHOUT, on the GAD-tools eval + a hypothesis-formulation eval. Cost: hours, not days. If C shows meaningful delta, promote to arm B (full SFT with soul-injected prompt during training, ~1 GPU-day) as Phase 05 candidate. If C shows no delta, the soul stays as prompt-only forever (consistent with slm-learning-047). Rationale: cheapest test first.</summary>
+  </decision>
+
+  <decision id="slm-learning-061">
+    <title>Evolution metric: compound (promotions + skeletons interred)</title>
+    <summary>The primary signal for an 'evolutionary step' is high-information events: skill promotions (gains) AND skeletons interred (recorded losses). Both teach. Tracked together as a compound metric: promotions + interments per N decisions logged. Phase complete and decision logged are too noisy/coarse; pressure point closed remains a secondary signal once it has a stable definition. Constitution-impact (slm-learning-060) measured against this metric.</summary>
+  </decision>
+
+  <decision id="slm-learning-062">
+    <title>Souls migration to framework: trigger = second project needs them</title>
+    <summary>narrative/souls/ stays project-local until a second GAD project actually requires the same souls (common-dream, dr-stein, gilgamesh, archivist, etc.). At that point, souls are promoted to framework scope and projects inherit by reference. Until then, duplication is not a problem worth pre-engineering for. Common-dream is the most likely first promotion since it is meant to be inherited by every agent.</summary>
+  </decision>
+
+  <decision id="slm-learning-063">
+    <title>Council souls: verifier + critic now, domain souls JIT</title>
+    <summary>Author verifier.md and critic.md now (they are the inverses of Dr. Stein and are needed for the constitution-impact experiment per slm-learning-060). Author executor.md and snapshot-orchestrator.md when each gets an actual runtime contract. Domain souls (game-maker, marketing-agent, personal-assistant) authored just-in-time when their specialist adapter starts training. Avoids authoring fiction.</summary>
+  </decision>
+
+  <decision id="slm-learning-064">
+    <title>Git fluency: ladder (sub-skill of tool-use coder, graduate later)</title>
+    <summary>Git fluency starts as a sub-skill of the tool-use Tier 1 coder (slm-learning-034), trained on real GAD git operations + monorepo git history + commit-message preference pairs. Graduates to its own specialist (gad-git-fluent adapter) only if eval pressure justifies — tracked as a candidate model line in the techniques registry. Adapter ladder discipline per slm-learning-032.</summary>
+  </decision>
+
+  <decision id="slm-learning-065">
+    <title>Skeleton recognition in evals: gated on classifier existence</title>
+    <summary>Adding a skeleton-recognition dimension to model evals (does the model invent calls to dead functions, propose reviving deprecated APIs?) requires a ground-truth dead-list. Cannot measure recognition without it. Therefore: build the skeleton classifier first (per slm-learning-056 + 057), then add recognition to the eval rubric. Evaluation cost is cheap once the classifier exists.</summary>
+  </decision>
+
+  <decision id="slm-learning-066">
+    <title>tmp namespace: museum (frozen) + zoo (life support)</title>
+    <summary>tmp/museum/ holds frozen skeletons — preserved for evidence and lineage, never executed. tmp/zoo/ holds deprecated-but-on-life-support — code that still runs, may still be referenced, but is on the way out. Distinction matters because zoo entries are still evaluated against current behavior; museum entries are frozen records. Existing tmp/ contents are surveyed during the targeted backward sweep (slm-learning-067) and routed into one of these or kept as-is.</summary>
+  </decision>
+
+  <decision id="slm-learning-067">
+    <title>Backward skeleton sweep: targeted, not full</title>
+    <summary>Initial skeleton-sweep is targeted, not comprehensive. First targets: experiments/runs/.*log files (26 untracked + already-committed accumulating training-run logs) and abandoned scripts identified by zero inbound import + 90-day no-touch heuristic. Deeper archaeology (full repo dead-code scan, git-blame mining) deferred until the classifier is mature. Time-boxed at &lt;=4 hours of human or agent attention per pass.</summary>
+  </decision>
+
+  <decision id="slm-learning-068">
+    <title>DNA schema: separate registry, not embedded in skill files</title>
+    <summary>If/when DNA metaphor goes operational (slm-learning-059), gene metadata { locus, allele, parents, fitness, expression } lives in a separate registry (.planning/concerns/skill-registry.json or similar) rather than being retrofitted into every skill file. Decouples schema evolution from skill content. Lets the registry version independently and prevents N-skill-files-rewritten-per-schema-change churn.</summary>
+  </decision>
+
+  <decision id="slm-learning-069">
+    <title>Hype retraction: sibling decision names the realistic ceiling</title>
+    <summary>Decision slm-learning-030 ('GAD-orchestrated system can match Opus on bounded workflows') is preserved as the original thesis with its full historical context. A sibling decision is added that names the realistic ceiling: bounded narrow specialists + cheap orchestration deliver compounding workflow memory and routing wins, NOT capability matching. Common-dream prohibits overclaim; it also prohibits hiding past reasoning. The two decisions read together as the evolution of the thesis. Sibling = slm-learning-070.</summary>
+  </decision>
+
+  <decision id="slm-learning-070">
+    <title>Realistic capability ceiling: workflow memory + narrow routing, NOT capability matching</title>
+    <summary>Sibling to slm-learning-030 (preserved). The realistic GAD value proposition is NOT 'a GAD-orchestrated system matches Opus on bounded workflows.' It is: GAD compounds workflow memory across sessions, routes cheap-and-narrow tasks to small specialists, and lets frontier models handle long-tail novel reasoning. Specialists deliver Opus-comparable ARTIFACTS on a small set of well-bounded shapes (tool-use translation, doc-verify, repo summary, narrow code edits) — not Opus-comparable CAPABILITY. Capability matching is rejected as a goal.</summary>
+  </decision>
+
+  <decision id="slm-learning-071">
+    <title>Evidence-tiered capability policy</title>
+    <summary>All capability claims must name task shape, baseline, sample count, cost, latency, eval score, and evidence tier. Evidence tiers: T1 single-run anecdote, T2 multi-run with baseline, T3 versus published baseline at scale, T4 reproduced by external party. Broad replace-Opus claims are rejected. Bounded 'Opus-comparable artifact quality under GAD orchestration on shape X' remains an active hypothesis evaluated at T2+. Resolves the hype-correction without killing the ambition. Per common-dream: evidence over self-flattery.</summary>
+  </decision>
+
 </decisions>

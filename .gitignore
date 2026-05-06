@@ -26,6 +26,7 @@ data/processed/*/sft_*.jsonl
 data/processed/*/dpo_*.jsonl
 /runs/
 /models/
+!/models/REGISTRY.json
 
 # Track experiment manifests + logs + eval JSON, but not bulky weight files
 experiments/runs/*/checkpoint.pt

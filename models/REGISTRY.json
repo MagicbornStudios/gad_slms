@@ -1,0 +1,92 @@
+{
+  "schema_v": 1,
+  "decision_refs": ["slm-learning-082", "slm-learning-051"],
+  "comment": "Checkpoint registry — single source of truth for which adapters are at which lifecycle state. Per slm-learning-082: candidate, staging, canonical, rejected, archived. Daemon (gad-monorepo phase 147) MAY auto-move low-blast-radius specialists from candidate to staging. NEVER auto-promotes to canonical. Updated by scripts/delta/promote_atomic.py and the (planned) registry-update hook in eval_candidate.py.",
+  "lanes": {
+    "cli_translator": {
+      "canonical": "scrubster/dr-stein-stage25-qwen15-instruct-v2",
+      "canonical_score": {"gad_tools": "30/30 (100%)", "gsm8k": "2/50 (4%)", "humaneval": "0/10 (0%)"},
+      "promoted_at": "2026-05-05T23:45:32Z",
+      "decision_id": "slm-learning-025",
+      "staging": [],
+      "candidates": [],
+      "rejected": [
+        {"id": "scrubster/dr-stein-stage25-qwen15-instruct-control", "reason": "v1, 22/30 — superseded by v2", "interred_as": "zoo"}
+      ]
+    },
+    "math_reasoner": {
+      "canonical": "scrubster/dr-stein-colab-qwen15-math-5k",
+      "canonical_score": {"gsm8k": "25/50 (50%)", "gad_tools": "12/30 (40%)", "humaneval": "0/10 (0%)"},
+      "promoted_at": "2026-05-06T05:48:09Z",
+      "staging": [],
+      "candidates": [],
+      "rejected": [
+        {"id": "scrubster/dr-stein-colab-qwen3b-math-5k", "reason": "3B underperformed 1.5B with same recipe", "interred_as": "zoo"}
+      ]
+    },
+    "tooluse_sanity": {
+      "canonical": "scrubster/dr-stein-colab-qwen15-tooluse-sanity",
+      "canonical_score": {"final_loss": 0.39, "token_acc": 0.90},
+      "promoted_at": "2026-05-06T05:48:09Z",
+      "staging": [],
+      "candidates": []
+    },
+    "multitask_generalist": {
+      "canonical": null,
+      "staging": [],
+      "candidates": [
+        {
+          "id": "experiments/runs/stage25_qwen15_multitask",
+          "status": "training",
+          "started_at": "2026-05-06T04:29:00Z",
+          "expected_eval_at": "~2026-05-06T18:00:00Z",
+          "policy": "manual",
+          "notes": "Hypothesis-testing run per SL-T-04-03 + slm-learning-049. Risk: catastrophic forgetting per slm-learning-024/026."
+        }
+      ],
+      "rejected": []
+    },
+    "doc_verifier": {
+      "canonical": null,
+      "staging": [],
+      "candidates": [
+        {
+          "id": "queue/pending/doc-verifier-r8-2026-05-06.json",
+          "status": "queued",
+          "depends_on": "multitask eval (GPU release)",
+          "policy": "auto-staging",
+          "notes": "auto-staging allowed per slm-learning-082 (low-blast-radius specialist); canonical promotion still manual."
+        }
+      ],
+      "rejected": []
+    },
+    "router_classifier": {
+      "canonical": null,
+      "staging": [],
+      "candidates": [],
+      "blocked_on": "gap G1 — gad-monorepo lib/routing/decision-log.cjs has zero callers; no training data."
+    },
+    "attention_classifier": {
+      "canonical": null,
+      "staging": [],
+      "candidates": [],
+      "rule_based_first": true,
+      "rule_based_at": "scripts/attention/score.py",
+      "notes": "Per slm-learning-072: rule-based v1 first; learned classifier becomes a Phase 05 candidate after we have a labeled golden set."
+    },
+    "skeleton_classifier": {
+      "canonical": null,
+      "staging": [],
+      "candidates": [],
+      "blocked_on": "no skeleton-marked corpus yet — gated on backward sweep per slm-learning-067."
+    },
+    "kael_intent_classifier": {
+      "canonical": null,
+      "staging": [],
+      "candidates": [],
+      "rule_based_first": true,
+      "rule_based_at": "scripts/kael/action_schema.py#classify_intent",
+      "notes": "Phase K2 candidate per slm-learning-084 — replace heuristic with SLM classifier once accept/reject trace data accumulates."
+    }
+  }
+}

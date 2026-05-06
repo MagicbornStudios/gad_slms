@@ -482,4 +482,44 @@
     <summary>Each GAD project field in the telemetry schema becomes a candidate cohort for a specialist LoRA. Initial ladder: dr-stein-cli-translator (gad CLI shape), dr-stein-doc-verifier (claim verification), dr-stein-router (runtime selection), dr-stein-narrative (magicborn-narrative project), dr-stein-frontend (grime-time/7greens/site projects), dr-stein-game-tooling (grime-time code). Each is a separate LoRA on the same Qwen2.5 base. Stacked at inference per slm-learning-049 (TIES/DARE) OR routed-to-one per slm-learning-036 (two-tier routing). Phase 148 (multi-domain LoRA registry) per global Claude's plan would own the registry; slm-learning owns trainer + eval. Cohort filtering uses envelope project field + derived content_type from task_id/handoff_id/file paths.</summary>
   </decision>
 
+  <decision id="slm-learning-080">
+    <title>Three-tier compute ladder: Tier 0 local / Tier 1 cheap remote / Tier 2 serious remote</title>
+    <summary>Operating model accepted: Tier 0 = local 1660 Ti for tiny continuous deltas (routers, rerankers, judges, failure classifiers, attention classifiers, prompt deltas, IA3/BitFit/small LoRA only when safe). Tier 1 = cheap remote GPUs (HF Jobs L4/A10G ~/usr/bin/bash.80-1.00/hr) as adapter factory for 1.5B/3B/7B LoRA + QLoRA + rank sweeps + domain adapters. Tier 2 = bigger remote GPUs (L40S/A100/H200 .80-5.00/hr) for serious 7B/14B/20B candidates + adapter merging + DPO/GRPO. 1660 Ti is ALWAYS LEARNING but never auto-mutating canonical weights. Per slm-learning-051: candidate-only locally, gated promotion globally.</summary>
+  </decision>
+
+  <decision id="slm-learning-081">
+    <title>Training factory shape: queue/{pending,running,evaluated,promoted,rejected} with job spec</title>
+    <summary>slm-learning becomes a training factory not a folder of experiments. Layout: experiments/queue/{pending,running,evaluated,promoted,rejected}/&lt;job-id&gt;.json. Each job spec: {job_id, base_model, adapter_type, rank, dataset, holdout, evals, compute_target (local-1660ti|remote-l4|remote-a10g|remote-l40s|remote-a100), promotion_policy: manual}. Queue picks next pending, atomic move to running, runs trainer subprocess, atomic move to evaluated with verdict.json, manual stamp moves to promoted (and triggers checkpoint-registry update) or rejected. Mandatory dataset profiling per slm-learning-049 before any rank&gt;8 LoRA.</summary>
+  </decision>
+
+  <decision id="slm-learning-082">
+    <title>Checkpoint registry: candidate/staging/canonical/rejected/archived</title>
+    <summary>models/REGISTRY.json tracks every adapter through lifecycle states. candidate = freshly trained, eval pending. staging = passed numeric gate, awaiting council verdict. canonical = promoted via scripts/delta/promote_atomic.py + decision id. rejected = failed gate or critic blocking failure mode. archived = superseded canonical, preserved for lineage. Daemon (gad-monorepo phase 147) MAY auto-move candidate -&gt; staging for low-blast-radius specialists (router, reranker, judge, doc-verifier per slm-learning-051 first-targets list). Daemon NEVER auto-promotes to canonical. Main coder NEVER auto-promotes. Main coder requires human stamp in any state transition. Resolves G4 auto-promote conflict from synthesis audit.</summary>
+  </decision>
+
+  <decision id="slm-learning-083">
+    <title>Runtime lanes: each runtime has a job, slm-learning trains models to improve those lanes</title>
+    <summary>Lane assignments accepted. Claude/Opus = architecture, hard reasoning, critique, debugging, research synthesis. Codex = mechanical implementation, refactors, tests, patch loops. OpenCode = cheaper implementation lane, open-runtime comparison, repetitive changes. Gemini = long-context scan/review when empirically useful. Local SLM = GAD command translation, routing, classification, summaries, judgments (already proven: v2 30/30 GAD-tools). Remote open-weight = cheaper code generation, narrative/game/marketing specialists. Routing question is NOT 'which runtime is best?' but 'which runtime is best for THIS task shape, cost, risk lane, context?'. Requires gad-monorepo to fix gap G1 (zero callers on logRoutingDecision) before router classifier has training data.</summary>
+  </decision>
+
+  <decision id="slm-learning-084">
+    <title>Kael MVP K0..K4 phased rollout — text first, voice second, tools third, daemon fourth</title>
+    <summary>K0 text-only Kael (kael ask|note|approve|queue|snapshot subcommands; uses scripts/gad_nl.py for CLI translation; action proposal + approval gate; trace logging). K1 local voice loop (whisper.cpp STT + Piper TTS; push-to-talk, NOT always-listening wake word at first). K2 tool actions (Gmail draft only, contacts lookup, content queue, follow-up reminders — all approval-gated). K3 browser/computer-use (BandLab, Suno, Reddit, social scheduling, Vercel — only after API tools work, always approval-gated). K4 always-running daemon (watches inbox/tasks/calendar/state, queues suggestions, no sends/posts/deploys without permission). Per slm-learning-075: never auto-publish, never make purchases, never impersonate, never auto-promote model. Frontline of GAD; routes to Dr. Stein / Gilgamesh / Verifier / Critic / Archivist for depth.</summary>
+  </decision>
+
+  <decision id="slm-learning-085">
+    <title>Model gateway: one OpenAI-compatible interface for local/remote/frontier</title>
+    <summary>Single client interface that routes calls to: (a) local vLLM serving our v2 adapter via scripts/serve/start_v2.sh, (b) remote vLLM endpoint serving 7B/14B specialists, (c) hosted frontier model API (Anthropic/OpenAI/Google) for tasks Kael shouldn't handle. Routing policy: wake/transcribe = local whisper.cpp; simple commands = local v2 SLM; classification = local classifier; draft email = remote 7B-14B or frontier per sensitivity; sensitive email = frontier + human approval; browser action = remote model + Playwright + human approval; deep reasoning = Opus. Implementation: scripts/gateway/route.py reads policy from .planning/concerns/model-gateway.md. OpenAI-compat client lib used everywhere so swapping providers is one config change.</summary>
+  </decision>
+
+  <decision id="slm-learning-086">
+    <title>Data flywheel mandate: every interaction becomes telemetry envelope</title>
+    <summary>Every action logged as envelope with content_type + project + lane + risk + accepted/rejected. Every model candidate gets benchmarked. Every user correction becomes preference data. Every deployment/domain/action gets a registry entry. Every browser/computer-use step gets screenshot + action + result trace. Every voice command gets transcript + intent + action + approval result. Every artifact gets score. The MODEL can come later; the TRACES must start now. This is the data lever that lets a small team compete with frontier on bounded shapes — not by out-pretraining but by out-specializing on real workflow data. Per slm-learning-070/071: bounded claim shape, evidence-tier T2+, no overclaim.</summary>
+  </decision>
+
+  <decision id="slm-learning-087">
+    <title>Long-term scaling roadmap: 1.5B -&gt; 3B -&gt; 7B -&gt; 14B -&gt; 20B only when evals justify</title>
+    <summary>Model ladder gated on evidence at each rung. 1.5B (current) = cheap specialist proof. 3B = stronger small specialist when 1.5B plateaus on a domain. 7B = first serious coder/tool-use agent (SL-T-04-06). 14B = better coder/debugger if 7B insufficient. 20B+ = hosted serious candidate. Frontier = teacher/fallback/reviewer always. NEVER scale up because we can — only scale when (a) r=32/r=64 still underfits AND (b) held-out eval plateaus below useful quality AND (c) the failure is composition not formatting AND (d) we have content_type-tagged data per slm-learning-079. If failure is bad data / bad labels / no holdout / dupes / weak eval / missing routing — more parameters won't fix it. Funded scaling (0k -&gt; 00k -&gt; M -&gt; 0M -&gt; 00M) targets a vertical agent lab (repo coding + computer use + business ops + artifact gen), NOT a generic chatbot.</summary>
+  </decision>
+
 </decisions>

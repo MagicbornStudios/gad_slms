@@ -48,9 +48,9 @@ import os
 from pathlib import Path
 from datasets import load_dataset
 
+# 1. Training data: OpenMathInstruct-2 (5000 pairs)
 out = Path('data/openmathinstruct_5k.jsonl')
-need_refresh = (not out.exists()) or out.stat().st_size < 1_000_000
-if not need_refresh:
+if out.exists() and out.stat().st_size > 1_000_000:
     print(f'  {out} already present')
 else:
     print(f'  streaming OpenMathInstruct-2 -> {out}')
@@ -67,18 +67,42 @@ else:
             n += 1
             if n >= 5000:
                 break
-    print(f'  wrote {n} pairs')
+    print(f'  wrote {n} pairs to {out}')
+
+# 2. Eval data: GSM8K test split (~1.3k problems, the eval scripts read parquet)
+gsm_out = Path('data/external/gsm8k/test.parquet')
+if gsm_out.exists() and gsm_out.stat().st_size > 100_000:
+    print(f'  {gsm_out} already present')
+else:
+    print(f'  pulling GSM8K test -> {gsm_out}')
+    ds = load_dataset('openai/gsm8k', 'main', split='test')
+    gsm_out.parent.mkdir(parents=True, exist_ok=True)
+    ds.to_parquet(str(gsm_out))
+    print(f'  wrote {len(ds)} rows to {gsm_out}')
+
+# 3. Eval data: HumanEval (164 problems)
+he_out = Path('data/external/humaneval/test.parquet')
+if he_out.exists() and he_out.stat().st_size > 50_000:
+    print(f'  {he_out} already present')
+else:
+    print(f'  pulling HumanEval test -> {he_out}')
+    ds = load_dataset('openai/openai_humaneval', split='test')
+    he_out.parent.mkdir(parents=True, exist_ok=True)
+    ds.to_parquet(str(he_out))
+    print(f'  wrote {len(ds)} rows to {he_out}')
+
 # os._exit(0) bypasses Python's atexit handlers (where the GIL crash happens)
 os._exit(0)
 PY
 set -e
-# Verify the file is actually present + non-trivial
-if [ ! -s data/openmathinstruct_5k.jsonl ] || [ "$(wc -l < data/openmathinstruct_5k.jsonl)" -lt 100 ]; then
-  echo "FATAL: math data file missing or too small after refresh step"
-  ls -la data/openmathinstruct_5k.jsonl 2>&1 || true
-  exit 1
-fi
-echo "  verified: $(wc -l < data/openmathinstruct_5k.jsonl) lines in math data file"
+# Verify all three data files are present + non-trivial
+for path in data/openmathinstruct_5k.jsonl data/external/gsm8k/test.parquet data/external/humaneval/test.parquet; do
+  if [ ! -s "$path" ]; then
+    echo "FATAL: data file missing: $path"
+    exit 1
+  fi
+done
+echo "  verified all training + eval data files"
 echo
 
 echo "==[ run sweep ]========================================================="

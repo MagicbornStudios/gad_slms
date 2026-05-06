@@ -31,8 +31,8 @@ echo
 
 echo "==[ install deps ]======================================================"
 pip install -q --no-cache-dir \
-  "transformers==4.45.2" "peft==0.13.2" "trl==1.3.0" "datasets==3.0.1" \
-  "accelerate==1.0.1" "huggingface_hub>=0.26" bitsandbytes pyyaml
+  "trl==1.3.0" transformers peft datasets accelerate \
+  huggingface_hub bitsandbytes pyyaml
 echo "  ok"
 echo
 

@@ -32,7 +32,7 @@ echo "  image:       $IMAGE"
 echo "  repo:        $REPO"
 echo
 
-CMD="apt-get update -qq && apt-get install -y -qq git curl && cd /tmp && git clone $REPO repo && cd repo && bash scripts/remote/hf_job_bootstrap.sh $CONFIGS_DIR"
+CMD="apt-get update -qq && apt-get install -y -qq git curl && cd /tmp && git clone -b master $REPO repo && cd repo && bash scripts/remote/hf_job_bootstrap.sh $CONFIGS_DIR"
 
 hf jobs run \
   --flavor "$FLAVOR" \

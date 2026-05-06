@@ -257,4 +257,9 @@
     <summary>Tool-use Tier 1 model is the highest-leverage training target. Inputs: real Claude-Code-on-this-repo trace events (.planning/.trace-events.jsonl, 974 events, 4 sessions, secret-redacted). 780 (instruction, command) pairs extracted via scripts/extract_tool_use_pairs.py. Plan: (1) sanity-train Qwen2.5-1.5B-Instruct LoRA (currently running, job 69facbbeb745af80fb37395d), (2) if loss converges + tool-name accuracy &gt;50% on held-out, graduate to (3) Qwen2.5-Coder-7B + QLoRA on same data + supplemental traces. Why coder base: tool-use is fundamentally code-call shaped — repo state + intent -&gt; tool name + JSON args is a code-prediction task. Gate before 7B run: 1.5B sanity must pass.</summary>
   </decision>
 
+  <decision id="slm-learning-035">
+    <title>Empirical: math training on Qwen2.5-1.5B-Instruct + 5000 ...</title>
+    <summary>Empirical: math training on Qwen2.5-1.5B-Instruct + 5000 OpenMathInstruct-2 pairs lifts GSM8K from 2/50 (4%) to 25/50 (50%) — 12x. Cost: $0.16 on HF Jobs L4. Validates that small specialist LoRAs achieve significant lift on narrow tasks with modest data. Caveat: 3B base with SAME recipe scored only 14/50 (undertrained — bigger model needs more epochs/data). Implication for ladder: the 5k+2-epoch recipe is right for 1.5B; for 3B+ scale to 3-5 epochs OR 10-20k pairs. Tooluse sanity train (Qwen2.5-1.5B + 780 trace pairs) converged cleanly (loss 0.39, token acc 90%). Tier 1 7B coder run (SL-T-04-06) is unblocked — sanity gate from slm-learning-034 passes.</summary>
+  </decision>
+
 </decisions>

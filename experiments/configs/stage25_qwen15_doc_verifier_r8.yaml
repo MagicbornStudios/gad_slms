@@ -44,12 +44,15 @@ data:
     reason. Output only the JSON object on one line.
 
 training:
-  # 3 epochs over 442 pairs at bs=4 grad_accum=4 (effective batch=16)
-  # = ~330 steps. ~15-20 min on a 1660 Ti.
+  # 3 epochs over 442 pairs at bs=1 grad_accum=16 (effective batch=16).
+  # bs=4 OOMs on Turing 1660 Ti per 2026-05-06 access-violation. Use
+  # the proven multitask recipe (bs=1, grad_accum=16) which trained 6572
+  # examples successfully overnight.
+  # ~80 steps per epoch * 3 = ~240 steps. ~10-12 min on 1660 Ti.
   epochs: 3
   learning_rate: 2.0e-4
-  batch_size: 4
-  gradient_accumulation: 4
+  batch_size: 1
+  gradient_accumulation: 16
   warmup_ratio: 0.05
   weight_decay: 0.0
   bf16: true

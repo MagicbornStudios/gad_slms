@@ -13,7 +13,32 @@
     "unknown": 8
   },
   "baseline_scores": {
-    "bare_qwen2.5-1.5b-instruct": {"note": "not yet measured — run scripts/eval/eval_doc_verifier.py with --candidate=None"}
+    "bare_qwen2.5-1.5b-instruct": {
+      "f1_macro": 0.363,
+      "accuracy": 0.500,
+      "json_validity_rate": 1.000,
+      "verified_f1": 0.550,
+      "refuted_f1": 0.538,
+      "unknown_f1": 0.000,
+      "measured_at": "2026-05-06T20:00:00Z"
+    },
+    "scrubster/dr-stein-stage25-qwen15-doc-verifier-r8": {
+      "f1_macro": 0.533,
+      "accuracy": 0.740,
+      "json_validity_rate": 1.000,
+      "unknown_f1": 0.000,
+      "delta_vs_bare": "+0.170",
+      "decision_ref": "slm-learning-089"
+    },
+    "scrubster/dr-stein-stage25-qwen15-doc-verifier-r16": {
+      "f1_macro": 0.720,
+      "accuracy": 0.800,
+      "json_validity_rate": 1.000,
+      "unknown_f1": 0.462,
+      "delta_vs_bare": "+0.357",
+      "delta_vs_r8": "+0.187",
+      "decision_ref": "slm-learning-090"
+    }
   },
   "promotion_threshold": {"f1_macro": 0.85, "json_validity_rate": 0.90},
   "evidence_tier_floor": "T2",

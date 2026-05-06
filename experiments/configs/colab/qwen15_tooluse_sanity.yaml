@@ -1,0 +1,68 @@
+name: colab_qwen15_tooluse_sanity
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+adapter: lora
+compute_target: hf-jobs
+notes: >
+  Tool-use sanity train: SAME Qwen2.5-1.5B-Instruct base that hit 30/30
+  on the GAD-CLI track (v2). Now training on 780 real Claude-Code-on-this-repo
+  tool-use pairs extracted from .planning/.trace-events.jsonl by
+  scripts/extract_tool_use_pairs.py.
+
+  Purpose: prove the pipeline works (extraction -> training -> coherent
+  tool-call output) on a small base before committing $$$ to a 7B coder
+  run. Quality gate: if held-out tool-name accuracy is >50% AND args parse
+  as valid JSON >70% of the time, advance to 7B. If not, fix the
+  extraction format / training recipe first.
+
+  Pairs are short (compressed context + tool-call target), so max_length=
+  512 covers most without truncation.
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/tool_use_pairs.jsonl
+  max_length: 512
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are a coding agent. Given the recent tool calls in a session,
+    choose the next tool call. Output exactly one tool call as
+    Tool(json_args).
+
+training:
+  epochs: 3
+  learning_rate: 2.0e-4
+  batch_size: 4
+  gradient_accumulation: 4
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: "no"
+  logging_steps: 10
+
+eval:
+  # No domain eval yet — first goal is the model TRAINS without crashing
+  # and produces tool-shaped output. Hand-eval after training.
+  run_after_train: false
+  benchmarks: []
+  temperature: 0.0
+  max_new_tokens: 200
+
+hub:
+  publish: true
+  private: false

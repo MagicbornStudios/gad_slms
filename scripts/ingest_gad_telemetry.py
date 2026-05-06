@@ -44,6 +44,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from collections import defaultdict
 from dataclasses import dataclass, field
@@ -52,6 +53,47 @@ from typing import Iterable
 
 
 SCHEMA_V = 1
+
+
+# Secret patterns — same set as scripts/synth_doc_verifier_pairs.py with
+# additions for cloud-provider tokens that GitHub push protection
+# explicitly blocks (Google OAuth, Slack, Stripe, etc).
+SECRET_PATTERNS = [
+    (re.compile(r"sk-ant-[A-Za-z0-9_\-]{20,}"), "[REDACTED_ANTHROPIC_KEY]"),
+    (re.compile(r"sk-[A-Za-z0-9]{20,}"), "[REDACTED_OPENAI_KEY]"),
+    (re.compile(r"\bnpm_[A-Za-z0-9_\-]{30,}"), "[REDACTED_NPM_TOKEN]"),
+    (re.compile(r"\bghp_[A-Za-z0-9]{30,}"), "[REDACTED_GH_PAT]"),
+    (re.compile(r"\bgh[ous]_[A-Za-z0-9]{30,}"), "[REDACTED_GH_TOKEN]"),
+    (re.compile(r"\bgithub_pat_[A-Za-z0-9_]{50,}"), "[REDACTED_GH_FINEPAT]"),
+    (re.compile(r"\bAKIA[A-Z0-9]{16}\b"), "[REDACTED_AWS_KEY]"),
+    (re.compile(r"\bhf_[A-Za-z0-9]{30,}"), "[REDACTED_HF_TOKEN]"),
+    (re.compile(r"\bya29\.[A-Za-z0-9_\-]{20,}"), "[REDACTED_GOOGLE_OAUTH]"),
+    (re.compile(r"\b1//[A-Za-z0-9_\-]{30,}"), "[REDACTED_GOOGLE_REFRESH]"),
+    (re.compile(r"\bxox[baprs]-[A-Za-z0-9\-]{10,}"), "[REDACTED_SLACK_TOKEN]"),
+    (re.compile(r"\bAIza[A-Za-z0-9_\-]{30,}"), "[REDACTED_GOOGLE_API_KEY]"),
+    (re.compile(r"\b(?:rk|pk|sk)_(?:test|live)_[A-Za-z0-9]{20,}"), "[REDACTED_STRIPE_KEY]"),
+    # Generic Bearer tokens in headers.
+    (re.compile(r"(?i)\bBearer\s+[A-Za-z0-9._\-]{20,}"), "Bearer [REDACTED_TOKEN]"),
+    # Generic api_key/secret/password assignments — narrow to avoid
+    # false positives on prose like "the api_key is wrong".
+    (re.compile(r'(?i)(api[_-]?key|secret|password|token)\s*[:=]\s*["\']?([A-Za-z0-9_\-]{16,})["\']?'),
+     r"\1=[REDACTED]"),
+    # Long base64-looking blobs.
+    (re.compile(r"(?<![A-Za-z0-9+/])[A-Za-z0-9+/]{60,}={0,2}(?![A-Za-z0-9+/])"),
+     "[REDACTED_LONG_B64]"),
+]
+
+
+def redact(text: str | None) -> tuple[str | None, bool]:
+    if not text:
+        return text, False
+    redacted = False
+    for pat, repl in SECRET_PATTERNS:
+        new_text = pat.sub(repl, text)
+        if new_text != text:
+            redacted = True
+            text = new_text
+    return text, redacted
 
 
 @dataclass
@@ -156,23 +198,30 @@ def group_by_run(envelopes: Iterable[dict]) -> dict[str, list[dict]]:
 
 
 def extract_text(env: dict) -> str | None:
-    """Extract plain text from an envelope's content payload.
+    """Extract plain text from an envelope's content payload, with
+    secret redaction applied.
 
     Envelope content shapes vary by role; this returns whatever string
     body is present, or None if the envelope is content-less or
-    structured-only.
+    structured-only. Real telemetry contains live secrets (OAuth
+    tokens, API keys); we redact every text we surface.
     """
     content = env.get("content")
+    raw: str | None = None
     if content is None:
         return None
     if isinstance(content, str):
-        return content
-    if isinstance(content, dict):
+        raw = content
+    elif isinstance(content, dict):
         for key in ("text", "value", "body", "message"):
             v = content.get(key)
             if isinstance(v, str) and v.strip():
-                return v
-    return None
+                raw = v
+                break
+    if raw is None:
+        return None
+    redacted, _ = redact(raw)
+    return redacted
 
 
 def extract_tool_call(env: dict) -> dict | None:

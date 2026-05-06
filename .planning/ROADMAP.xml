@@ -25,7 +25,7 @@
   <phase id="03">
     <title>Eval &amp; Continual Improvement</title>
     <goal>Establish dr_stein baseline, build benchmark battery (HumanEval/MBPP/GSM8K/ARC/HellaSwag/GAD-tool-calls), wire Claude-subagent teacher distillation (haiku-4-5 default — OpenCode descoped 2026-05-05), stand up a training factory that sweeps configs across many small experiments fast.</goal>
-    <status>planned</status>
+    <status>done</status>
     <depends></depends>
   </phase>
 

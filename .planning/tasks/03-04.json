@@ -1,7 +1,7 @@
 {
   "id": "03-04",
   "phase": "03",
-  "status": "planned",
+  "status": "done",
   "goal": "Build a Claude-subagent teacher that produces (prompt, gad-cli) tool-call pairs for SLM distillation. Spawn a cheap-model subagent (default haiku-4-5) with a strict system prompt that forces it to emit only the gad CLI command for a given natural-language instruction. Capture pairs as JSONL into data/distilled_pairs.jsonl. Includes a small hand-curated seed in data/gad_tool_pairs.jsonl that bootstraps Stage 2.5 fine-tune before the auto-distillation loop runs. Out of scope: OpenCode (descoped 2026-05-05 — see feedback memory).",
   "type": "code",
   "keywords": "",
@@ -10,9 +10,9 @@
   ],
   "commands": [],
   "files": [],
-  "agent_id": "",
+  "agent_id": "claude",
   "agent_role": "",
-  "runtime": "",
+  "runtime": "claude-code",
   "model_profile": "",
   "resolved_model": "",
   "skill": "",
@@ -23,5 +23,5 @@
   "completed_at": "",
   "resolution": "",
   "created_at": "2026-05-05T05:39:28.216Z",
-  "updated_at": "2026-05-05T09:30:00.000Z"
+  "updated_at": "2026-05-06T10:15:41.886Z"
 }

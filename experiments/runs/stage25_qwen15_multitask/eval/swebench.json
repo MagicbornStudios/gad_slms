@@ -1,0 +1,373 @@
+{
+  "schema_v": 1,
+  "role": "benchmark_run",
+  "benchmark": "swe_bench",
+  "model_path": "scrubster/dr-stein-stage25-qwen15-multitask",
+  "slice_version": "v1-scaffold",
+  "evaluated_at": "2026-05-06T10:06:52.759814+00:00",
+  "issues_total": 50,
+  "issues": [
+    {
+      "issue_id": "django__django-11099",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "django__django-11451",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "django__django-11815",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "django__django-12453",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "django__django-13230",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "matplotlib__matplotlib-23314",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "matplotlib__matplotlib-23476",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "matplotlib__matplotlib-25775",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "psf__requests-1142",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "psf__requests-1724",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "psf__requests-2317",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "pytest-dev__pytest-5103",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "pytest-dev__pytest-7373",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "scikit-learn__scikit-learn-13280",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "scikit-learn__scikit-learn-13439",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "scikit-learn__scikit-learn-25232",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "sphinx-doc__sphinx-7686",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "sphinx-doc__sphinx-8265",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "sphinx-doc__sphinx-8475",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "sympy__sympy-13615",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "sympy__sympy-15873",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "sympy__sympy-21379",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "sympy__sympy-22456",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "astropy__astropy-7166",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "astropy__astropy-12907",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "pylint-dev__pylint-4661",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "pylint-dev__pylint-7993",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "pydata__xarray-3993",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "pydata__xarray-4248",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "mwaskom__seaborn-3010",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "django__django-11138",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "django__django-11532",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "django__django-12517",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "django__django-12700",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "django__django-13363",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "django__django-14787",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "django__django-15252",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "django__django-15814",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "matplotlib__matplotlib-21568",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "matplotlib__matplotlib-22871",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "psf__requests-863",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "scikit-learn__scikit-learn-10297",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "scikit-learn__scikit-learn-13496",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "scikit-learn__scikit-learn-14894",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "sphinx-doc__sphinx-8627",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "sphinx-doc__sphinx-9711",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "sympy__sympy-15011",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "sympy__sympy-17630",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "sympy__sympy-18189",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    },
+    {
+      "issue_id": "sympy__sympy-23117",
+      "pass": null,
+      "patch_chars": 0,
+      "runtime_s": 0.0,
+      "error_class": "scaffold_unimplemented"
+    }
+  ],
+  "summary": {
+    "passed": 0,
+    "failed": 0,
+    "scaffold_unimplemented": 50,
+    "pass_rate": null,
+    "vs_bare_base": null,
+    "vs_opus_baseline": null,
+    "evidence_tier": "T1"
+  },
+  "status": "scaffold",
+  "decision_ref": "slm-learning-053 + slm-learning-070 + slm-learning-071",
+  "next_step": "Phase 06 SL-T-06-03 (patch_generator) + SL-T-06-04 (test_runner) implement real scoring."
+}

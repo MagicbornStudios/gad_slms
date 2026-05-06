@@ -527,4 +527,9 @@
     <summary>Empirical result 2026-05-06 from stage25_qwen15_multitask (Qwen2.5-1.5B-Instruct + 6572 combined pairs, rank=16, 822 steps, ~7hr local 1660 Ti). Scores: GAD-tools 25/30 (83%, REGRESSED -17pp from v2 specialist 30/30); GSM8K 5/50 (10%, REGRESSED -40pp from math specialist 25/50); HumanEval 0/10 (unchanged, no code data per gap G8). Net: multi-task LoRA UNDERPERFORMS both specialists. Hypothesis from SL-T-04-03 ('a single LoRA can hold three task shapes without catastrophic forgetting') is FALSIFIED at this rank/data combination. Risk per slm-learning-024 + slm-learning-026 was real. Implication: pursue SL-T-04-02 (stacking via PEFT multi-adapter) and slm-learning-049 (TIES/DARE-TIES merging) instead. Per-domain specialists with router (slm-learning-079) becomes the right direction. Candidate REJECTED per slm-learning-082 (&gt;5pp regression on multiple lanes). Adapter preserved as skeleton for SERA-style negative-tier training data per slm-learning-073.</summary>
   </decision>
 
+  <decision id="slm-learning-089">
+    <title>Doc-verifier r=8 underfits — F1=0.533, queue r=16 retrain</title>
+    <summary>Empirical 2026-05-06: doc-verifier r=8 trained 442 reshaped pairs, 44min wall, train_loss 0.30, token_acc 94.8%. Eval on 50 holdout: f1_macro=0.533 (FAILED 0.85 threshold), accuracy=0.74, json_validity_rate=1.000 (perfect). Per-class F1: verified=0.769, refuted=0.830, unknown=0.000 (model never predicts unknown — all 8 unknown cases mispredicted as verified or refuted). Per ChatGPT directive 2026-05-06 'rank=8 first, rank=16 only if F1&lt;0.85': r=8 candidate REJECTED, r=16 retrain queued. Hypothesis: doubled rank lets model learn the 3-class decision boundary including unknown. Adapter preserved at scrubster/dr-stein-stage25-qwen15-doc-verifier-r8 + experiments/runs/stage25_qwen15_doc_verifier_r8/ as skeleton (zoo) for negative-tier training data per slm-learning-073.</summary>
+  </decision>
+
 </decisions>

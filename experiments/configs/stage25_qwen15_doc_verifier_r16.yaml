@@ -1,0 +1,64 @@
+name: stage25_qwen15_doc_verifier_r16
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+adapter: lora
+compute_target: local-cuda-0
+notes: >
+  Doc-verifier rank=16 retrain after r=8 underfit (F1 0.533 << 0.85
+  threshold per ChatGPT directive 2026-05-06). The r=8 model perfected
+  json_validity (1.000) and learned verified/refuted (F1 0.77/0.83) but
+  COMPLETELY MISSED the unknown class (F1 0.000) — 8/8 unknown cases
+  mispredicted as verified or refuted. More capacity may let the model
+  learn the unknown decision boundary.
+
+  Same recipe as r=8 (442 reshaped train pairs, 50 holdout) — only LoRA
+  rank/alpha doubled. Per slm-learning-051: candidate-only.
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/eval/doc_verifier_train.reshaped.jsonl
+  max_length: 384
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are gad-doc-verifier. Verify the claim against the live
+    codebase and emit a JSON object with status (verified|refuted|
+    unknown), evidence (list of file:line citations), and a brief
+    reason. Output only the JSON object on one line.
+
+training:
+  epochs: 3
+  learning_rate: 2.0e-4
+  batch_size: 1
+  gradient_accumulation: 16
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: "no"
+  logging_steps: 25
+
+eval:
+  run_after_train: true
+  benchmarks:
+    - gad_tools
+  temperature: 0.0
+  max_new_tokens: 200
+
+hub:
+  publish: true
+  private: false

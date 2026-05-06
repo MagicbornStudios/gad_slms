@@ -57,14 +57,23 @@
       "staging": [],
       "candidates": [
         {
-          "id": "queue/pending/doc-verifier-r8-2026-05-06.json",
+          "id": "queue/pending/doc-verifier-r16-2026-05-06.json",
           "status": "queued",
-          "depends_on": "multitask eval (GPU release)",
           "policy": "auto-staging",
-          "notes": "auto-staging allowed per slm-learning-082 (low-blast-radius specialist); canonical promotion still manual."
+          "notes": "Rank=16 retrain after r=8 underfit per slm-learning-089. ETA ~50min."
         }
       ],
-      "rejected": []
+      "rejected": [
+        {
+          "id": "scrubster/dr-stein-stage25-qwen15-doc-verifier-r8",
+          "rejected_at": "2026-05-06T19:35:00Z",
+          "rejection_reason": "F1=0.533 << 0.85 threshold. Unknown class F1=0.000 (8/8 mispredicted). Underfits per slm-learning-089.",
+          "scores": {"f1_macro": 0.533, "accuracy": 0.740, "json_validity_rate": 1.000, "verified_f1": 0.769, "refuted_f1": 0.830, "unknown_f1": 0.000},
+          "interred_as": "zoo",
+          "decision_ref": "slm-learning-089",
+          "useful_for": "negative-tier training data; counter-example for r=16 promotion gate"
+        }
+      ]
     },
     "router_classifier": {
       "canonical": null,

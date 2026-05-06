@@ -1,0 +1,22 @@
+{
+  "schema_v": 1,
+  "name": "gad_tools_v2",
+  "version": "v1",
+  "source_dataset": "promptfoo-gad-tools.yaml",
+  "alt_dataset": "data/gad_tool_pairs_v2.jsonl (783 train pairs)",
+  "n": 30,
+  "task_shape": "cli_translation",
+  "metric_primary": "pass_rate",
+  "metric_secondary": ["wall_seconds", "json_validity_rate"],
+  "baseline_scores": {
+    "bare_qwen2.5-1.5b-instruct": {"pass_rate": 0.000},
+    "bare_qwen2.5-3b-instruct": {"pass_rate": 0.000},
+    "bare_smollm2-135m": {"pass_rate": 0.000},
+    "stage25_qwen15_instruct_control_v1": {"pass_rate": 0.733},
+    "stage25_qwen15_instruct_v2": {"pass_rate": 1.000}
+  },
+  "promotion_threshold": {"pass_rate": 0.95},
+  "evidence_tier_floor": "T2",
+  "decision_refs": ["slm-learning-022", "slm-learning-029", "slm-learning-053"],
+  "notes": "30/30 saturation reached at 1.5B + bf16 + 783 pairs. Eval set is now considered SATURATED at this scale per slm-learning-029 — needs harder eval before claiming progress beyond v2."
+}

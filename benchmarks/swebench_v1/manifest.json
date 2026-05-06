@@ -1,0 +1,21 @@
+{
+  "schema_v": 1,
+  "name": "swebench_v1",
+  "version": "v1-scaffold",
+  "source_dataset": "data/swe_bench_slice_v1.json",
+  "n": 50,
+  "task_shape": "real_world_bug_fix",
+  "slice_composition": {"swe_bench_lite": 30, "swe_bench_verified": 20},
+  "metric_primary": "pass_rate",
+  "metric_secondary": ["patch_chars", "runtime_s", "error_class_distribution"],
+  "baseline_scores": {
+    "all_current_adapters": {"pass_rate": null, "status": "scaffold_unimplemented"},
+    "frontier_opus_baseline": {"pass_rate": null, "status": "TODO — costs estimated $X for 50-issue baseline"}
+  },
+  "promotion_threshold": {"pass_rate": 0.10},
+  "evidence_tier_floor": "T2",
+  "decision_refs": ["slm-learning-053", "slm-learning-070"],
+  "eval_script": "scripts/eval_swebench.py",
+  "blocked_on": "phase 06 SL-T-06-03 (patch_generator) + SL-T-06-04 (test_runner) — current is scaffold only",
+  "notes": "Realistic ceiling per slm-learning-070: small specialists will not match Opus. The point is to track delta over time, not match frontier."
+}

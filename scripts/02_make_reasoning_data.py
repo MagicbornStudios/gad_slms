@@ -1,3 +1,4 @@
+# SKELETON: deprecated 2026-05-06 reason: Phase 02 reasoning corpus prep; replaced by HF dataset pulls (scripts/download_datasets.py) + scripts/extract_*.py. Marker only; move to tmp/museum/ on age threshold.
 from __future__ import annotations
 
 import argparse

@@ -1,3 +1,4 @@
+# SKELETON: deprecated 2026-05-06 reason: Phase 02 generation script; replaced by scripts/serve/serve_adapter.py + scripts/gad_nl.py + scripts/gateway/route.py. Marker only; move to tmp/museum/ on age threshold.
 from __future__ import annotations
 
 import argparse

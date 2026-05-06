@@ -1,0 +1,22 @@
+{
+  "schema_v": 1,
+  "name": "humaneval",
+  "version": "n=10",
+  "source_dataset": "data/external/humaneval/",
+  "n": 10,
+  "task_shape": "code_completion",
+  "metric_primary": "pass_rate",
+  "metric_secondary": ["wall_seconds", "syntax_valid_rate"],
+  "baseline_scores": {
+    "bare_qwen2.5-1.5b-instruct": {"pass_rate": 0.0},
+    "stage25_qwen15_instruct_v2": {"pass_rate": 0.0},
+    "scrubster/dr-stein-colab-qwen15-math-5k": {"pass_rate": 0.0},
+    "all_current_adapters": {"pass_rate": 0.0}
+  },
+  "promotion_threshold": {"pass_rate": 0.20},
+  "evidence_tier_floor": "T1 (small n; widen to n=164 full HumanEval before claiming T2)",
+  "decision_refs": ["slm-learning-053", "slm-learning-070"],
+  "eval_script": "scripts/eval_humaneval.py",
+  "blocked_on": "gap G8 — no code-completion training data exists. CLI / tool-use / math corpora do not provide code-completion shape per ChatGPT directive 2026-05-06.",
+  "notes": "Subprocess + 10s timeout per problem. n=10 is a smoke check; widen to full 164 once any adapter shows >0/10 signal."
+}

@@ -1,3 +1,4 @@
+# SKELETON: deprecated 2026-05-06 reason: pre-Qwen char-LM training; fully superseded by scripts/18_stage25_finetune.py + Qwen2.5 base per slm-learning-022. Marker only; move to tmp/museum/ on age threshold.
 from __future__ import annotations
 
 import argparse

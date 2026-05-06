@@ -1,3 +1,4 @@
+# SKELETON: deprecated 2026-05-06 reason: Phase 02 standalone reasoning trainer; replaced by scripts/18_stage25_finetune.py + TRL+PEFT per slm-learning-013. Marker only; move to tmp/museum/ on age threshold.
 from __future__ import annotations
 
 import argparse

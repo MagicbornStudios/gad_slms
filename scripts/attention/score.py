@@ -338,22 +338,35 @@ def main() -> int:
     active_phase_files = read_active_phase_files(root / ".planning")
     print(f"[attention] {len(active_phase_files)} file refs in STATE.xml next-action")
 
-    # Recent failures: scan trace events for failures referencing files
+    # Recent failures: scan trace events for STRUCTURED failure signals only.
+    # Loose grep for "error"/"failed" was matching prose-only events (e.g.,
+    # planning notes that mention error handling). Tighten to events that
+    # have a structured failure shape: kind/role contains "failed" /
+    # "rejected" / "error", OR a non-zero exit_code field, OR an explicit
+    # status="failed".
     recent_failure_paths: set[str] = set()
     trace = root / ".planning" / ".trace-events.jsonl"
+    FAIL_KIND_RE = re.compile(r'"(?:kind|role|status|action)"\s*:\s*"[^"]*(fail|reject|error|fault)[^"]*"',
+                               re.IGNORECASE)
+    EXIT_NONZERO_RE = re.compile(r'"(?:exit_code|returncode)"\s*:\s*[1-9]\d*')
     if trace.exists():
         try:
             for line in trace.read_text(encoding="utf-8", errors="replace").splitlines()[-2000:]:
                 if not line.strip():
+                    continue
+                if not (FAIL_KIND_RE.search(line) or EXIT_NONZERO_RE.search(line)):
                     continue
                 try:
                     e = json.loads(line)
                 except json.JSONDecodeError:
                     continue
                 content = json.dumps(e)
-                if any(k in content.lower() for k in ["failed", "error", "failed=true", "exit_code"]):
-                    for m in re.finditer(r"([a-zA-Z0-9_\-./]+\.[a-zA-Z]+)", content):
-                        recent_failure_paths.add(m.group(1))
+                # Only attribute to file paths that look like real source paths
+                # (have a directory separator + a real extension).
+                for m in re.finditer(r"([a-zA-Z0-9_\-./]+/[a-zA-Z0-9_\-]+\.[a-zA-Z]{1,4})\b", content):
+                    p = m.group(1)
+                    if not p.startswith(("http", "#", "<")):
+                        recent_failure_paths.add(p)
         except OSError:
             pass
 

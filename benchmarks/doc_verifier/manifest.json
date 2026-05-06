@@ -1,0 +1,23 @@
+{
+  "schema_v": 1,
+  "name": "doc_verifier",
+  "version": "v1",
+  "source_dataset": "data/eval/doc_verifier_holdout.reshaped.jsonl",
+  "n": 50,
+  "task_shape": "doc_verification",
+  "metric_primary": "f1_macro",
+  "metric_secondary": ["accuracy", "json_validity_rate", "per_class_f1"],
+  "label_balance_holdout": {
+    "refuted": 25,
+    "verified": 17,
+    "unknown": 8
+  },
+  "baseline_scores": {
+    "bare_qwen2.5-1.5b-instruct": {"note": "not yet measured — run scripts/eval/eval_doc_verifier.py with --candidate=None"}
+  },
+  "promotion_threshold": {"f1_macro": 0.85, "json_validity_rate": 0.90},
+  "evidence_tier_floor": "T2",
+  "decision_refs": ["slm-learning-051", "slm-learning-053", "slm-learning-071"],
+  "eval_script": "scripts/eval/eval_doc_verifier.py",
+  "notes": "Held-out 50 stratified by status. Train split = 442 reshaped pairs at data/eval/doc_verifier_train.reshaped.jsonl. Per ChatGPT directive 2026-05-06: rank=8 first, rank=16 only if F1 < 0.85."
+}

@@ -1,3 +1,4 @@
+# SKELETON: deprecated 2026-05-06 reason: Phase 02 reasoning eval; replaced by scripts/eval_benchmark_matrix.py + scripts/eval_gsm8k.py + scripts/eval_humaneval.py. Marker only; move to tmp/museum/ on age threshold.
 from __future__ import annotations
 
 import argparse

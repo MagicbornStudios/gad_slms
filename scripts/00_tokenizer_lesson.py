@@ -1,3 +1,4 @@
+# SKELETON: deprecated 2026-05-06 reason: Phase 01 lesson scaffold; never extended; superseded by Stage 2.5 pipeline (scripts/18_stage25_finetune.py). Per slm-learning-056 + slm-learning-057, kept in-place with marker; move to tmp/museum/ when 60-day no-touch threshold hits.
 from __future__ import annotations
 
 from pathlib import Path

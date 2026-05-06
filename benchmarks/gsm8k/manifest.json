@@ -1,0 +1,20 @@
+{
+  "schema_v": 1,
+  "name": "gsm8k",
+  "version": "n=50",
+  "source_dataset": "data/external/gsm8k/",
+  "n": 50,
+  "task_shape": "math_word_problem",
+  "metric_primary": "pass_rate",
+  "metric_secondary": ["wall_seconds"],
+  "baseline_scores": {
+    "bare_qwen2.5-1.5b-instruct": {"pass_rate": 0.04},
+    "stage25_qwen15_instruct_v2": {"pass_rate": 0.04},
+    "scrubster/dr-stein-colab-qwen15-math-5k": {"pass_rate": 0.50}
+  },
+  "promotion_threshold": {"pass_rate": 0.50},
+  "evidence_tier_floor": "T2",
+  "decision_refs": ["slm-learning-053"],
+  "eval_script": "scripts/eval_gsm8k.py",
+  "notes": "Math 1.5B + 5k OpenMathInstruct = 25/50 (12x baseline). HumanEval still 0/10 across all checkpoints — see gap G8 (no code-completion training data)."
+}

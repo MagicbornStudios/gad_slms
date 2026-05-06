@@ -262,4 +262,14 @@
     <summary>Empirical: math training on Qwen2.5-1.5B-Instruct + 5000 OpenMathInstruct-2 pairs lifts GSM8K from 2/50 (4%) to 25/50 (50%) — 12x. Cost: $0.16 on HF Jobs L4. Validates that small specialist LoRAs achieve significant lift on narrow tasks with modest data. Caveat: 3B base with SAME recipe scored only 14/50 (undertrained — bigger model needs more epochs/data). Implication for ladder: the 5k+2-epoch recipe is right for 1.5B; for 3B+ scale to 3-5 epochs OR 10-20k pairs. Tooluse sanity train (Qwen2.5-1.5B + 780 trace pairs) converged cleanly (loss 0.39, token acc 90%). Tier 1 7B coder run (SL-T-04-06) is unblocked — sanity gate from slm-learning-034 passes.</summary>
   </decision>
 
+  <decision id="slm-learning-036">
+    <title>Two-tier routing architecture decided.</title>
+    <summary>Two-tier routing architecture decided. Layer 1: Runtime router (SL-T-04-08) — classical ML classifier picks Claude Code / Codex CLI / Gemini CLI / OpenCode / frontier-API per task. Layer 2: Agent router (SL-T-04-01) — within a runtime, picks which subagent (gad-planner, gad-executor, gad-doc-verifier, etc.) for a sub-step. Layer 3: Tool router — within an agent, picks gad CLI command (already validated by v2 30/30). Each layer is classical ML where possible (cheap, deterministic, debuggable per slm-learning-031). Integration pattern: SLMs serve as subagents via vLLM OpenAI-compatible endpoints (SL-T-04-10) so existing runtimes call them through standard /v1/chat/completions. Long-term Pattern B: build gad-cli-agent runtime that uses our SLMs natively as the runtime itself.</summary>
+  </decision>
+
+  <decision id="slm-learning-037">
+    <title>Agent-as-SLM target list (20 agents in .agent/agents/, mi...</title>
+    <summary>Agent-as-SLM target list (20 agents in .agent/agents/, mirrored across .codex/.gemini/.opencode/.windsurf/.cursor/). Each agent is a specialist candidate. First-wave (1.5B-3B tractable): doc-verifier, user-profiler, assumptions-analyzer, nyquist-auditor, codebase-mapper. Second-wave (3B-7B): doc-writer, roadmapper, research-synthesizer, ui-checker. Third-wave (7B+, Tier 1): planner, plan-checker, executor, debugger, security-auditor, integration-checker, ui-auditor, ui-researcher. Web-research agents (advisor/phase/project-researcher) require web access — keep on frontier or add tool-use. Training data is largely already produced by these very agents on this repo: .planning/codebase/, .planning/notes/, .planning/decisions/, .planning/.trace-events.jsonl. The framework + monorepo are a self-improving training corpus per slm-learning-030.</summary>
+  </decision>
+
 </decisions>

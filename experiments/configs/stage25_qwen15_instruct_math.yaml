@@ -1,0 +1,70 @@
+name: stage25_qwen15_instruct_math
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+adapter: lora
+compute_target: local-cuda-0
+notes: >
+  Math/reasoning track: separate adapter on Qwen2.5-1.5B-Instruct trained
+  on 2000 OpenMathInstruct-2 pairs (problem -> generated_solution). The
+  v2 CLI adapter scored 30/30 on GAD-tools but 0/10 on HumanEval and
+  2/50 on GSM8K — math reasoning needs its own data + longer context.
+
+  Why a separate adapter, not unified: per slm-learning-024 / 026, mixing
+  CLI single-line outputs with multi-step reasoning traces in one fine-tune
+  risks catastrophic forgetting in either direction (we already saw this
+  on the distill model when CLI fine-tuning destroyed its <think> structure).
+  Two specialist adapters > one generalist that does both poorly.
+
+  First-pass conservative settings: 2000 pairs to validate the path before
+  scaling to 50k+. max_length=1024 covers the median solution length
+  (median=692 chars / ~230 tokens with chat template wrapping). bs=2
+  grad_accum=8 keeps effective batch=16 while fitting under 6GB.
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/openmathinstruct_2k.jsonl
+  max_length: 1024
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are Dr. Stein. Solve the math problem step by step, showing your
+    reasoning, then state the final numeric answer on its own line.
+
+training:
+  epochs: 2
+  learning_rate: 2.0e-4
+  batch_size: 2
+  gradient_accumulation: 8
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: "no"
+  logging_steps: 25
+
+eval:
+  run_after_train: true
+  benchmarks:
+    - gsm8k
+    - humaneval
+    - gad_tools
+  temperature: 0.0
+  max_new_tokens: 400  # GSM8K solutions need room; not as much as 2048
+
+hub:
+  publish: true
+  private: false

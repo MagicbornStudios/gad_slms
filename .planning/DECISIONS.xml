@@ -217,4 +217,9 @@
     <summary>Empirical: vocab-anchored distillation (canonical gad CLI surface + Haiku 4.5 subagent + 8 known failure-mode reinforcement) closes the 22/30 -&gt; 30/30 gap on GAD-tools eval. 5x training data with single-variable change (more+better data, not paraphrase) eliminated all v1 vocabulary hallucinations. Method generalizes: when target output domain has a finite canonical surface, walk the surface, distill against it, train. CLI-track is solved at the current eval scale; expand the eval to 100+ harder cases or move on. Math/code tracks still 0%/4% - distinct skill, distinct data needed.</summary>
   </decision>
 
+  <decision id="slm-learning-027">
+    <title>Empirical: fine-tuning a reasoning-distilled model (DeepS...</title>
+    <summary>Empirical: fine-tuning a reasoning-distilled model (DeepSeek-R1-Distill-Qwen-1.5B) on terse single-line CLI commands DESTROYS its &lt;think&gt; reasoning structure. Tested at max_new_tokens=2048: distill adapter still produced 0/8 on HumanEval (killed at 8/10) with identical SyntaxError-on-unterminated-string pattern as the 128-token run. The model lost its ability to terminate &lt;think&gt; blocks coherently. Lesson: don't fine-tune a reasoning model on non-reasoning data — separate adapters for separate skills (slm-learning-024 confirmed). Math/code track now uses Qwen2.5-1.5B-Instruct (not the distill base) + OpenMathInstruct-2 data per slm-learning-012.</summary>
+  </decision>
+
 </decisions>

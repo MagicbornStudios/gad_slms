@@ -53,3 +53,4 @@ node_modules/
 
 .DS_Store
 Thumbs.db
+data/openmathinstruct_5k.jsonl

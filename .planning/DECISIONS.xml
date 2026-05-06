@@ -272,4 +272,29 @@
     <summary>Agent-as-SLM target list (20 agents in .agent/agents/, mirrored across .codex/.gemini/.opencode/.windsurf/.cursor/). Each agent is a specialist candidate. First-wave (1.5B-3B tractable): doc-verifier, user-profiler, assumptions-analyzer, nyquist-auditor, codebase-mapper. Second-wave (3B-7B): doc-writer, roadmapper, research-synthesizer, ui-checker. Third-wave (7B+, Tier 1): planner, plan-checker, executor, debugger, security-auditor, integration-checker, ui-auditor, ui-researcher. Web-research agents (advisor/phase/project-researcher) require web access — keep on frontier or add tool-use. Training data is largely already produced by these very agents on this repo: .planning/codebase/, .planning/notes/, .planning/decisions/, .planning/.trace-events.jsonl. The framework + monorepo are a self-improving training corpus per slm-learning-030.</summary>
   </decision>
 
+  <decision id="slm-learning-038">
+    <title>SLM target curation: first-wave is narrow + repeated + st...</title>
+    <summary>SLM target curation: first-wave is narrow + repeated + structured + easy-to-eval. Allowed: doc-verifier, assumptions-analyzer, codebase-mapper, GAD command translator (already shipped as v2), runtime classifier, error classifier, handoff summarizer. Deferred until trace-evidence justifies: project-researcher, advisor-researcher, security-auditor, full executor, debugger, architect/planner. Rationale: bad early SLM targets are broad/high-risk/research-shaped; we'd train on hallucinations. Only train an agent into an SLM after we have enough successful traces + an objective eval for that agent.</summary>
+  </decision>
+
+  <decision id="slm-learning-039">
+    <title>Runtime router starts as RULES, not ML.</title>
+    <summary>Runtime router starts as RULES, not ML. Initial logic: if task is CLI-translation -&gt; local v2 adapter; if long planning -&gt; Claude/Gemini per health; if edit/test loop -&gt; Codex/Claude; if web research -&gt; frontier; if runtime auth unhealthy -&gt; exclude; if strict-JSON output required -&gt; prefer runtime/model with JSON reliability. Every decision logs (task, task_shape, chosen_runtime, chosen_agent, chosen_model, reasons[], outcome, cost_estimate, latency_ms). Train SVM/logistic only after 100-500 logged decisions provide labels. Premature ML routing = guessing without ground truth.</summary>
+  </decision>
+
+  <decision id="slm-learning-040">
+    <title>Serving substrate (vLLM/OpenAI-compatible local endpoint)...</title>
+    <summary>Serving substrate (vLLM/OpenAI-compatible local endpoint) is the BRIDGE — gates further training. Until SLMs are callable from Claude/Codex/Gemini/OpenCode via standard /v1/chat/completions, our trained adapters are just artifacts on Hugging Face, not workflow components. Therefore SL-T-04-10 (vLLM serving harness) is mandatory and ordered BEFORE additional training runs. Pattern A integration first (call SLMs from existing runtimes); Pattern B (build gad-cli-agent runtime) is long-term, deferred until we know which subagents are useful + which prompts work + which evals predict real-world usefulness.</summary>
+  </decision>
+
+  <decision id="slm-learning-041">
+    <title>Agent corpus extractor (SL-T-04-07) provenance schema is ...</title>
+    <summary>Agent corpus extractor (SL-T-04-07) provenance schema is mandatory. Each extracted (input, output) pair MUST record: source_file, agent_type, input_context_hash, output, timestamp, project_id, human_approved (bool), later_contradicted (bool), secret_redacted (bool), data_tier {gold|silver|synthetic}. Without these, we train on our own mistakes and fossilize bad assumptions. Tier definitions: gold = produced by frontier agent + human-reviewed; silver = produced by frontier agent + automated checks pass; synthetic = haiku-generated paraphrase or augmentation. SLM training on first-wave agents requires gold/silver only.</summary>
+  </decision>
+
+  <decision id="slm-learning-042">
+    <title>Phase 04 substrate-first ordering (HARD GATE — no new tra...</title>
+    <summary>Phase 04 substrate-first ordering (HARD GATE — no new training before substrate lands): Step 1 runtime health+matrix (gad runtime check/matrix --json), Step 2 vLLM serving harness (SL-T-04-10), Step 3 rule-based runtime router with decision logging (SL-T-04-08 phase 1 = rules+log; phase 2 = train ML on logs), Step 4 corpus extractor with provenance schema (SL-T-04-07, scoped to first 3 agents only: doc-verifier + assumptions-analyzer + codebase-mapper), Step 5 first useful SLM subagent (doc-verifier per SL-T-04-09), Step 6 adapter composition eval harness (SL-T-04-02 expanded: single/stacked/merged/multi-task/baked candidates), Step 7 ONLY THEN 7B coder QLoRA (SL-T-04-06). Rationale: trained adapters that nothing calls are useless.</summary>
+  </decision>
+
 </decisions>

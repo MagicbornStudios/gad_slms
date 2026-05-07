@@ -1,0 +1,35 @@
+{
+  "run_id": "ladder-3b-coder-2026-05-08",
+  "exp_id": "EXP-001-ladder",
+  "purpose": "Scaling-ladder rung 2: predict 32B outcome.",
+  "base_model": "Qwen/Qwen2.5-Coder-3B-Instruct",
+  "dataset_volume_path": "/data/external/open-code-reasoning/data.parquet",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "output",
+  "max_length": 1024,
+  "lora": {
+    "r": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "target_modules": [
+      "q_proj", "k_proj", "v_proj", "o_proj",
+      "gate_proj", "up_proj", "down_proj"
+    ]
+  },
+  "training": {
+    "epochs": 1,
+    "lr": 2e-4,
+    "batch_size": 2,
+    "grad_accum": 8,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "seed": 42,
+    "logging_steps": 50
+  },
+  "gpu": "A10G",
+  "timeout_seconds": 7200,
+  "hub_repo": "scrubster/dr-stein-ladder-3b-coder-smoke",
+  "decision_refs": ["slm-learning-097", "slm-learning-094", "slm-learning-102"]
+}

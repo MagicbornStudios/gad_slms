@@ -1,0 +1,35 @@
+{
+  "run_id": "ladder-7b-coder-2026-05-08",
+  "exp_id": "EXP-001-ladder",
+  "purpose": "Scaling-ladder rung 3: predict 32B outcome. The decisive rung — if 7B doesn't lift over 3B, 32B shot is not justified.",
+  "base_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "dataset_volume_path": "/data/external/open-code-reasoning/data.parquet",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "output",
+  "max_length": 1024,
+  "lora": {
+    "r": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "target_modules": [
+      "q_proj", "k_proj", "v_proj", "o_proj",
+      "gate_proj", "up_proj", "down_proj"
+    ]
+  },
+  "training": {
+    "epochs": 1,
+    "lr": 2e-4,
+    "batch_size": 1,
+    "grad_accum": 16,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "seed": 42,
+    "logging_steps": 50
+  },
+  "gpu": "A100",
+  "timeout_seconds": 10800,
+  "hub_repo": "scrubster/dr-stein-ladder-7b-coder-smoke",
+  "decision_refs": ["slm-learning-097", "slm-learning-094", "slm-learning-102"]
+}

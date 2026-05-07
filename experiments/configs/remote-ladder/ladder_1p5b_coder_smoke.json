@@ -1,0 +1,35 @@
+{
+  "run_id": "ladder-1p5b-coder-2026-05-08",
+  "exp_id": "EXP-001-ladder",
+  "purpose": "Scaling-ladder rung 1: predict 32B outcome from 1.5B/3B/7B curve. Per slm-learning-097 pre-flight.",
+  "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "dataset_volume_path": "/data/external/open-code-reasoning/data.parquet",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "output",
+  "max_length": 1024,
+  "lora": {
+    "r": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "target_modules": [
+      "q_proj", "k_proj", "v_proj", "o_proj",
+      "gate_proj", "up_proj", "down_proj"
+    ]
+  },
+  "training": {
+    "epochs": 1,
+    "lr": 2e-4,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "seed": 42,
+    "logging_steps": 50
+  },
+  "gpu": "L4",
+  "timeout_seconds": 5400,
+  "hub_repo": "scrubster/dr-stein-ladder-1p5b-coder-smoke",
+  "decision_refs": ["slm-learning-097", "slm-learning-094", "slm-learning-102"]
+}

@@ -1,0 +1,30 @@
+{
+  "job_id": "tooluse-sanity-v2-2026-05-07",
+  "base_model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "adapter_type": "lora",
+  "rank": 16,
+  "alpha": 32,
+  "dataset": "data/processed/gad-telemetry-2026-05-06/sft_tooluse.jsonl",
+  "evals": [
+    "gad_tools"
+  ],
+  "compute_target": "modal-l4",
+  "config_path": "experiments/configs/stage25_qwen15_tooluse_sanity_v2.yaml",
+  "promotion_policy": "auto-staging",
+  "evidence_tier_target": "T2",
+  "expected_wall_minutes": 90,
+  "expected_vram_gb": 5,
+  "depends_on": [],
+  "decision_refs": [
+    "slm-learning-051",
+    "slm-learning-082",
+    "slm-learning-086"
+  ],
+  "created_at": "2026-05-07T19:30:00Z",
+  "created_by": "claude-code-slm-learning",
+  "notes": "Tool-use sanity v2: 4841 telemetry-derived pairs (6x v1 789-pair corpus). Same recipe as v1, just bigger corpus. v1 hit final_loss 0.39 + token_acc 0.90 on 789 pairs. Hypothesis: 6x more real Claude-Code sessions improves generalization. Per audit-2026-05-07-data-quality-honest.md this is the cleanest available win for the tool-use lane. | Retry: first attempt OOM'd on 6GB 1660Ti at batch_size=2 due to VRAM residue from doc-verifier eval. Lowered to batch_size=1 + gradient_accumulation=16. | Pivot: aborted on local 1660 Ti after 2.5+ hrs (slow); refiring on Modal L4 (~30 min, ~/usr/bin/bash.40) per slm-learning-105.",
+  "claimed_by": null,
+  "claimed_at": null,
+  "completed_at": null,
+  "verdict_path": null
+}

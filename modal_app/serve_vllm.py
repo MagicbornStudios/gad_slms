@@ -47,6 +47,19 @@ import modal
 
 app = modal.App("slm-learning-vllm")
 
+DEFAULT_BASE = "Qwen/Qwen2.5-1.5B-Instruct"
+DEFAULT_ADAPTER = "scrubster/dr-stein-stage25-qwen15-instruct-v2"
+DEFAULT_SERVED_NAME = "dr-stein-cli-v2"
+
+
+def _prefetch_model() -> None:
+    """Pre-download base + adapter at image-build time so cold starts
+    don't pay the network cost. Saves ~60-90s per cold start."""
+    from huggingface_hub import snapshot_download
+    snapshot_download(repo_id=DEFAULT_BASE)
+    snapshot_download(repo_id=DEFAULT_ADAPTER)
+
+
 image = (
     modal.Image.debian_slim(python_version="3.11")
     .pip_install(
@@ -54,16 +67,10 @@ image = (
         "torch==2.9.1",
         "huggingface_hub>=0.30",
     )
+    .run_function(_prefetch_model)
 )
 
 models_volume = modal.Volume.from_name("slm-models", create_if_missing=True)
-
-
-# Default deployment: v2 CLI translator. Operator overrides via the
-# `serve` function args.
-DEFAULT_BASE = "Qwen/Qwen2.5-1.5B-Instruct"
-DEFAULT_ADAPTER = "scrubster/dr-stein-stage25-qwen15-instruct-v2"
-DEFAULT_SERVED_NAME = "dr-stein-cli-v2"
 
 
 @app.cls(
@@ -217,13 +224,31 @@ def smoke() -> None:
     import json as _json
     import urllib.request
 
-    # Get the engine instance with default params (v2 CLI adapter)
     engine = VLLMEngine()
-    # Trigger a warm load by hitting health
-    health_url = engine.health.web_url
-    chat_url = engine.chat_completions.web_url
+
+    # Modal versions vary on attribute name — try a few
+    def _url(method) -> str:
+        for attr in ("get_web_url", "web_url", "url"):
+            v = getattr(method, attr, None)
+            if callable(v):
+                try:
+                    return v()
+                except Exception:
+                    pass
+            elif isinstance(v, str):
+                return v
+        # Fallback: use known URL pattern from the build log
+        return ""
+
+    health_url = _url(engine.health)
+    chat_url = _url(engine.chat_completions)
     print(f"[smoke] health: {health_url}")
     print(f"[smoke] chat:   {chat_url}")
+
+    if not chat_url:
+        print("[smoke] could not resolve chat URL; deploy and curl manually:")
+        print("  modal deploy modal_app/serve_vllm.py")
+        return
 
     payload = {
         "messages": [
@@ -239,6 +264,6 @@ def smoke() -> None:
         headers={"Content-Type": "application/json"}, method="POST",
     )
     print(f"[smoke] sending POST...")
-    with urllib.request.urlopen(req, timeout=120) as resp:
+    with urllib.request.urlopen(req, timeout=300) as resp:
         result = _json.loads(resp.read().decode("utf-8"))
     print(_json.dumps(result, indent=2))

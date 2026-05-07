@@ -1,0 +1,21 @@
+{
+  "status": "ok",
+  "schema_v": 1,
+  "ts": "2026-05-07T00:21:43.376901+00:00",
+  "cohort_path": "data\\cohorts\\2026-05-06\\cohort-global-planning.jsonl",
+  "project_filter": "global",
+  "content_type_filter": "planning",
+  "strategy": "reasoning_to_response",
+  "rows_in": 117196,
+  "pairs_out": 98,
+  "train_n": 94,
+  "holdout_n": 4,
+  "out_dir": "data\\processed\\planning-2026-05-07",
+  "elapsed_seconds": 1.97,
+  "decision_refs": [
+    "slm-learning-051",
+    "slm-learning-079",
+    "slm-learning-082",
+    "slm-learning-086"
+  ]
+}

@@ -15,10 +15,18 @@
   "expected_cost_usd": 1.60,
   "expected_vram_gb": 18,
   "depends_on": [
-    "data/cohorts/2026-05-06/cohort-global-planning.holdout.jsonl (need to extract)",
-    "experiments/configs/stage25_qwen15_planning_r16.yaml (need to write)",
+    "fresh telemetry export with handoffs adapter (gad-monorepo commit dad42a4d) — current cohort yields only 98 reasoning_to_response pairs because prompt envelopes lack handoff_id; the new adapter exports handoff bodies that are joinable to response.handoff_id",
     "remote L4 endpoint configured (HF Jobs CLI ready)"
   ],
+  "data_artifacts": {
+    "config_written_at": "2026-05-07",
+    "current_pair_count": 98,
+    "current_train_path": "data/processed/planning-2026-05-07/sft.train.jsonl",
+    "current_holdout_path": "data/processed/planning-2026-05-07/sft.holdout.jsonl",
+    "minimum_pair_count_to_fire": 1000,
+    "extraction_script": "scripts/delta/prepare_dataset.py",
+    "extraction_strategy": "reasoning_to_response (groups envelopes by handoff_id, requires both reasoning AND response in same handoff)"
+  },
   "decision_refs": [
     "slm-learning-079",
     "slm-learning-080",

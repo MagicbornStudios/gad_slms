@@ -40,3 +40,6 @@
 | stage25_qwen15_distill_reasoning EVAL | 2026-05-05T15:56:41 |  |  |  |  |  |  | 8/30 (26.7%) |  |
 | stage25_qwen15_instruct_control_bf16 EVAL | 2026-05-05T16:50:17 |  |  |  |  |  |  | 22/30 (73.3%) |  |
 | stage25_qwen15_instruct_v2 EVAL | 2026-05-05T18:37:45 |  |  |  |  |  |  | 30/30 (100.0%) |  |
+| stage25_qwen15_multitask EVAL | 2026-05-06T12:59:29 |  |  |  |  |  |  | 25/30 (83.3%) |  |
+| stage25_qwen15_doc_verifier_r8 EVAL | 2026-05-06T14:22:38 |  |  |  |  |  |  | 11/30 (36.7%) |  |
+| stage25_qwen15_doc_verifier_r16 EVAL | 2026-05-06T15:07:19 |  |  |  |  |  |  | 10/30 (33.3%) |  |

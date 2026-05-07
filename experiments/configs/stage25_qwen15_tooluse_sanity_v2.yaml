@@ -1,0 +1,74 @@
+name: stage25_qwen15_tooluse_sanity_v2
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+adapter: lora
+compute_target: local-cuda-0
+notes: >
+  Tool-use sanity v2: same recipe as v1 (LoRA r=16, alpha=32) but on
+  the larger telemetry-derived corpus.
+
+  v1 corpus: data/tool_use_pairs.jsonl (789 pairs from
+  scripts/extract_tool_use_pairs.py, .planning/.trace-events.jsonl).
+  Final loss 0.39, token acc 0.90. Promoted to canonical (per
+  models/REGISTRY.json scrubster/dr-stein-colab-qwen15-tooluse-sanity).
+
+  v2 corpus: data/processed/gad-telemetry-2026-05-06/sft_tooluse.jsonl
+  (4841 pairs from gad telemetry export — 6x v1, all real Claude-Code
+  sessions, telemetry-redacted via gad-monorepo commit 823f19f1).
+
+  Hypothesis: 6x more real tool-call pairs should improve generalization
+  beyond the cherry-picked 789 set without any recipe change.
+
+  Promotion gate: token_acc >= 0.92 AND tool_name acc >= 0.85 on the
+  10% holdout (482 pairs). If gate passes, promote to canonical and
+  retire v1.
+
+  Per slm-learning-051: candidate-only.
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/processed/gad-telemetry-2026-05-06/sft_tooluse.jsonl
+  max_length: 512
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are a coding agent. Given the recent tool calls in a session,
+    choose the next tool call. Output exactly one tool call as
+    Tool(json_args).
+
+training:
+  epochs: 3
+  learning_rate: 2.0e-4
+  batch_size: 2
+  gradient_accumulation: 8
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: "no"
+  logging_steps: 25
+
+eval:
+  run_after_train: true
+  benchmarks:
+    - gad_tools
+  temperature: 0.0
+  max_new_tokens: 200
+
+hub:
+  publish: true
+  private: false

@@ -1,0 +1,80 @@
+name: stage25_qwen15_planning_r16
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+adapter: lora
+compute_target: hf-jobs
+notes: >
+  Planning specialist: Qwen2.5-1.5B + LoRA r=16, trained on the
+  reasoning_to_response pairs extracted from the global / planning
+  cohort.
+
+  Per audit-2026-05-07-data-quality-honest.md, the global / planning
+  cohort has 117k envelopes — the largest available signal in the
+  whole corpus. But the prompt envelopes have no handoff_id, so they
+  cannot be joined to response envelopes by ID alone.
+
+  Initial extraction via scripts/delta/prepare_dataset.py (strategy:
+  reasoning_to_response) yields 98 pairs from the 2026-05-06 export.
+  Output at data/processed/planning-2026-05-07/.
+
+  TO INCREASE PAIR YIELD before firing the run on Tier 1 remote:
+    1. Operator runs `gad telemetry export` from gad-monorepo with the
+       new handoffs/decisions/tasks adapters (commits dad42a4d / 9a8e6acd).
+       Those adapters export the original handoff body envelopes which
+       the planning cohort is missing — should add ~3000+ joinable pairs.
+    2. Re-run prepare_dataset.py against the fresh export.
+    3. Re-run the planning specialist spec (this config) once train_n
+       crosses ~1000.
+
+  Per slm-learning-079 (per-domain ladder) + slm-learning-080 (Tier 1
+  remote L4 ~$1.60).
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/processed/planning-2026-05-07/sft.train.jsonl
+  max_length: 2048
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are a planning specialist for the GAD ecosystem. Given a
+    chain-of-thought from a planning handoff, summarize the work into
+    a concise completion message that names changed files, validation
+    steps, and any remaining gaps.
+
+training:
+  epochs: 3
+  learning_rate: 2.0e-4
+  batch_size: 1
+  gradient_accumulation: 16
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: "no"
+  logging_steps: 10
+
+eval:
+  run_after_train: true
+  benchmarks:
+    - gad_tools
+  holdout_path: data/processed/planning-2026-05-07/sft.holdout.jsonl
+  temperature: 0.0
+  max_new_tokens: 512
+
+hub:
+  publish: true
+  private: false

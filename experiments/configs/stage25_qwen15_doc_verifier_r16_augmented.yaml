@@ -1,0 +1,67 @@
+name: stage25_qwen15_doc_verifier_r16_augmented
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+adapter: lora
+compute_target: local-cuda-0
+notes: >
+  Doc-verifier rank=16 retrain on the augmented corpus (442 -> 592
+  pairs; unknown class 70 -> 220 via fake-parent-prefix synthesis,
+  see scripts/distill/augment_doc_verifier_unknown.py).
+
+  Hypothesis (from .planning/concerns/scaling-decisions.md): r=16 model
+  stalled at F1=0.720 because unknown-class had only 16% of pairs — a
+  DATA imbalance bottleneck, not a parameter bottleneck. Re-balancing
+  the corpus to ~37% unknown should lift unknown-class F1 from 0.462
+  toward the 0.85 promotion gate without changing rank.
+
+  Same recipe as r=16 (LoRA r=16, alpha=32, 3 epochs, lr=2e-4) — only
+  the dataset path changed. Per slm-learning-051: candidate-only.
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/eval/doc_verifier_train.augmented.reshaped.jsonl
+  max_length: 384
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are gad-doc-verifier. Verify the claim against the live
+    codebase and emit a JSON object with status (verified|refuted|
+    unknown), evidence (list of file:line citations), and a brief
+    reason. Output only the JSON object on one line.
+
+training:
+  epochs: 3
+  learning_rate: 2.0e-4
+  batch_size: 1
+  gradient_accumulation: 16
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: "no"
+  logging_steps: 25
+
+eval:
+  run_after_train: true
+  benchmarks:
+    - gad_tools
+  temperature: 0.0
+  max_new_tokens: 200
+
+hub:
+  publish: true
+  private: false

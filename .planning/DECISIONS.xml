@@ -542,4 +542,9 @@
     <summary>Authored .planning/concerns/scaling-decisions.md codifying the diagnostic flow. 7-step diagnostic (does output have valid format -&gt; does rank-doubling lift one metric -&gt; are some classes never produced -&gt; wrong-but-plausible content -&gt; loss-vs-holdout pattern -&gt; loss convergence -&gt; eval saturation). Decision rules per axis: PARAM (rank x2 then base scale-up); DATA imbalance (haiku per-class augment then external corpus); DATA absence (external corpus or accept gap); DATA shape (per-cohort + stacking, NOT multi-task LoRA); TRAINING (LR/warmup/batch); EVAL (harder eval, no more training). When to scale base 1.5B-&gt;3B-&gt;7B-&gt;14B-&gt;20B: only when r=32 still underfits AND failure is composition not formatting AND content_type-tagged data per slm-learning-079 AND eval plateau over 2 rank-doublings AND target is a locked use case per slm-learning-054. Empirical evidence table from this session: multi-task=DATA shape (slm-learning-088), doc-verifier r=8-&gt;r=16=PARAM (slm-learning-090), doc-verifier r=16 at 0.72=DATA imbalance (unknown only 70 examples), HumanEval=DATA absence (233 envelopes), GAD-tools 30/30=EVAL saturated (slm-learning-029). Specific guidance: doc-verifier next move is haiku unknown-class augmentation (NOT r=32), multi-task next is stacking/TIES, planning-specialist gets the big bet (117k cohort).</summary>
   </decision>
 
+  <decision id="slm-learning-092">
+    <title>Planning specialist gated on fresh telemetry export with ...</title>
+    <summary>Planning specialist gated on fresh telemetry export with handoffs adapter — current cohort yields only 98 pairs from 117k envelopes</summary>
+  </decision>
+
 </decisions>

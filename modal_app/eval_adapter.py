@@ -216,8 +216,17 @@ def _judge(case: dict, completion: str) -> tuple[bool, str]:
     import textwrap
     import tempfile
 
-    # Strip <think>...</think> reasoning blocks (OpenCodeReasoning style)
-    code = re.sub(r"<think>.*?</think>", "", completion, flags=re.DOTALL)
+    # Strip <think>...</think> reasoning blocks (OpenCodeReasoning style).
+    # If the closing </think> is missing (truncation), drop everything
+    # from <think> onwards — that means no code emerged, judge fails.
+    if "<think>" in completion:
+        if "</think>" in completion:
+            code = re.sub(r"<think>.*?</think>", "", completion,
+                           flags=re.DOTALL)
+        else:
+            code = completion.split("<think>")[0]
+    else:
+        code = completion
     # Strip code fences if present
     m = re.search(r"```(?:python)?\s*\n?(.*?)\n?```", code, re.DOTALL)
     if m:

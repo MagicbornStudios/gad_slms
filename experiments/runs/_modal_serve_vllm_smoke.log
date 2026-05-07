@@ -1,0 +1,81 @@
+C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_utils\async_utils.py:45: DeprecationWarning: 'asyncio.WindowsSelectorEventLoopPolicy' is deprecated and slated for removal in Python 3.16
+  asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_utils\async_utils.py:45: DeprecationWarning: 'asyncio.set_event_loop_policy' is deprecated and slated for removal in Python 3.16
+  asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+┌───────────────────── Traceback (most recent call last) ─────────────────────┐
+│ C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_type_m │
+│ anager.py:76 in _get_encoder                                                │
+│                                                                             │
+│    75 │   │   try:                                                          │
+│ >  76 │   │   │   return self._py_base_type_to_serde[python_base_type]      │
+│    77 │   │   except KeyError:                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+KeyError: 'str'
+
+During handling of the above exception, another exception occurred:
+
+┌───────────────────── Traceback (most recent call last) ─────────────────────┐
+│ C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\cli\imp │
+│ ort_refs.py:98 in import_file_or_module                                     │
+│                                                                             │
+│    97 │   │   │   assert spec.loader                                        │
+│ >  98 │   │   │   spec.loader.exec_module(module)                           │
+│    99 │   │   except Exception as exc:                                      │
+│ <frozen importlib._bootstrap_external>:759 in exec_module                   │
+│                                                                             │
+│ <frozen importlib._bootstrap>:491 in _call_with_frames_removed              │
+│                                                                             │
+│                                                                             │
+│ C:\Users\benja\Documents\slm_learning\modal_app/serve_vllm.py:69 in         │
+│ <module>                                                                    │
+│                                                                             │
+│    68                                                                       │
+│ >  69 @app.cls(                                                             │
+│    70 │   image=image,                                                      │
+│                                                                             │
+│ C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\synchronicity │
+│ \synchronizer.py:732 in f_wrapped                                           │
+│                                                                             │
+│ C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\app.py: │
+│ 1120 in wrapper                                                             │
+│                                                                             │
+│   1119 │   │   │                                                            │
+│ > 1120 │   │   │   cls: _Cls = _Cls.from_local(user_cls, self, cls_func)    │
+│   1121                                                                      │
+│                                                                             │
+│ C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\cls.py: │
+│ 558 in from_local                                                           │
+│                                                                             │
+│   557 │   │   # validate signature                                          │
+│ > 558 │   │   _Cls.validate_construction_mechanism(user_cls)                │
+│   559                                                                       │
+│                                                                             │
+│ C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\cls.py: │
+│ 550 in validate_construction_mechanism                                      │
+│                                                                             │
+│   549 │   │   │   try:                                                      │
+│ > 550 │   │   │   │   parameter_serde_registry.validate_parameter_type(t)   │
+│   551 │   │   │   except TypeError as exc:                                  │
+│                                                                             │
+│ C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_type_m │
+│ anager.py:62 in validate_parameter_type                                     │
+│                                                                             │
+│    61 │   │   """Raises a helpful TypeError if the supplied type isn't supp │
+│ >  62 │   │   if not parameter_serde_registry.supports_type(declared_type): │
+│    63 │   │   │   supported_types = self._py_base_type_to_serde.keys()      │
+│                                                                             │
+│ C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_type_m │
+│ anager.py:52 in supports_type                                               │
+│                                                                             │
+│    51 │   │   try:                                                          │
+│ >  52 │   │   │   self._get_encoder(declared_type)                          │
+│    53 │   │   │   return True                                               │
+│                                                                             │
+│ C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_type_m │
+│ anager.py:78 in _get_encoder                                                │
+│                                                                             │
+│    77 │   │   except KeyError:                                              │
+│ >  78 │   │   │   raise InvalidError(f"No class parameter encoder implement │
+│    79                                                                       │
+└─────────────────────────────────────────────────────────────────────────────┘
+AttributeError: 'str' object has no attribute '__name__'

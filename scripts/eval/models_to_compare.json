@@ -83,11 +83,11 @@
     "model_id": "gemini-cli",
     "kind": "runtime-cli",
     "binary": "gemini",
-    "args": [],
+    "args": ["--skip-trust", "-p"],
     "cost_usd_per_1k_tokens_out": 0.0125,
     "tier": "runtime",
     "timeout_seconds": 180,
-    "notes": "Google Gemini CLI. Auth via gemini-cli's own login flow."
+    "notes": "Google Gemini CLI. Auth via gemini-cli's own login flow. --skip-trust avoids the 'untrusted workspace' refusal; -p runs non-interactive."
   },
   {
     "model_id": "codex-cli",

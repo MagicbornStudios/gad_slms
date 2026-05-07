@@ -1,0 +1,31 @@
+{
+  "schema_v": 1,
+  "ts": "2026-05-07T04:48:23.505624+00:00",
+  "n_models": 1,
+  "n_benchmarks": 1,
+  "rows": [
+    {
+      "model_id": "claude-cli",
+      "benchmark": "gad_tools_v2",
+      "kind": "runtime-cli",
+      "tier": "runtime",
+      "n": 5,
+      "passed": 5,
+      "score": 1.0,
+      "latency_p50_s": 6.44,
+      "latency_total_s": 33.15,
+      "cost_usd": 0.0012,
+      "evidence_tier": "T1",
+      "endpoint_used": "cli",
+      "served_name": "C:\\Users\\benja\\.local\\bin\\claude.EXE",
+      "first_failures": [],
+      "ts": "2026-05-07T04:48:23.505585+00:00"
+    }
+  ],
+  "decision_refs": [
+    "slm-learning-053",
+    "slm-learning-070",
+    "slm-learning-071",
+    "slm-learning-085"
+  ]
+}

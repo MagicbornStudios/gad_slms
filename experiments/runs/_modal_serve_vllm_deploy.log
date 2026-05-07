@@ -1,0 +1,15 @@
+C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_utils\async_utils.py:45: DeprecationWarning: 'asyncio.WindowsSelectorEventLoopPolicy' is deprecated and slated for removal in Python 3.16
+  asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_utils\async_utils.py:45: DeprecationWarning: 'asyncio.set_event_loop_policy' is deprecated and slated for removal in Python 3.16
+  asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+✓ Created objects.
+├── 🔨 Created mount 
+│   C:\Users\benja\Documents\slm_learning\modal_app\serve_vllm.py
+├── 🔨 Created function VLLMEngine.*.
+├── 🔨 Created web endpoint for VLLMEngine.health => 
+│   https://b2gdevs--slm-learning-vllm-vllmengine-health.modal.run
+└── 🔨 Created web endpoint for VLLMEngine.chat_completions => 
+    https://b2gdevs--slm-learning-vllm-vllmengine-chat-completions.modal.run
+✓ App deployed in 1.709s! 🎉
+
+View Deployment: https://modal.com/apps/b2gdevs/main/deployed/slm-learning-vllm

@@ -6,12 +6,14 @@ Aggregated from `experiments/runs/_eval_*_n164.log`. Per decision `slm-learning-
 
 | Model | HumanEval | MBPP | Notes |
 |---|---|---|---|
-| 7B coder LoRA | running | running | Qwen2.5-Coder-7B-Instruct + LoRA r=16 on OpenCodeReasoning n=5000, 1 epoch, A100 (training) |
-| 7B base (no LoRA) | running | running | Qwen2.5-Coder-7B-Instruct base — control row to measure LoRA delta |
+| 7B coder LoRA | **50/164 (30.5%)** | **124/164 (75.6%)** | Qwen2.5-Coder-7B-Instruct + LoRA r=16 on OpenCodeReasoning n=5000, 1 epoch, A100 (training) |
+| 7B base (no LoRA) | **106/164 (64.6%)** | **132/164 (80.5%)** | Qwen2.5-Coder-7B-Instruct base — control row to measure LoRA delta |
 | 3B coder LoRA | running | running | Qwen2.5-Coder-3B-Instruct + LoRA r=16 same recipe as 7B |
 
 ## LoRA delta vs base (HumanEval + MBPP combined)
 
+- HumanEval delta: **-34.1pp** (64.6% → 30.5%)
+- MBPP delta: **-4.9pp** (80.5% → 75.6%)
 
 ## Lineage (per slm-learning-100 Delta Graph schema)
 

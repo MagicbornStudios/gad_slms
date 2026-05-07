@@ -44,3 +44,10 @@
 | stage25_qwen15_doc_verifier_r8 EVAL | 2026-05-06T14:22:38 |  |  |  |  |  |  | 11/30 (36.7%) |  |
 | stage25_qwen15_doc_verifier_r16 EVAL | 2026-05-06T15:07:19 |  |  |  |  |  |  | 10/30 (33.3%) |  |
 | stage25_qwen15_doc_verifier_r16_augmented EVAL | 2026-05-06T19:58:30 |  |  |  |  |  |  | 12/30 (40.0%) |  |
+
+| BASE EVAL (humaneval) | 2026-05-07T16:05:38.062773+00:00 |  |  |  |  |  |  | 106/164 (64.6%) | n=164 temp=0.0 device=cuda gpu=A10G/L4 modal-public-row |
+| BASE EVAL (mbpp) | 2026-05-07T16:05:14.865005+00:00 |  |  |  |  |  |  | 132/164 (80.5%) | n=164 temp=0.0 device=cuda gpu=A10G/L4 modal-public-row |
+
+| ladder-7b-coder-2026-05-08 EVAL (humaneval) | 2026-05-07T16:29:08.251551+00:00 |  |  |  |  |  |  | 50/164 (30.5%) | n=164 temp=0.0 device=cuda gpu=A10G/L4 modal-public-row |
+| ladder-7b-coder-2026-05-08 EVAL (mbpp) | 2026-05-07T16:19:57.177620+00:00 |  |  |  |  |  |  | 124/164 (75.6%) | n=164 temp=0.0 device=cuda gpu=A10G/L4 modal-public-row |
+| BASE EVAL (humaneval) | 2026-05-07T16:27:03.392329+00:00 |  |  |  |  |  |  | 106/164 (64.6%) | n=164 temp=0.0 device=cuda gpu=A10G/L4 modal-public-row |

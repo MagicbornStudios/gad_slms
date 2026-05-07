@@ -227,14 +227,41 @@ def _judge(case: dict, completion: str) -> tuple[bool, str]:
             code = completion.split("<think>")[0]
     else:
         code = completion
-    # Strip code fences if present
+    # Strip code fences if present. Use rstrip-only — .strip() kills the
+    # leading body indent which breaks prefix-merge for HumanEval body-
+    # only completions like `    for i in range(...):`.
     m = re.search(r"```(?:python)?\s*\n?(.*?)\n?```", code, re.DOTALL)
     if m:
-        code = m.group(1).strip()
+        code = m.group(1).rstrip()
+        # Also drop any all-whitespace leading lines but preserve the
+        # indent of the first non-blank line.
+        lines = code.split("\n")
+        while lines and not lines[0].strip():
+            lines.pop(0)
+        code = "\n".join(lines)
+
+    # If the case provides a `prefix` (HumanEval signature + imports),
+    # prepend it. This lets a model emit "function body only" and still
+    # run as a complete program. Otherwise the completion stands alone.
+    prefix = case.get("prefix", "")
+
+    # Always inject standard typing imports — many HumanEval tasks
+    # reference List/Dict/etc. without an `import` line.
+    imports = (
+        "from typing import List, Dict, Tuple, Optional, Any, Set, "
+        "FrozenSet, Union, Callable, Iterable, Iterator\n"
+        "import math, re, json, collections, itertools, functools\n\n"
+    )
 
     # Compose the test program
     test_block = case["test"]
-    program = textwrap.dedent(code) + "\n\n" + textwrap.dedent(test_block) + "\n"
+    if prefix:
+        # When prefix is provided (HumanEval), the body is expected to be
+        # indented under the prefix's def signature — DO NOT dedent the
+        # body or it ends up at module level.
+        program = imports + prefix + code + "\n\n" + textwrap.dedent(test_block) + "\n"
+    else:
+        program = imports + textwrap.dedent(code) + "\n\n" + textwrap.dedent(test_block) + "\n"
 
     with tempfile.NamedTemporaryFile("w", suffix=".py", delete=False,
                                        encoding="utf-8") as f:
@@ -268,6 +295,11 @@ def _load_humaneval(limit: int) -> list[dict]:
         cases.append({
             "id": row.get("task_id"),
             "prompt": HUMANEVAL_TEMPLATE.format(prompt=row["prompt"]),
+            # The full original HumanEval prompt — `def signature():\n
+            # """docstring"""\n` — prepended to the model's completion
+            # by _judge so a "body-only" answer is still runnable. See
+            # slm-learning-103 for why the judge is harness-aware.
+            "prefix": row["prompt"],
             "test": row["test"] + f"\ncheck({row['entry_point']})",
         })
     return cases

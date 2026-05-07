@@ -131,8 +131,14 @@ def _score_inner(args: dict) -> dict:
     benchmark = args["benchmark"]
     limit = args.get("limit", 20)
     max_new_tokens = args.get("max_new_tokens", 384)
+    # mode = "chat" (apply_chat_template, default) or "completion"
+    # (raw prompt, matches the standard HumanEval harness for an apples-
+    # to-apples leaderboard comparison). Per slm-learning-107.
+    mode = args.get("mode", "chat")
+    persist_run_id = args.get("persist_run_id")
 
-    print(f"[eval] adapter={adapter_id} base={base_model} benchmark={benchmark}")
+    print(f"[eval] adapter={adapter_id} base={base_model} "
+          f"benchmark={benchmark} mode={mode}")
 
     t0 = time.time()
     tok = AutoTokenizer.from_pretrained(base_model)
@@ -150,9 +156,11 @@ def _score_inner(args: dict) -> dict:
     if benchmark == "code_smoke":
         cases = CODE_SMOKE_TASKS[:limit]
     elif benchmark == "humaneval":
-        cases = _load_humaneval(limit)
+        cases = _load_humaneval(limit, mode=mode)
     elif benchmark == "mbpp":
         cases = _load_mbpp(limit)
+    elif benchmark == "gad_tools":
+        cases = _load_gad_tools(limit)
     else:
         return {"status": "error", "error": f"unknown benchmark {benchmark!r}"}
 
@@ -161,12 +169,20 @@ def _score_inner(args: dict) -> dict:
     for i, case in enumerate(cases):
         case_t0 = time.time()
         prompt_text = case["prompt"]
-        msgs = [{"role": "user", "content": prompt_text}]
-        try:
-            text_in = tok.apply_chat_template(msgs, tokenize=False,
-                                              add_generation_prompt=True)
-        except Exception:
-            text_in = prompt_text + "\n"
+
+        if mode == "completion":
+            # Raw completion mode — no chat template, no instruction wrapper.
+            # The model continues from the prompt verbatim, matching the
+            # standard HumanEval/MBPP completion harnesses.
+            text_in = prompt_text
+        else:
+            msgs = [{"role": "user", "content": prompt_text}]
+            try:
+                text_in = tok.apply_chat_template(
+                    msgs, tokenize=False, add_generation_prompt=True
+                )
+            except Exception:
+                text_in = prompt_text + "\n"
 
         inputs = tok(text_in, return_tensors="pt").to(model.device)
         with torch.no_grad():
@@ -188,24 +204,40 @@ def _score_inner(args: dict) -> dict:
             "passed": ok,
             "judge_reason": why,
             "elapsed_s": round(elapsed, 2),
+            "completion_full": completion,
             "completion_preview": completion[:300],
         })
 
     score = round(passed / max(1, len(cases)), 4)
     summary = {
-        "schema_v": 1,
+        "schema_v": 2,
         "ts": dt.datetime.now(dt.timezone.utc).isoformat(),
         "adapter_id": adapter_id,
         "base_model": base_model,
         "benchmark": benchmark,
+        "mode": mode,
         "n": len(cases),
         "passed": passed,
         "score": score,
         "results": results,
         "decision_refs": ["slm-learning-094", "slm-learning-097",
-                          "slm-learning-103"],
+                          "slm-learning-103", "slm-learning-107"],
     }
-    print(f"[eval] DONE {benchmark}: {passed}/{len(cases)} = {score:.3f}")
+
+    # Persist FULL results to slm-models volume for offline analysis
+    # (the [:3000] truncation on the local print is for log readability;
+    # downstream taxonomy work needs the full per-case data).
+    if persist_run_id:
+        import json as _json
+        out_dir = Path(f"/models/eval-runs/{persist_run_id}")
+        out_dir.mkdir(parents=True, exist_ok=True)
+        out_path = out_dir / f"{benchmark}_{mode}_n{len(cases)}.json"
+        out_path.write_text(_json.dumps(summary, indent=2), encoding="utf-8")
+        models_volume.commit()
+        print(f"[eval] persisted full results to {out_path}")
+        summary["persisted_path"] = str(out_path)
+
+    print(f"[eval] DONE {benchmark} ({mode}): {passed}/{len(cases)} = {score:.3f}")
     return summary
 
 
@@ -215,6 +247,31 @@ def _judge(case: dict, completion: str) -> tuple[bool, str]:
     import subprocess
     import textwrap
     import tempfile
+
+    # gad_tools uses assertion-based scoring (icontains/contains-any/
+    # is-json), not code execution. See _load_gad_tools.
+    if case.get("judge_kind") == "assertion":
+        out_lc = completion.lower()
+        for a in case.get("assertions", []):
+            atype = a.get("type", "")
+            value = a.get("value")
+            if atype == "icontains":
+                if not isinstance(value, str) or value.lower() not in out_lc:
+                    return False, f"icontains {value!r} miss"
+            elif atype == "contains-any":
+                if not isinstance(value, list):
+                    return False, f"contains-any needs list"
+                if not any(str(v).lower() in out_lc for v in value):
+                    return False, f"contains-any none of {value}"
+            elif atype == "is-json":
+                import json as _json
+                try:
+                    _json.loads(completion)
+                except Exception as e:
+                    return False, f"is-json failed: {e}"
+            else:
+                return False, f"unknown assertion type {atype!r}"
+        return True, "ok"
 
     # Strip <think>...</think> reasoning blocks (OpenCodeReasoning style).
     # If the closing </think> is missing (truncation), drop everything
@@ -282,7 +339,7 @@ def _judge(case: dict, completion: str) -> tuple[bool, str]:
         return False, repr(e)[:200]
 
 
-def _load_humaneval(limit: int) -> list[dict]:
+def _load_humaneval(limit: int, mode: str = "chat") -> list[dict]:
     from datasets import load_dataset
     try:
         ds = load_dataset("openai/openai_humaneval", split="test")
@@ -292,15 +349,68 @@ def _load_humaneval(limit: int) -> list[dict]:
     for i, row in enumerate(ds):
         if i >= limit:
             break
+        if mode == "completion":
+            # Standard completion-mode harness: feed the model the raw
+            # HumanEval prompt and let it continue from there. No prefix
+            # in the case (the prompt IS the prefix); the model's output
+            # is the function body. The judge concatenates prompt +
+            # completion + test.
+            prompt_for_model = row["prompt"]
+            prefix_for_judge = ""
+            # In completion mode the model's output is appended to
+            # prompt directly; signal to judge by prepending the prompt
+            # in the prefix.
+            prefix_for_judge = row["prompt"]
+        else:
+            prompt_for_model = HUMANEVAL_TEMPLATE.format(prompt=row["prompt"])
+            prefix_for_judge = row["prompt"]
         cases.append({
             "id": row.get("task_id"),
-            "prompt": HUMANEVAL_TEMPLATE.format(prompt=row["prompt"]),
+            "prompt": prompt_for_model,
             # The full original HumanEval prompt — `def signature():\n
             # """docstring"""\n` — prepended to the model's completion
             # by _judge so a "body-only" answer is still runnable. See
-            # slm-learning-103 for why the judge is harness-aware.
-            "prefix": row["prompt"],
+            # slm-learning-103, slm-learning-107.
+            "prefix": prefix_for_judge,
             "test": row["test"] + f"\ncheck({row['entry_point']})",
+        })
+    return cases
+
+
+def _load_gad_tools(limit: int) -> list[dict]:
+    """Load GAD-tool prompts from /data/eval/promptfoo-gad-tools.yaml.
+
+    The yaml is uploaded to the slm-data volume by:
+        modal volume put slm-data \\
+            promptfoo-gad-tools.yaml \\
+            /eval/promptfoo-gad-tools.yaml
+
+    Each test in the YAML has:
+        vars.instruction (str) — natural-language ask
+        assert[].type, .value — icontains / contains-any / is-json
+
+    We translate that into eval_adapter case format. The judge for
+    gad_tools uses the same icontains/contains-any/is-json subset
+    inline (no subprocess; assertion-based judging instead of
+    code-execution).
+    """
+    import yaml
+    yaml_path = Path("/data/eval/promptfoo-gad-tools.yaml")
+    if not yaml_path.exists():
+        # Fallback: try the slm-data volume root
+        yaml_path = Path("/data/promptfoo-gad-tools.yaml")
+    spec = yaml.safe_load(yaml_path.read_text(encoding="utf-8"))
+    cases = []
+    for i, t in enumerate(spec.get("tests", [])):
+        if i >= limit:
+            break
+        instruction = t.get("vars", {}).get("instruction", "")
+        cases.append({
+            "id": t.get("description", f"gad-tools-{i}"),
+            "prompt": instruction,
+            "assertions": t.get("assert", []),
+            # Tag so the judge uses assertion-based scoring, not code exec.
+            "judge_kind": "assertion",
         })
     return cases
 
@@ -332,17 +442,21 @@ def _load_mbpp(limit: int) -> list[dict]:
 @app.local_entrypoint()
 def main(adapter_id: str, base_model: str, benchmark: str = "code_smoke",
          limit: int = 5, gpu: str = "L4",
-         max_new_tokens: int = 384) -> None:
+         max_new_tokens: int = 384, mode: str = "chat",
+         persist_run_id: str = "") -> None:
     args = {
         "adapter_id": adapter_id,
         "base_model": base_model,
         "benchmark": benchmark,
         "limit": limit,
         "max_new_tokens": max_new_tokens,
+        "mode": mode,
+        "persist_run_id": persist_run_id or None,
     }
     fn = {"L4": score_l4, "A10G": score_a10g, "A100": score_a100}.get(
         gpu, score_l4)
-    print(f"[main] firing eval on Modal {gpu} for {adapter_id} on {benchmark} (n={limit})")
+    print(f"[main] firing eval on Modal {gpu} for {adapter_id} "
+          f"on {benchmark} (n={limit}, mode={mode})")
     result = fn.remote(args)
     print()
     print(json.dumps(result, indent=2)[:3000])

@@ -617,4 +617,9 @@
     <summary>Research intake protocol: tmp/research/{papers,repos,experiments,reviews} with research_id manifest per pull (source, url, cloned_to, review_status, ideas_extracted, risks, license, gad_relevance, next_test); 6 rules - never pollute production from tmp, every clone gets review, useful ideas become deltas, unused becomes skeleton, no dependency without license/security review, every claim needs benchmark or reproduction</summary>
   </decision>
 
+  <decision id="slm-learning-107">
+    <title>Benchmark-gated scaling: 32B scaling requires public-benc...</title>
+    <summary>Benchmark-gated scaling: 32B scaling requires public-benchmark or GAD-owned benchmark lift at 7B; training-loss decrease alone is insufficient</summary>
+  </decision>
+
 </decisions>

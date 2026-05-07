@@ -86,7 +86,7 @@ CODE_SMOKE_TASKS = [
     image=image,
     gpu="L4",
     volumes={"/data": data_volume, "/models": models_volume},
-    timeout=3600,
+    timeout=5400,
     cpu=4,
     memory=24576,
 )

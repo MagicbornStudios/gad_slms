@@ -1,0 +1,132 @@
+C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_utils\async_utils.py:45: DeprecationWarning: 'asyncio.WindowsSelectorEventLoopPolicy' is deprecated and slated for removal in Python 3.16
+  asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_utils\async_utils.py:45: DeprecationWarning: 'asyncio.set_event_loop_policy' is deprecated and slated for removal in Python 3.16
+  asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+✓ Initialized. View run at 
+https://modal.com/apps/b2gdevs/main/ap-fcVvS0oG2niqtvSLWNdlIv
+✓ Created objects.
+├── 🔨 Created mount 
+│   C:\Users\benja\Documents\slm_learning\modal_app\eval_adapter.py
+├── 🔨 Created function score_l4.
+├── 🔨 Created function score_a10g.
+└── 🔨 Created function score_a100.
+[main] firing eval on Modal A10G for /models/runs/ladder-7b-coder-2026-05-08/adapter on code_smoke (n=5)
+[eval] adapter=/models/runs/ladder-7b-coder-2026-05-08/adapter base=Qwen/Qwen2.5-Coder-7B-Instruct benchmark=code_smoke
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1AFetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+WARNING: Logs may not be continuous
+Task's current input(s) ["in-01KR0EMX4ABSA8T2J741ZNF181:1778131825804-0"] cancelled because: Task's current input in-01KR0EMX4ABSA8T2J741ZNF181:1778131825804-0 hit its timeout of 5400s
+[modal-client] 2026-05-07T07:00:33+0000 Received a cancellation signal while processing input ('in-01KR0EMX4ABSA8T2J741ZNF181:1778131825804-0',)
+
+[1AFetching 4 files:   0%|          | 0/4 [1:29:47<?, ?it/s]
+Stopping app - uncaught exception raised locally: FunctionTimeoutError("Task's current input in-01KR0EMX4ABSA8T2J741ZNF181:1778131825804-0 hit its timeout of 5400s").
+Cancellation requested; stopping current tasks.
+Runner terminated.
+┌───────────────────── Traceback (most recent call last) ─────────────────────┐
+│ C:\Users\benja\Documents\slm_learning\modal_app/eval_adapter.py:302 in main │
+│                                                                             │
+│   301 │   args = {                                                          │
+│ > 302 │   │   "adapter_id": adapter_id,                                     │
+│   303 │   │   "base_model": base_model,                                     │
+│                                                                             │
+│ C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_object │
+│ .py:46 in wrapped                                                           │
+│                                                                             │
+│    45 │   │   await self.hydrate()                                          │
+│ >  46 │   │   return await method(self, *args, **kwargs)                    │
+│    47                                                                       │
+│                                                                             │
+│ C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_functi │
+│ ons.py:1699 in remote                                                       │
+│                                                                             │
+│   1698 │   │                                                                │
+│ > 1699 │   │   return await self._call_function(args, kwargs)               │
+│   1700                                                                      │
+│                                                                             │
+│ C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_functi │
+│ ons.py:1643 in _call_function                                               │
+│                                                                             │
+│   1642 │   │                                                                │
+│ > 1643 │   │   return await invocation.run_function()                       │
+│   1644                                                                      │
+│                                                                             │
+│ C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_functi │
+│ ons.py:291 in run_function                                                  │
+│                                                                             │
+│    290 │   │   │   item = await self._get_single_output()                   │
+│ >  291 │   │   │   return await _process_result(item.result, item.data_form │
+│    292                                                                      │
+│                                                                             │
+│ C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_utils\ │
+│ function_utils.py:489 in _process_result                                    │
+│                                                                             │
+│   488 │   if result.status == api_pb2.GenericResult.GENERIC_STATUS_TIMEOUT: │
+│ > 489 │   │   raise FunctionTimeoutError(result.exception)                  │
+│   490 │   elif result.status == api_pb2.GenericResult.GENERIC_STATUS_INTERN │
+└─────────────────────────────────────────────────────────────────────────────┘
+FunctionTimeoutError: Task's current input 
+in-01KR0EMX4ABSA8T2J741ZNF181:1778131825804-0 hit its timeout of 5400s

@@ -251,6 +251,38 @@ def _score_inner(args: dict) -> dict:
     return summary
 
 
+def _strip_post_answer_pollution(code: str) -> str:
+    """Strip trailing test/check definitions and markdown noise after the answer.
+
+    HumanEval models sometimes append:
+    - '# Check function to verify...'
+    - 'def check_*(...)'
+    - 'def test_*(...)'
+    - 'if __name__ == "__main__":'
+    - Stray markdown fences like '```'
+
+    Remove everything from the first such line onwards.
+    """
+    import re
+    lines = code.split("\n")
+    kept = []
+    for line in lines:
+        stripped = line.lstrip()
+        # Stop at common post-answer patterns
+        if any(stripped.startswith(p) for p in [
+            "# Check function",
+            "# Test function",
+            "# Verify",
+            "def check_",
+            "def test_",
+            "if __name__",
+            "```",
+        ]):
+            break
+        kept.append(line)
+    return "\n".join(kept).rstrip()
+
+
 def _judge(case: dict, completion: str) -> tuple[bool, str]:
     """Run the case's test against the completion. Return (passed, reason)."""
     import re
@@ -326,6 +358,18 @@ def _judge(case: dict, completion: str) -> tuple[bool, str]:
         # When prefix is provided (HumanEval), the body is expected to be
         # indented under the prefix's def signature — DO NOT dedent the
         # body or it ends up at module level.
+        # First strip trailing test/check noise.
+        code = _strip_post_answer_pollution(code)
+
+        # If code starts at column 0 (no leading whitespace), assume it's
+        # body-only and indent every line by 4 spaces before merging with
+        # the prefix. If already indented, leave it alone.
+        first_nonblank = next((line for line in code.split("\n")
+                               if line.strip()), "")
+        if first_nonblank and not first_nonblank[0].isspace():
+            # Column 0: indent all lines by 4 spaces
+            code = "\n".join("    " + line for line in code.split("\n"))
+
         program = imports + prefix + code + "\n\n" + textwrap.dedent(test_block) + "\n"
     else:
         program = imports + textwrap.dedent(code) + "\n\n" + textwrap.dedent(test_block) + "\n"

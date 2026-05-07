@@ -1,0 +1,146 @@
+{
+  "base": {
+    "label": "7B base",
+    "n_total": 164,
+    "n_failures": 58,
+    "buckets": {
+      "A_think_truncation": 0,
+      "B_code_truncated": 0,
+      "C_wrong_function_signature": 0,
+      "D_full_script_not_function": 0,
+      "E_competitive_style": 0,
+      "F_markdown_prose_pollution": 1,
+      "G_indentation_prefix_bug": 33,
+      "H_genuine_algorithm_fail": 0,
+      "I_evaluator_bug": 24
+    },
+    "examples": {
+      "A_think_truncation": [],
+      "B_code_truncated": [],
+      "C_wrong_function_signature": [],
+      "D_full_script_not_function": [],
+      "E_competitive_style": [],
+      "F_markdown_prose_pollution": [
+        {
+          "id": "HumanEval/10",
+          "reason": "3 prose-like lines",
+          "completion_preview": "```python\ndef make_palindrome(string: str) -> str:\n    \"\"\" Find the shortest palindrome that begins with a supplied string.\n    Algorithm idea is simple:\n    - Find the longest postfix of supplied str",
+          "judge_reason": "Traceback (most recent call last):\n  File \"/tmp/tmpco14bwyx.py\", line 56, in <module>\n    check(make_palindrome)\n  File \"/tmp/tmpco14bwyx.py\", line 51, in check\n    assert candidate('x') == 'x'\n      "
+        }
+      ],
+      "G_indentation_prefix_bug": [
+        {
+          "id": "HumanEval/0",
+          "reason": "  File \"/tmp/tmpikyj11wv.py\", line 19\n    return False\n                ^\nIndentationError: unindent does not match any o",
+          "completion_preview": "```python\n    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if abs(numbers[i] - numbers[j]) < threshold:\n                return True\n    return False\n```",
+          "judge_reason": "  File \"/tmp/tmpikyj11wv.py\", line 19\n    return False\n                ^\nIndentationError: unindent does not match any outer indentation level\n"
+        },
+        {
+          "id": "HumanEval/2",
+          "reason": "return outside function",
+          "completion_preview": "```python\nreturn number - int(number)\n```",
+          "judge_reason": "  File \"/tmp/tmpr7k30ogu.py\", line 15\n    return number - int(number)\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nSyntaxError: 'return' outside function\n"
+        },
+        {
+          "id": "HumanEval/4",
+          "reason": "  File \"/tmp/tmp3v1zhh9j.py\", line 17\n    return sum(abs(x - mean) for x in numbers) / len(numbers)\nIndentationError: un",
+          "completion_preview": "```python\n    mean = sum(numbers) / len(numbers)\n    return sum(abs(x - mean) for x in numbers) / len(numbers)\n```",
+          "judge_reason": "  File \"/tmp/tmp3v1zhh9j.py\", line 17\n    return sum(abs(x - mean) for x in numbers) / len(numbers)\nIndentationError: unexpected indent\n"
+        }
+      ],
+      "H_genuine_algorithm_fail": [],
+      "I_evaluator_bug": [
+        {
+          "id": "HumanEval/18",
+          "reason": "unclassified: '  File \"/tmp/tmph6fyvbet.py\", line 15\\n    return sum(1 for i in range(len(string'",
+          "completion_preview": "```python\n    return sum(1 for i in range(len(string) - len(substring) + 1) if string[i:i+len(substring)] == substring)\n```",
+          "judge_reason": "  File \"/tmp/tmph6fyvbet.py\", line 15\n    return sum(1 for i in range(len(string) - len(substring) + 1) if string[i:i+len(substring)] == substring)\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        },
+        {
+          "id": "HumanEval/27",
+          "reason": "unclassified: '  File \"/tmp/tmpaoszxn9e.py\", line 11\\n    return \\'\\'.join(char.lower() if char.is'",
+          "completion_preview": "```python\nreturn ''.join(char.lower() if char.isupper() else char.upper() for char in string)\n```",
+          "judge_reason": "  File \"/tmp/tmpaoszxn9e.py\", line 11\n    return ''.join(char.lower() if char.isupper() else char.upper() for char in string)\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        },
+        {
+          "id": "HumanEval/32",
+          "reason": "unclassified: 'Traceback (most recent call last):\\n  File \"/tmp/tmpvpgio1md.py\", line 62, in <mo'",
+          "completion_preview": "```python\ndef find_zero(xs: list):\n    def poly(xs: list, x: float):\n        return sum([coeff * math.pow(x, i) for i, coeff in enumerate(xs)])\n\n    low, high = -1000, 1000\n    while high - low > 1e-7",
+          "judge_reason": "Traceback (most recent call last):\n  File \"/tmp/tmpvpgio1md.py\", line 62, in <module>\n    check(find_zero)\n  File \"/tmp/tmpvpgio1md.py\", line 59, in check\n    assert math.fabs(poly(coeffs, solution)) "
+        }
+      ]
+    }
+  },
+  "lora": {
+    "label": "7B + OCR LoRA",
+    "n_total": 164,
+    "n_failures": 114,
+    "buckets": {
+      "A_think_truncation": 1,
+      "B_code_truncated": 0,
+      "C_wrong_function_signature": 0,
+      "D_full_script_not_function": 0,
+      "E_competitive_style": 0,
+      "F_markdown_prose_pollution": 0,
+      "G_indentation_prefix_bug": 81,
+      "H_genuine_algorithm_fail": 0,
+      "I_evaluator_bug": 32
+    },
+    "examples": {
+      "A_think_truncation": [
+        {
+          "id": "HumanEval/83",
+          "reason": "open <think> never closed",
+          "completion_preview": "<think>\nOkay, I need to solve this problem where I have to find how many n-digit positive integers start or end with 1. Let's think about it step by step.\n\nFirst, let's understand what an n-digit numb",
+          "judge_reason": "Traceback (most recent call last):\n  File \"/tmp/tmp73k8g6hc.py\", line 26, in <module>\n    check(starts_one_ends)\n  File \"/tmp/tmp73k8g6hc.py\", line 16, in check\n    assert candidate(1) == 1\n          "
+        }
+      ],
+      "B_code_truncated": [],
+      "C_wrong_function_signature": [],
+      "D_full_script_not_function": [],
+      "E_competitive_style": [],
+      "F_markdown_prose_pollution": [],
+      "G_indentation_prefix_bug": [
+        {
+          "id": "HumanEval/0",
+          "reason": "  File \"/tmp/tmp14cu0llm.py\", line 19\n    return False\n                ^\nIndentationError: unindent does not match any o",
+          "completion_preview": "```python\n    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            if abs(numbers[i] - numbers[j]) < threshold:\n                return True\n    return False\n```",
+          "judge_reason": "  File \"/tmp/tmp14cu0llm.py\", line 19\n    return False\n                ^\nIndentationError: unindent does not match any outer indentation level\n"
+        },
+        {
+          "id": "HumanEval/2",
+          "reason": "return outside function",
+          "completion_preview": "```python\n    return number - int(number)\n```",
+          "judge_reason": "  File \"/tmp/tmpohb4i25j.py\", line 15\n    return number - int(number)\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nSyntaxError: 'return' outside function\n"
+        },
+        {
+          "id": "HumanEval/3",
+          "reason": "return outside function",
+          "completion_preview": "```python\nbalance = 0\nfor op in operations:\n    balance += op\n    if balance < 0:\n        return True\nreturn False\n```",
+          "judge_reason": "  File \"/tmp/tmpxu6dwjdz.py\", line 20\n    return True\n    ^^^^^^^^^^^\nSyntaxError: 'return' outside function\n"
+        }
+      ],
+      "H_genuine_algorithm_fail": [],
+      "I_evaluator_bug": [
+        {
+          "id": "HumanEval/6",
+          "reason": "unclassified: '  File \"/tmp/tmph7o8au5m.py\", line 15\\n    return [max(map(len, g.split(\\' \\'))) fo'",
+          "completion_preview": "```python\n    return [max(map(len, g.split(' '))) for g in paren_string.split()]\n```",
+          "judge_reason": "  File \"/tmp/tmph7o8au5m.py\", line 15\n    return [max(map(len, g.split(' '))) for g in paren_string.split()]\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nSyntaxError: 'return"
+        },
+        {
+          "id": "HumanEval/17",
+          "reason": "unclassified: '  File \"/tmp/tmpm0s3du4b.py\", line 20\\n    return [4 if note == \\'o\\' else 2 if not'",
+          "completion_preview": "```python\n    return [4 if note == 'o' else 2 if note == 'o|' else 1 for note in music_string.split()]\n```",
+          "judge_reason": "  File \"/tmp/tmpm0s3du4b.py\", line 20\n    return [4 if note == 'o' else 2 if note == 'o|' else 1 for note in music_string.split()]\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        },
+        {
+          "id": "HumanEval/18",
+          "reason": "unclassified: '  File \"/tmp/tmp1g0m56t5.py\", line 15\\n    return len([i for i in range(len(strin'",
+          "completion_preview": "```python\n    return len([i for i in range(len(string)) if string.startswith(substring, i)])\n```",
+          "judge_reason": "  File \"/tmp/tmp1g0m56t5.py\", line 15\n    return len([i for i in range(len(string)) if string.startswith(substring, i)])\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"
+        }
+      ]
+    }
+  }
+}

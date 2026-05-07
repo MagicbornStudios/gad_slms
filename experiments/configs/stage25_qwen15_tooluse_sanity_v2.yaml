@@ -51,8 +51,8 @@ data:
 training:
   epochs: 3
   learning_rate: 2.0e-4
-  batch_size: 2
-  gradient_accumulation: 8
+  batch_size: 1
+  gradient_accumulation: 16
   warmup_ratio: 0.05
   weight_decay: 0.0
   bf16: true

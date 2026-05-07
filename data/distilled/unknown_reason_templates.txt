@@ -1,0 +1,20 @@
+the path `{claim}` is missing, although a file named `{basename}` does exist elsewhere
+no match for `{claim}`; the basename `{basename}` appears at a different location
+`{claim}` not present in the codebase, but `{basename}` is found in another directory
+literal lookup of `{claim}` failed; `{basename}` resolves to a different file in the tree
+could not locate `{claim}`, however `{basename}` matches an existing file elsewhere
+`{claim}` does not exist, though there is a `{basename}` at another path
+the exact path `{claim}` is absent; `{basename}` exists under a different directory
+no file at `{claim}` — a file called `{basename}` lives elsewhere in the repo
+unable to find `{claim}`; only the basename `{basename}` matches files at other locations
+`{basename}` exists in the codebase, but not at the claimed path `{claim}`
+the path `{claim}` was not found, yet a `{basename}` file is present elsewhere
+missing: `{claim}`. A different file named `{basename}` was located in the tree
+`{claim}` is not a valid path here, although `{basename}` is the name of an existing file elsewhere
+nothing at `{claim}`; basename `{basename}` does match other files in the repo
+verified absent: `{claim}` — basename `{basename}` matches a file at a different path
+the literal path `{claim}` could not be resolved, but `{basename}` exists in another folder
+`{claim}` not found in the repository; a same-named file `{basename}` exists somewhere else
+no such path as `{claim}`, though `{basename}` corresponds to a file elsewhere in the tree
+search for `{claim}` returned no result; the basename `{basename}` is present at another location
+while `{basename}` exists elsewhere in the codebase, the specific path `{claim}` does not

@@ -1,0 +1,78 @@
+name: stage25_qwen15_doc_verifier_r16_augmented_v2
+base_model: Qwen/Qwen2.5-1.5B-Instruct
+adapter: lora
+compute_target: local-cuda-0
+notes: >
+  Doc-verifier rank=16 retrain on the v2 augmented corpus — same fake-
+  parent-prefix synthesis but with 150 distinct reason phrasings drawn
+  from a pool of 20 haiku-paraphrased templates (vs the v1 attempt's
+  single uniform template).
+
+  The v1 attempt regressed: F1 0.720 -> 0.599, unknown F1 0.462 -> 0.167.
+  Root cause per slm-learning-093: model overfit to the uniform reason
+  template "basename X matches elsewhere; literal path Y not found"
+  (used 150x identically). The 20-template pool now produces 150 unique
+  reason strings — model cannot memorize the template, must learn the
+  underlying structural concept.
+
+  Same recipe as r=16 baseline (LoRA r=16, alpha=32, 3 epochs, lr=2e-4).
+  Per slm-learning-051: candidate-only.
+
+  Promotion gate per benchmarks/README.md: f1_macro >= 0.85 + json
+  validity >= 0.90.
+
+  Falsification criterion: if f1_macro >= 0.720 AND unknown_f1 >= 0.462
+  the diversity hypothesis is at least partially supported (improvement
+  over r=16 baseline). If still regressed, the data-imbalance lane is
+  exhausted — the next move is a different angle (r=32 on original
+  corpus, or DIFFERENT minority-class signal entirely).
+
+lora:
+  r: 16
+  alpha: 32
+  dropout: 0.05
+  target_modules:
+    - q_proj
+    - k_proj
+    - v_proj
+    - o_proj
+    - gate_proj
+    - up_proj
+    - down_proj
+
+data:
+  source: jsonl_pairs
+  path: data/eval/doc_verifier_train.augmented_v2.reshaped.jsonl
+  max_length: 384
+  instruction_field: instruction
+  response_field: command
+  system_prompt: >-
+    You are gad-doc-verifier. Verify the claim against the live
+    codebase and emit a JSON object with status (verified|refuted|
+    unknown), evidence (list of file:line citations), and a brief
+    reason. Output only the JSON object on one line.
+
+training:
+  epochs: 3
+  learning_rate: 2.0e-4
+  batch_size: 1
+  gradient_accumulation: 16
+  warmup_ratio: 0.05
+  weight_decay: 0.0
+  bf16: true
+  fp16: false
+  gradient_checkpointing: true
+  seed: 42
+  save_strategy: "no"
+  logging_steps: 25
+
+eval:
+  run_after_train: true
+  benchmarks:
+    - gad_tools
+  temperature: 0.0
+  max_new_tokens: 200
+
+hub:
+  publish: true
+  private: false

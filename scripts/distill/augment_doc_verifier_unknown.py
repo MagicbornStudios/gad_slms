@@ -62,6 +62,30 @@ from typing import Iterable
 # writing the row, so even if a prefix later becomes real (someone adds
 # a directory called `archive/`) the augmenter still produces correct
 # unknown-class examples.
+# Default reason templates (used if --reason-templates not provided).
+# These are the original deterministic + a few variants. For real
+# variance, pass --reason-templates pointing at a haiku-generated pool
+# (see data/distilled/unknown_reason_templates.txt).
+DEFAULT_REASON_TEMPLATES = [
+    "basename {basename!r} matches elsewhere; literal path {claim!r} not found",
+]
+
+
+def load_reason_templates(path: Path | None) -> list[str]:
+    """Load reason-template variants from a text file (one per line)."""
+    if not path:
+        return DEFAULT_REASON_TEMPLATES
+    if not path.exists():
+        return DEFAULT_REASON_TEMPLATES
+    lines = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        s = line.strip()
+        if not s or s.startswith("#"):
+            continue
+        lines.append(s)
+    return lines or DEFAULT_REASON_TEMPLATES
+
+
 SYNTHETIC_PREFIXES = [
     "_ghost_root",
     "_ghost_root/v1",
@@ -108,7 +132,8 @@ def _basename(claim: str) -> str:
 
 
 def synthesize_unknown_row(verified_row: dict, prefix: str, *,
-                           orig_evidence: list[str]) -> dict:
+                           orig_evidence: list[str],
+                           reason_template: str) -> dict:
     """Mutate a verified row into a structurally-correct unknown row."""
     inp = verified_row["input"]
     orig_claim = inp["claim"]
@@ -130,10 +155,16 @@ def synthesize_unknown_row(verified_row: dict, prefix: str, *,
     if not evidence and orig_claim:
         evidence = [orig_claim]
 
-    reason = (
-        f"basename {base!r} matches elsewhere; literal path "
-        f"{new_claim!r} not found"
-    )
+    # Format the reason template — supports both !r-style and plain
+    # placeholders. Try !r-style first (legacy single template); fall
+    # back to plain str format.
+    try:
+        reason = reason_template.format(basename=base, claim=new_claim)
+    except (KeyError, IndexError):
+        reason = (
+            f"basename {base!r} matches elsewhere; literal path "
+            f"{new_claim!r} not found"
+        )
 
     new_output = {
         "claim": new_claim,
@@ -200,7 +231,8 @@ def collect_verified_seeds(rows: Iterable[dict]) -> list[dict]:
 
 
 def augment(rows: list[dict], target_unknown: int, *,
-            seed: int) -> tuple[list[dict], dict]:
+            seed: int,
+            reason_templates: list[str]) -> tuple[list[dict], dict]:
     rng = random.Random(seed)
     current_unknown = sum(1 for r in rows if r.get("output", {}).get("status") == "unknown")
     needed = max(0, target_unknown - current_unknown)
@@ -216,18 +248,22 @@ def augment(rows: list[dict], target_unknown: int, *,
     seen_claims: set[str] = set()
 
     # Try multiple (seed, prefix) combos until we have `needed` distinct
-    # synthetic claims.
+    # synthetic claims. Reason template is sampled from the pool so
+    # each synthetic row has different surface form (per slm-learning-093:
+    # uniform templates regress).
     attempt_cap = needed * 8
     attempts = 0
     while len(new_rows) < needed and attempts < attempt_cap:
         attempts += 1
         seed_row = rng.choice(seeds)
         prefix = rng.choice(SYNTHETIC_PREFIXES)
+        reason_template = rng.choice(reason_templates)
         # Use the original verified evidence (single match = the real
         # location). For unknowns, evidence is the basename matches.
         orig_evidence = seed_row.get("output", {}).get("evidence", [])
         new_row = synthesize_unknown_row(seed_row, prefix,
-                                         orig_evidence=orig_evidence)
+                                         orig_evidence=orig_evidence,
+                                         reason_template=reason_template)
         ck = new_row["input"]["claim"]
         if ck in seen_claims:
             continue
@@ -246,6 +282,7 @@ def augment(rows: list[dict], target_unknown: int, *,
         "ending_unknown": current_unknown + len(new_rows),
         "verified_seed_pool": len(seeds),
         "prefix_pool": len(SYNTHETIC_PREFIXES),
+        "reason_template_pool": len(reason_templates),
     }
     return augmented, stats
 
@@ -258,6 +295,14 @@ def main() -> int:
                         help="Target count of unknown-class rows in output. "
                              "Default 220 = ~50%% of original 442 corpus.")
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--reason-templates", type=Path, default=None,
+                        help="Path to a text file with one reason template "
+                             "per line. Use {basename} and {claim} as "
+                             "placeholders. Critical per slm-learning-093 — "
+                             "without variance the model overfits to the "
+                             "single default template. Default pool: "
+                             "data/distilled/unknown_reason_templates.txt "
+                             "(20 haiku-generated variants).")
     args = parser.parse_args()
 
     if not args.inp.exists():
@@ -267,7 +312,19 @@ def main() -> int:
     rows = load_pairs(args.inp)
     print(f"[augment] loaded {len(rows)} rows from {args.inp}")
 
-    augmented, stats = augment(rows, args.target_unknown, seed=args.seed)
+    # Default to the haiku-generated template pool if it exists and the
+    # operator didn't override.
+    template_path = args.reason_templates or (
+        Path("data/distilled/unknown_reason_templates.txt")
+        if Path("data/distilled/unknown_reason_templates.txt").exists()
+        else None
+    )
+    reason_templates = load_reason_templates(template_path)
+    print(f"[augment] using {len(reason_templates)} reason template(s) "
+          f"from {template_path or 'DEFAULT_REASON_TEMPLATES'}")
+
+    augmented, stats = augment(rows, args.target_unknown, seed=args.seed,
+                               reason_templates=reason_templates)
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
     with args.out.open("w", encoding="utf-8") as f:

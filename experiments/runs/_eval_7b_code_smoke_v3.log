@@ -1,0 +1,139 @@
+C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_utils\async_utils.py:45: DeprecationWarning: 'asyncio.WindowsSelectorEventLoopPolicy' is deprecated and slated for removal in Python 3.16
+  asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_utils\async_utils.py:45: DeprecationWarning: 'asyncio.set_event_loop_policy' is deprecated and slated for removal in Python 3.16
+  asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+✓ Initialized. View run at 
+https://modal.com/apps/b2gdevs/main/ap-L2lD1Qb1fWMY1JKQgF7SMr
+✓ Created objects.
+├── 🔨 Created mount 
+│   C:\Users\benja\Documents\slm_learning\modal_app\eval_adapter.py
+├── 🔨 Created function score_a10g.
+├── 🔨 Created function score_a100.
+└── 🔨 Created function score_l4.
+[main] firing eval on Modal A10G for /models/runs/ladder-7b-coder-2026-05-08/adapter on code_smoke (n=5)
+[eval] adapter=/models/runs/ladder-7b-coder-2026-05-08/adapter base=Qwen/Qwen2.5-Coder-7B-Instruct benchmark=code_smoke
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1AFetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Cancellation requested; stopping current tasks.
+
+[1AFetching 4 files:   0%|          | 0/4 [06:07<?, ?it/s]
+Runner interrupted due to worker preemption. Your Function will be restarted with the same input. For more details, see https://modal.com/docs/guide/preemption
+[eval] adapter=/models/runs/ladder-7b-coder-2026-05-08/adapter base=Qwen/Qwen2.5-Coder-7B-Instruct benchmark=code_smoke
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1AFetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]
+[1AFetching 4 files:  25%|██▌       | 1/4 [00:53<02:40, 53.46s/it]
+[1AFetching 4 files: 100%|██████████| 4/4 [00:53<00:00, 13.37s/it]
+
+[1ALoading weights:   0%|          | 0/339 [00:00<?, ?it/s]
+[1ALoading weights:   0%|          | 1/339 [00:00<03:07,  1.80it/s]
+[1ALoading weights:   1%|          | 2/339 [00:01<03:08,  1.78it/s]
+[1ALoading weights:   1%|▏         | 5/339 [00:01<01:04,  5.18it/s]
+[1ALoading weights:   5%|▍         | 16/339 [00:01<00:16, 19.06it/s]
+[1ALoading weights:   6%|▌         | 20/339 [00:01<00:15, 20.92it/s]
+[1ALoading weights:   8%|▊         | 28/339 [00:01<00:10, 30.56it/s]
+[1ALoading weights:  10%|▉         | 33/339 [00:01<00:09, 30.93it/s]
+[1ALoading weights:  12%|█▏        | 41/339 [00:02<00:08, 35.91it/s]
+[1ALoading weights:  15%|█▍        | 50/339 [00:02<00:06, 46.79it/s]
+[1ALoading weights:  17%|█▋        | 56/339 [00:02<00:07, 37.51it/s]
+[1ALoading weights:  19%|█▉        | 64/339 [00:02<00:07, 39.06it/s]
+[1ALoading weights:  20%|██        | 69/339 [00:02<00:08, 33.72it/s]
+[1ALoading weights:  22%|██▏       | 76/339 [00:02<00:07, 35.27it/s]
+[1ALoading weights:  24%|██▎       | 80/339 [00:03<00:09, 27.31it/s]
+[1ALoading weights:  26%|██▌       | 87/339 [00:03<00:08, 29.73it/s]
+[1ALoading weights:  27%|██▋       | 91/339 [00:03<00:10, 23.76it/s]
+[1ALoading weights:  29%|██▉       | 99/339 [00:03<00:08, 27.64it/s]
+[1ALoading weights:  31%|███▏      | 106/339 [00:04<00:06, 34.11it/s]
+[1ALoading weights:  33%|███▎      | 112/339 [00:04<00:05, 38.81it/s]
+[1ALoading weights:  35%|███▍      | 117/339 [00:04<00:05, 38.00it/s]
+[1ALoading weights:  37%|███▋      | 125/339 [00:04<00:05, 41.08it/s]
+[1ALoading weights:  39%|███▉      | 132/339 [00:04<00:04, 46.67it/s]
+[1ALoading weights:  41%|████      | 138/339 [00:04<00:05, 39.14it/s]
+[1ALoading weights:  44%|████▎     | 148/339 [00:04<00:03, 51.18it/s]
+[1ALoading weights:  45%|████▌     | 154/339 [00:05<00:03, 47.18it/s]
+[1ALoading weights:  47%|████▋     | 161/339 [00:05<00:03, 45.32it/s]
+[1ALoading weights:  50%|████▉     | 168/339 [00:05<00:03, 49.11it/s]
+[1ALoading weights:  51%|█████▏    | 174/339 [00:05<00:04, 39.54it/s]
+[1ALoading weights:  54%|█████▍    | 183/339 [00:05<00:03, 49.53it/s]
+[1ALoading weights:  56%|█████▌    | 189/339 [00:05<00:03, 47.60it/s]
+[1ALoading weights:  58%|█████▊    | 196/339 [00:05<00:02, 52.10it/s]
+[1ALoading weights:  60%|█████▉    | 202/339 [00:06<00:02, 45.82it/s]
+[1ALoading weights:  61%|██████▏   | 208/339 [00:06<00:02, 48.07it/s]
+[1ALoading weights:  63%|██████▎   | 214/339 [00:06<00:02, 41.99it/s]
+[1ALoading weights:  65%|██████▌   | 221/339 [00:06<00:02, 42.27it/s]
+[1ALoading weights:  68%|██████▊   | 230/339 [00:06<00:02, 52.47it/s]
+[1ALoading weights:  70%|██████▉   | 236/339 [00:06<00:02, 42.15it/s]
+[1ALoading weights:  72%|███████▏  | 244/339 [00:06<00:01, 49.38it/s]
+[1ALoading weights:  74%|███████▎  | 250/339 [00:07<00:02, 44.32it/s]
+[1ALoading weights:  76%|███████▌  | 257/339 [00:07<00:01, 42.94it/s]
+[1ALoading weights:  78%|███████▊  | 264/339 [00:07<00:01, 47.51it/s]
+[1ALoading weights:  80%|███████▉  | 270/339 [00:07<00:01, 40.70it/s]
+[1ALoading weights:  83%|████████▎ | 280/339 [00:07<00:01, 52.62it/s]
+[1ALoading weights:  85%|████████▍ | 287/339 [00:07<00:01, 46.33it/s]
+[1ALoading weights:  86%|████████▋ | 293/339 [00:08<00:01, 41.22it/s]
+[1ALoading weights:  88%|████████▊ | 298/339 [00:08<00:00, 42.92it/s]
+[1ALoading weights:  90%|████████▉ | 304/339 [00:08<00:00, 40.94it/s]
+[1ALoading weights:  92%|█████████▏| 311/339 [00:08<00:00, 46.98it/s]
+[1ALoading weights:  94%|█████████▎| 317/339 [00:08<00:00, 42.24it/s]
+[1ALoading weights:  95%|█████████▍| 322/339 [00:08<00:00, 42.14it/s]
+[1ALoading weights:  97%|█████████▋| 328/339 [00:08<00:00, 44.41it/s]
+[1ALoading weights:  98%|█████████▊| 333/339 [00:09<00:00, 41.21it/s]
+[1ALoading weights: 100%|██████████| 339/339 [00:09<00:00, 37.44it/s]
+[eval] model loaded in 67.5s
+
+{
+  "schema_v": 1,
+  "ts": "2026-05-07T05:48:09.693986+00:00",
+  "adapter_id": "/models/runs/ladder-7b-coder-2026-05-08/adapter",
+  "base_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "benchmark": "code_smoke",
+  "n": 5,
+  "passed": 5,
+  "score": 1.0,
+  "results": [
+    {
+      "id": "smoke_sum",
+      "passed": true,
+      "judge_reason": "ok",
+      "elapsed_s": 4.59,
+      "completion_preview": "Certainly! Below is a simple Python function named `add` that takes two parameters and returns their sum:\n\n```python\ndef add(a, b):\n    return a + b\n\n# Example usage:\nresult = add(3, 5)\nprint(result)  # Output: 8\n```\n\nThis function can be used to compute the sum of any two numbers you pass as argume"
+    },
+    {
+      "id": "smoke_reverse",
+      "passed": true,
+      "judge_reason": "ok",
+      "elapsed_s": 8.2,
+      "completion_preview": "Certainly! Below is a Python function named `reverse_string` that takes a string `s` as input and returns its reversed version.\n\n```python\ndef reverse_string(s):\n    return s[::-1]\n\n# Example usage:\ninput_string = \"Hello, World!\"\nreversed_string = reverse_string(input_string)\nprint(reversed_string) "
+    },
+    {
+      "id": "smoke_fibonacci",
+      "passed": true,
+      "judge_reason": "ok",
+      "elapsed_s": 13.22,
+      "completion_preview": "Certainly! The Fibonacci sequence is defined such that each number after the first two is the sum of the two preceding ones. The sequence starts with 0 and 1.\n\nHere's a Python function to compute the nth Fibonacci number using recursion:\n\n```python\ndef fib(n):\n    if n == 0:\n        return 0\n    eli"
+    },
+    {
+      "id": "smoke_count_vowels",
+      "passed": true,
+      "judge_reason": "ok",
+      "elapsed_s": 15.24,
+      "completion_preview": "Certainly! Below is the Python function `count_vowels(s)` that counts the occurrences of vowels (a, e, i, o, u) in a given string, ignoring case.\n\n```python\ndef count_vowels(s):\n    # Define the set of vowels for quick lookup\n    vowels = {'a', 'e', 'i', 'o', 'u'}\n    \n    # Initialize a counter to "
+    },
+    {
+      "id": "smoke_is_prime",
+      "passed": true,
+      "judge_reason": "ok",
+      "elapsed_s": 14.88,
+      "completion_preview": "Certainly! Below is the Python function `is_prime(n)` that checks whether a given number \\( n \\) is a prime number:\n\n```python\ndef is_prime(n):\n    # Check if the input is less than 2\n    if n <= 1:\n        return False\n    \n    # Check for divisibility from 2 up to the square root of n\n    for i in"
+    }
+  ],
+  "decision_refs": [
+    "slm-learning-094",
+    "slm-learning-097",
+    "slm-learning-103"
+  ]
+}
+[eval] DONE code_smoke: 5/5 = 1.000
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/b2gdevs/main/ap-L2lD1Qb1fWMY1JKQgF7SMr

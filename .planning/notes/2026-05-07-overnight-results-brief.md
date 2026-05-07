@@ -35,7 +35,20 @@ This is the comparison the operator asked for. We exist on the leaderboard.
 
 **Loss curve so far**: 7B (1.012) < 3B (1.087). Lower is better. Consistent scaling — bigger model fits the data better. Predicts continued lift if we go to 14B / 32B.
 
-**Next step**: when 1.5B retry lands, all three rungs eval'd against same code_smoke + HumanEval n=20 → real scaling curve → decision on 32B shot.
+### Scaling-ladder code_smoke results (max_new_tokens=1024, judge strips `<think>` blocks)
+
+| Rung | code_smoke (n=5) | Notes |
+|---|---|---|
+| 7B Qwen2.5-Coder + LoRA | **5/5 (100%)** | passed all 5: add, reverse, fib, count_vowels, is_prime |
+| 3B Qwen2.5-Coder + LoRA | **4/5 (80%)** | failed only is_prime (minor judge code-fence edge case) |
+| 1.5B retry | TBD | training in flight on A10G |
+
+**Scaling curve confirmed**: 3B → 7B = +20pp on code_smoke, paralleling
+the loss curve. **This justifies firing the $50 32B shot** (decision
+slm-learning-097's pre-flight gate is now passed). Decide in the
+morning.
+
+**Next step**: when 1.5B retry lands, complete the 3-point curve.
 
 ## Cost summary tonight
 

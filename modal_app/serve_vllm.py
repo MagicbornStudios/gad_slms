@@ -161,8 +161,12 @@ class VLLMEngine:
         temperature = float(request.get("temperature", 0.0))
         stop = request.get("stop")
 
-        # Render messages to chat-template prompt via the engine's tokenizer
-        tokenizer = await self.engine.get_tokenizer()
+        # Render messages to chat-template prompt via the engine's tokenizer.
+        # vllm 0.16: get_tokenizer() is sync, returns a CachedTokenizerFast.
+        tokenizer = self.engine.get_tokenizer()
+        # Some vllm versions wrap; unwrap if needed
+        if hasattr(tokenizer, "tokenizer"):
+            tokenizer = tokenizer.tokenizer
         try:
             prompt = tokenizer.apply_chat_template(
                 messages, tokenize=False, add_generation_prompt=True,

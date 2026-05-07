@@ -1,0 +1,57 @@
+{
+  "schema_v": 1,
+  "ts": "2026-05-07T05:10:33.009376+00:00",
+  "n_models": 1,
+  "n_benchmarks": 1,
+  "rows": [
+    {
+      "model_id": "gemini-cli",
+      "benchmark": "gad_tools_v2",
+      "kind": "runtime-cli",
+      "tier": "runtime",
+      "n": 30,
+      "passed": 0,
+      "score": 0.0,
+      "latency_p50_s": 0.51,
+      "latency_total_s": 15.73,
+      "cost_usd": 0.0,
+      "evidence_tier": "T2",
+      "endpoint_used": "cli",
+      "served_name": "C:\\Users\\benja\\npm-global\\gemini.CMD",
+      "first_failures": [
+        {
+          "i": 0,
+          "prompt": "Take a note that the build is broken on Windows.",
+          "response": "[CLI_NOT_FOUND: gemini]"
+        },
+        {
+          "i": 1,
+          "prompt": "Jot down that we should investigate the OOM in stage 3.",
+          "response": "[CLI_NOT_FOUND: gemini]"
+        },
+        {
+          "i": 2,
+          "prompt": "Show me the open planning notes.",
+          "response": "[CLI_NOT_FOUND: gemini]"
+        },
+        {
+          "i": 3,
+          "prompt": "Add a new task under phase 03 to wire up the OpenCode teacher.",
+          "response": "[CLI_NOT_FOUND: gemini]"
+        },
+        {
+          "i": 4,
+          "prompt": "Mark task 02-02 as done.",
+          "response": "[CLI_NOT_FOUND: gemini]"
+        }
+      ],
+      "ts": "2026-05-07T05:10:33.009290+00:00"
+    }
+  ],
+  "decision_refs": [
+    "slm-learning-053",
+    "slm-learning-070",
+    "slm-learning-071",
+    "slm-learning-085"
+  ]
+}

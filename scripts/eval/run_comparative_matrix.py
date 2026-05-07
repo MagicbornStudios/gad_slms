@@ -180,33 +180,60 @@ def call_runtime_cli(model: dict, prompt: str, system: str | None = None,
     import shlex
     import subprocess
 
+    import shutil
     binary = model["binary"]
     args_template = model.get("args", ["-p"])
     extra_env = model.get("env", {})
+
+    # Resolve binary on PATH (handles .EXE/.CMD/.BAT on Windows)
+    resolved = shutil.which(binary) or binary
 
     # Compose the full prompt: system prepended if provided
     full_prompt = (
         f"{system}\n\n{prompt}" if system else prompt
     )
 
-    cmd = [binary] + list(args_template)
+    cmd = [resolved] + list(args_template)
     # Pass the prompt as the final positional arg
     cmd.append(full_prompt)
+
+    # On Windows, .CMD/.BAT need shell=True OR cmd.exe /c. Detect + adapt.
+    use_shell = (
+        os.name == "nt"
+        and isinstance(resolved, str)
+        and resolved.lower().endswith((".cmd", ".bat"))
+    )
 
     env = dict(os.environ)
     env.update({k: str(v) for k, v in extra_env.items()})
     env.setdefault("PYTHONUTF8", "1")
 
     try:
-        proc = subprocess.run(
-            cmd,
-            env=env,
-            capture_output=True,
-            text=True,
-            timeout=timeout,
-            encoding="utf-8",
-            errors="replace",
-        )
+        if use_shell:
+            # Shell-based invocation for .CMD/.BAT — quote args
+            shell_cmd = " ".join(
+                [f'"{c}"' if (" " in c or '"' in c) else c for c in cmd]
+            )
+            proc = subprocess.run(
+                shell_cmd,
+                shell=True,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                encoding="utf-8",
+                errors="replace",
+            )
+        else:
+            proc = subprocess.run(
+                cmd,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                encoding="utf-8",
+                errors="replace",
+            )
     except subprocess.TimeoutExpired:
         return "[CLI_TIMEOUT]", 0, 0
     except FileNotFoundError:

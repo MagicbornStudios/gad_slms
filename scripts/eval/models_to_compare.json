@@ -6,7 +6,7 @@
     "served_name": "Qwen/Qwen2.5-1.5B-Instruct",
     "cost_usd_per_1k_tokens_out": 0.0,
     "tier": "Tier 0 local",
-    "notes": "Bare base — no adapter; the floor every specialist must beat."
+    "notes": "Bare base \u2014 no adapter; the floor every specialist must beat."
   },
   {
     "model_id": "scrubster/dr-stein-stage25-qwen15-instruct-v2",
@@ -40,7 +40,7 @@
     "kind": "frontier-anthropic",
     "cost_usd_per_1k_tokens_out": 0.075,
     "tier": "frontier",
-    "notes": "Anthropic Claude Opus 4.7 — frontier reasoning baseline."
+    "notes": "Anthropic Claude Opus 4.7 \u2014 frontier reasoning baseline."
   },
   {
     "model_id": "claude-sonnet-4-6",
@@ -71,7 +71,9 @@
     "model_id": "claude-cli",
     "kind": "runtime-cli",
     "binary": "claude",
-    "args": ["-p"],
+    "args": [
+      "-p"
+    ],
     "cost_usd_per_1k_tokens_out": 0.015,
     "tier": "runtime",
     "timeout_seconds": 180,
@@ -91,7 +93,9 @@
     "model_id": "codex-cli",
     "kind": "runtime-cli",
     "binary": "codex",
-    "args": ["exec"],
+    "args": [
+      "exec"
+    ],
     "cost_usd_per_1k_tokens_out": 0.015,
     "tier": "runtime",
     "timeout_seconds": 180,
@@ -101,7 +105,11 @@
     "model_id": "opencode-pickle",
     "kind": "runtime-cli",
     "binary": "opencode",
-    "args": ["run", "--model", "pickle"],
+    "args": [
+      "run",
+      "--model",
+      "pickle"
+    ],
     "cost_usd_per_1k_tokens_out": 0.0,
     "tier": "runtime-free",
     "timeout_seconds": 300,
@@ -111,10 +119,23 @@
     "model_id": "opencode-llama-3.3-70b",
     "kind": "runtime-cli",
     "binary": "opencode",
-    "args": ["run", "--model", "openrouter/meta-llama/llama-3.3-70b-instruct:free"],
+    "args": [
+      "run",
+      "--model",
+      "openrouter/meta-llama/llama-3.3-70b-instruct:free"
+    ],
     "cost_usd_per_1k_tokens_out": 0.0,
     "tier": "runtime-free",
     "timeout_seconds": 300,
     "notes": "OpenCode CLI routing to OpenRouter's free Llama-3.3-70B. The known-quantity free-tier comparator."
+  },
+  {
+    "model_id": "ours-via-modal-v2",
+    "kind": "local",
+    "endpoint": "https://b2gdevs--slm-learning-vllm-vllmengine-chat-completions.modal.run",
+    "served_name": "dr-stein-cli-v2",
+    "cost_usd_per_1k_tokens_out": 0.0,
+    "tier": "ours-served",
+    "notes": "Our v2 adapter served via Modal vLLM. The row that proves we exist on the leaderboard."
   }
 ]

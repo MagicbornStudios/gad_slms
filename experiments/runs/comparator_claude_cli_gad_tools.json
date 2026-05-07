@@ -1,0 +1,57 @@
+{
+  "schema_v": 1,
+  "ts": "2026-05-07T05:14:55.997527+00:00",
+  "n_models": 1,
+  "n_benchmarks": 1,
+  "rows": [
+    {
+      "model_id": "claude-cli",
+      "benchmark": "gad_tools_v2",
+      "kind": "runtime-cli",
+      "tier": "runtime",
+      "n": 30,
+      "passed": 24,
+      "score": 0.8,
+      "latency_p50_s": 8.92,
+      "latency_total_s": 279.75,
+      "cost_usd": 0.0048,
+      "evidence_tier": "T2",
+      "endpoint_used": "cli",
+      "served_name": "C:\\Users\\benja\\.local\\bin\\claude.EXE",
+      "first_failures": [
+        {
+          "i": 10,
+          "prompt": "Close out phase 02 since the training pipeline is done.",
+          "response": "`gad tasks stamp SL-T-02 --projectid slm-learning --status done --agent claude --runtime claude-code`"
+        },
+        {
+          "i": 13,
+          "prompt": "Show me what's blocking phase 03.",
+          "response": "`gad snapshot --projectid slm-learning --phase 03`"
+        },
+        {
+          "i": 17,
+          "prompt": "Run an evolution scan on slm-learning and write the json.",
+          "response": "`gad evolution evolve --projectid slm-learning --json`"
+        },
+        {
+          "i": 24,
+          "prompt": "Which command do I use to start tracking a new feature?",
+          "response": "`gad new-project`"
+        },
+        {
+          "i": 27,
+          "prompt": "Where is the project state file located?",
+          "response": "`gad snapshot --projectid slm-learning`"
+        }
+      ],
+      "ts": "2026-05-07T05:14:55.997437+00:00"
+    }
+  ],
+  "decision_refs": [
+    "slm-learning-053",
+    "slm-learning-070",
+    "slm-learning-071",
+    "slm-learning-085"
+  ]
+}

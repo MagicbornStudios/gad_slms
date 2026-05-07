@@ -1,0 +1,31 @@
+{
+  "schema_v": 1,
+  "ts": "2026-05-07T05:17:49.632281+00:00",
+  "n_models": 1,
+  "n_benchmarks": 1,
+  "rows": [
+    {
+      "model_id": "ours-via-modal-v2",
+      "benchmark": "gad_tools_v2",
+      "kind": "local",
+      "tier": "ours-served",
+      "n": 30,
+      "passed": 30,
+      "score": 1.0,
+      "latency_p50_s": 0.54,
+      "latency_total_s": 95.43,
+      "cost_usd": 0.0,
+      "evidence_tier": "T2",
+      "endpoint_used": "https://b2gdevs--slm-learning-vllm-vllmengine-chat-completions.modal.run",
+      "served_name": "dr-stein-cli-v2",
+      "first_failures": [],
+      "ts": "2026-05-07T05:17:49.632242+00:00"
+    }
+  ],
+  "decision_refs": [
+    "slm-learning-053",
+    "slm-learning-070",
+    "slm-learning-071",
+    "slm-learning-085"
+  ]
+}

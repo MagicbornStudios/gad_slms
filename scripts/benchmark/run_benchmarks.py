@@ -1,40 +1,35 @@
-import argparse
+"""DEPRECATED MOCK — refuses to run.
+
+This file used to print hardcoded "perplexity: 15.4 / accuracy: 0.42 /
+pass@1: 0.25" results without actually running any benchmark. That is a
+landmine: anything that consumes its output gets fake numbers.
+
+The REAL eval entrypoints are:
+  - scripts/eval_humaneval.py   — HumanEval (n=10 by default; n=164 full)
+  - scripts/eval_gsm8k.py       — GSM8K (n=50 by default)
+  - scripts/eval_swebench.py    — SWE-bench Verified (subset selectable)
+  - scripts/eval_checkpoint.py  — GAD-tools 30-case promptfoo eval
+  - scripts/eval/eval_doc_verifier.py — doc_verifier_f1 + json_validity
+  - scripts/eval/run_comparative_matrix.py — N models x M benchmarks
+  - scripts/benchmark/run_per_cohort.py — per-cohort dispatcher (D-4)
+
+This file refuses to run so callers are forced to switch.
+"""
+from __future__ import annotations
 import sys
-from typing import Dict, Any
 
-def evaluate_tinystories(model_name: str) -> Dict[str, Any]:
-    print(f"Evaluating {model_name} on TinyStories...")
-    # Placeholder for perplexity/coherence scoring
-    return {"perplexity": 15.4, "grammar_score": 0.85}
 
-def evaluate_gsm8k(model_name: str) -> Dict[str, Any]:
-    print(f"Evaluating {model_name} on GSM8K (Reasoning)...")
-    # Placeholder for logic and reasoning score
-    return {"accuracy": 0.42}
+def main() -> int:
+    print(
+        "ERROR: scripts/benchmark/run_benchmarks.py is a DEPRECATED MOCK "
+        "that returned hardcoded fake scores. It refuses to run.\n\n"
+        "Use the per-suite scripts in scripts/eval_*.py + scripts/eval/, "
+        "or scripts/eval/run_comparative_matrix.py for an N x M matrix, "
+        "or scripts/benchmark/run_per_cohort.py for per-cohort dispatch.",
+        file=sys.stderr,
+    )
+    return 2
 
-def evaluate_humaneval(model_name: str) -> Dict[str, Any]:
-    print(f"Evaluating {model_name} on HumanEval (Coding)...")
-    # Placeholder for code completion score
-    return {"pass@1": 0.25}
-
-def main():
-    parser = argparse.ArgumentParser(description="Run SLM Benchmarks")
-    parser.add_argument("--model", type=str, required=True, help="Model to evaluate (e.g., Kael, DrStein)")
-    parser.add_argument("--suite", type=str, choices=["all", "tinystories", "gsm8k", "humaneval"], default="all")
-    
-    args = parser.parse_args()
-    results = {}
-    
-    if args.suite in ["all", "tinystories"]:
-        results["tinystories"] = evaluate_tinystories(args.model)
-    if args.suite in ["all", "gsm8k"]:
-        results["gsm8k"] = evaluate_gsm8k(args.model)
-    if args.suite in ["all", "humaneval"]:
-        results["humaneval"] = evaluate_humaneval(args.model)
-        
-    print("\n--- Benchmark Results ---")
-    for suite, res in results.items():
-        print(f"{suite.upper()}: {res}")
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

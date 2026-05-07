@@ -1,30 +1,40 @@
-import argparse
+"""DEPRECATED MOCK — refuses to run.
 
-def evaluate_tool_calling(model_name: str):
-    print(f"Running GAD Tool-Calling Eval for {model_name}...")
-    # This simulates a mock GAD project environment where the model must 
-    # correctly output a tool call to update a planning file.
-    
-    tasks = [
-        "Update the ROADMAP.xml to mark phase 01 as complete.",
-        "Add a new decision to DECISIONS.xml about using JSON-RPC.",
-        "Change the next-action in STATE.xml to 'Run benchmarks'."
-    ]
-    
-    for i, task in enumerate(tasks):
-        print(f"\nTask {i+1}: {task}")
-        # In a real eval, we feed this to the model and parse the tool JSON/XML
-        print("  -> Expected: ToolCall(update_file)")
-        print("  -> Actual: [Mock pass]")
-        
-    print("\nTool Eval Score: 3/3 (100%)")
+This file used to print a hardcoded "Tool Eval Score: 3/3 (100%)" without
+actually evaluating anything. That is a landmine: if any tooling ever
+calls it, it returns a fake-passing score that misrepresents adapter
+quality.
 
-def main():
-    parser = argparse.ArgumentParser(description="Run GAD Tool Eval")
-    parser.add_argument("--model", type=str, required=True)
-    args = parser.parse_args()
-    
-    evaluate_tool_calling(args.model)
+The REAL gad-tools eval lives at:
+  - scripts/eval_checkpoint.py (the canonical 30-case promptfoo-gad-tools
+    runner used by every real adapter eval, e.g.
+    experiments/runs/<run>/eval_gad_tools.json)
+  - scripts/delta/eval_candidate.py --benchmarks gad_tools (the daemon-
+    facing wrapper that produces a verdict envelope)
+  - scripts/benchmark/run_per_cohort.py (the per-cohort dispatcher per
+    workstream-d-4)
+
+Use those instead. This file refuses to run with a clear error so a
+caller is forced to switch over.
+"""
+from __future__ import annotations
+import sys
+
+
+def main() -> int:
+    print(
+        "ERROR: scripts/benchmark/eval_gad_tools.py is a DEPRECATED MOCK "
+        "that returned hardcoded fake scores. It refuses to run.\n\n"
+        "Use one of:\n"
+        "  scripts/eval_checkpoint.py --candidate <adapter>\n"
+        "  scripts/delta/eval_candidate.py --candidate-dir <dir> "
+        "--benchmarks gad_tools\n"
+        "  scripts/benchmark/run_per_cohort.py --adapter <id> --cohort-id "
+        "<project>-eval",
+        file=sys.stderr,
+    )
+    return 2
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

@@ -547,4 +547,9 @@
     <summary>Planning specialist gated on fresh telemetry export with handoffs adapter — current cohort yields only 98 pairs from 117k envelopes</summary>
   </decision>
 
+  <decision id="slm-learning-093">
+    <title>Doc-verifier r=16 augmented REGRESSED (F1 0.720 -&gt; 0.599,...</title>
+    <summary>Doc-verifier r=16 augmented REGRESSED (F1 0.720 -&gt; 0.599, unknown 0.462 -&gt; 0.167) — deterministic template synthesis caused overfit to template phrasing; need haiku paraphrase variance</summary>
+  </decision>
+
 </decisions>

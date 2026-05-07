@@ -1,0 +1,56 @@
+{
+  "schema_v": 1,
+  "benchmark": "doc_verifier",
+  "ts": "2026-05-07T01:06:19.297692+00:00",
+  "candidate": "scrubster/dr-stein-stage25-qwen15-doc-verifier-r16-augmented",
+  "base": "Qwen/Qwen2.5-1.5B-Instruct",
+  "holdout_path": "data\\eval\\doc_verifier_holdout.reshaped.jsonl",
+  "metrics": {
+    "n_holdout": 50,
+    "n_with_gold": 50,
+    "f1_macro": 0.599,
+    "accuracy": 0.74,
+    "json_validity_rate": 1.0,
+    "per_class_precision": {
+      "verified": 0.714,
+      "refuted": 0.84,
+      "unknown": 0.25
+    },
+    "per_class_recall": {
+      "verified": 0.882,
+      "refuted": 0.84,
+      "unknown": 0.125
+    },
+    "per_class_f1": {
+      "verified": 0.789,
+      "refuted": 0.84,
+      "unknown": 0.167
+    },
+    "confusion_matrix": {
+      "verified": {
+        "verified": 15,
+        "unknown": 2
+      },
+      "refuted": {
+        "refuted": 21,
+        "verified": 3,
+        "unknown": 1
+      },
+      "unknown": {
+        "refuted": 4,
+        "verified": 3,
+        "unknown": 1
+      }
+    }
+  },
+  "evidence_tier": "T1",
+  "decision_refs": [
+    "slm-learning-051",
+    "slm-learning-071"
+  ],
+  "promotion_threshold": {
+    "f1_macro": 0.85,
+    "json_validity_rate": 0.9
+  },
+  "promotion_eligible": false
+}

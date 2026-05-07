@@ -1,0 +1,436 @@
+{
+  "checkpoint": "experiments\\runs\\stage25_qwen15_doc_verifier_r16_augmented\\adapter",
+  "eval": "promptfoo-gad-tools.yaml",
+  "device": "cuda",
+  "temperature": 0.0,
+  "max_new_tokens": 200,
+  "evaluated_at": "2026-05-06T19:58:30",
+  "elapsed_sec": 140.6,
+  "per_test_sec": [
+    6.549,
+    2.514,
+    1.359,
+    2.794,
+    1.813,
+    0.467,
+    1.783,
+    1.624,
+    0.348,
+    2.34,
+    1.437,
+    32.665,
+    3.344,
+    6.577,
+    1.61,
+    5.218,
+    1.389,
+    2.249,
+    3.962,
+    3.121,
+    0.935,
+    1.111,
+    1.441,
+    1.067,
+    8.506,
+    5.308,
+    2.766,
+    1.39,
+    31.63,
+    3.325
+  ],
+  "passed": 12,
+  "total": 30,
+  "pct": 40.0,
+  "results": [
+    {
+      "description": "note add basic",
+      "instruction": "Take a note that the build is broken on Windows.",
+      "output": "note author=agent\\ Stephen\\ Lee title=Build broken on Windows body=A build break occurred on Windows.",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad note'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 6.549
+    },
+    {
+      "description": "note add (synonym: jot down)",
+      "instruction": "Jot down that we should investigate the OOM in stage 3.",
+      "output": "narrate evidence of oom in stage 3.",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad note'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 2.514
+    },
+    {
+      "description": "note list",
+      "instruction": "Show me the open planning notes.",
+      "output": "gad planner:notes --status=open\n",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad note'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.359
+    },
+    {
+      "description": "task add",
+      "instruction": "Add a new task under phase 03 to wire up the OpenCode teacher.",
+      "output": "gad \"phase: 03\" \"task\": \"wire up the OpenCode teacher\"",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad task'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 2.794
+    },
+    {
+      "description": "task stamp done",
+      "instruction": "Mark task 02-02 as done.",
+      "output": "gad mark-task-done --task 02-02",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'stamp'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.813
+    },
+    {
+      "description": "task list",
+      "instruction": "What tasks are open right now?",
+      "output": "status\n",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'gad task'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 0.467
+    },
+    {
+      "description": "state log",
+      "instruction": "Log a state delta saying we just finished Stage 3 DPO.",
+      "output": "logStateDelta stage:3,phase:dpo,event:finished\n",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'state log'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.783
+    },
+    {
+      "description": "snapshot",
+      "instruction": "Hydrate the planning context for slm-learning before I start.",
+      "output": "hydrate --context=planning:slm-learning",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'snapshot'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.624
+    },
+    {
+      "description": "next action",
+      "instruction": "What's the next action I should pick up?",
+      "output": "next_action",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['gad next', 'STATE.xml']"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 0.348
+    },
+    {
+      "description": "phase add",
+      "instruction": "Append a phase 04 about TUI polish to the roadmap.",
+      "output": "echo \"Phase 04: TUI polish\" >> roadmap.md\n",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'phase'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 2.34
+    },
+    {
+      "description": "phase close",
+      "instruction": "Close out phase 02 since the training pipeline is done.",
+      "output": "exit_phase 02\n",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "contains-any matched 'phase'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 1.437
+    },
+    {
+      "description": "decisions add",
+      "instruction": "Record a decision: from now on we use fp16 + GradScaler on CUDA.",
+      "output": "echo \"from transformers import AutoModelForCausalLM\" > model.py\ngdown --id 1Zy4m98G57023QKoqTzrFVXtRJWYnDvLH -O model.py\npip install -r requirements.txt\npython train.py --model_name_or_path <path_to_model> --dataset_name shapenet --train_data_ratio 0.9 --val_data_ratio 0.05 --test_data_ratio 0.05 --output_dir output_fp16_gradscaler --per_device_train_batch_size 16 --per_device_eval_batch_size 16 --learning_rate 2e-5 --weight_decay 0.01 --adam_beta1 0.9 --adam_beta2 0.95 --num_train_epochs 3 --fp16 --grad_accumulation_steps 4 --gradient_clipping 1.0 --seed ",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'decision'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 32.665
+    },
+    {
+      "description": "errors add",
+      "instruction": "Track an error: stage 3 DPO OOM'd loading two model copies.",
+      "output": "gad track_error stage=3 category=DPO reason=OOM&loading=model%20copies",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'error'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 3.344
+    },
+    {
+      "description": "blockers list",
+      "instruction": "Show me what's blocking phase 03.",
+      "output": "grep -r \"phase 03\" . | grep -v 'no change needed' | grep -v 'skipped' | grep -v 'unchanged' | wc -l\n",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'blocker'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 6.577
+    },
+    {
+      "description": "handoffs list",
+      "instruction": "Are there any open handoffs I can pick up?",
+      "output": "isThereAnyOpenHandoffPickupAvailable()",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'handoff'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 1.61
+    },
+    {
+      "description": "handoffs claim",
+      "instruction": "Claim handoff h-2026-05-04-slm_learning-02.",
+      "output": "gad claim-handoff -h \"h-2026-05-04-slm_learning-02\"",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'claim'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 5.218
+    },
+    {
+      "description": "evolution status",
+      "instruction": "Show me the current evolution pressure for this project.",
+      "output": "evolve pressure show -p project-name",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'evolution'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.389
+    },
+    {
+      "description": "evolution scan",
+      "instruction": "Run an evolution scan on slm-learning and write the json.",
+      "output": "gad evolve:scan -r slm-learning -o json",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'scan'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 2.249
+    },
+    {
+      "description": "evolution promote",
+      "instruction": "Promote the prefer-clean-baseline-over-custom-dev-runtime proto-skill.",
+      "output": "gad promote --skill-path .windsurf\\skills\\prefer-clean-baseline-over-custom-dev-runtime.proto-skill\n",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'promote'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 3.962
+    },
+    {
+      "description": "projects list",
+      "instruction": "List every gad project I have registered.",
+      "output": "ls -Rv .windsurf\\gad | grep -v '^#|node_modules|vendor'",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['gad ls', 'projects list']"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 3.121
+    },
+    {
+      "description": "recipes list",
+      "instruction": "What recipes do we have available?",
+      "output": "gad list-recipes",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'recipe'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 0.935
+    },
+    {
+      "description": "verify phase",
+      "instruction": "Verify that phase 02 actually achieved its goal.",
+      "output": "verify phase 02 goal\n",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'verify'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 1.111
+    },
+    {
+      "description": "health check",
+      "instruction": "Diagnose the health of my planning directory.",
+      "output": "gad diagnose -r planning --d \"json\"",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'health'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.441
+    },
+    {
+      "description": "tool call: which command for status delta",
+      "instruction": "Which command do I run when I want to record progress mid-task?",
+      "output": "dr_exec -c 'record_progress'",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'state log'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.067
+    },
+    {
+      "description": "tool call: which command for new feature",
+      "instruction": "Which command do I use to start tracking a new feature?",
+      "output": "dr.evolve.track -n FEATURE_NAME -m MODEL_PATH -t TRAINING_DATA.json -b 10000 -a AdamW -c learning_rate=0.001,weight_decay=0.0001",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['phase', 'task']"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 8.506
+    },
+    {
+      "description": "ambiguous note vs task",
+      "instruction": "I want to remember to fix the broken hook tomorrow.",
+      "output": "echo \"Fix the broken hook\" | dsk-learn --event=REMINDER --tags=WORK,DEVOPS -m 24h",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "contains-any none of ['gad note', 'gad task']"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 5.308
+    },
+    {
+      "description": "explicit JSON tool call format",
+      "instruction": "Output a JSON tool call that adds a note saying 'check the gad statusline pressure cache'.",
+      "output": "gad -m addNote --body 'check the gad statusline pressure cache'",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'note'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 2.766
+    },
+    {
+      "description": "where does state live",
+      "instruction": "Where is the project state file located?",
+      "output": "cat .planning\\state.json\n",
+      "asserts": [
+        {
+          "ok": false,
+          "why": "icontains 'state.xml'"
+        }
+      ],
+      "passed": false,
+      "elapsed_sec": 1.39
+    },
+    {
+      "description": "where do tasks live",
+      "instruction": "Where do task json files live?",
+      "output": "find -name \"*.json\" -type f -not -path '*/ven*' -not -path '*/node_modules/*' -not -path './package.json' -not -path './.windsurf.json' -not -path './.planning\\workflows\\*.json' -not -path './.planning\\\\workflows\\\\*.json' -not -path './.planning\\\\workflows\\\\agent-state-session-hygiene\\\\*.json' -not -path './.planning\\\\workflows\\\\build-and-release-locally\\\\*.json' -not -path './.planning\\\\workflows\\\\consolidate-cli-and-routes\\\\*.json' -not -path './.planning\\\\workflows\\\\consolidate-microservices\\\\*.json' -not -path './.planning\\\\workflows\\\\consolidate-npm-tasks\\\\*.json' -not -path './.planning\\\\workflows",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains '.planning'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 31.63
+    },
+    {
+      "description": "where does roadmap live",
+      "instruction": "Where is the roadmap file?",
+      "output": "grep 'roadmap' .gitrepo | head -n 1 | xargs cat | grep path\n",
+      "asserts": [
+        {
+          "ok": true,
+          "why": "icontains 'roadmap'"
+        }
+      ],
+      "passed": true,
+      "elapsed_sec": 3.325
+    }
+  ]
+}

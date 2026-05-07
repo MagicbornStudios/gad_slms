@@ -78,6 +78,17 @@
           "interred_as": "zoo",
           "decision_ref": "slm-learning-089",
           "useful_for": "negative-tier training data; counter-example for r=16 promotion gate"
+        },
+        {
+          "id": "scrubster/dr-stein-stage25-qwen15-doc-verifier-r16-augmented",
+          "rejected_at": "2026-05-07T01:08:00Z",
+          "rejection_reason": "REGRESSED vs r=16 baseline. F1=0.599 (-0.121 vs r=16). Unknown F1=0.167 (-0.295 vs r=16). Deterministic fake-parent-prefix synthesis with single reason template caused overfit to template phrasing. The 150 synthetic unknowns all shared the EXACT reason 'basename X matches elsewhere; literal path Y not found' — model memorized that exact string as the unknown signal and missed real unknowns with varied reasons in the holdout.",
+          "scores": {"f1_macro": 0.599, "accuracy": 0.740, "json_validity_rate": 1.000, "verified_f1": 0.789, "refuted_f1": 0.840, "unknown_f1": 0.167},
+          "delta_vs_r16_baseline": {"f1_macro": "-0.121", "unknown_f1": "-0.295", "accuracy": "-0.060"},
+          "interred_as": "zoo",
+          "decision_ref": "slm-learning-093",
+          "useful_for": "negative-tier training data; counter-example for 'augment minority class' as a blanket strategy; locks in the lesson that template uniformity defeats augmentation",
+          "lesson_for_scaling_decisions": "When augmenting via synthesis, surface form variance is REQUIRED — uniform templates teach the model to memorize the template, not the underlying structure. The framework table in .planning/concerns/scaling-decisions.md needs a footnote: DATA imbalance fix is augmentation + variance, not augmentation alone."
         }
       ]
     },

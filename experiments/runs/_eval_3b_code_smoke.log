@@ -1,0 +1,98 @@
+C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_utils\async_utils.py:45: DeprecationWarning: 'asyncio.WindowsSelectorEventLoopPolicy' is deprecated and slated for removal in Python 3.16
+  asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_utils\async_utils.py:45: DeprecationWarning: 'asyncio.set_event_loop_policy' is deprecated and slated for removal in Python 3.16
+  asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+✓ Initialized. View run at 
+https://modal.com/apps/b2gdevs/main/ap-fyEM7k8xuHkNpjuYrdghl5
+✓ Created objects.
+├── 🔨 Created mount 
+│   C:\Users\benja\Documents\slm_learning\modal_app\eval_adapter.py
+├── 🔨 Created function score_a10g.
+├── 🔨 Created function score_l4.
+└── 🔨 Created function score_a100.
+[main] firing eval on Modal A10G for /models/runs/ladder-3b-coder-2026-05-08/adapter on code_smoke (n=5)
+[eval] adapter=/models/runs/ladder-3b-coder-2026-05-08/adapter base=Qwen/Qwen2.5-Coder-3B-Instruct benchmark=code_smoke
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1AFetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]
+[1AFetching 2 files:  50%|█████     | 1/2 [00:19<00:19, 19.92s/it]
+[1AFetching 2 files: 100%|██████████| 2/2 [00:19<00:00,  9.96s/it]
+
+[1ALoading weights:   0%|          | 0/434 [00:00<?, ?it/s]
+[1ALoading weights:   0%|          | 1/434 [00:00<02:04,  3.47it/s]
+[1ALoading weights:   3%|▎         | 14/434 [00:00<00:09, 44.19it/s]
+[1ALoading weights:   6%|▋         | 28/434 [00:00<00:05, 71.54it/s]
+[1ALoading weights:   9%|▉         | 41/434 [00:00<00:04, 87.54it/s]
+[1ALoading weights:  15%|█▍        | 63/434 [00:00<00:03, 121.86it/s]
+[1ALoading weights:  18%|█▊        | 77/434 [00:00<00:03, 117.16it/s]
+[1ALoading weights:  22%|██▏       | 94/434 [00:00<00:02, 131.40it/s]
+[1ALoading weights:  26%|██▌       | 111/434 [00:01<00:02, 121.61it/s]
+[1ALoading weights:  31%|███       | 135/434 [00:01<00:02, 136.86it/s]
+[1ALoading weights:  35%|███▍      | 150/434 [00:01<00:02, 138.68it/s]
+[1ALoading weights:  39%|███▉      | 171/434 [00:01<00:01, 148.55it/s]
+[1ALoading weights:  43%|████▎     | 187/434 [00:01<00:01, 138.46it/s]
+[1ALoading weights:  48%|████▊     | 207/434 [00:01<00:01, 148.89it/s]
+[1ALoading weights:  51%|█████▏    | 223/434 [00:01<00:01, 139.31it/s]
+[1ALoading weights:  55%|█████▍    | 238/434 [00:01<00:01, 141.90it/s]
+[1ALoading weights:  59%|█████▉    | 255/434 [00:02<00:01, 137.80it/s]
+[1ALoading weights:  62%|██████▏   | 269/434 [00:02<00:01, 136.67it/s]
+[1ALoading weights:  66%|██████▋   | 288/434 [00:02<00:00, 150.64it/s]
+[1ALoading weights:  70%|███████   | 304/434 [00:02<00:00, 139.90it/s]
+[1ALoading weights:  74%|███████▎  | 319/434 [00:02<00:00, 137.13it/s]
+[1ALoading weights:  77%|███████▋  | 335/434 [00:02<00:00, 141.94it/s]
+[1ALoading weights:  81%|████████  | 351/434 [00:02<00:00, 134.89it/s]
+[1ALoading weights:  84%|████████▍ | 365/434 [00:02<00:00, 134.39it/s]
+[1ALoading weights:  88%|████████▊ | 383/434 [00:03<00:00, 145.40it/s]
+[1ALoading weights:  92%|█████████▏| 398/434 [00:03<00:00, 142.26it/s]
+[1ALoading weights:  95%|█████████▌| 413/434 [00:03<00:00, 136.16it/s]
+[1ALoading weights:  99%|█████████▉| 431/434 [00:03<00:00, 147.73it/s]
+[1ALoading weights: 100%|██████████| 434/434 [00:03<00:00, 129.91it/s]
+[eval] model loaded in 28.3s
+
+{
+  "schema_v": 1,
+  "ts": "2026-05-07T05:28:15.379799+00:00",
+  "adapter_id": "/models/runs/ladder-3b-coder-2026-05-08/adapter",
+  "base_model": "Qwen/Qwen2.5-Coder-3B-Instruct",
+  "benchmark": "code_smoke",
+  "n": 5,
+  "passed": 1,
+  "score": 0.2,
+  "results": [
+    {
+      "id": "smoke_sum",
+      "passed": true,
+      "judge_reason": "ok",
+      "elapsed_s": 13.73,
+      "completion_preview": "<think>\nOkay, I need to write a Python function called add that takes two parameters, a and b, and returns their sum. Let's think about how to do this.\n\nFirst, I remember that in Python, functions are defined using the def keyword. So the function signature would be def add(a, b):. Then, inside the "
+    },
+    {
+      "id": "smoke_reverse",
+      "passed": false,
+      "judge_reason": "  File \"/tmp/tmps582jrt2.py\", line 2\n    Okay, I need to write a Python function that reverses a given string. Let's think about how to approach this.\n                                                 ",
+      "elapsed_s": 21.77,
+      "completion_preview": "<think>\nOkay, I need to write a Python function that reverses a given string. Let's think about how to approach this.\n\nFirst, what's the problem? The function should take a string as input and return the same string but with all characters in reverse order. So for example, if the input is \"hello\", t"
+    },
+    {
+      "id": "smoke_fibonacci",
+      "passed": false,
+      "judge_reason": "  File \"/tmp/tmpsd8tpcey.py\", line 2\n    Okay, I need to write a Python function that calculates the n-th Fibonacci number. Let's think about how to approach this.\n                                    ",
+      "elapsed_s": 21.63,
+      "completion_preview": "<think>\nOkay, I need to write a Python function that calculates the n-th Fibonacci number. Let's think about how to approach this.\n\nThe Fibonacci sequence starts with 0 and 1, then each subsequent number is the sum of the previous two. So for example, fib(0) is 0, fib(1) is 1, fib(2) is 1 (0+1), fib"
+    },
+    {
+      "id": "smoke_count_vowels",
+      "passed": false,
+      "judge_reason": "  File \"/tmp/tmp7we7eae5.py\", line 4\n    First, let's think about how to approach this. The function should take a string s as input and return the total number of vowels found in it.\n              ^\n",
+      "elapsed_s": 21.57,
+      "completion_preview": "<think>\nOkay, I need to write a Python function that counts the vowels 'a', 'e', 'i', 'o', 'u' in a given string. The vowels should be case-insensitive, meaning both uppercase and lowercase are considered the same. So for example, 'A' and 'a' would both count as one vowel.\n\nFirst, let's think about "
+    },
+    {
+      "id": "smoke_is_prime",
+      "passed": false,
+      "judge_reason": "  File \"/tmp/tmpksanalij.py\", line 24\n    Wait, but how do I compute the square root? In Python, using math.sqrt() should work. But maybe it's better to compute it as n**0.5, which is more efficient.\n",
+      "elapsed_s": 22.0
+[eval] DONE code_smoke: 1/5 = 0.200
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/b2gdevs/main/ap-fyEM7k8xuHkNpjuYrdghl5

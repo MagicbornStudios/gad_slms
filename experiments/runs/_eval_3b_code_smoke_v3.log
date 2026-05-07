@@ -1,0 +1,107 @@
+C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_utils\async_utils.py:45: DeprecationWarning: 'asyncio.WindowsSelectorEventLoopPolicy' is deprecated and slated for removal in Python 3.16
+  asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+C:\Users\benja\Documents\slm_learning\.venv\Lib\site-packages\modal\_utils\async_utils.py:45: DeprecationWarning: 'asyncio.set_event_loop_policy' is deprecated and slated for removal in Python 3.16
+  asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+✓ Initialized. View run at 
+https://modal.com/apps/b2gdevs/main/ap-YtaKp0MXCZSigyYboAXeHZ
+✓ Created objects.
+├── 🔨 Created mount 
+│   C:\Users\benja\Documents\slm_learning\modal_app\eval_adapter.py
+├── 🔨 Created function score_l4.
+├── 🔨 Created function score_a10g.
+└── 🔨 Created function score_a100.
+[main] firing eval on Modal A10G for /models/runs/ladder-3b-coder-2026-05-08/adapter on code_smoke (n=5)
+[eval] adapter=/models/runs/ladder-3b-coder-2026-05-08/adapter base=Qwen/Qwen2.5-Coder-3B-Instruct benchmark=code_smoke
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+
+[1AFetching 2 files:   0%|          | 0/2 [00:00<?, ?it/s]
+[1AFetching 2 files:  50%|█████     | 1/2 [00:21<00:21, 21.05s/it]
+[1AFetching 2 files: 100%|██████████| 2/2 [00:21<00:00, 10.52s/it]
+
+[1ALoading weights:   0%|          | 0/434 [00:00<?, ?it/s]
+[1ALoading weights:   0%|          | 1/434 [00:00<02:36,  2.78it/s]
+[1ALoading weights:   3%|▎         | 14/434 [00:00<00:11, 36.70it/s]
+[1ALoading weights:   6%|▋         | 28/434 [00:00<00:06, 64.29it/s]
+[1ALoading weights:   9%|▉         | 41/434 [00:00<00:04, 79.21it/s]
+[1ALoading weights:  14%|█▍        | 62/434 [00:00<00:03, 112.25it/s]
+[1ALoading weights:  18%|█▊        | 76/434 [00:00<00:03, 115.90it/s]
+[1ALoading weights:  21%|██        | 90/434 [00:01<00:02, 115.80it/s]
+[1ALoading weights:  25%|██▌       | 110/434 [00:01<00:02, 138.57it/s]
+[1ALoading weights:  29%|██▉       | 125/434 [00:01<00:02, 121.94it/s]
+[1ALoading weights:  34%|███▍      | 147/434 [00:01<00:02, 138.08it/s]
+[1ALoading weights:  37%|███▋      | 162/434 [00:01<00:02, 128.69it/s]
+[1ALoading weights:  41%|████      | 176/434 [00:01<00:01, 131.16it/s]
+[1ALoading weights:  45%|████▍     | 195/434 [00:01<00:01, 138.67it/s]
+[1ALoading weights:  48%|████▊     | 210/434 [00:01<00:01, 132.68it/s]
+[1ALoading weights:  53%|█████▎    | 231/434 [00:02<00:01, 144.13it/s]
+[1ALoading weights:  57%|█████▋    | 246/434 [00:02<00:01, 130.30it/s]
+[1ALoading weights:  60%|██████    | 262/434 [00:02<00:01, 136.37it/s]
+[1ALoading weights:  64%|██████▍   | 279/434 [00:02<00:01, 138.85it/s]
+[1ALoading weights:  68%|██████▊   | 294/434 [00:02<00:01, 121.08it/s]
+[1ALoading weights:  71%|███████   | 307/434 [00:02<00:01, 117.57it/s]
+[1ALoading weights:  75%|███████▌  | 326/434 [00:02<00:00, 135.55it/s]
+[1ALoading weights:  79%|███████▊  | 341/434 [00:02<00:00, 123.32it/s]
+[1ALoading weights:  83%|████████▎ | 362/434 [00:03<00:00, 144.83it/s]
+[1ALoading weights:  87%|████████▋ | 378/434 [00:03<00:00, 131.85it/s]
+[1ALoading weights:  92%|█████████▏| 398/434 [00:03<00:00, 138.58it/s]
+[1ALoading weights:  95%|█████████▌| 413/434 [00:03<00:00, 128.31it/s]
+[1ALoading weights:  98%|█████████▊| 427/434 [00:03<00:00, 130.28it/s]
+[1ALoading weights: 100%|██████████| 434/434 [00:03<00:00, 121.39it/s]
+[eval] model loaded in 28.4s
+
+{
+  "schema_v": 1,
+  "ts": "2026-05-07T05:38:45.466224+00:00",
+  "adapter_id": "/models/runs/ladder-3b-coder-2026-05-08/adapter",
+  "base_model": "Qwen/Qwen2.5-Coder-3B-Instruct",
+  "benchmark": "code_smoke",
+  "n": 5,
+  "passed": 4,
+  "score": 0.8,
+  "results": [
+    {
+      "id": "smoke_sum",
+      "passed": true,
+      "judge_reason": "ok",
+      "elapsed_s": 14.0,
+      "completion_preview": "<think>\nOkay, I need to write a Python function called add that takes two parameters, a and b, and returns their sum. Let's think about how to do this.\n\nFirst, I remember that in Python, functions are defined using the def keyword. So the function signature would be def add(a, b):. Then, inside the "
+    },
+    {
+      "id": "smoke_reverse",
+      "passed": true,
+      "judge_reason": "ok",
+      "elapsed_s": 24.95,
+      "completion_preview": "<think>\nOkay, I need to write a Python function that reverses a given string. Let's think about how to approach this.\n\nFirst, what's the problem? The function should take a string as input and return the same string but with all characters in reverse order. So for example, if the input is \"hello\", t"
+    },
+    {
+      "id": "smoke_fibonacci",
+      "passed": true,
+      "judge_reason": "ok",
+      "elapsed_s": 44.61,
+      "completion_preview": "<think>\nOkay, I need to write a Python function that calculates the n-th Fibonacci number. Let's think about how to approach this.\n\nThe Fibonacci sequence starts with 0 and 1, then each subsequent number is the sum of the previous two. So for example, fib(0) is 0, fib(1) is 1, fib(2) is 1 (0+1), fib"
+    },
+    {
+      "id": "smoke_count_vowels",
+      "passed": true,
+      "judge_reason": "ok",
+      "elapsed_s": 42.13,
+      "completion_preview": "<think>\nOkay, I need to write a Python function that counts the vowels 'a', 'e', 'i', 'o', 'u' in a given string. The vowels should be case-insensitive, meaning both uppercase and lowercase are considered the same. So for example, 'A' and 'a' would both count as one vowel.\n\nFirst, let's think about "
+    },
+    {
+      "id": "smoke_is_prime",
+      "passed": false,
+      "judge_reason": "  File \"/tmp/tmp6f1ra636.py\", line 3\n    ```python\n    ^\nSyntaxError: invalid syntax\n",
+      "elapsed_s": 60.11,
+      "completion_preview": "<think>\nOkay, I need to write a Python function that checks if a number is prime. Let's think about what a prime number is. A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself. So for example, 2, 3, 5, 7 are primes, but 4 is not because it's divisi"
+    }
+  ],
+  "decision_refs": [
+    "slm-learning-094",
+    "slm-learning-097",
+    "slm-learning-103"
+  ]
+}
+[eval] DONE code_smoke: 4/5 = 0.800
+Stopping app - local entrypoint completed.
+✓ App completed. View run at 
+https://modal.com/apps/b2gdevs/main/ap-YtaKp0MXCZSigyYboAXeHZ

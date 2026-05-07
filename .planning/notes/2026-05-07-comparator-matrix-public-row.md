@@ -1,4 +1,4 @@
-# Public-benchmark row + key finding — 2026-05-07 (autonomous run)
+# Public-benchmark row + key finding — 2026-05-07 (autonomous run, finalized)
 
 Aggregated from `experiments/runs/_eval_*_n164.log` and Modal training
 manifests. Per decision `slm-learning-103` this is the
@@ -21,13 +21,24 @@ any candidate.
 |---|---|---|---|---|
 | **Qwen2.5-Coder-7B base** | **106/164 (64.6%)** | **132/164 (80.5%)** | — (control) | — |
 | Qwen2.5-Coder-7B + OCR LoRA | **50/164 (30.5%)** | **124/164 (75.6%)** | 34 min A100 | $1.58 |
-| Qwen2.5-Coder-3B + OCR LoRA | running* | running* | 53 min A10G | $0.97 |
-| Qwen2.5-Coder-1.5B + OCR LoRA (v2) | running* | running* | 33 min A10G | $0.55 |
+| Qwen2.5-Coder-3B + OCR LoRA | did-not-land | did-not-land | 53 min A10G | $0.97 |
+| Qwen2.5-Coder-1.5B + OCR LoRA (v2) | did-not-land | did-not-land | 33 min A10G | $0.55 |
 
-\* The 3B and 1.5B L4 evals were repeatedly stuck or timing out at
-the Modal L4 1-hour container limit. Bumped to 5400s and re-fired;
-running at the time of report write. Will be appended to
-`experiments/INDEX.md` when they land.
+The 4 L4-hosted evals (3B HE/MBPP, 1.5B HE/MBPP) repeatedly stalled
+at the Modal L4 1-hour container limit even after bumping to 5400s.
+Adapters exist on the slm-models volume; the operator can re-fire
+these evals manually:
+
+```sh
+MSYS_NO_PATHCONV=1 PYTHONIOENCODING=utf-8 .venv/Scripts/python.exe \
+    -m modal run modal_app/eval_adapter.py::main \
+    --adapter-id /models/runs/ladder-3b-coder-2026-05-08/adapter \
+    --base-model Qwen/Qwen2.5-Coder-3B-Instruct \
+    --benchmark humaneval --limit 164 --gpu A10G --max-new-tokens 1024
+```
+
+(Switch to A10G to escape the L4 contention. Repeat for 1.5B with
+adapter `ladder-1p5b-coder-2026-05-08-v2`.)
 
 ## LoRA delta vs base (7B, n=164)
 
@@ -40,7 +51,7 @@ The 7B base MBPP score (80.5%) matches published Qwen2.5-Coder-7B
 baseline (~79–83%), validating the harness on MBPP. The 7B base
 HumanEval (64.6%) is below published ~88% — chat-mode harness floor;
 instruct models score lower in chat mode than in completion mode and
-our judge has remaining edges (model wraps in `\`\`\`python` blocks
+our judge has remaining edges (model wraps in ```python``` blocks
 inconsistently). For both benchmarks the **delta** is the meaningful
 signal because it controls for harness noise.
 
@@ -100,8 +111,8 @@ the next eval task; not done in this run because it requires loading
 | delta_id | base | parents | rank | dataset | training_method | evals.public | cost_usd | wall_hours | adapter |
 |---|---|---|---|---|---|---|---|---|---|
 | ladder-7b-coder-2026-05-08 | Qwen2.5-Coder-7B-Instruct | — | 16 | OCR n=5000 | SFT-LoRA, 1ep, A100 | HE 30.5% / MBPP 75.6% | $1.58 | 0.57 | volume |
-| ladder-3b-coder-2026-05-08 | Qwen2.5-Coder-3B-Instruct | — | 16 | OCR n=5000 | SFT-LoRA, 1ep, A10G | running | $0.97 | 0.88 | volume |
-| ladder-1p5b-coder-2026-05-08-v2 | Qwen2.5-Coder-1.5B-Instruct | — | 16 | OCR n=5000 | SFT-LoRA, 1ep, A10G | running | $0.55 | 0.55 | volume |
+| ladder-3b-coder-2026-05-08 | Qwen2.5-Coder-3B-Instruct | — | 16 | OCR n=5000 | SFT-LoRA, 1ep, A10G | did-not-land (L4 contention) | $0.97 | 0.88 | volume |
+| ladder-1p5b-coder-2026-05-08-v2 | Qwen2.5-Coder-1.5B-Instruct | — | 16 | OCR n=5000 | SFT-LoRA, 1ep, A10G | did-not-land (L4 contention) | $0.55 | 0.55 | volume |
 | tooluse-sanity-v2-modal-l4-2026-05-08 | Qwen2.5-1.5B-Instruct | — | 16 | gad-telemetry n=4841 | SFT-LoRA, 3ep, L4 | gad_tools eval pending | $0.50 | 0.58 | volume |
 
 ## Bug log (this run)
@@ -114,18 +125,19 @@ the next eval task; not done in this run because it requires loading
 | Judge `.strip()` killing leading body indent | ~$0.50 (re-run) | Use rstrip + skip leading blank lines instead |
 | `textwrap.dedent` on body breaking prefix-merge | ~$0 (caught before re-fire) | No dedent when prefix is present |
 | Modal `--spec dict` rejected | $0 | Use `train_lora.py::main --spec-path <path>` |
-| L4 1-hour container timeout | ~$0.30 (3B MBPP timeout) | Bumped to 5400s |
+| L4 1-hour container timeout | ~$0.30 (3B MBPP timeout) | Bumped to 5400s — but L4 evals continued to stall, suggesting Modal L4 capacity issue not pure timeout |
+| Aggregator overwrites comprehensive report | $0 (file rewrite) | Future: aggregator should preserve hand-edited sections or emit to a separate file |
 
 ## Cost summary (autonomous run)
 
 | Item | Spent |
 |---|---|
-| Eval lane (3 confirmed runs + 4 retries + cancellations) | ~$3.50 |
+| Eval lane (4 confirmed runs + retries + cancellations + stuck L4) | ~$4.00 |
 | 1.5B retry training (A10G, 33 min) | $0.55 |
 | Tooluse-sanity-v2 training (L4, 35 min) | $0.50 |
 | Bug-debugging tax (cancelled mid-run jobs) | ~$1.55 |
 | Volume put + image build + cold starts | ~$0.30 |
-| **Total estimated** | **~$6.40** |
+| **Total estimated** | **~$6.90** |
 
 Well under the $30 budget. Bug-tax was high but each bug is now
 fixed permanently in the codebase.
@@ -144,6 +156,8 @@ fixed permanently in the codebase.
    - 1 epoch is overfit to OCR's unique output style
    - LoRA r=16 is too small to absorb both OCR-style + base
      instruction-following
+   - Mix OCR with instruction-following data to preserve base
+     capability (the SLM strategy doc already calls for this)
 3. **Validate tooluse-v2 generalization.** v2 has 6× v1 data and
    matches v1 final loss. The owned-domain win we have today
    (`ours-via-modal-v2 = 30/30`) was on v1. v2 may lift further
@@ -158,6 +172,9 @@ fixed permanently in the codebase.
    adds ~24pp of variance. Either accept the floor or move to a
    completion-mode harness (no chat template) that matches the
    published numbers.
+6. **Move 3B + 1.5B evals off L4.** L4 capacity issues caused 4
+   evals to stall regardless of timeout setting. Switch to A10G
+   when re-firing — 7B HE/MBPP completed cleanly on A10G.
 
 ## Decision refs
 
@@ -167,16 +184,21 @@ fixed permanently in the codebase.
 - `slm-learning-103` — compare-and-compete mandatory (4 rows per candidate)
 - `slm-learning-105` — hardware policy (Modal-first)
 
-## What's still in flight
+## What's complete vs deferred
 
-| Job | Status | When to check |
-|---|---|---|
-| 3B coder LoRA × HumanEval | running on L4 (post-timeout-bump retry) | check log for `[eval] DONE` |
-| 3B coder LoRA × MBPP | running on L4 | check log |
-| 1.5B coder LoRA × HumanEval | running on L4 | check log |
-| 1.5B coder LoRA × MBPP | running on L4 | check log |
+| Item | Status |
+|---|---|
+| 7B base × HumanEval n=164 | ✅ 106/164 (64.6%) |
+| 7B base × MBPP n=164 | ✅ 132/164 (80.5%) |
+| 7B coder LoRA × HumanEval n=164 | ✅ 50/164 (30.5%) |
+| 7B coder LoRA × MBPP n=164 | ✅ 124/164 (75.6%) |
+| 1.5B retry training | ✅ loss=1.187 |
+| Tooluse-sanity-v2 training | ✅ loss=0.406 |
+| 3B coder LoRA × HumanEval | ❌ stalled on L4; re-fire on A10G |
+| 3B coder LoRA × MBPP | ❌ stalled on L4; re-fire on A10G |
+| 1.5B coder LoRA × HumanEval | ❌ stalled on L4; re-fire on A10G |
+| 1.5B coder LoRA × MBPP | ❌ stalled on L4; re-fire on A10G |
+| Tooluse-v2 × gad_tools eval | ⏸ deferred (needs eval_adapter.py extension) |
+| SWE-bench Verified subset | ⏸ deferred (next session task) |
 
-When these land, run `.venv/Scripts/python.exe scripts/eval/aggregate_public_matrix.py`
-to update this file and append rows to `experiments/INDEX.md`.
-
-— Dr. Stein, autonomous run 2026-05-07
+— Dr. Stein, autonomous run 2026-05-07 (finalized)

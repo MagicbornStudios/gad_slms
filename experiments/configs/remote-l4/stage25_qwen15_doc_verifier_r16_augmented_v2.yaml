@@ -1,7 +1,7 @@
 name: stage25_qwen15_doc_verifier_r16_augmented_v2
 base_model: Qwen/Qwen2.5-1.5B-Instruct
 adapter: lora
-compute_target: hf-jobs-l4x1
+compute_target: local-cuda-0
 notes: >
   Doc-verifier rank=16 retrain on the v2 augmented corpus — same fake-
   parent-prefix synthesis but with 150 distinct reason phrasings drawn

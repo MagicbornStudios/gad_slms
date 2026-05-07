@@ -1,0 +1,21 @@
+{
+  "status": "ok",
+  "schema_v": 1,
+  "ts": "2026-05-07T01:31:38.047412+00:00",
+  "cohort_path": "data\\raw\\2026-05-07\\events.jsonl",
+  "project_filter": null,
+  "content_type_filter": null,
+  "strategy": "reasoning_to_response",
+  "rows_in": 215782,
+  "pairs_out": 108,
+  "train_n": 103,
+  "holdout_n": 5,
+  "out_dir": "data\\processed\\planning-2026-05-07-reasoning",
+  "elapsed_seconds": 3.12,
+  "decision_refs": [
+    "slm-learning-051",
+    "slm-learning-079",
+    "slm-learning-082",
+    "slm-learning-086"
+  ]
+}

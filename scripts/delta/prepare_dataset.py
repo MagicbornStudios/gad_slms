@@ -138,7 +138,102 @@ def build_pairs(rows: list[dict], system_prompt: str,
     """
     if strategy == "prompt_to_response":
         return _build_prompt_to_response(rows, system_prompt)
+    if strategy == "handoff_prompt_to_response":
+        return _build_handoff_prompt_to_response(rows, system_prompt)
     return _build_reasoning_to_response(rows, system_prompt)
+
+
+def _build_handoff_prompt_to_response(rows: list[dict],
+                                       system_prompt: str) -> list[dict]:
+    """Pair handoff body (role=prompt with handoff_id) with completion
+    (role=response with same handoff_id). This is the right shape for
+    a planning specialist trained on the gad-monorepo handoffs adapter
+    (commit dad42a4d, 2026-05-07 onwards).
+    """
+    prompts_by_hid: dict[str, dict] = {}
+    responses_by_hid: dict[str, list[dict]] = {}
+    reasoning_by_hid: dict[str, list[dict]] = {}
+
+    for r in rows:
+        hid = r.get("handoff_id")
+        if not hid:
+            continue
+        role = r.get("role")
+        if role == "prompt":
+            prompts_by_hid.setdefault(hid, r)  # first wins
+        elif role == "response":
+            responses_by_hid.setdefault(hid, []).append(r)
+        elif role == "reasoning":
+            reasoning_by_hid.setdefault(hid, []).append(r)
+
+    pairs: list[dict] = []
+    for hid, prompt_env in prompts_by_hid.items():
+        responses = responses_by_hid.get(hid, [])
+        if not responses:
+            continue
+        # Sort responses by ts; the LAST is the final closeout
+        responses.sort(key=lambda x: (x.get("ts") or "", x.get("seq", 0)))
+        target = responses[-1]
+
+        prompt_text = envelope_text(prompt_env).strip()
+        response_text = envelope_text(target).strip()
+        if not prompt_text or not response_text:
+            continue
+
+        # Optional: include reasoning chunks for this handoff as
+        # additional context. Useful but adds length.
+        reasoning_chunks = [envelope_text(e) for e in
+                            sorted(reasoning_by_hid.get(hid, []),
+                                   key=lambda x: (x.get("ts") or "",
+                                                  x.get("seq", 0)))
+                            if envelope_text(e)]
+
+        if len(prompt_text) > 4000:
+            prompt_text = prompt_text[:4000] + "\n[truncated]"
+        if len(response_text) > 4000:
+            response_text = response_text[:4000] + "\n[truncated]"
+
+        instruction = (
+            f"You are a planning specialist for the GAD ecosystem. The "
+            f"following is a handoff brief assigned to you. Produce a "
+            f"completion message that summarizes the work done, names "
+            f"changed files, validation steps, and any remaining gaps.\n\n"
+            f"Handoff: {hid}\n\n"
+            f"Brief:\n{prompt_text}"
+        )
+        if reasoning_chunks:
+            joined_reasoning = "\n\n".join(reasoning_chunks)
+            if len(joined_reasoning) > 6000:
+                joined_reasoning = joined_reasoning[:6000] + "\n[truncated]"
+            # Skip embedding reasoning by default — keeps the
+            # instruction tight. The handoff brief itself + handoff_id
+            # is enough signal.
+
+        provenance = {
+            "source_handoff_id": hid,
+            "source_envelope_ids": [prompt_env.get("id")] +
+                                    [e.get("id") for e in responses],
+            "reasoning_chunk_count": len(reasoning_chunks),
+            "agent_type": "planning",
+            "project_id": prompt_env.get("project"),
+            "agent_id": target.get("agent_id"),
+            "runtime": target.get("runtime"),
+            "timestamp": dt.datetime.now(dt.timezone.utc).isoformat(),
+            "human_approved": False,
+            "later_contradicted": False,
+            "secret_redacted": True,
+            "data_tier": "telemetry_extracted",
+            "pair_strategy": "handoff_prompt_to_response",
+        }
+
+        pairs.append({
+            "instruction": instruction,
+            "command": response_text,
+            "system_prompt": system_prompt,
+            "provenance": provenance,
+        })
+
+    return pairs
 
 
 def _build_reasoning_to_response(rows: list[dict], system_prompt: str) -> list[dict]:
@@ -330,10 +425,16 @@ def main() -> int:
                         help="Override system prompt (default: planning if "
                              "content_type=planning, else generic)")
     parser.add_argument("--strategy", type=str, default="reasoning_to_response",
-                        choices=["reasoning_to_response", "prompt_to_response"],
+                        choices=["reasoning_to_response", "prompt_to_response",
+                                 "handoff_prompt_to_response"],
                         help="Pair-building strategy. reasoning_to_response "
                              "(default) groups by handoff_id and emits "
                              "(reasoning chain -> response). "
+                             "handoff_prompt_to_response groups by handoff_id "
+                             "and emits (handoff body prompt -> final response) "
+                             "— USE THIS for the planning specialist when the "
+                             "telemetry export includes the handoffs adapter "
+                             "(gad-monorepo dad42a4d+). "
                              "prompt_to_response is the legacy heuristic "
                              "that requires prompt + response in same run_id.")
     args = parser.parse_args()

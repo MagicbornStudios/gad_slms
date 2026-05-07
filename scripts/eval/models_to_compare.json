@@ -66,5 +66,55 @@
     "kind": "frontier-google",
     "cost_usd_per_1k_tokens_out": 0.0125,
     "tier": "frontier"
+  },
+  {
+    "model_id": "claude-cli",
+    "kind": "runtime-cli",
+    "binary": "claude",
+    "args": ["-p"],
+    "cost_usd_per_1k_tokens_out": 0.015,
+    "tier": "runtime",
+    "timeout_seconds": 180,
+    "notes": "Local claude CLI (Anthropic Claude Code). Uses operator's local subscription auth. NO API key required. Primary frontier comparator."
+  },
+  {
+    "model_id": "gemini-cli",
+    "kind": "runtime-cli",
+    "binary": "gemini",
+    "args": [],
+    "cost_usd_per_1k_tokens_out": 0.0125,
+    "tier": "runtime",
+    "timeout_seconds": 180,
+    "notes": "Google Gemini CLI. Auth via gemini-cli's own login flow."
+  },
+  {
+    "model_id": "codex-cli",
+    "kind": "runtime-cli",
+    "binary": "codex",
+    "args": ["exec"],
+    "cost_usd_per_1k_tokens_out": 0.015,
+    "tier": "runtime",
+    "timeout_seconds": 180,
+    "notes": "OpenAI Codex CLI. Auth via codex-cli's own login flow."
+  },
+  {
+    "model_id": "opencode-pickle",
+    "kind": "runtime-cli",
+    "binary": "opencode",
+    "args": ["run", "--model", "pickle"],
+    "cost_usd_per_1k_tokens_out": 0.0,
+    "tier": "runtime-free",
+    "timeout_seconds": 300,
+    "notes": "OpenCode CLI routing to Big Pickle (OpenCode Zen stealth model, free limited time). Comparator floor per slm-learning-095."
+  },
+  {
+    "model_id": "opencode-llama-3.3-70b",
+    "kind": "runtime-cli",
+    "binary": "opencode",
+    "args": ["run", "--model", "openrouter/meta-llama/llama-3.3-70b-instruct:free"],
+    "cost_usd_per_1k_tokens_out": 0.0,
+    "tier": "runtime-free",
+    "timeout_seconds": 300,
+    "notes": "OpenCode CLI routing to OpenRouter's free Llama-3.3-70B. The known-quantity free-tier comparator."
   }
 ]

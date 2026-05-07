@@ -165,6 +165,63 @@ DEFAULT_MODELS = [
 ]
 
 
+def call_runtime_cli(model: dict, prompt: str, system: str | None = None,
+                      timeout: int = 180) -> tuple[str, int, int]:
+    """Shell out to a CLI runtime (claude / gemini / codex / opencode).
+
+    Per slm-learning-103: this is the runtime-level lane of the
+    comparator. claude-cli uses the operator's local subscription auth
+    (no API key needed). opencode-via-pickle / opencode-via-openrouter
+    rely on opencode's internal model registry.
+
+    Token counts are not available from CLIs, so we estimate at
+    word-count granularity. Returns (text, est_prompt_tokens, est_completion_tokens).
+    """
+    import shlex
+    import subprocess
+
+    binary = model["binary"]
+    args_template = model.get("args", ["-p"])
+    extra_env = model.get("env", {})
+
+    # Compose the full prompt: system prepended if provided
+    full_prompt = (
+        f"{system}\n\n{prompt}" if system else prompt
+    )
+
+    cmd = [binary] + list(args_template)
+    # Pass the prompt as the final positional arg
+    cmd.append(full_prompt)
+
+    env = dict(os.environ)
+    env.update({k: str(v) for k, v in extra_env.items()})
+    env.setdefault("PYTHONUTF8", "1")
+
+    try:
+        proc = subprocess.run(
+            cmd,
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            encoding="utf-8",
+            errors="replace",
+        )
+    except subprocess.TimeoutExpired:
+        return "[CLI_TIMEOUT]", 0, 0
+    except FileNotFoundError:
+        return f"[CLI_NOT_FOUND: {binary}]", 0, 0
+
+    text = (proc.stdout or "").strip()
+    if not text:
+        text = f"[CLI_EMPTY_STDOUT (stderr: {(proc.stderr or '')[:200]!r})]"
+
+    # Token estimate: ~1.3 tokens per word for English (rough)
+    est_prompt_tokens = int(len(full_prompt.split()) * 1.3)
+    est_completion_tokens = int(len(text.split()) * 1.3)
+    return text, est_prompt_tokens, est_completion_tokens
+
+
 def call_openai_compat(endpoint: str, model: str, prompt: str,
                         system: str | None = None,
                         max_tokens: int = 256, timeout: int = 60,
@@ -192,7 +249,11 @@ def call_openai_compat(endpoint: str, model: str, prompt: str,
 
 
 def resolve_model_endpoint(model: dict) -> tuple[str, str, str | None]:
-    """Returns (endpoint_url, served_name, api_key)."""
+    """Returns (endpoint_url, served_name, api_key).
+
+    For runtime-cli kind, returns ('cli', binary_path, None) — caller
+    must dispatch to call_runtime_cli rather than HTTP.
+    """
     kind = model.get("kind", "local")
     if kind == "local":
         return model["endpoint"], model.get("served_name", "adapter"), None
@@ -200,6 +261,12 @@ def resolve_model_endpoint(model: dict) -> tuple[str, str, str | None]:
         ep = os.environ.get(model.get("endpoint_env", "GAD_REMOTE_ENDPOINT"), "")
         nm = os.environ.get(model.get("served_name_env", "GAD_REMOTE_MODEL"), "")
         return ep, nm, os.environ.get("GAD_REMOTE_API_KEY")
+    if kind == "runtime-cli":
+        # Resolve the binary path; if not on PATH, return empty endpoint
+        # so run_one marks it endpoint_not_configured.
+        import shutil
+        binary = shutil.which(model.get("binary", "")) or model.get("binary", "")
+        return ("cli" if binary else ""), binary, None
     if kind == "frontier-anthropic":
         ep = os.environ.get("GAD_ANTHROPIC_ENDPOINT", "https://api.anthropic.com/v1/messages")
         return ep, model["model_id"], os.environ.get("ANTHROPIC_API_KEY")
@@ -231,16 +298,26 @@ def load_benchmark_cases(benchmark: dict) -> list[dict]:
         data = yaml.safe_load(path.read_text(encoding="utf-8"))
         cases = []
         for t in data.get("tests", []):
-            inp = (t.get("vars") or {}).get("input") or ""
+            v = t.get("vars") or {}
+            inp = v.get("instruction") or v.get("input") or t.get("description") or ""
             asserts = t.get("assert", [])
-            expected = ""
+            # Accept contains, icontains, contains-any, icontains-any.
+            # Build a flat list of acceptable substrings.
+            expected_tokens: list[str] = []
             for a in asserts:
-                if a.get("type") == "contains":
-                    expected = a.get("value", "")
-                    break
+                t_type = (a.get("type") or "").lower()
+                val = a.get("value")
+                if t_type in {"contains", "icontains"}:
+                    if isinstance(val, str):
+                        expected_tokens.append(val)
+                elif t_type in {"contains-any", "icontains-any",
+                                "contains-all", "icontains-all"}:
+                    if isinstance(val, list):
+                        expected_tokens.extend(s for s in val if isinstance(s, str))
             cases.append({
                 "prompt": inp,
-                "expected_contains": expected,
+                "expected_contains_any": [s.lower() for s in expected_tokens]
+                                          if expected_tokens else [],
                 "system": "You are an assistant. Translate the user's request "
                           "into a single gad CLI command. Output only the command "
                           "on one line.",
@@ -268,6 +345,9 @@ def load_benchmark_cases(benchmark: dict) -> list[dict]:
 
 
 def score_case(case: dict, response: str) -> bool:
+    resp_lower = (response or "").lower()
+    if case.get("expected_contains_any"):
+        return any(t in resp_lower for t in case["expected_contains_any"])
     if "expected_contains" in case and case["expected_contains"]:
         return case["expected_contains"] in response
     if "expected_json_status" in case and case["expected_json_status"]:
@@ -330,14 +410,22 @@ def run_one(model: dict, benchmark: dict, *, limit: int | None = None,
     latencies: list[float] = []
     total_completion_tokens = 0
     failures: list[dict] = []
+    is_cli = model.get("kind") == "runtime-cli"
     for i, case in enumerate(cases):
         try:
             t0 = time.time()
-            text, _pt, ct = call_openai_compat(
-                endpoint, served_name,
-                case["prompt"], system=case.get("system"),
-                max_tokens=max_tokens, api_key=api_key,
-            )
+            if is_cli:
+                text, _pt, ct = call_runtime_cli(
+                    model,
+                    case["prompt"], system=case.get("system"),
+                    timeout=model.get("timeout_seconds", 180),
+                )
+            else:
+                text, _pt, ct = call_openai_compat(
+                    endpoint, served_name,
+                    case["prompt"], system=case.get("system"),
+                    max_tokens=max_tokens, api_key=api_key,
+                )
             wall = time.time() - t0
             latencies.append(wall)
             total_completion_tokens += ct

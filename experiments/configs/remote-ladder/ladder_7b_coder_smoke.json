@@ -8,6 +8,7 @@
   "instruction_field": "input",
   "response_field": "output",
   "max_length": 1024,
+  "dataset_limit": 5000,
   "lora": {
     "r": 16,
     "alpha": 32,

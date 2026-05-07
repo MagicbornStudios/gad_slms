@@ -80,15 +80,12 @@ image = (
 data_volume = modal.Volume.from_name("slm-data", create_if_missing=True)
 models_volume = modal.Volume.from_name("slm-models", create_if_missing=True)
 
-# HF token is optional. Operator creates it once with:
+# HF push is optional. To enable, operator creates a Modal secret once:
 #   modal secret create hf-token HF_TOKEN=hf_...
-# If absent, the trainer skips the Hub push and saves only to the
-# slm-models volume. The adapter is still recoverable via volume.
-try:
-    hf_secret = modal.Secret.from_name("hf-token", required_keys=["HF_TOKEN"])
-    HF_SECRETS = [hf_secret]
-except Exception:
-    HF_SECRETS = []
+# Then add `secrets=[modal.Secret.from_name("hf-token")]` to the
+# function decorator(s). Without the secret the trainer still saves to
+# the slm-models volume (recoverable; we can push later).
+HF_SECRETS: list = []
 
 
 GPU_FLAVORS = {
@@ -185,6 +182,12 @@ def _train_inner(spec: dict) -> dict:
                 "error": f"unknown dataset format: {dataset_path}"}
 
     print(f"[train] loaded {len(ds)} rows from {dataset_path}")
+
+    # Optional row slice for faster smoke runs
+    dataset_limit = spec.get("dataset_limit")
+    if dataset_limit and dataset_limit < len(ds):
+        ds = ds.select(range(dataset_limit))
+        print(f"[train] sliced to {len(ds)} rows (dataset_limit)")
 
     # 2. Tokenizer + base
     tok = AutoTokenizer.from_pretrained(base_model)

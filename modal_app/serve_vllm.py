@@ -40,8 +40,8 @@ monthly cost at light usage: ~$5-20.
 
 Decision refs: slm-learning-094, 104, 105.
 """
-from __future__ import annotations
-
+# NOTE: do NOT add `from __future__ import annotations` here — Modal's
+# class parameter type validator needs real type objects, not strings.
 import modal
 
 

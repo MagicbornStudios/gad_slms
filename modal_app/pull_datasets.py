@@ -55,12 +55,16 @@ VOLUME_MOUNT = "/data"
 #   target:    subdir under /data/external/
 #   format:    parquet / jsonl
 DATASETS = [
+    # Replaced bigcode/the-stack-smol (gated) with public OpenCodeReasoning
+    # 736k pairs of reasoning-augmented code — stronger signal for our
+    # coder shot than raw code (it has explanation + chain-of-thought
+    # baked in).
     {
-        "id": "bigcode/the-stack-smol",
-        "subset": "data/python",
-        "split": "train",
-        "limit": 5000,
-        "target": "the-stack-smol-py",
+        "id": "nvidia/OpenCodeReasoning",
+        "subset": "split_0",
+        "split": "split_0",
+        "limit": 30000,
+        "target": "open-code-reasoning",
         "format": "parquet",
     },
     {
@@ -87,6 +91,10 @@ DATASETS = [
         "target": "swebench-verified",
         "format": "parquet",
     },
+    # bigcode/starcoderdata is also gated; alternative public code corpora
+    # for future pulls: codeparrot/github-code (large), code_contests
+    # (DeepMind), code_x_glue_cc_code_completion_token. We can swap these
+    # in once the OpenCodeReasoning pull validates the pipeline.
 ]
 
 

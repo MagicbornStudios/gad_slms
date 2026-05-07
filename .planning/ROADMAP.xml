@@ -5,6 +5,7 @@
     <phase id="00" status="done">
       <title>Bootstrap</title>
       <goal>Define scope</goal>
+      <status>done</status>
     </phase>
   </milestone>
 

@@ -1,0 +1,35 @@
+{
+  "run_id": "tooluse-sanity-v2-modal-l4-2026-05-08",
+  "exp_id": "EXP-tooluse-v2",
+  "purpose": "Tool-use sanity v2 on Modal L4: 4841 telemetry-derived pairs (6x the v1 789-pair corpus). v1 hit final_loss 0.39, token_acc 0.90. Hypothesis: 6x more real Claude-Code sessions improves generalization without recipe change.",
+  "base_model": "Qwen/Qwen2.5-1.5B-Instruct",
+  "dataset_volume_path": "/data/processed/gad-telemetry-2026-05-06/sft_tooluse.jsonl",
+  "system_prompt": "You are a coding agent. Given the recent tool calls in a session, choose the next tool call. Output exactly one tool call as Tool(json_args).",
+  "instruction_field": "instruction",
+  "response_field": "command",
+  "max_length": 512,
+  "lora": {
+    "r": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "target_modules": [
+      "q_proj", "k_proj", "v_proj", "o_proj",
+      "gate_proj", "up_proj", "down_proj"
+    ]
+  },
+  "training": {
+    "epochs": 3,
+    "lr": 2e-4,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "seed": 42,
+    "logging_steps": 25
+  },
+  "gpu": "L4",
+  "timeout_seconds": 5400,
+  "hub_repo": "scrubster/dr-stein-tooluse-v2-modal-l4",
+  "decision_refs": ["slm-learning-051", "slm-learning-082", "slm-learning-086", "slm-learning-094"]
+}

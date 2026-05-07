@@ -43,3 +43,4 @@
 | stage25_qwen15_multitask EVAL | 2026-05-06T12:59:29 |  |  |  |  |  |  | 25/30 (83.3%) |  |
 | stage25_qwen15_doc_verifier_r8 EVAL | 2026-05-06T14:22:38 |  |  |  |  |  |  | 11/30 (36.7%) |  |
 | stage25_qwen15_doc_verifier_r16 EVAL | 2026-05-06T15:07:19 |  |  |  |  |  |  | 10/30 (33.3%) |  |
+| stage25_qwen15_doc_verifier_r16_augmented EVAL | 2026-05-06T19:58:30 |  |  |  |  |  |  | 12/30 (40.0%) |  |

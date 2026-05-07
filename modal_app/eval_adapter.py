@@ -281,9 +281,12 @@ def _load_mbpp(limit: int) -> list[dict]:
     for i, row in enumerate(ds):
         if i >= limit:
             break
+        # MBPP sanitized config renamed 'text' -> 'prompt' on HF Hub.
+        # Fall back to 'text' for older snapshots.
+        text = row.get("prompt") or row.get("text") or ""
         prompt = (
             f"Solve this Python problem. Output only the function definition.\n\n"
-            f"{row['text']}\n\nExample test:\n{row['test_list'][0]}"
+            f"{text}\n\nExample test:\n{row['test_list'][0]}"
         )
         test = "\n".join(row["test_list"])
         cases.append({

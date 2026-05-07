@@ -1,0 +1,59 @@
+{
+  "$comment": "Project-scoped GAD CLI extensions for slm-learning. Each entry registers a command that the gad CLI should dispatch when run from this project root (or with --projectid slm-learning). The monorepo team is building the loader framework; this manifest is forward-compatible with their design and operates today via path-based dispatch. See handoff h-2026-05-08T01-00-00 for details.",
+  "schema_v": 1,
+  "projectid": "slm-learning",
+  "namespace": "slm",
+  "extensions": [
+    {
+      "name": "slm eval classify-failures",
+      "module": "scripts/eval/classify_humaneval_failures.py",
+      "entrypoint": "main",
+      "description": "Classify HumanEval failures into 9 buckets (think/truncation, code-truncated, wrong-signature, full-script, competitive-style, prose-pollution, indentation-bug, algorithm-fail, evaluator-bug). Reads persisted full-result JSONs from Modal volume.",
+      "args": [
+        {"name": "--base", "required": true, "help": "Path to base-model HumanEval results JSON"},
+        {"name": "--lora", "required": true, "help": "Path to LoRA HumanEval results JSON"},
+        {"name": "--out-md", "default": "reports/diagnostics/ocr_lora_humaneval_failure_taxonomy.md"},
+        {"name": "--out-json", "default": "reports/diagnostics/ocr_lora_humaneval_failure_taxonomy.json"}
+      ],
+      "tags": ["diagnostic", "humaneval", "post-eval"],
+      "decision_refs": ["slm-learning-103", "slm-learning-107"]
+    },
+    {
+      "name": "slm eval aggregate-public-matrix",
+      "module": "scripts/eval/aggregate_public_matrix.py",
+      "entrypoint": "main",
+      "description": "Compile HumanEval+MBPP eval logs into the comparator-matrix public-row report. Per slm-learning-103 (4 rows per candidate before promotion).",
+      "args": [],
+      "tags": ["report", "public-row", "post-eval"],
+      "decision_refs": ["slm-learning-103"]
+    },
+    {
+      "name": "slm data prepare-ocr-variants",
+      "module": "scripts/data/prepare_ocr_variants.py",
+      "entrypoint": "main",
+      "description": "Build 5 OCR variants for controlled experiments (raw, no_think, function_normalized, mixed_instruction_50, high_quality_subset). Profiles + samples per variant. Does NOT train.",
+      "args": [
+        {"name": "--source", "default": "data/external/open-code-reasoning/data.parquet"},
+        {"name": "--limit", "type": "int", "default": 2000},
+        {"name": "--out", "default": "data/processed/ocr-variants-2026-05-08"}
+      ],
+      "tags": ["data", "preparation", "pre-train"],
+      "decision_refs": ["slm-learning-107"],
+      "data_contract": "docs/data-contracts/coding_sft.md"
+    },
+    {
+      "name": "slm eval modal-fire",
+      "module": "scripts/eval/modal_fire.py",
+      "entrypoint": "main",
+      "description": "Fire a Modal eval job with project-standard args (MSYS_NO_PATHCONV, PYTHONIOENCODING, max_new_tokens, persist_run_id). Wraps the modal_app/eval_adapter.py entrypoint to remove operator-error landmines.",
+      "status": "planned",
+      "rationale": "Encodes the bug-tax lessons from autonomous run 2026-05-07 (MSYS path translation, dataset_limit, L4 timeout) so future operators don't re-discover them."
+    }
+  ],
+  "see_also": {
+    "future_framework": "Monorepo team is building the dynamic CLI extension loader. When the framework lands, this manifest stays the same; the gad CLI gains the ability to dispatch `gad slm eval classify-failures` directly. Until then, operators run the scripts via path: `.venv/Scripts/python.exe <module> --args`.",
+    "handoff": ".planning/handoffs/open/h-2026-05-08T01-00-00-monorepo-cli-extension-framework.md",
+    "data_contract": "docs/data-contracts/coding_sft.md",
+    "decision": "slm-learning-108 (TODO: register the extension-first authoring policy)"
+  }
+}

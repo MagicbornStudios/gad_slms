@@ -216,8 +216,9 @@ def _judge(case: dict, completion: str) -> tuple[bool, str]:
     import textwrap
     import tempfile
 
+    # Strip <think>...</think> reasoning blocks (OpenCodeReasoning style)
+    code = re.sub(r"<think>.*?</think>", "", completion, flags=re.DOTALL)
     # Strip code fences if present
-    code = completion
     m = re.search(r"```(?:python)?\s*\n?(.*?)\n?```", code, re.DOTALL)
     if m:
         code = m.group(1).strip()

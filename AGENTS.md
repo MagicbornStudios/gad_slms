@@ -1,5 +1,38 @@
 # Agent Guide
 
+## Operating constitution (read first)
+
+This project is a research program, not a one-off training repo. The
+operating constitution is `.planning/concerns/research-program-charter.md`
+(locked 2026-05-07 by operator brief). Read it before any training,
+serving, or eval work.
+
+Headlines that bind every session:
+
+- **Compare-and-compete is mandatory.** Every candidate model produces
+  4 eval rows (public leaderboard + frontier comparator + owned-domain
+  + lineage) or it is REFUSED for promotion. See `slm-learning-103`.
+- **Delta Graph schema for adapters.** Every LoRA tracks
+  parents/depends_on/evals/cost/lineage in `models/REGISTRY.json`. No
+  blind stacking. No merge without an eval beating both parents. See
+  `slm-learning-100`.
+- **3-artifact rule per training run.** Weights + outputs-corpus +
+  regression journal. Lost training is structurally impossible. See
+  `slm-learning-096`.
+- **Two-shot $50 discipline.** No big training fires without pre-flight
+  comparator matrix landing real numbers vs frontier AND scaling-ladder
+  smoke (1.5B → 3B → 7B) predicting the bigger outcome. See
+  `slm-learning-097`.
+- **Hardware policy.** Anything >100MB goes to Modal volume, NOT local.
+  Local disk at 93% — assume the laptop is fragile. See
+  `slm-learning-105`.
+- **Six research tracks** are open: Branch-Train-Merge, SERA repo-coder,
+  RLEF/RLVR, test-time compute, Kael computer-use, artifact generation.
+  See `slm-learning-101`.
+- **Named experiments only.** EXP-001 through EXP-010 each have
+  hypothesis + dataset + model + cost + eval + pass-threshold in
+  `.planning/research/EXPERIMENTS.json`.
+
 ## gad
 
 Use `gad` as the durable planning and project-memory CLI for this repo.

@@ -577,4 +577,44 @@
     <summary>Credit acquisition order ranked by time-to-funds: NVIDIA Inception (days, no equity required) then Modal startup credits via founders email (days) then Hugging Face research credits (week) then AWS Activate at 1k-5k tier (days) then Microsoft for Startups Hub (weeks, needs LLC) then Google Cloud for Startups (1-2 months, needs entity); user filing company tomorrow unlocks the larger programs</summary>
   </decision>
 
+  <decision id="slm-learning-099">
+    <title>L0-L5 stack: L0 base (Qwen 7B/32B/72B never pretrained by...</title>
+    <summary>L0-L5 stack: L0 base (Qwen 7B/32B/72B never pretrained by us), L1 domain deltas, L2 task deltas, L3 preference deltas (DPO), L4 routing+merge policy (TIES/BTM/learned router), L5 system orchestration (Kael/team) — research program charter locked</summary>
+  </decision>
+
+  <decision id="slm-learning-100">
+    <title>Delta Graph schema: every adapter is a node with delta_id...</title>
+    <summary>Delta Graph schema: every adapter is a node with delta_id, base, parents, depends_on, dataset, rank, merge_method, training_method, evals.public+private, cost_usd, wall_hours, compute_target, status, regression_journal_uri, outputs_corpus_uri, decision_refs; deltas may depend on parents but never blindly stack forever; merge requires eval beating both parents</summary>
+  </decision>
+
+  <decision id="slm-learning-101">
+    <title>Six research tracks active: Track A Branch-Train-Merge (c...</title>
+    <summary>Six research tracks active: Track A Branch-Train-Merge (composition), Track B SERA repo-specialized coder (strongest paper lane), Track C verifier-driven RL (SFT to DPO to GRPO/RLVR), Track D test-time compute (best-of-N+verifier), Track E Kael computer-use traces, Track F artifact generation (game/music/landing/marketing)</summary>
+  </decision>
+
+  <decision id="slm-learning-102">
+    <title>EXP-001 through EXP-010 named experiment registry: BTM on...</title>
+    <summary>EXP-001 through EXP-010 named experiment registry: BTM on GAD domains, Delta Graph routing, SERA repo trajectories, codebase-attention adapter, best-of-N verifier, local tiny router, soul-prompt impact, skeleton-aware coder, Kael intent classifier, music/soundtrack scorer; each carries hypothesis+dataset+model+cost+eval+pass-threshold; full table in research-program-charter.md</summary>
+  </decision>
+
+  <decision id="slm-learning-103">
+    <title>Compare-and-compete discipline mandatory for all training...</title>
+    <summary>Compare-and-compete discipline mandatory for all training: every candidate model produces 4 eval rows (public leaderboard SWE-bench+HumanEval+MBPP+LiveCodeBench, frontier comparator vs claude-cli+Big-Pickle+OpenRouter-free-tier+bare-base, owned-domain GAD/Magicborn/Grime-Time/Kael, lineage parents+method+cost+wall-hours); a candidate missing any of the 4 rows is REFUSED for promotion no exceptions</summary>
+  </decision>
+
+  <decision id="slm-learning-104">
+    <title>ASAP launch timeline: Day 0 Phase 0 architecture validati...</title>
+    <summary>ASAP launch timeline: Day 0 Phase 0 architecture validation, Day 1-2 Modal vLLM serving v2 adapter, Day 2-3 comparator harness with frontier rows, Day 3-5 SERA-style trajectory generator, Day 5-7 scaling-ladder 1.5B-3B-7B (~0-15), Day 7-10 shot 1 32B-Coder (~0), Day 10-14 wire into opencode + first real PR run = LAUNCH THRESHOLD; Day 14-21 shot 2 72B orchestrator; Day 21-30 gad infer production serving with 5+ adapters in delta graph</summary>
+  </decision>
+
+  <decision id="slm-learning-105">
+    <title>Hardware policy locked per disk-93pct-full state: anythin...</title>
+    <summary>Hardware policy locked per disk-93pct-full state: anything &gt;100MB goes to Modal volume not local; base model weights HF Hub+Modal volume only with small local cache for active dev; telemetry exports rotate to Modal volume after 7 days; adapters HF Hub primary; local laptop is orchestration+small-specialist-eval only</summary>
+  </decision>
+
+  <decision id="slm-learning-106">
+    <title>Research intake protocol: tmp/research/{papers,repos,expe...</title>
+    <summary>Research intake protocol: tmp/research/{papers,repos,experiments,reviews} with research_id manifest per pull (source, url, cloned_to, review_status, ideas_extracted, risks, license, gad_relevance, next_test); 6 rules - never pollute production from tmp, every clone gets review, useful ideas become deltas, unused becomes skeleton, no dependency without license/security review, every claim needs benchmark or reproduction</summary>
+  </decision>
+
 </decisions>

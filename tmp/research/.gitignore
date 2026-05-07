@@ -1,0 +1,6 @@
+# Per slm-learning-106: large external clones don't belong in git
+papers/
+repos/
+# But we keep reviews + derived experiments
+!reviews/
+!experiments/

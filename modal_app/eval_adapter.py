@@ -231,7 +231,17 @@ def _score_inner(args: dict) -> dict:
         import json as _json
         out_dir = Path(f"/models/eval-runs/{persist_run_id}")
         out_dir.mkdir(parents=True, exist_ok=True)
-        out_path = out_dir / f"{benchmark}_{mode}_n{len(cases)}.json"
+        # Slug the adapter so multiple adapters don't overwrite each other.
+        # BASE → "base"; "/models/runs/foo/adapter" → "foo"; HF id → last segment.
+        if not adapter_id or adapter_id == "BASE":
+            slug = "base"
+        else:
+            parts = [p for p in adapter_id.replace("\\", "/").split("/") if p]
+            # Strip trailing "adapter" if present
+            if parts and parts[-1] == "adapter":
+                parts = parts[:-1]
+            slug = parts[-1] if parts else "unknown"
+        out_path = out_dir / f"{benchmark}_{mode}_{slug}_n{len(cases)}.json"
         out_path.write_text(_json.dumps(summary, indent=2), encoding="utf-8")
         models_volume.commit()
         print(f"[eval] persisted full results to {out_path}")

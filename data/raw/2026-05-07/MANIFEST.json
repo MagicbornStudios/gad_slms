@@ -1,0 +1,32 @@
+{
+  "schema_v": 1,
+  "exported_at": "2026-05-07T01:24:33.503Z",
+  "since": "2026-05-04T00:00:00Z",
+  "until": "2026-05-07T01:23:57.020Z",
+  "data_file": "events.jsonl",
+  "data_sha256": "aec465968724e39effe99d78d1830834eedfe7ba4b663558da9cd0ea27e79652",
+  "data_bytes": 161043719,
+  "row_count": 215782,
+  "role_histogram": {
+    "meta": 118975,
+    "tool_call": 884,
+    "tool_result": 884,
+    "reasoning": 88087,
+    "response": 4432,
+    "prompt": 2520
+  },
+  "content_type_histogram": {
+    "meta": 52399,
+    "narrative": 5,
+    "site": 12,
+    "planning": 163015,
+    "code": 349,
+    "eval": 2
+  },
+  "source_commits": {
+    "monorepo": "7d36adcfe1ba98ac25ec53805434021abfcbf8ce",
+    "gad": null
+  },
+  "redacted": true,
+  "redacted_envelope_count": 44
+}

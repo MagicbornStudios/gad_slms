@@ -552,4 +552,29 @@
     <summary>Doc-verifier r=16 augmented REGRESSED (F1 0.720 -&gt; 0.599, unknown 0.462 -&gt; 0.167) — deterministic template synthesis caused overfit to template phrasing; need haiku paraphrase variance</summary>
   </decision>
 
+  <decision id="slm-learning-094">
+    <title>Composition-of-specialists is our path to trillion-effect...</title>
+    <summary>Composition-of-specialists is our path to trillion-effective-params: 50-100 specialists at 7B-32B with hard+soft routing + fusion head + TIES merge passes equals Opus-class total params at fraction of cost; reaches 700B-3.2T total active params at our 0-shot budget tier</summary>
+  </decision>
+
+  <decision id="slm-learning-095">
+    <title>Comparator floor for our model is Big Pickle (OpenCode Ze...</title>
+    <summary>Comparator floor for our model is Big Pickle (OpenCode Zen stealth, free), Llama-3.3-70B-Instruct:free (OpenRouter), Qwen2.5-Coder-32B-Instruct (raw base) + claude-cli + bare-base on HumanEval+MBPP+GAD-tools+SWE-bench; comparator harness must run end-to-end before any 50-dollar shot fires</summary>
+  </decision>
+
+  <decision id="slm-learning-096">
+    <title>Every training run produces 3 reusable artifacts not 1: (...</title>
+    <summary>Every training run produces 3 reusable artifacts not 1: (1) adapter weights to HF Hub with lineage in REGISTRY.json, (2) outputs-corpus on held-out 200-prompt bank for next-gen curriculum distillation, (3) regression journal of failed tasks for next-gen DPO + targeted augmentation; this makes lost-training structurally impossible</summary>
+  </decision>
+
+  <decision id="slm-learning-097">
+    <title>Two-shot 50-dollar discipline: shot 1 Qwen2.5-Coder-32B-I...</title>
+    <summary>Two-shot 50-dollar discipline: shot 1 Qwen2.5-Coder-32B-Instruct + QLoRA on Modal H100 (~47 dollars), shot 2 Qwen2.5-72B-Instruct or DeepSeek-V2.5 + QLoRA (~50-80 dollars); BOTH gated on pre-flight comparator matrix landing real numbers vs Big Pickle and free-tier OpenRouter; no shot fires without scaling-ladder smoke at 1.5B-3B-7B predicting the 32B outcome</summary>
+  </decision>
+
+  <decision id="slm-learning-098">
+    <title>Credit acquisition order ranked by time-to-funds: NVIDIA ...</title>
+    <summary>Credit acquisition order ranked by time-to-funds: NVIDIA Inception (days, no equity required) then Modal startup credits via founders email (days) then Hugging Face research credits (week) then AWS Activate at 1k-5k tier (days) then Microsoft for Startups Hub (weeks, needs LLC) then Google Cloud for Startups (1-2 months, needs entity); user filing company tomorrow unlocks the larger programs</summary>
+  </decision>
+
 </decisions>

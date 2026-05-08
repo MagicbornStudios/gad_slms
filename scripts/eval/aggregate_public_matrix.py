@@ -117,7 +117,11 @@ def main() -> None:
         })
 
     today = dt.date.today().isoformat()
-    out_md = NOTES_DIR / f"{today}-comparator-matrix-public-row.md"
+    # Write to an _auto path so we don't clobber the hand-edited
+    # comprehensive matrix at `<date>-comparator-matrix-public-row.md`.
+    # Operators consult the hand-edited file; the auto file is the
+    # programmatic snapshot that the aggregator owns.
+    out_md = NOTES_DIR / f"{today}-comparator-matrix-public-row_auto.md"
     out_md.parent.mkdir(parents=True, exist_ok=True)
 
     lines = []

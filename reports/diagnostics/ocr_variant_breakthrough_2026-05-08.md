@@ -34,7 +34,8 @@ recovered and these are the post-recovery numbers.
 | Qwen2.5-Coder-1.5B + OCR fn-norm LoRA | **101/164 (61.6%)** | **105/164 (64.0%)** |
 | Δ vs 1.5B base (HE) | **+6.7 pp** ⬆️ | pending |
 | | | |
-| Qwen2.5-Coder-1.5B + OCR no-think LoRA | training (77%) | pending |
+| Qwen2.5-Coder-1.5B + OCR no-think LoRA | **75/164 (45.7%)** | **96/164 (58.5%)** |
+| Δ vs 1.5B base (no-think) | **−9.2 pp** ⬇️ | **−2.5 pp** ⬇️ |
 
 ## What changed between this round and the prior diagnosis
 
@@ -76,6 +77,26 @@ calls for: declare a `target_format` per row, filter to rows whose
 target shape matches the eval's expected shape, don't train on
 the mismatched rows.
 
+## Lever isolation: which transformation matters?
+
+The two variants isolate two transformations:
+
+| Variant | strip `<think>` | normalize format | result |
+|---|---|---|---|
+| no_think | ✓ | ✗ | **regresses** −9.2pp HE, −2.5pp MBPP |
+| fn_normalized | ✓ | ✓ | **lifts** +6.7pp HE, +3.0pp MBPP |
+
+**The format normalization is the dominant positive lever.** Stripping
+`<think>` blocks alone is a NET NEGATIVE — it makes the competitive-
+programming style harder to learn (less reasoning context) without
+fixing the format mismatch with HE/MBPP. Fn-normalized fixes both,
+and the format fix dwarfs the think-loss penalty.
+
+This is also evidence that the LoRA is sensitive to **target distribution
+shape**, not target length per se. no_think shrinks targets 25× but
+preserves competitive-programming output shape; fn_normalized changes
+the shape and lifts. Shape > length.
+
 ## Implications for the $50 32B shot
 
 The `slm-learning-097` pre-flight gate said: "scaling-ladder smoke
@@ -83,11 +104,11 @@ must predict benchmark lift before firing the larger shot."
 
 Updated gate readout per `slm-learning-107`:
 
-| Recipe | 1.5B HE | Predicts at 7B → 32B? |
-|---|---|---|
-| OCR raw LoRA | regresses (TBD this run) | NO — DON'T fire |
-| OCR fn-normalized LoRA | **+6.7 pp lift** | YES — fire is justified once we confirm at 7B |
-| OCR no-think LoRA | TBD (training in flight) | TBD |
+| Recipe | 1.5B HE | 1.5B MBPP | Predicts at 7B → 32B? |
+|---|---|---|---|
+| OCR raw LoRA | regresses | regresses | NO — DON'T fire |
+| OCR no-think LoRA | **−9.2 pp** | **−2.5 pp** | NO — think-strip alone is a net negative |
+| OCR fn-normalized LoRA | **+6.7 pp** | **+3.0 pp** | YES — fire is justified once we confirm at 7B |
 
 **The $50 32B shot is now justified IF we use the fn-normalized
 recipe AND it lifts at 7B too.** Order of operations:

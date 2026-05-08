@@ -1,0 +1,11 @@
+{
+  "variant": "ocr_raw",
+  "n_rows": 5000,
+  "n_input_rows": 5000,
+  "kept_fraction": 1.0,
+  "target_formats": {
+    "competitive_program": 5000
+  },
+  "avg_target_chars": 27388.4,
+  "avg_input_chars": 1660.3
+}

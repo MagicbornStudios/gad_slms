@@ -1,0 +1,11 @@
+{
+  "variant": "ocr_function_normalized",
+  "n_rows": 1991,
+  "n_input_rows": 5000,
+  "kept_fraction": 0.398,
+  "target_formats": {
+    "full_function_definition": 1991
+  },
+  "avg_target_chars": 1249.0,
+  "avg_input_chars": 1899.8
+}

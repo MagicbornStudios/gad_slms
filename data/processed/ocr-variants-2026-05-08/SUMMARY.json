@@ -1,0 +1,58 @@
+{
+  "ts": "2026-05-07T21:30:32.777932",
+  "source": "C:\\Users\\benja\\Documents\\slm_learning\\data\\external\\open-code-reasoning\\data.parquet",
+  "limit": 5000,
+  "variants": {
+    "ocr_raw": {
+      "variant": "ocr_raw",
+      "n_rows": 5000,
+      "n_input_rows": 5000,
+      "kept_fraction": 1.0,
+      "target_formats": {
+        "competitive_program": 5000
+      },
+      "avg_target_chars": 27388.4,
+      "avg_input_chars": 1660.3
+    },
+    "ocr_no_think": {
+      "variant": "ocr_no_think",
+      "n_rows": 5000,
+      "n_input_rows": 5000,
+      "kept_fraction": 1.0,
+      "target_formats": {
+        "competitive_program": 5000
+      },
+      "avg_target_chars": 1069.2,
+      "avg_input_chars": 1660.3
+    },
+    "ocr_function_normalized": {
+      "variant": "ocr_function_normalized",
+      "n_rows": 1991,
+      "n_input_rows": 5000,
+      "kept_fraction": 0.398,
+      "target_formats": {
+        "full_function_definition": 1991
+      },
+      "avg_target_chars": 1249.0,
+      "avg_input_chars": 1899.8
+    },
+    "ocr_high_quality_subset": {
+      "variant": "ocr_high_quality_subset",
+      "n_rows": 1988,
+      "n_input_rows": 5000,
+      "kept_fraction": 0.398,
+      "target_formats": {
+        "full_function_definition": 1988
+      },
+      "avg_target_chars": 1243.4,
+      "avg_input_chars": 1899.8
+    },
+    "ocr_mixed_instruction_50": {
+      "variant": "ocr_mixed_instruction_50",
+      "n_rows": 0,
+      "kept_fraction": 0.0,
+      "skipped_reason": "needs instruction-source"
+    }
+  },
+  "data_contract": "docs/data-contracts/coding_sft.md"
+}

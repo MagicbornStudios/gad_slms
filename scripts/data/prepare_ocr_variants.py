@@ -309,7 +309,7 @@ def main():
         transformed = [vfn(r) for r in rows]
         profile = write_variant(vname, transformed, out_dir)
         profiles[vname] = profile
-        print(f"  → kept {profile['n_rows']}/{profile['n_input_rows']} "
+        print(f"  -> kept {profile['n_rows']}/{profile['n_input_rows']} "
               f"({profile['kept_fraction']*100:.1f}%)")
 
     # Mixed variant — needs instruction data; skipped if none provided.

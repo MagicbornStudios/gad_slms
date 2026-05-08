@@ -1,0 +1,35 @@
+{
+  "run_id": "ladder-1p5b-ocr-no-think-2026-05-08",
+  "exp_id": "EXP-ocr-variant-no-think",
+  "purpose": "Controlled experiment per 2026-05-08 directive: train 1.5B coder on ocr_no_think (think blocks stripped) to test the hypothesis that <think>...</think> overhead caused the OCR LoRA regression. Same recipe as ladder-1p5b-coder-2026-05-08-v2 except for dataset.",
+  "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "dataset_volume_path": "/data/processed/ocr-variants-2026-05-08/ocr_no_think/rows.jsonl",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "target",
+  "max_length": 1024,
+  "lora": {
+    "r": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "target_modules": [
+      "q_proj", "k_proj", "v_proj", "o_proj",
+      "gate_proj", "up_proj", "down_proj"
+    ]
+  },
+  "training": {
+    "epochs": 1,
+    "lr": 2e-4,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "seed": 42,
+    "logging_steps": 50
+  },
+  "gpu": "A10G",
+  "timeout_seconds": 5400,
+  "hub_repo": "scrubster/dr-stein-ladder-1p5b-ocr-no-think",
+  "decision_refs": ["slm-learning-097", "slm-learning-103", "slm-learning-107"]
+}

@@ -1,0 +1,11 @@
+{
+  "variant": "ocr_high_quality_subset",
+  "n_rows": 1988,
+  "n_input_rows": 5000,
+  "kept_fraction": 0.398,
+  "target_formats": {
+    "full_function_definition": 1988
+  },
+  "avg_target_chars": 1243.4,
+  "avg_input_chars": 1899.8
+}

@@ -842,4 +842,29 @@
     <summary>Cross-base failure-data transfer FALSIFIED (charter Claim 1 narrowed). 3B + 7B-hard (58 rows of 7B's HumanEval failures + canonical solutions, trained on 3B base via LoRA r=16) regressed HE -7.3pp (76.2% vs 3B base 83.5%) and effectively flat MBPP -0.6pp (73.8% vs base 74.4%). Asymmetric: HE worse because dataset is HE-shaped; MBPP barely moved because OOD. Validates slm-learning-169 (morphism prototype must use 0.5B-OWN failures) and generalizes the rule: BASE-FAILURE ROWS ARE BASE-SPECIFIC. 7B-failure does not equal 3B-failure does not equal 1.5B-failure. Each base needs its OWN gap data to lift. Charter Claim 1 lifted-rungs count remains at 2 (7B + 1.5B with own data); third rung (3B) blocked on building 3B-OWN-hard dataset (~0.40 USD prereq + 0.30 train + 0.80 eval = 1.50 USD).</summary>
   </decision>
 
+  <decision id="slm-learning-178">
+    <title>Hard rows alone are insufficient for small-or-mid bases; ...</title>
+    <summary>Hard rows alone are insufficient for small-or-mid bases; retain rows are MANDATORY for consolidation at &lt;=3B. Empirical: 0.5B+hard regressed -33pp HE, 1.5B+hard regressed -6.7pp HE, but 1.5B+hard+retain (45/55 mix) LIFTED +9.1pp HE / +3.0pp MBPP. The 7B exception (lift on hard-only) reflects 7B's larger capacity to self-regularize against narrow training data; bases below ~7B do not have that capacity and require explicit retain-mix smoothing. Implications: every consolidation run at &lt;=3B base must use a hard+retain mix; build_retain_bank.py + build_consolidation_mix.py are the canonical pipeline; the retain ratio is a per-base hyperparameter (start 30-50% hard at 1.5B, more retain at smaller bases). Refs: slm-learning-122, 126, 130, 170, 173.</summary>
+  </decision>
+
+  <decision id="slm-learning-179">
+    <title>Cross-base failure-data transfer is FALSIFIED — every bas...</title>
+    <summary>Cross-base failure-data transfer is FALSIFIED — every base needs its OWN pressure profile (this restates and elevates slm-learning-177). Empirical: 3B + 7B-hard regressed -7.3pp HE asymmetrically (HE worse than MBPP because dataset is HE-shaped). Implication: morphism prototype rule from slm-learning-169 (locked to 0.5B-OWN-failures) generalizes to ALL training mechanisms. Build per-base hard sets via the same build_&lt;base&gt;_hard_fn_norm_dataset.py recipe pointed at THAT base's eval results. No universal hard dataset. Refs: slm-learning-169, 177.</summary>
+  </decision>
+
+  <decision id="slm-learning-180">
+    <title>Morphism growth requires SMOOTHING, not hard-only training.</title>
+    <summary>Morphism growth requires SMOOTHING, not hard-only training. Empirical: Variant A on hard-only at 0.5B/1.5B regressed catastrophically; Variant A late+retain (combining position-fix slm-learning-175 + data-fix slm-learning-173) is the experiment-of-record now firing. The general principle: when adding capacity to a base via residual layers, training data must include enough retain rows to anchor old behavior, AND the residual contribution must be small-magnitude (small gate, small init scaling, late insertion). Hard-only on a freshly-inserted morphism layer rotates the residual stream too aggressively, breaking unrelated patterns. Refs: slm-learning-158, 165, 170, 173, 175, 178.</summary>
+  </decision>
+
+  <decision id="slm-learning-181">
+    <title>Variant C late gated residual (small-nonzero init) is the...</title>
+    <summary>Variant C late gated residual (small-nonzero init) is the next morphism design. Fixes Variant B's gate-stickiness (slm-learning-176) by making up_proj small-random Kaiming (scaled by 0.01) instead of zero, AND gate small-nonzero (0.01) instead of zero. Function preservation at init is ~99.99% (logit diff 1e-4) not bit-exact, but local smoke test confirms 60/60 token agreement on 0.5B. Trainable param count: ~1.2M on 1.5B (slightly more than Variant B's 1.18M). Insertion at layer 21 (75% depth) per slm-learning-175. Training on hard+retain per slm-learning-178/180. Implementation in modal_app/train_morphism.py + eval_morphism.py + scripts/morphism/local_init_smoke_test.py. First firing 2026-05-08 12:55 — see morphism_c_1p5b_hard_retain.json. Refs: slm-learning-158, 165, 174, 175, 176, 178.</summary>
+  </decision>
+
+  <decision id="slm-learning-182">
+    <title>Consolidation runs become first-class scaling events.</title>
+    <summary>Consolidation runs become first-class scaling events. Per the incremental latent consolidation framework (reports/research/incremental_latent_consolidation.md): each consolidation run produces a structured record per schemas/consolidation_run.schema.json including base_model, delta_type (lora/morphism_a/morphism_b/morphism_c/adapter/router/skill_model), hard_rows, retain_rows, hard_retain_ratio, curriculum_schedule, trainable_params, eval_before, eval_after, retain_pass_rate_before/after, regression_score, promotion_verdict (canonical/staging/skeleton/negative_teacher/quarantined/rejected). The scaling ledger is extended with one entry per consolidation run; the GAD evolution loop becomes 10 explicit steps from observe-pressure to serve-through-router with telemetry feedback. Pressure-gated training (slm-learning-129/166) gates step 2; this decision makes the rest of the pipeline first-class infrastructure. Refs: slm-learning-122, 125, 129, 166, 172, 173, 178, 179, 180, 181.</summary>
+  </decision>
+
 </decisions>

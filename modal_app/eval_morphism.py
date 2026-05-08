@@ -138,6 +138,37 @@ def _score_morphism_inner(args: dict) -> dict:
         ):
             return hidden_states + self.proj(self.norm(hidden_states))
 
+    class GatedResidualLayerC(nn.Module):
+        """Variant C — load-back form. Uses small-nonzero init so trained
+        weights from training time can re-initialize to ~base behavior
+        before state-dict load overwrites them."""
+        def __init__(self, hidden_size: int, bottleneck_size: int,
+                     eps: float = 1e-6, gate_init: float = 0.01,
+                     up_scale: float = 0.01):
+            super().__init__()
+            self.hidden_size = hidden_size
+            self.bottleneck_size = bottleneck_size
+            self.norm = Qwen2RMSNorm(hidden_size, eps=eps)
+            self.down = nn.Linear(hidden_size, bottleneck_size, bias=True)
+            self.up = nn.Linear(bottleneck_size, hidden_size, bias=True)
+            self.gate = nn.Parameter(torch.full((1,), float(gate_init)))
+            self.act = nn.SiLU()
+            nn.init.kaiming_uniform_(self.down.weight, a=5**0.5)
+            nn.init.zeros_(self.down.bias)
+            nn.init.kaiming_uniform_(self.up.weight, a=5**0.5)
+            with torch.no_grad():
+                self.up.weight.mul_(float(up_scale))
+            nn.init.zeros_(self.up.bias)
+
+        def forward(
+            self, hidden_states, attention_mask=None, position_ids=None,
+            past_key_values=None, use_cache=False, cache_position=None,
+            position_embeddings=None, **kwargs,
+        ):
+            h = self.norm(hidden_states)
+            h = self.up(self.act(self.down(h)))
+            return hidden_states + self.gate * h
+
     class GatedBottleneckLayer(nn.Module):
         """Variant B at eval: structurally identical to train_morphism.py."""
 
@@ -175,6 +206,13 @@ def _score_morphism_inner(args: dict) -> dict:
         bottleneck_size = args.get("bottleneck_size") or max(64, hidden_size // 4)
         new_layer = GatedBottleneckLayer(
             hidden_size, bottleneck_size, cfg.rms_norm_eps
+        ).to(device=target_device, dtype=dtype)
+    elif variant == "C_gated_residual":
+        bottleneck_size = args.get("bottleneck_size") or max(64, hidden_size // 4)
+        new_layer = GatedResidualLayerC(
+            hidden_size, bottleneck_size, cfg.rms_norm_eps,
+            gate_init=args.get("gate_init", 0.01),
+            up_scale=args.get("up_scale", 0.01),
         ).to(device=target_device, dtype=dtype)
     else:
         return {"status": "error", "error": f"unknown variant {variant!r}"}
@@ -291,7 +329,9 @@ def main(run_id: str, base_model: str, insert_after_layer: int = 11,
          max_new_tokens: int = 384, mode: str = "chat",
          persist_run_id: str = "",
          variant: str = "A_identity_projection",
-         bottleneck_size: int = 0) -> None:
+         bottleneck_size: int = 0,
+         gate_init: float = 0.01,
+         up_scale: float = 0.01) -> None:
     args = {
         "run_id": run_id,
         "base_model": base_model,
@@ -303,6 +343,8 @@ def main(run_id: str, base_model: str, insert_after_layer: int = 11,
         "persist_run_id": persist_run_id or None,
         "variant": variant,
         "bottleneck_size": bottleneck_size or None,
+        "gate_init": gate_init,
+        "up_scale": up_scale,
     }
     fn = {"A10G": score_morphism_a10g, "A100": score_morphism_a100}.get(
         gpu, score_morphism_a10g)

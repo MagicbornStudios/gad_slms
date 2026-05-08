@@ -1,0 +1,32 @@
+{
+  "run_id": "lora-3b-hard-retain-2026-05-08",
+  "exp_id": "EXP-3b-rung-hard-retain",
+  "purpose": "Charter Claim 1 rung 3 (proper). 3B + LoRA r=16 trained on 3B-OWN-hard+retain consolidation mix (27 base-failure rows + 63 base-pass retain rows = 90 total, exact 30/70 ratio). Per slm-learning-178/179: each base needs OWN failure data + retain rows. Direct test: does the 1.5B+retain canonical recipe (slm-learning-173) generalize up to 3B?",
+  "base_model": "Qwen/Qwen2.5-Coder-3B-Instruct",
+  "dataset_volume_path": "/data/processed/3b-consolidation-mix-30-70-2026-05-08/rows.jsonl",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "target",
+  "max_length": 1024,
+  "lora": {
+    "r": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+  },
+  "training": {
+    "epochs": 3,
+    "lr": 2e-4,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "seed": 42,
+    "logging_steps": 5
+  },
+  "gpu": "A10G",
+  "timeout_seconds": 7200,
+  "hub_repo": null,
+  "decision_refs": ["slm-learning-130", "slm-learning-173", "slm-learning-178", "slm-learning-179", "slm-learning-182"]
+}

@@ -208,6 +208,43 @@ def _train_morphism_inner(spec: dict) -> dict:
         ):
             return hidden_states + self.proj(self.norm(hidden_states))
 
+    # Variant C: late gated residual with SMALL-NONZERO init throughout.
+    # Per slm-learning-181: Variant B's chicken-and-egg gate-stickiness
+    # is fixed by giving up_proj small-random weights (not zero) and
+    # gate small nonzero (not zero). Function preservation is approximate
+    # (>=99% token agreement), not bit-exact, in exchange for trainability.
+    # y = x + gate * up(silu(down(norm(x)))) with:
+    #   gate init = small nonzero (default 0.01)
+    #   up_proj init = kaiming * 0.01 (small-random, not zero)
+    #   down_proj init = kaiming (full)
+    class GatedResidualLayerC(nn.Module):
+        def __init__(self, hidden_size: int, bottleneck_size: int,
+                     eps: float = 1e-6, gate_init: float = 0.01,
+                     up_scale: float = 0.01):
+            super().__init__()
+            self.hidden_size = hidden_size
+            self.bottleneck_size = bottleneck_size
+            self.norm = Qwen2RMSNorm(hidden_size, eps=eps)
+            self.down = nn.Linear(hidden_size, bottleneck_size, bias=True)
+            self.up = nn.Linear(bottleneck_size, hidden_size, bias=True)
+            self.gate = nn.Parameter(torch.full((1,), float(gate_init)))
+            self.act = nn.SiLU()
+            nn.init.kaiming_uniform_(self.down.weight, a=5**0.5)
+            nn.init.zeros_(self.down.bias)
+            nn.init.kaiming_uniform_(self.up.weight, a=5**0.5)
+            with torch.no_grad():
+                self.up.weight.mul_(float(up_scale))
+            nn.init.zeros_(self.up.bias)
+
+        def forward(
+            self, hidden_states, attention_mask=None, position_ids=None,
+            past_key_values=None, use_cache=False, cache_position=None,
+            position_embeddings=None, **kwargs,
+        ):
+            h = self.norm(hidden_states)
+            h = self.up(self.act(self.down(h)))
+            return hidden_states + self.gate * h
+
     # Variant B: gated zero-init bottleneck residual (safer growth structure).
     # y = x + gate * up(silu(down(norm(x)))), with gate=0 AND up.weight=0 at
     # init. Two layers of safety: gate scales the contribution from 0;
@@ -263,6 +300,18 @@ def _train_morphism_inner(spec: dict) -> dict:
             hidden_size, bottleneck_size, cfg.rms_norm_eps
         ).to(device=target_device, dtype=dtype)
         print(f"[morphism] Variant B: bottleneck_size={bottleneck_size}")
+    elif variant == "C_gated_residual":
+        bottleneck_size = morphism_cfg.get(
+            "bottleneck_size", max(64, hidden_size // 4)
+        )
+        gate_init = morphism_cfg.get("gate_init", 0.01)
+        up_scale = morphism_cfg.get("up_scale", 0.01)
+        new_layer = GatedResidualLayerC(
+            hidden_size, bottleneck_size, cfg.rms_norm_eps,
+            gate_init=gate_init, up_scale=up_scale,
+        ).to(device=target_device, dtype=dtype)
+        print(f"[morphism] Variant C: bottleneck_size={bottleneck_size} "
+              f"gate_init={gate_init} up_scale={up_scale}")
     else:
         return {"run_id": run_id, "status": "error",
                 "error": f"unknown morphism.variant {variant!r}"}
@@ -462,7 +511,9 @@ def _train_morphism_inner(spec: dict) -> dict:
             "num_hidden_after": cfg.num_hidden_layers,
             "init_agreement_mean": mean_agreement,
             "init_agreement_per_prompt": per_prompt,
-            "bottleneck_size": morphism_cfg.get("bottleneck_size") if variant == "B_gated_bottleneck" else None,
+            "bottleneck_size": morphism_cfg.get("bottleneck_size") if variant in ("B_gated_bottleneck", "C_gated_residual") else None,
+            "gate_init": morphism_cfg.get("gate_init") if variant == "C_gated_residual" else None,
+            "up_scale": morphism_cfg.get("up_scale") if variant == "C_gated_residual" else None,
         },
         "training": train_cfg,
         "training_loss": train_loss,

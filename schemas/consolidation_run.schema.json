@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/consolidation_run.schema.json",
+  "title": "Consolidation Run",
+  "description": "One pressure-gated incremental latent consolidation run (slm-learning-178..182). Captures the delta + data + before/after + promotion verdict so the consolidation ledger stays auditable.",
+  "type": "object",
+  "required": [
+    "run_id",
+    "base_model",
+    "delta_type",
+    "hard_rows",
+    "retain_rows",
+    "hard_retain_ratio",
+    "trainable_params",
+    "eval_before",
+    "eval_after",
+    "promotion_verdict"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "description": "Unique consolidation run id (e.g., consolidation-1p5b-2026-05-08-14-30)"
+    },
+    "ts_completed": { "type": "string", "format": "date-time" },
+    "base_model": {
+      "type": "string",
+      "description": "HF id of the base model (e.g., Qwen/Qwen2.5-Coder-1.5B-Instruct)"
+    },
+    "delta_type": {
+      "type": "string",
+      "enum": ["lora", "morphism_a", "morphism_b", "morphism_c", "adapter", "router", "skill_model"],
+      "description": "Mechanism of the consolidation delta"
+    },
+    "delta_id": {
+      "type": "string",
+      "description": "ID of the produced adapter / morphism / skill / etc."
+    },
+    "pressure_source": {
+      "type": "string",
+      "description": "ID of the pressure_event that triggered this consolidation (e.g., 'humaneval-failures-1p5b-2026-05-08'). null if operator-triggered."
+    },
+    "hard_rows": {
+      "type": "object",
+      "required": ["count", "source"],
+      "properties": {
+        "count": { "type": "integer", "minimum": 0 },
+        "source": { "type": "string", "description": "Path or id of the hard-rows file" },
+        "source_eval": { "type": "string", "description": "Eval the failures came from (humaneval/mbpp/gad_tools/...)" }
+      }
+    },
+    "retain_rows": {
+      "type": "object",
+      "required": ["count", "source"],
+      "properties": {
+        "count": { "type": "integer", "minimum": 0 },
+        "source": { "type": "string" },
+        "source_eval": { "type": "string" },
+        "retain_bank_id": {
+          "type": "string",
+          "description": "ID of the per-base retain bank these rows were sampled from"
+        }
+      }
+    },
+    "hard_retain_ratio": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Fraction of total rows that are hard (rest are retain). Configured value; actual ratio recorded separately."
+    },
+    "actual_hard_ratio": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "curriculum_schedule": {
+      "type": ["null", "array"],
+      "description": "Optional per-epoch (or per-step) ratio schedule. null = uniform mix.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "stage": { "type": "integer" },
+          "hard_ratio": { "type": "number" },
+          "epochs_or_steps": { "type": "integer" }
+        }
+      }
+    },
+    "trainable_params": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of trainable parameters in this delta"
+    },
+    "trainable_fraction_pct": { "type": "number" },
+    "insertion_layer": {
+      "type": ["null", "integer"],
+      "description": "For morphism: the layer index AFTER which the new module is inserted. null for non-morphism deltas."
+    },
+    "gate_init": {
+      "type": ["null", "number"],
+      "description": "For Variants B/C: the initial scalar gate value. null for non-gated mechanisms."
+    },
+    "training": {
+      "type": "object",
+      "properties": {
+        "epochs": { "type": "integer" },
+        "lr": { "type": "number" },
+        "batch_size": { "type": "integer" },
+        "grad_accum": { "type": "integer" },
+        "wall_seconds": { "type": "number" },
+        "training_loss": { "type": "number" },
+        "compute_target": { "type": "string" },
+        "cost_usd_estimate": { "type": "number" }
+      }
+    },
+    "init_check": {
+      "type": "object",
+      "description": "For morphism deltas: function-preservation at init",
+      "properties": {
+        "min_agreement": { "type": "number" },
+        "actual_agreement_mean": { "type": "number" },
+        "passed": { "type": "boolean" }
+      }
+    },
+    "eval_before": {
+      "type": "object",
+      "description": "Bare-base scores prior to applying this delta",
+      "properties": {
+        "humaneval": { "type": "number" },
+        "mbpp": { "type": "number" },
+        "gad_tools": { "type": "number" },
+        "retain_pass_rate": { "type": "number", "description": "Fraction of retain-bank rows the base passes" }
+      }
+    },
+    "eval_after": {
+      "type": "object",
+      "description": "Scores after applying this delta",
+      "properties": {
+        "humaneval": { "type": "number" },
+        "mbpp": { "type": "number" },
+        "gad_tools": { "type": "number" },
+        "retain_pass_rate": { "type": "number" }
+      }
+    },
+    "retain_pass_rate_before": { "type": "number" },
+    "retain_pass_rate_after": { "type": "number" },
+    "regression_score": {
+      "type": "number",
+      "description": "Largest negative delta (in pp) on any measured axis. Negative = regression magnitude. Used as a promotion gate (rejects deltas with regression > 5pp)."
+    },
+    "promotion_verdict": {
+      "type": "string",
+      "enum": ["canonical", "staging", "skeleton", "negative_teacher", "quarantined", "rejected"],
+      "description": "Final promotion decision"
+    },
+    "promotion_reason": { "type": "string" },
+    "decision_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "lineage": {
+      "type": "object",
+      "properties": {
+        "parents": { "type": "array", "items": { "type": "string" } },
+        "depends_on": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

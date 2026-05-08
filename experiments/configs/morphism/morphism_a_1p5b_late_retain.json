@@ -1,0 +1,45 @@
+{
+  "run_id": "morphism-a-1p5b-late-retain-2026-05-08",
+  "exp_id": "EXP-1p5b-followup-arm-9-A-late-retain",
+  "purpose": "Variant A late-layer + retain-mix cross-product. Per operator+ChatGPT review (slm-learning-180): combine the two biggest mitigations from this session. Late insertion (slm-learning-175: ~19pp recovery) + retain-mix data (slm-learning-173: lifts via LoRA). If lifts → Variant A becomes a usable mechanism after all; the architecture's hostility is fully tamed by combining position+data fixes. If still flat or negative → late+retain is insufficient; need Variant C or skip morphism for stacked-adapter approaches.",
+  "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "dataset_volume_path": "/data/processed/1p5b-retain-mix-30-70-2026-05-08/rows.jsonl",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "target",
+  "max_length": 1024,
+  "morphism": {
+    "variant": "A_identity_projection",
+    "insert_after_layer": 21,
+    "init_check": {
+      "min_agreement": 0.99,
+      "max_new_tokens": 16,
+      "prompts": [
+        "def hello():",
+        "import math\nfrom typing import List",
+        "def fibonacci(n: int) -> int:",
+        "class Stack:",
+        "for i in range(10):",
+        "def is_prime(n):",
+        "x = [1, 2, 3]",
+        "def reverse_string(s: str) -> str:"
+      ]
+    }
+  },
+  "training": {
+    "epochs": 3,
+    "lr": 2e-4,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": false,
+    "seed": 42,
+    "logging_steps": 5,
+    "max_grad_norm": 1.0
+  },
+  "gpu": "A10G",
+  "timeout_seconds": 7200,
+  "hub_repo": null,
+  "decision_refs": ["slm-learning-172", "slm-learning-173", "slm-learning-175", "slm-learning-180"]
+}

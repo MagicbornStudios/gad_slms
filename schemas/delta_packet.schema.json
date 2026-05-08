@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/delta_packet.schema.json",
+  "title": "Delta Packet",
+  "description": "Minimal non-redundant training record. Captures the difference between failed behavior and desired behavior, anchored to a context_root. Per slm-learning-186/192. Storage shrinks; signal density grows.",
+  "type": "object",
+  "required": [
+    "packet_id",
+    "root_context_id",
+    "base_model",
+    "task_shape",
+    "minimal_prompt",
+    "correction"
+  ],
+  "properties": {
+    "packet_id": {
+      "type": "string",
+      "description": "Unique id (e.g. 'qwen-1p5b-he-fail-001')"
+    },
+    "root_context_id": {
+      "type": "string",
+      "description": "ID of the context_root this packet attaches to. Composes with root.shared_instruction at load time."
+    },
+    "base_model": {
+      "type": "string",
+      "description": "HF id of the base model (e.g. Qwen/Qwen2.5-Coder-1.5B-Instruct)"
+    },
+    "task_shape": {
+      "type": "string",
+      "enum": [
+        "function_repair",
+        "function_completion",
+        "tool_action",
+        "schema_repair",
+        "format_correction",
+        "decision_correction",
+        "edge_case_fix",
+        "documentation",
+        "other"
+      ]
+    },
+    "skill_id": {
+      "type": "string",
+      "description": "Skill this packet teaches (e.g. 'code_function_repair'). Optional."
+    },
+    "pressure_source": {
+      "type": "string",
+      "enum": [
+        "base_eval_failure",
+        "human_correction",
+        "fallback_event",
+        "contract_violation",
+        "tool_action_failure",
+        "recurring_error",
+        "operator_curated",
+        "synthetic_variant"
+      ]
+    },
+    "failure_type": {
+      "type": "string",
+      "description": "Specific failure label (edge_case_miss / wrong_signature / hallucination / etc.)"
+    },
+    "base_output_ref": {
+      "type": "string",
+      "description": "Content hash of the base's failed output. Used for dedup + audit. Format: 'sha256:...' or path to a corpus entry."
+    },
+    "minimal_prompt": {
+      "type": "string",
+      "description": "The shortest prompt that, combined with root.shared_instruction, reproduces the failure."
+    },
+    "correction": {
+      "type": "string",
+      "description": "Canonical / desired output. The training target."
+    },
+    "tests": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional tests that the correction must pass. Used by judge for code-execution scoring."
+    },
+    "retain_tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Tags identifying which retain-bank groups this packet wants paired during consolidation."
+    },
+    "target_contract": {
+      "type": "string",
+      "description": "Output contract the correction satisfies (function_definition / tool_action_json / etc.)"
+    },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "captured_at": { "type": "string", "format": "date-time" },
+        "from_run_id": { "type": "string" },
+        "captured_by": { "type": "string" },
+        "review_status": {
+          "type": "string",
+          "enum": ["unreviewed", "approved", "rejected", "auto"]
+        }
+      }
+    },
+    "token_budget": {
+      "type": "integer",
+      "description": "Soft budget for combined root+packet length at training time. Composer warns if exceeded."
+    },
+    "schema_v": {
+      "type": "integer",
+      "default": 1
+    }
+  }
+}

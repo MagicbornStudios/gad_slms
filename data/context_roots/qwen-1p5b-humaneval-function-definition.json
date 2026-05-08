@@ -1,0 +1,13 @@
+{
+  "root_context_id": "qwen-1p5b-humaneval-function-definition",
+  "project": "slm-learning",
+  "benchmark": "humaneval",
+  "model_family": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "target_contract": "function_definition",
+  "shared_instruction": "You are a coding assistant. Solve the problem in clean Python.",
+  "tokenizer_family": "qwen2",
+  "schema_version": 1,
+  "allowed_tools": [],
+  "eval_refs": ["humaneval", "mbpp"],
+  "decision_refs": ["slm-learning-130", "slm-learning-173", "slm-learning-186"]
+}

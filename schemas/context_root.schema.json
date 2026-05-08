@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/context_root.schema.json",
+  "title": "Context Root",
+  "description": "Shared header for many delta_packets. Stored once, referenced by ID from every packet that shares it. Per slm-learning-186/189.",
+  "type": "object",
+  "required": [
+    "root_context_id",
+    "model_family",
+    "shared_instruction",
+    "schema_version"
+  ],
+  "properties": {
+    "root_context_id": {
+      "type": "string",
+      "description": "Unique id (e.g. 'qwen-1p5b-mbpp-function-definition')"
+    },
+    "project": { "type": "string", "default": "slm-learning" },
+    "benchmark": {
+      "type": "string",
+      "description": "Benchmark / domain this root targets (humaneval / mbpp / gad_tools / kael_traces / bestiary / etc.)"
+    },
+    "model_family": {
+      "type": "string",
+      "description": "HF id or family identifier (e.g. Qwen/Qwen2.5-Coder-1.5B-Instruct)"
+    },
+    "target_contract": {
+      "type": "string",
+      "description": "Output contract this root expects (function_definition / tool_action_json / bestiary_entry / etc.)"
+    },
+    "shared_instruction": {
+      "type": "string",
+      "description": "The instruction prefix every delta_packet inherits. Composed at training-time as: shared_instruction + '\\n\\n' + delta.minimal_prompt"
+    },
+    "tokenizer_family": {
+      "type": "string",
+      "description": "Tokenizer family (e.g. 'qwen2'). Used to validate token_budget at compose time."
+    },
+    "schema_version": { "type": "integer", "default": 1 },
+    "allowed_tools": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Tools/skills the model is allowed to call when responding under this root"
+    },
+    "eval_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Eval suites this root anchors to (humaneval, mbpp, etc.)"
+    },
+    "decision_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

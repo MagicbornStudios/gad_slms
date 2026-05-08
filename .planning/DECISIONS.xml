@@ -882,4 +882,39 @@
     <summary>Variant A late+retain at 1.5B asymmetric: HE 50.0 (-4.9pp vs base 54.9) MBPP 61.0 (FLAT). Adding retain to Variant A late HURT HE compared to late+hard-only (52.4 HE -2.5pp). For LoRA, retain HELPED both axes. For Variant A, retain helps MBPP +2.5pp but hurts HE -2.4pp. Mechanism difference: Variant A's residual-rotation perturbation interacts with retain rows differently than LoRA's distributed deltas. Implication: retain-mix is NOT a universal smoother — it works for distributed-delta mechanisms (LoRA) but can hurt single-chokepoint mechanisms (Variant A). Variant A late on hard-only remains the best-staged morphism arm at 1.5B. Refs: slm-learning-173, 175, 178, 180.</summary>
   </decision>
 
+  <decision id="slm-learning-186">
+    <title>Pressure becomes training data only through TYPED DELTA P...</title>
+    <summary>Pressure becomes training data only through TYPED DELTA PACKETS. Per operator+ChatGPT directive 2026-05-08: every training row is a delta_packet attached to a context_root. Packet stores only the difference (failure_type, base_output_ref, minimal_prompt, correction, tests, retain_tags); root stores the shared header (model_family, shared_instruction, target_contract). Composes at training-time as root.shared_instruction + delta.minimal_prompt -&gt; delta.correction. Storage shrinks (root once, not per-row); signal density grows; auditability ('show all packets with failure_type=edge_case_miss'); shard reuse (same packets, different ratios/retain banks). Schemas: schemas/delta_packet.schema.json, schemas/context_root.schema.json. Pipeline: scripts/data/build_delta_packets.py + compose_training_mix_from_shards.py. End-to-end smoke validated 2026-05-08: 74 1.5B packets + 90 retain rows = 211-row mix at 0.35 actual ratio.</summary>
+  </decision>
+
+  <decision id="slm-learning-187">
+    <title>Dataset density is a first-class scaling metric (alongsid...</title>
+    <summary>Dataset density is a first-class scaling metric (alongside score, cost, lift). Empirical evidence: 7B+58 hard rows lifted (slm-learning-130), 1.5B+74 hard alone regressed but +164 hard+retain lifted (slm-learning-173), 3B+90 hard+retain regressed (slm-learning-183). Density = (n_rows, hard:retain ratio, dedup score, cluster-rep coverage, token-budget per row). Every consolidation run records density alongside other metrics in consolidation_run.schema.json. Open experiments: dataset density sweep at 1.5B (Q2 in pressure_to_training_research_agenda.md), retain-ratio sweep (Q3), failure-clustering removal of redundant rows (Q5). Goal: minimum dataset for stable lift, then cluster-rep training to shrink further.</summary>
+  </decision>
+
+  <decision id="slm-learning-188">
+    <title>Retain banks are required for consolidation at every base...</title>
+    <summary>Retain banks are required for consolidation at every base size &lt;=3B. Per slm-learning-178 (data) + this finding: retain banks are first-class objects, not optional add-ons. scripts/data/build_retain_bank.py builds per-base-per-benchmark passed.jsonl from eval persist JSONs; build_consolidation_mix.py and compose_training_mix_from_shards.py both sample from retain banks. Built this session: 1.5B humaneval retain (90 rows), 3B humaneval retain (137 rows). Next: 7B retain bank, MBPP retain banks, gad_tools retain bank, Kael-trace retain bank. Retain ratio is base-size-sensitive (slm-learning-185: retain-mix non-universal — works for distributed-delta mechanisms like LoRA but can hurt single-chokepoint mechanisms like Variant A morphism). Never train hard-only at &lt;=3B without explicit operator override.</summary>
+  </decision>
+
+  <decision id="slm-learning-189">
+    <title>Base-specific pressure sets supersede cross-base failure ...</title>
+    <summary>Base-specific pressure sets supersede cross-base failure transfer. RESTATEMENT and elevation of slm-learning-177 (cross-base falsified) + slm-learning-169 (morphism dataset locked). Each base has its OWN pressure profile: 7B-failures != 3B-failures != 1.5B-failures != 0.5B-failures. The build_delta_packets.py pipeline is per-base by construction (--base-slug, --base-results); context_root is per-(model_family, benchmark, contract). No universal hard dataset. The 7B+hard recipe success (slm-learning-130) does NOT mean the same recipe works at 3B even with adjusted ratio (slm-learning-183 falsified that). Implications: (a) every new base brought online needs its own eval pass + delta packet build + retain bank; (b) Kael-trace specialist needs Kael-specific failure capture, not generic code-pressure transfer.</summary>
+  </decision>
+
+  <decision id="slm-learning-190">
+    <title>Training cost optimization is a separate research lane (d...</title>
+    <summary>Training cost optimization is a separate research lane (deferred). Includes: (a) trainer choice (Modal SFTTrainer vs Unsloth-class optimizations); (b) serving engine (vLLM multi-LoRA per-request routing vs SGLang RadixAttention + speculative decoding); (c) quantization impact on accuracy; (d) speculative decoding with 1.5B draft accelerating 7B/32B; (e) multi-LoRA batching for adapter-MoE deployment; (f) quantized 32B fallback vs always-on 7B on USD-per-successful-task. Not the primary research lane (data quality + delta packets + consolidation is). Captured here so it doesn't get lost. Tracking refs: vLLM LoRA serving docs, SGLang speculative decoding (EAGLE-2/3, n-gram), Unsloth fine-tune-MoE-12x docs. Future experiment Q13a-d in pressure_to_training_research_agenda.md.</summary>
+  </decision>
+
+  <decision id="slm-learning-191">
+    <title>Multimodal starts as STRUCTURED ARTIFACT GENERATION, not ...</title>
+    <summary>Multimodal starts as STRUCTURED ARTIFACT GENERATION, not multimodal pretraining. Per operator directive 2026-05-08: do not start by training a multimodal base. The text/code SLM produces structured INSTRUCTIONS for image/video systems: image prompt generation, sprite sheet specs, Remotion scene plans, UI layout JSON, asset metadata tagging, art critique rubrics. Kael's flagship-chat role consumes our adapters via vLLM and produces structured artifact specs that downstream image/video tools execute. Open question Q14 in pressure_to_training_research_agenda.md: how far can text/code SLM drive multimodal pipelines through structured specs before a true multimodal model is needed? Multimodal pretraining/fine-tuning deferred until: (a) text-side artifact generation saturates, OR (b) Kael's user feedback shows multimodal failure modes that structured specs can't reach.</summary>
+  </decision>
+
+  <decision id="slm-learning-192">
+    <title>Morphism targets must be COMPACT, REPEATED, BASE-SPECIFIC...</title>
+    <summary>Morphism targets must be COMPACT, REPEATED, BASE-SPECIFIC delta families. Refines slm-learning-158/165/175. 'Bad morphism target' was previously stated too strongly — it does NOT mean 'never train toward broad reasoning.' It means: a tiny inserted identity/projection layer trained on &lt;100 rows is the wrong MECHANISM for installing broad architecture-wide intelligence. Good morphism targets (small late-inserted residual layer can absorb): late-stage output corrections, schema repairs, tool-action formatting, specific code edge-case corrections, GAD command normalization, project-specific style. Bad targets FOR THIS MECHANISM (use a different mechanism, the goal is fine): broad general reasoning, cross-base failure knowledge, architecture-wide changes, entirely new capabilities the base doesn't do at all. Use larger LoRA / system-MoE / bigger base / specialist for those instead. Empirical: Variant A late hard-only at 1.5B achieved -2.5/-2.5 (mildly hostile recoverable); Variant A late+retain HURT HE on Variant A specifically (slm-learning-185 — retain-mix non-universal). Refs: slm-learning-158, 165, 173, 175, 178, 180, 185.</summary>
+  </decision>
+
 </decisions>

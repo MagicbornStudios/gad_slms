@@ -1,0 +1,54 @@
+{
+  "ts": "2026-05-08T16:03:08.189932",
+  "report": "morphism_0p5b_variant_a",
+  "init_agreement_mean": 1.0,
+  "init_check_pass": "PASS",
+  "rows": [
+    {
+      "label": "0.5B base (Arm A)",
+      "he_n": 164,
+      "he_passed": 91,
+      "he_score": 0.5549,
+      "mbpp_n": 164,
+      "mbpp_passed": 85,
+      "mbpp_score": 0.5183
+    },
+    {
+      "label": "0.5B + LoRA r=16 (Arm B, control)",
+      "he_n": 164,
+      "he_passed": 37,
+      "he_score": 0.2256,
+      "mbpp_n": 164,
+      "mbpp_passed": 70,
+      "mbpp_score": 0.4268
+    },
+    {
+      "label": "0.5B + morphism Variant A (Arm C)",
+      "he_n": 164,
+      "he_passed": 45,
+      "he_score": 0.2744,
+      "mbpp_n": 164,
+      "mbpp_passed": 62,
+      "mbpp_score": 0.378
+    }
+  ],
+  "training": {
+    "morphism": {
+      "wall_seconds": 31.4,
+      "trainable_params_M": 0.8046,
+      "cost_usd_estimate": 0.0072
+    },
+    "lora_control": {
+      "wall_seconds": 42.3,
+      "trainable_params_M": 8.8,
+      "cost_usd_estimate": 0.0098
+    }
+  },
+  "verdict": "FAIL \u2014 morphism regresses vs LoRA control by >2pp on both",
+  "decision_refs": [
+    "slm-learning-103",
+    "slm-learning-130",
+    "slm-learning-165",
+    "slm-learning-169"
+  ]
+}

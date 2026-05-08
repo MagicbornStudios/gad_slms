@@ -1,0 +1,46 @@
+{
+  "run_id": "morphism-0p5b-variant-a-2026-05-08",
+  "exp_id": "EXP-009-morphism-projection",
+  "purpose": "Morphism Variant A (identity-init projection layer) on Qwen2.5-Coder-0.5B-Instruct, trained on 0.5B-base-failure rows. Per slm-learning-165 (architecture review GREEN), slm-learning-169 (dataset locked to 0.5B-base-failures), and scaling_proof_charter.md Arm 2.",
+  "base_model": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+  "dataset_volume_path": "/data/processed/0p5b-hard-fn-norm-2026-05-08/rows.jsonl",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "target",
+  "max_length": 1024,
+  "morphism": {
+    "variant": "A_identity_projection",
+    "insert_after_layer": 11,
+    "init_check": {
+      "min_agreement": 0.99,
+      "max_new_tokens": 16,
+      "prompts": [
+        "def hello():",
+        "import math\nfrom typing import List",
+        "def fibonacci(n: int) -> int:",
+        "class Stack:",
+        "for i in range(10):",
+        "def is_prime(n):",
+        "x = [1, 2, 3]",
+        "def reverse_string(s: str) -> str:"
+      ]
+    }
+  },
+  "training": {
+    "epochs": 3,
+    "lr": 2e-4,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": false,
+    "seed": 42,
+    "logging_steps": 5,
+    "max_grad_norm": 1.0
+  },
+  "gpu": "A10G",
+  "timeout_seconds": 7200,
+  "hub_repo": "scrubster/dr-stein-morphism-0p5b-variant-a",
+  "decision_refs": ["slm-learning-130", "slm-learning-158", "slm-learning-163", "slm-learning-165", "slm-learning-169"],
+  "notes": "Phase 2 arm C of morphism prototype. 0.5B-base-failure rows from Phase 0 eval. Trains ONLY the inserted IdentityProjectionLayer (~0.4M params on 0.5B); freeze rest. Init agreement check is the gate: <0.99 means broken patch, do not train."
+}

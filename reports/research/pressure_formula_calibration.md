@@ -1,4 +1,12 @@
-# Pressure formula calibration
+# Pressure formula calibration (v1 — superseded)
+
+> **Note 2026-05-08:** This document is the v1 sketch of the
+> pressure formula. It is superseded by
+> [`pressure_formula_v2.md`](./pressure_formula_v2.md), which
+> closes seven gaps (no error/unknown/cost/regret/decay terms;
+> units mismatch; silently-zero skill term). Kept here as
+> historical record per `slm-learning-122` (durable transfer
+> artifacts).
 
 **Date:** 2026-05-08
 **Decision refs:** `slm-learning-103`, `slm-learning-107`,

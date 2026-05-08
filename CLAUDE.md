@@ -80,6 +80,17 @@ Full rationale: AGENTS.md "SLM Training Strategy" section + decisions
 - Free remote compute (Colab/Kaggle/HF Spaces) for jobs that exceed
   local; inference + planning stay local.
 
+## Cross-project eval scoring source of truth
+
+For sibling-project evals (notably escape-the-dungeon under
+`custom_portfolio/vendor/get-anything-done/evals/`), **`TRACE.json`**
+in each version dir is authoritative. SCORE.md is discipline-only
+and excludes human-playability deductions; they disagree by
+0.10+ on the same run. Cite TRACE.json `composite` +
+`human_review.score` + `gate_notes` for any paper-shaped row.
+Full rules in AGENTS.md "Cross-Project Eval Scoring." Check
+script: `scripts/eval/check_trace_score_consistency.py`.
+
 ## Eval defaults
 
 Read AGENTS.md "Eval Pipeline Conventions". Headlines:
@@ -117,11 +128,28 @@ candidate, it's a vibe.
 Per `slm-learning-105`. The local laptop disk is at 93% capacity:
 
 - Anything >100MB goes to **Modal volume**, never local
+- **Never commit files >5MB without explicit authorization** (subagents
+  inherit this rule via the dispatch checklist; data/processed/,
+  data/external/, tmp/ are gitignored unconditionally). See error
+  `subagent-committed-143mb-ocr-raw-2026-05-08`.
 - Base model weights: HF Hub + Modal volume, small local cache only
   for active dev (cap ~10GB)
 - Telemetry exports rotate to Modal volume after 7 days
 - Adapters live on HF Hub primary
 - Local laptop = orchestration + small specialist eval only
+
+## Windows / Git Bash gotcha
+
+Modal CLI on Git Bash for Windows: MSYS path translation rewrites
+leading-slash args like `/models/...` into `C:/Program Files/Git/...`.
+Always invoke modal with `MSYS_NO_PATHCONV=1 PYTHONIOENCODING=utf-8`
+prepended, e.g.:
+
+```
+MSYS_NO_PATHCONV=1 PYTHONIOENCODING=utf-8 modal volume put slm-models ...
+```
+
+See error `msys-pathconv-translates-modal-volume-paths-2026-05-08`.
 
 ## Delta Graph (model registry schema)
 

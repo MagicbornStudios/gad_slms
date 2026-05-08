@@ -1,0 +1,36 @@
+{
+  "run_id": "morphism-0p5b-lora-control-2026-05-08",
+  "exp_id": "EXP-009-morphism-projection-control",
+  "purpose": "Arm B of morphism prototype: LoRA r=16 on Qwen2.5-Coder-0.5B-Instruct trained on the SAME 0.5B-base-failure rows as Arm C. Direct comparison: same data, same epochs, same base — only the parameter-injection mechanism differs (LoRA in attention/MLP vs morphism projection layer).",
+  "base_model": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+  "dataset_volume_path": "/data/processed/0p5b-hard-fn-norm-2026-05-08/rows.jsonl",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "target",
+  "max_length": 1024,
+  "lora": {
+    "r": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "target_modules": [
+      "q_proj", "k_proj", "v_proj", "o_proj",
+      "gate_proj", "up_proj", "down_proj"
+    ]
+  },
+  "training": {
+    "epochs": 3,
+    "lr": 2e-4,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "seed": 42,
+    "logging_steps": 5
+  },
+  "gpu": "A10G",
+  "timeout_seconds": 7200,
+  "hub_repo": "scrubster/dr-stein-morphism-0p5b-lora-control",
+  "decision_refs": ["slm-learning-130", "slm-learning-165", "slm-learning-169"],
+  "notes": "Control arm. Mirrors the 7B-hard-fn-norm config (r=16, alpha=32, 3 epochs, lr=2e-4) so the only difference vs Arm C is the injection mechanism."
+}

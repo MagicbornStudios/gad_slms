@@ -24,8 +24,15 @@ Headlines that bind every session:
   smoke (1.5B → 3B → 7B) predicting the bigger outcome. See
   `slm-learning-097`.
 - **Hardware policy.** Anything >100MB goes to Modal volume, NOT local.
-  Local disk at 93% — assume the laptop is fragile. See
-  `slm-learning-105`.
+  **Never commit files >5MB without explicit authorization** — subagents
+  inherit this rule via the dispatch checklist; `data/processed/`,
+  `data/external/`, `tmp/` are gitignored unconditionally. Local disk
+  at 93% — assume the laptop is fragile. See `slm-learning-105` and
+  error `subagent-committed-143mb-ocr-raw-2026-05-08`.
+- **Windows Modal CLI.** Git Bash MSYS rewrites `/models/...` to
+  `C:/Program Files/Git/models/...`. Prepend
+  `MSYS_NO_PATHCONV=1 PYTHONIOENCODING=utf-8` to every `modal` invocation
+  on Windows. See error `msys-pathconv-translates-modal-volume-paths-2026-05-08`.
 - **Six research tracks** are open: Branch-Train-Merge, SERA repo-coder,
   RLEF/RLVR, test-time compute, Kael computer-use, artifact generation.
   See `slm-learning-101`.
@@ -193,6 +200,43 @@ rationale. Operating constraints and direction:
 - HumanEval candidate code runs in a fresh subprocess with a 10s
   timeout — that is the safety boundary for model-generated code on
   this machine.
+
+## Cross-Project Eval Scoring: Source of Truth
+
+When citing scores from a sibling-project eval (e.g.,
+`custom_portfolio/vendor/get-anything-done/evals/escape-the-dungeon/`),
+the **`TRACE.json`** in each version dir is the authoritative
+record. It contains the human-reviewed `composite`,
+`human_review.score`, and `gate_notes` (e.g., "blank screen, no
+UI renders").
+
+Do NOT cite `SCORE.md`. `SCORE.md` is auto-derived from
+git/planning-doc discipline metrics (commits, phases, skill
+triggers) and **excludes the human-playability deduction**. The
+two often disagree by 0.10+ on the same run. Example:
+
+| File | v5 composite | Human-review note |
+|---|---|---|
+| `species/gad/v5/SCORE.md` | 0.935 | (none — discipline only) |
+| `species/gad/v5/TRACE.json` | **0.8123** | **0.0 "blank screen, no UI renders"** |
+
+Same run; SCORE.md misses the playability gate-fail.
+
+**Rule for any agent (including subagents):** for cross-project
+eval rows in any slm-learning report, charter, or paper-shaped
+doc, grep `TRACE.json` for `"composite"` and `"human_review"` and
+cite from there. If you cite a score from SCORE.md, you must also
+spot-check the matching TRACE.json composite within ±0.05 or
+flag the divergence.
+
+A check script lives at `scripts/eval/check_trace_score_consistency.py`
+that walks all version dirs in a given eval and reports any
+SCORE.md vs TRACE.json composite drift > 0.05.
+
+## Eval Pipeline Conventions (slm-learning local evals)
+
+The cross-project rule above governs sibling-project evals. For
+slm-learning's own training/eval runs, the conventions below apply.
 
 ## Current Caution
 

@@ -27,6 +27,38 @@
     "notes": "Current GAD coder system: 7B base + hard_fn_norm adapter. Gap-targeted training on 7B-base HE failures. Best $/pp-lift metric to date. Staging pending 32B base eval for 32B shot decision."
   },
   {
+    "entry_id": "ladder-0p5b-hard-fn-norm-lora-rejected",
+    "entry_type": "adapter",
+    "model_or_system_id": "morphism-0p5b-lora-control-2026-05-08",
+    "ts_added": "2026-05-08T16:04:51.749181Z",
+    "base_model": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+    "base_params": 494032768,
+    "adapter_params": 8800000,
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.226,
+      "mbpp": 0.427
+    },
+    "promotion_status": "rejected",
+    "decision_refs": []
+  },
+  {
+    "entry_id": "ladder-0p5b-hard-fn-norm-morphism-rejected",
+    "entry_type": "adapter",
+    "model_or_system_id": "morphism-0p5b-variant-a-2026-05-08",
+    "ts_added": "2026-05-08T16:04:52.297176Z",
+    "base_model": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+    "base_params": 494032768,
+    "adapter_params": 804608,
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.274,
+      "mbpp": 0.378
+    },
+    "promotion_status": "rejected",
+    "decision_refs": []
+  },
+  {
     "entry_id": "ladder-1p5b-ocr-fn-norm-canonical",
     "entry_type": "adapter",
     "model_or_system_id": "ladder-1p5b-ocr-fn-norm",
@@ -156,6 +188,21 @@
       "slm-learning-110"
     ],
     "notes": "Gate test for 32B shot. fn_norm lift is 1.5B artifact. Gate FAILS; 32B shot not justified with this recipe."
+  },
+  {
+    "entry_id": "qwen25-coder-0p5b-base-2026-05-08",
+    "entry_type": "base_model",
+    "model_or_system_id": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+    "ts_added": "2026-05-08T16:04:39.763496Z",
+    "base_model": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+    "base_params": 494032768,
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.555,
+      "mbpp": 0.518
+    },
+    "promotion_status": "canonical",
+    "decision_refs": []
   },
   {
     "entry_id": "qwen25-coder-1p5b-base-v1",

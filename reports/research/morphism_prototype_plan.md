@@ -1,9 +1,17 @@
 # Model Morphism Prototype Plan
 
-**Owner**: Dr. Stein  
-**Status**: ready to execute (needs pre-flight research check)  
-**References**: slm-learning-158, 163  
+**Owner**: Dr. Stein
+**Status**: ready to execute. Architecture review GREEN (`reports/research/morphism_qwen2_arch_review.md`). Pending operator authorization for ~$3 fire.
+**References**: slm-learning-158, 163, 165, 167 (proposed below)
 **Status gate**: blocks EXP-009 in EXPERIMENTS.json
+
+> **Operator lock 2026-05-08:** the morphism prototype must train
+> on **0.5B-base-failure rows**, not on the existing 7B-hard rows
+> or generic fn_norm. Training a 0.5B-architecture experiment on
+> 7B's failure distribution would teach the wrong gaps. This adds
+> a $0.40 prerequisite step (eval Qwen2.5-Coder-0.5B-Instruct on
+> HumanEval n=164 to identify 0.5B's failure cases) before the
+> dataset build can run.
 
 ## Hypothesis
 
@@ -92,12 +100,55 @@ def verify_morphism_init(base_model, morphed_model, test_prompts=20):
 
 ## Training
 
-### Dataset
-Choose **one** (not both):
-- **Option A**: `hard_fn_norm.jsonl` (58 rows of hard, function-normal code examples) — fast, reuses existing corpus
-- **Option B**: Tiny instruction-following subset (~200 examples of "write a Python function that X") — broader coverage, more generic
+### Dataset (operator-locked 2026-05-08)
 
-**Recommendation**: Start with Option A for speed + signal; if results unclear, try Option B.
+Use **0.5B-base-failure rows**: rows synthesized from
+HumanEval cases where `Qwen2.5-Coder-0.5B-Instruct` fails, with
+canonical solutions as the target. Rationale per
+`scaling_proof_charter.md`: training a 0.5B-architecture
+experiment on 7B's failure distribution would teach gaps that
+don't apply to 0.5B. The 7B-hard dataset is the wrong shape for
+this base.
+
+**Build sequence (free + $0.40):**
+
+1. Eval Qwen2.5-Coder-0.5B-Instruct on HumanEval n=164 (greedy,
+   temp=0.0, EOS early-stop, 10s subprocess timeout per
+   `AGENTS.md` Eval Pipeline Conventions). Cost: ~$0.40 on
+   Modal A10G. Output:
+   `tmp/diag-2026-05-08/base_he_0p5b_full.json`.
+2. Run the existing dataset builder against the 0.5B results:
+
+   ```
+   python scripts/data/build_7b_hard_fn_norm_dataset.py \
+       --results tmp/diag-2026-05-08/base_he_0p5b_full.json \
+       --out data/processed/0p5b-hard-fn-norm-2026-05-08
+   ```
+
+   Output: `data/processed/0p5b-hard-fn-norm-2026-05-08/rows.jsonl`
+   (~80–100 rows expected, since 0.5B base will fail more cases
+   than 7B).
+
+3. Update `tags` in the rows from `"7b-hard"` to `"0p5b-hard"`
+   (one-line sed) and re-write `profile.json` source field. This
+   is a small chore in the existing script that should be
+   parameterized in a follow-up.
+
+**Why not "broader instruction-following data":** generic
+data-shape mixing is what made fn_norm regress at 3B and 7B
+(`slm-learning-130`). The whole point of the morphism arm is to
+test whether function-preserving capacity, trained on the
+specific gaps the base has, beats a same-cost LoRA on the same
+data. Adding a confounding generic corpus would dilute the
+signal. Generic-corpus morphism is a follow-up cycle, not the
+prototype.
+
+(Historical alternatives, retained for context:)
+
+- ~~Option A~~: `hard_fn_norm.jsonl` (58 rows from 7B failures) —
+  rejected, wrong base distribution
+- ~~Option B~~: Tiny instruction-following subset — deferred,
+  generic-corpus confound
 
 ### Hyperparameters
 
@@ -288,20 +339,38 @@ def evaluate_all_arms(base_eval_dir, lora_eval_dir, morphism_c_dir, morphism_d_d
     pass
 ```
 
-### Execution Checklist
+### Execution Checklist (operator-locked sequence 2026-05-08)
 
-- [ ] Verify Qwen2.5-Coder-0.5B on HF Hub accessible
-- [ ] Confirm hard_fn_norm.jsonl in data/
-- [ ] Run `verify_function_preservation.py` on base 0.5B (sanity check)
-- [ ] Implement morphism layer insertion in custom modeling file
-- [ ] Run Arm A eval (baseline)
-- [ ] Run Arm B (LoRA) — serves as control
-- [ ] Run Arm C (projection) with init verification
-- [ ] Run Arm D (block dup) with init verification
-- [ ] Aggregate results → morphism_results.json
+**Phase 0: prerequisites (~$0.40, ~5 min)**
+- [ ] Verify Qwen2.5-Coder-0.5B-Instruct on HF Hub accessible (free)
+- [ ] Eval 0.5B base on HumanEval n=164 → `tmp/diag-2026-05-08/base_he_0p5b_full.json` (Arm A baseline)
+- [ ] Eval 0.5B base on MBPP n=164 → matching artifact (Arm A baseline)
+- [ ] Build 0.5B-hard-fn-norm dataset via existing builder (free, local)
+
+**Phase 1: implement morphism subclass (~$0, ~30 min)**
+- [ ] Implement `IdentityProjectionLayer` from `morphism_qwen2_arch_review.md` (~50 LOC)
+- [ ] Implement `expand_with_identity()` helper (~30 LOC)
+- [ ] Run `verify_function_preservation.py` on (base, expanded) pair → assert 100% token agreement on 20 prompts (zero tolerance)
+
+**Phase 2: train arms B + C in parallel (~$0.50, ~5 min)**
+- [ ] Arm B: train LoRA r=16 on 0.5B base × 0.5B-hard-fn-norm
+- [ ] Arm C: train morphism Variant A on 0.5B-expanded × 0.5B-hard-fn-norm
+
+**Phase 3: eval all arms (~$1.60, ~30 min)**
+- [ ] Arm A: 0.5B base × HE/MBPP n=164 (already done in Phase 0)
+- [ ] Arm B: 0.5B + LoRA × HE/MBPP n=164
+- [ ] Arm C: 0.5B-expanded + morphism × HE/MBPP n=164
+- [ ] (Defer Arm D block-duplication unless A/B/C trio is positive)
+
+**Phase 4: report + decision (~$0, ~30 min)**
+- [ ] Aggregate to `reports/evals/morphism_0p5b_variant_a_2026-05-XX.md`
+- [ ] Update `reports/scaling/gad_scaling_ledger.md` with new entries
 - [ ] Assess against pass criteria
-- [ ] If pass: document findings; queue morphism-1p5b variant for next iteration
-- [ ] Commit final morphism/ dir + results
+- [ ] Log decision (slm-learning-167 if pass, slm-learning-167-falsify if fail)
+- [ ] If pass: queue morphism-1p5b variant for next iteration
+- [ ] If fail: document falsification, do not bury — per `slm-learning-122` durable transfer artifacts, falsifications are publishable
+
+**Total cost ~$2.50, total wall ~70 min, gated by operator authorization.**
 
 ---
 
@@ -323,6 +392,9 @@ def evaluate_all_arms(base_eval_dir, lora_eval_dir, morphism_c_dir, morphism_d_d
 
 - **slm-learning-158**: Morphism as function-preserving expansion (principle)
 - **slm-learning-163**: Tiny-first experimental validation (policy)
+- **slm-learning-165**: Qwen2 morphism Variant A architecture review GREEN
+- **slm-learning-130**: Gap-targeted training is canonical scale recipe (basis for "use base-failure rows, not generic")
+- **scaling_proof_charter.md Arm 2**: this prototype IS Arm 2; pre-registered pass/fail criteria live there
 
 ## Next Milestone
 

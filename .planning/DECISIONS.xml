@@ -827,4 +827,19 @@
     <summary>Morphism Variant B at 1.5B: PRESERVES base behavior bit-for-bit (HE 54.9% / MBPP 61.0% = identical to 1.5B base) but does not LIFT — gate stayed near 0 throughout 3 epochs of training (final loss 1.0402, highest of all arms). Double-safety (gate=0 + zero-up at init) is empirically validated as forgetting-mitigation but the architecture is too inert under standard hyperparameters on 74 rows. Variant B is staged not rejected because the safety property is durable and useful; the lift question is open. Natural follow-ups: (a) Variant B + retain-mix at 1.5B; (b) Variant B at higher lr with gate-only warmup epoch; (c) Variant B at 7B where the architecture's safe-by-construction property would let us train aggressively without risking 7B-canonical regression. Variant A REPLICATED as architecturally hostile at 1.5B (HE -22 / MBPP -20.7), same shape as 0.5B falsification, smaller magnitude. Refs: slm-learning-158, slm-learning-165, slm-learning-170, slm-learning-172.</summary>
   </decision>
 
+  <decision id="slm-learning-175">
+    <title>Variant A position-sensitivity PROVEN at 1.5B: insert at ...</title>
+    <summary>Variant A position-sensitivity PROVEN at 1.5B: insert at layer 21 (75% depth) recovers ~19pp HE / 18pp MBPP vs insert at layer 13 (mid). Late-layer Variant A on 1.5B-hard 74 rows: HE 52.4 (-2.5pp vs base 54.9) MBPP 58.5 (-2.5pp vs base 61.0). Compared to mid-layer Variant A: HE -21.9 / MBPP -20.7. Same data, same lr, same epochs, only insert position differs. Validates operator+ChatGPT review hypothesis: late insertions cause less GLOBAL damage because fewer downstream layers propagate the residual perturbation. Status: STAGED (mildly hostile but recoverable; combine with retain-mix as next test). Variant A is now framed as 'position-sensitive architectural cost' rather than 'fundamentally hostile.' Next: late + retain-mix + Variant A; if lifts, Variant A late-layer becomes a usable mechanism.</summary>
+  </decision>
+
+  <decision id="slm-learning-176">
+    <title>Variant B gate-stickiness is STRUCTURAL not hyperparameter.</title>
+    <summary>Variant B gate-stickiness is STRUCTURAL not hyperparameter. Two follow-ups confirm: (a) Variant B at lr=5e-4 same hard 74 rows = HE 54.3 (1 case off base, noise) MBPP 61.0 (FLAT); identical training loss 1.0402 to lr=2e-4. (b) Variant B + retain-mix 164 rows at lr=2e-4 = HE 54.9 (FLAT) MBPP 61.0 (FLAT); training loss 1.0583. Neither lr boost nor data enrichment unstuck the gate. Mechanism: chicken-and-egg of zero-init up_proj making bottleneck(x)=0 making gate*bottleneck(x)=0 making partial_loss/partial_gate ~ 0. REAL FIX requires init redesign: (Option A) small-random Kaiming up_proj keep gate=0; (Option B) gate-only warmup epoch; (Option C) MLP-gated mixture. Status: REJECTED for these specific configs; Variant B itself is NOT rejected — the safety property (gate=0+zero-up double safety) is durable when init issue is fixed. Refs: slm-learning-158, 165, 174.</summary>
+  </decision>
+
+  <decision id="slm-learning-177">
+    <title>Cross-base failure-data transfer FALSIFIED (charter Claim...</title>
+    <summary>Cross-base failure-data transfer FALSIFIED (charter Claim 1 narrowed). 3B + 7B-hard (58 rows of 7B's HumanEval failures + canonical solutions, trained on 3B base via LoRA r=16) regressed HE -7.3pp (76.2% vs 3B base 83.5%) and effectively flat MBPP -0.6pp (73.8% vs base 74.4%). Asymmetric: HE worse because dataset is HE-shaped; MBPP barely moved because OOD. Validates slm-learning-169 (morphism prototype must use 0.5B-OWN failures) and generalizes the rule: BASE-FAILURE ROWS ARE BASE-SPECIFIC. 7B-failure does not equal 3B-failure does not equal 1.5B-failure. Each base needs its OWN gap data to lift. Charter Claim 1 lifted-rungs count remains at 2 (7B + 1.5B with own data); third rung (3B) blocked on building 3B-OWN-hard dataset (~0.40 USD prereq + 0.30 train + 0.80 eval = 1.50 USD).</summary>
+  </decision>
+
 </decisions>

@@ -107,6 +107,22 @@
     "decision_refs": []
   },
   {
+    "entry_id": "ladder-1p5b-morphism-a-late-layer-staging",
+    "entry_type": "adapter",
+    "model_or_system_id": "morphism-a-1p5b-hard-late-2026-05-08",
+    "ts_added": "2026-05-08T18:33:45.048646Z",
+    "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_params": 1543714304,
+    "adapter_params": 2362400,
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.524,
+      "mbpp": 0.585
+    },
+    "promotion_status": "staging",
+    "decision_refs": []
+  },
+  {
     "entry_id": "ladder-1p5b-morphism-a-rejected",
     "entry_type": "adapter",
     "model_or_system_id": "morphism-a-1p5b-hard-2026-05-08",
@@ -118,6 +134,38 @@
     "evals": {
       "humaneval": 0.329,
       "mbpp": 0.402
+    },
+    "promotion_status": "rejected",
+    "decision_refs": []
+  },
+  {
+    "entry_id": "ladder-1p5b-morphism-b-lr5e4-rejected",
+    "entry_type": "adapter",
+    "model_or_system_id": "morphism-b-1p5b-hard-lr5e4-2026-05-08",
+    "ts_added": "2026-05-08T18:33:45.582820Z",
+    "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_params": 1543714304,
+    "adapter_params": 1183100,
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.543,
+      "mbpp": 0.61
+    },
+    "promotion_status": "rejected",
+    "decision_refs": []
+  },
+  {
+    "entry_id": "ladder-1p5b-morphism-b-retain-rejected",
+    "entry_type": "adapter",
+    "model_or_system_id": "morphism-b-1p5b-hard-retain-2026-05-08",
+    "ts_added": "2026-05-08T18:33:46.139349Z",
+    "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_params": 1543714304,
+    "adapter_params": 1183100,
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.549,
+      "mbpp": 0.61
     },
     "promotion_status": "rejected",
     "decision_refs": []
@@ -187,6 +235,22 @@
     "rejection_reason": "Regresses both 1.5B (-9.2 pp HE / -2.5 pp MBPP). Think-stripping alone hurts performance.",
     "decision_refs": [],
     "notes": "OCR with <think> tags stripped. Skeleton preserved for potential negative teacher use in DPO."
+  },
+  {
+    "entry_id": "ladder-3b-7bhard-cross-transfer-rejected",
+    "entry_type": "adapter",
+    "model_or_system_id": "ladder-3b-hard-fn-norm-transfer-2026-05-08",
+    "ts_added": "2026-05-08T18:33:46.679091Z",
+    "base_model": "Qwen/Qwen2.5-Coder-3B-Instruct",
+    "base_params": 3099175936,
+    "adapter_params": 18460000,
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.762,
+      "mbpp": 0.738
+    },
+    "promotion_status": "rejected",
+    "decision_refs": []
   },
   {
     "entry_id": "ladder-3b-ocr-fn-norm-rejected",

@@ -1,0 +1,46 @@
+{
+  "run_id": "morphism-b-1p5b-hard-lr5e4-2026-05-08",
+  "exp_id": "EXP-1p5b-followup-arm-6",
+  "purpose": "Variant B at lr=5e-4 (2.5x higher than 2e-4 default) on the same 74-row hard dataset. Tests whether the gate-stays-near-zero inertness from slm-learning-174 is fixable by a higher learning rate. If lifts on HE/MBPP → Variant B's safety property AND learning property are both achievable, just need correct hyperparameters. If still flat → gate-stickiness is a deeper structural issue requiring warmup or gate-only training stage.",
+  "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "dataset_volume_path": "/data/processed/1p5b-hard-fn-norm-2026-05-08/rows.jsonl",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "target",
+  "max_length": 1024,
+  "morphism": {
+    "variant": "B_gated_bottleneck",
+    "insert_after_layer": 13,
+    "bottleneck_size": 384,
+    "init_check": {
+      "min_agreement": 0.99,
+      "max_new_tokens": 16,
+      "prompts": [
+        "def hello():",
+        "import math\nfrom typing import List",
+        "def fibonacci(n: int) -> int:",
+        "class Stack:",
+        "for i in range(10):",
+        "def is_prime(n):",
+        "x = [1, 2, 3]",
+        "def reverse_string(s: str) -> str:"
+      ]
+    }
+  },
+  "training": {
+    "epochs": 3,
+    "lr": 5e-4,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": false,
+    "seed": 42,
+    "logging_steps": 5,
+    "max_grad_norm": 1.0
+  },
+  "gpu": "A10G",
+  "timeout_seconds": 7200,
+  "hub_repo": null,
+  "decision_refs": ["slm-learning-174"]
+}

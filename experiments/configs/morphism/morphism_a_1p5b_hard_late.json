@@ -1,0 +1,45 @@
+{
+  "run_id": "morphism-a-1p5b-hard-late-2026-05-08",
+  "exp_id": "EXP-1p5b-followup-arm-7",
+  "purpose": "Variant A inserted at LATE layer (21 of 28 = 75% depth) instead of mid (13 = 46% depth). Per operator+ChatGPT review hypothesis (slm-learning-172): late insertions may change output behavior with less GLOBAL damage because there are fewer downstream layers to propagate the residual perturbation. If Variant A regresses MUCH less at layer 21 than at layer 13 (compare to slm-learning-173 result HE -22 / MBPP -21 at mid), the architectural hostility is INSERTION-POSITION-SENSITIVE, not architecture-fundamental.",
+  "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "dataset_volume_path": "/data/processed/1p5b-hard-fn-norm-2026-05-08/rows.jsonl",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "target",
+  "max_length": 1024,
+  "morphism": {
+    "variant": "A_identity_projection",
+    "insert_after_layer": 21,
+    "init_check": {
+      "min_agreement": 0.99,
+      "max_new_tokens": 16,
+      "prompts": [
+        "def hello():",
+        "import math\nfrom typing import List",
+        "def fibonacci(n: int) -> int:",
+        "class Stack:",
+        "for i in range(10):",
+        "def is_prime(n):",
+        "x = [1, 2, 3]",
+        "def reverse_string(s: str) -> str:"
+      ]
+    }
+  },
+  "training": {
+    "epochs": 3,
+    "lr": 2e-4,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": false,
+    "seed": 42,
+    "logging_steps": 5,
+    "max_grad_norm": 1.0
+  },
+  "gpu": "A10G",
+  "timeout_seconds": 7200,
+  "hub_repo": null,
+  "decision_refs": ["slm-learning-158", "slm-learning-172", "slm-learning-173"]
+}

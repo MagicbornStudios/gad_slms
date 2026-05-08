@@ -1,0 +1,32 @@
+{
+  "run_id": "ladder-3b-hard-fn-norm-transfer-2026-05-08",
+  "exp_id": "EXP-claim1-rung3",
+  "purpose": "Charter Claim 1's third rung: 3B + 7B-hard transfer test. Trains Qwen2.5-Coder-3B-Instruct on the existing 7B-hard-fn-norm dataset (58 7B-base failure rows). Per slm-learning-130: tests whether the 7B-proven hard-only recipe transfers to 3B WITHOUT a 3B-specific failure dataset. If lifts → recipe is base-agnostic (only data shape matters). If regresses → recipe is base-specific (each base needs its OWN failure data). Either way, this is the rung the scaling-proof charter needs.",
+  "base_model": "Qwen/Qwen2.5-Coder-3B-Instruct",
+  "dataset_volume_path": "/data/processed/7b-hard-fn-norm-2026-05-08/rows.jsonl",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "target",
+  "max_length": 1024,
+  "lora": {
+    "r": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+  },
+  "training": {
+    "epochs": 3,
+    "lr": 2e-4,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "seed": 42,
+    "logging_steps": 5
+  },
+  "gpu": "A10G",
+  "timeout_seconds": 7200,
+  "hub_repo": null,
+  "decision_refs": ["slm-learning-130", "slm-learning-164", "slm-learning-173"]
+}

@@ -1,0 +1,243 @@
+[
+  {
+    "entry_id": "gad-coder-7b-canonical-assembly-2026-05-08",
+    "entry_type": "system_assembly",
+    "model_or_system_id": "gad-coder-7b-canonical",
+    "ts_added": "2026-05-08T00:00:00Z",
+    "base_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "base_params": 7610000000,
+    "adapter_params": 18460000,
+    "adapter_count": 1,
+    "active_params_default": "7.628B routed",
+    "active_params_max": 7628460000,
+    "total_deployed_params": 7628460000,
+    "trainable_params_last_run": 18460000,
+    "route_policy": "single",
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.848,
+      "mbpp": 0.823
+    },
+    "promotion_status": "staging",
+    "decision_refs": [
+      "slm-learning-119",
+      "slm-learning-121",
+      "slm-learning-130"
+    ],
+    "notes": "Current GAD coder system: 7B base + hard_fn_norm adapter. Gap-targeted training on 7B-base HE failures. Best $/pp-lift metric to date. Staging pending 32B base eval for 32B shot decision."
+  },
+  {
+    "entry_id": "ladder-1p5b-ocr-fn-norm-canonical",
+    "entry_type": "adapter",
+    "model_or_system_id": "ladder-1p5b-ocr-fn-norm",
+    "ts_added": "2026-05-08T00:00:00Z",
+    "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_params": 1777088000,
+    "adapter_params": 18464768,
+    "adapter_count": 1,
+    "active_params_default": "1795552768",
+    "active_params_max": 1795552768,
+    "total_deployed_params": 1795552768,
+    "trainable_params_last_run": 18464768,
+    "route_policy": "single",
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.616,
+      "mbpp": 0.64
+    },
+    "promotion_status": "canonical",
+    "decision_refs": [
+      "slm-learning-110",
+      "slm-learning-118"
+    ],
+    "notes": "fn_normalized recipe on 1.5B base. +6.7 pp HE / +3.0 pp MBPP. Canonical small-model specialist."
+  },
+  {
+    "entry_id": "ladder-1p5b-ocr-no-think-skeleton",
+    "entry_type": "adapter",
+    "model_or_system_id": "ladder-1p5b-ocr-no-think",
+    "ts_added": "2026-05-08T00:00:00Z",
+    "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_params": 1777088000,
+    "adapter_params": 18464768,
+    "adapter_count": 1,
+    "active_params_default": "1795552768",
+    "active_params_max": 1795552768,
+    "total_deployed_params": 1795552768,
+    "trainable_params_last_run": 18464768,
+    "route_policy": "single",
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.457,
+      "mbpp": 0.585
+    },
+    "promotion_status": "skeleton_adapter",
+    "rejection_reason": "Regresses both 1.5B (-9.2 pp HE / -2.5 pp MBPP). Think-stripping alone hurts performance.",
+    "decision_refs": [],
+    "notes": "OCR with <think> tags stripped. Skeleton preserved for potential negative teacher use in DPO."
+  },
+  {
+    "entry_id": "ladder-3b-ocr-fn-norm-rejected",
+    "entry_type": "adapter",
+    "model_or_system_id": "ladder-3b-ocr-fn-norm",
+    "ts_added": "2026-05-08T00:00:00Z",
+    "base_model": "Qwen/Qwen2.5-Coder-3B-Instruct",
+    "base_params": 3099175936,
+    "adapter_params": 18464768,
+    "adapter_count": 1,
+    "active_params_default": "3117640704",
+    "active_params_max": 3117640704,
+    "total_deployed_params": 3117640704,
+    "trainable_params_last_run": 18464768,
+    "route_policy": "single",
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.799,
+      "mbpp": 0.738
+    },
+    "promotion_status": "rejected",
+    "rejection_reason": "Regression at 3B: -3.6 pp HE / -0.6 pp MBPP. fn_norm is a 1.5B-only specialist.",
+    "decision_refs": [
+      "slm-learning-110",
+      "slm-learning-118"
+    ],
+    "notes": "fn_normalized recipe does NOT scale. 3B base already in saturation regime."
+  },
+  {
+    "entry_id": "ladder-7b-hard-fn-norm-canonical",
+    "entry_type": "adapter",
+    "model_or_system_id": "ladder-7b-hard-fn-norm",
+    "ts_added": "2026-05-08T00:00:00Z",
+    "base_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "base_params": 7610000000,
+    "adapter_params": 18460000,
+    "adapter_count": 1,
+    "active_params_default": "7628460000",
+    "active_params_max": 7628460000,
+    "total_deployed_params": 7628460000,
+    "trainable_params_last_run": 18460000,
+    "route_policy": "single",
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.848,
+      "mbpp": 0.823
+    },
+    "promotion_status": "staging",
+    "decision_refs": [
+      "slm-learning-119",
+      "slm-learning-130"
+    ],
+    "notes": "Gap-targeted training on 58 7B-base HE failures. +3.1 pp HE / +1.8 pp MBPP. 3 epochs, 143s, $0.14. Strongest $/pp-lift recipe. Best result so far. Waiting for 32B base eval before promotion."
+  },
+  {
+    "entry_id": "ladder-7b-ocr-fn-norm-rejected",
+    "entry_type": "adapter",
+    "model_or_system_id": "ladder-7b-ocr-fn-norm",
+    "ts_added": "2026-05-08T00:00:00Z",
+    "base_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "base_params": 7610000000,
+    "adapter_params": 18464768,
+    "adapter_count": 1,
+    "active_params_default": "7628464768",
+    "active_params_max": 7628464768,
+    "total_deployed_params": 7628464768,
+    "trainable_params_last_run": 18464768,
+    "route_policy": "single",
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.811,
+      "mbpp": 0.768,
+      "gad_tools": 0.367
+    },
+    "promotion_status": "rejected",
+    "rejection_reason": "Neutral on HE (-0.6 pp) and regression on MBPP (-3.7 pp). Generic OCR data saturates strong bases.",
+    "decision_refs": [
+      "slm-learning-107",
+      "slm-learning-110"
+    ],
+    "notes": "Gate test for 32B shot. fn_norm lift is 1.5B artifact. Gate FAILS; 32B shot not justified with this recipe."
+  },
+  {
+    "entry_id": "qwen25-coder-1p5b-base-v1",
+    "entry_type": "base_model",
+    "model_or_system_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "ts_added": "2026-05-01T00:00:00Z",
+    "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_params": 1777088000,
+    "active_params_default": "1777088000",
+    "active_params_max": 1777088000,
+    "total_deployed_params": 1777088000,
+    "route_policy": "single",
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.549,
+      "mbpp": 0.61
+    },
+    "promotion_status": "canonical",
+    "decision_refs": [],
+    "notes": "Base 1.5B model from Hugging Face. Chat-mode harness v3."
+  },
+  {
+    "entry_id": "qwen25-coder-3b-base-v1",
+    "entry_type": "base_model",
+    "model_or_system_id": "Qwen/Qwen2.5-Coder-3B-Instruct",
+    "ts_added": "2026-05-01T00:00:00Z",
+    "base_model": "Qwen/Qwen2.5-Coder-3B-Instruct",
+    "base_params": 3099175936,
+    "active_params_default": "3099175936",
+    "active_params_max": 3099175936,
+    "total_deployed_params": 3099175936,
+    "route_policy": "single",
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.835,
+      "mbpp": 0.744
+    },
+    "promotion_status": "canonical",
+    "decision_refs": [],
+    "notes": "Base 3B model from Hugging Face. Chat-mode harness v3."
+  },
+  {
+    "entry_id": "qwen25-coder-7b-base-v3",
+    "entry_type": "base_model",
+    "model_or_system_id": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "ts_added": "2026-05-05T00:00:00Z",
+    "base_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "base_params": 7610000000,
+    "active_params_default": "7610000000",
+    "active_params_max": 7610000000,
+    "total_deployed_params": 7610000000,
+    "route_policy": "single",
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.817,
+      "mbpp": 0.805,
+      "gad_tools": 0.367
+    },
+    "promotion_status": "canonical",
+    "decision_refs": [],
+    "notes": "Base 7B model v3 from Hugging Face. Chat-mode harness v3. Canonical scale baseline."
+  },
+  {
+    "entry_id": "tooluse-sanity-v2-modal-l4",
+    "entry_type": "adapter",
+    "model_or_system_id": "tooluse-sanity-v2",
+    "ts_added": "2026-05-07T00:00:00Z",
+    "base_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+    "base_params": 7610000000,
+    "adapter_params": 18460000,
+    "adapter_count": 1,
+    "active_params_default": "7628460000",
+    "active_params_max": 7628460000,
+    "total_deployed_params": 7628460000,
+    "trainable_params_last_run": 18460000,
+    "route_policy": "single",
+    "fallback_models": [],
+    "evals": {},
+    "promotion_status": "salvage_candidate",
+    "decision_refs": [
+      "slm-learning-097"
+    ],
+    "notes": "Tooluse-v2 sanity check. Training completed but eval timed out (10800s on A10G). Dataset has issues. Salvage for post-mortem analysis."
+  }
+]

@@ -79,3 +79,8 @@ node_modules/
 .DS_Store
 Thumbs.db
 data/openmathinstruct_5k.jsonl
+data/processed/ocr-variants-2026-05-08/ocr_raw/
+data/processed/ocr-variants-2026-05-08/ocr_no_think/rows.jsonl
+data/processed/ocr-variants-2026-05-08/ocr_function_normalized/rows.jsonl
+data/processed/ocr-variants-2026-05-08/ocr_high_quality_subset/rows.jsonl
+data/external/open-code-reasoning/

@@ -1,0 +1,165 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "GAD Scaling Ledger Entry",
+  "description": "Schema for recording honest system growth: base models, adapters, routers, and assemblies with parameter counts and evaluation results",
+  "type": "object",
+  "required": [
+    "entry_id",
+    "entry_type",
+    "model_or_system_id",
+    "ts_added",
+    "base_model",
+    "base_params",
+    "promotion_status"
+  ],
+  "properties": {
+    "entry_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9\\-]*[a-z0-9]$",
+      "description": "Unique kebab-case identifier for this ledger entry"
+    },
+    "entry_type": {
+      "type": "string",
+      "enum": [
+        "base_model",
+        "adapter",
+        "router",
+        "fallback_route",
+        "skill_bundle",
+        "system_assembly"
+      ],
+      "description": "Classification of what this entry represents"
+    },
+    "model_or_system_id": {
+      "type": "string",
+      "description": "Canonical name of the model or system (e.g., 'Qwen2.5-Coder-7B-Instruct' or 'gad-coder-7b-canonical')"
+    },
+    "ts_added": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO8601 timestamp when this entry was added to the ledger"
+    },
+    "base_model": {
+      "type": "string",
+      "description": "Reference to the base model (HF Hub ID or internal ID) this entry depends on. For base_model entries, reference self."
+    },
+    "base_params": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of parameters in the dense base model"
+    },
+    "adapter_params": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Sum of all trainable adapter parameters (LoRA, prefix tuning, etc.)"
+    },
+    "adapter_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of separate adapters active in this entry"
+    },
+    "active_params_default": {
+      "oneOf": [
+        {
+          "type": "integer",
+          "minimum": 0
+        },
+        {
+          "type": "string",
+          "description": "Human-readable param count or range (e.g., '7B routed', '3B sparse')"
+        }
+      ],
+      "description": "Default active parameters for typical inference call (may be range if routed)"
+    },
+    "active_params_max": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Maximum active parameters in any single call (base + largest routed adapter)"
+    },
+    "total_deployed_params": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Sum of base + all deployed adapters + fallback models (total system footprint)"
+    },
+    "trainable_params_last_run": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of parameters that were trainable in the most recent training run"
+    },
+    "route_policy": {
+      "type": "string",
+      "enum": [
+        "router-selected",
+        "merged",
+        "stacked",
+        "single",
+        "fallback",
+        "moe"
+      ],
+      "description": "How adapters are combined: router picks one, merged into base, stacked sequentially, or single adapter only"
+    },
+    "fallback_models": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of fallback model IDs available if primary routes fail"
+    },
+    "evals": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "minimum": 0,
+        "description": "Benchmark score as decimal (0.0-1.0 for percentages, or raw score)"
+      },
+      "description": "Benchmark results map: benchmark_name -> score (decimal 0.0-1.0 for percentages)"
+    },
+    "cost_per_success": {
+      "type": "number",
+      "minimum": 0,
+      "description": "USD cost per successful task (for cost-efficiency sorting)"
+    },
+    "latency_p50_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Median latency in milliseconds for inference"
+    },
+    "fallback_rate": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Fraction of requests that fall back to secondary routes (0.0 = no fallbacks, 1.0 = all fallback)"
+    },
+    "promotion_status": {
+      "type": "string",
+      "enum": [
+        "candidate",
+        "staging",
+        "canonical",
+        "rejected",
+        "salvage_candidate",
+        "negative_teacher",
+        "skeleton_adapter",
+        "quarantined"
+      ],
+      "description": "Current status in the promotion pipeline"
+    },
+    "rejection_reason": {
+      "type": "string",
+      "description": "If status is 'rejected', explanation for why (e.g., 'regression at 3B', 'data leakage risk')"
+    },
+    "decision_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^slm-learning-[0-9]{3}$"
+      },
+      "description": "Array of decision IDs that reference or justify this entry"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-text notes on training, methodology, caveats, or context"
+    }
+  },
+  "additionalProperties": false
+}

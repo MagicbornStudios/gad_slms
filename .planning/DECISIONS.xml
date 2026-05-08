@@ -717,4 +717,59 @@
     <summary>Gap-targeted training is the canonical scale recipe: when base scores &gt;70% on target eval, train ONLY on rows the base fails on with canonical solutions; produces lift where generic data saturates. 7B+hard_fn_norm: +3.1pp HE / +1.8pp MBPP at 58 rows / 2.4min / $0.14. The recipe transfers (HE-failures lifted MBPP), the weights do not.</summary>
   </decision>
 
+  <decision id="slm-learning-153">
+    <title>Upscaling is P0: every cycle must include at least one lo...</title>
+    <summary>Upscaling is P0: every cycle must include at least one low-cost scaling experiment (data, parameter, adapter, routing, distillation, retrieval, inference, or morphism); not deferred to later</summary>
+  </decision>
+
+  <decision id="slm-learning-154">
+    <title>Scaling method must name its cost-performance target: no ...</title>
+    <summary>Scaling method must name its cost-performance target: no scaling experiment is valid without expected improvement in accuracy, fallback rate, latency, cost per success, or trainability</summary>
+  </decision>
+
+  <decision id="slm-learning-155">
+    <title>Bigger dense models are fallback/teacher first: 32B+ mode...</title>
+    <summary>Bigger dense models are fallback/teacher first: 32B+ models are brought online as gateway fallback and teacher before expensive adaptation training</summary>
+  </decision>
+
+  <decision id="slm-learning-156">
+    <title>Adapter-level MoE is the first practical architecture ups...</title>
+    <summary>Adapter-level MoE is the first practical architecture upscaler: router-selected LoRA specialists are tested before internal MoE; vLLM supports per-request LoRA serving</summary>
+  </decision>
+
+  <decision id="slm-learning-157">
+    <title>Hard-example scaling preferred for strong bases: when bas...</title>
+    <summary>Hard-example scaling preferred for strong bases: when base is already strong, generic data is not enough; train on verified failure clusters (proven 7B+3.1pp HE / +1.8pp MBPP at 58 rows / 2.4min / $0.14)</summary>
+  </decision>
+
+  <decision id="slm-learning-158">
+    <title>Function-preserving morphism starts tiny: identity/no-op ...</title>
+    <summary>Function-preserving morphism starts tiny: identity/no-op expansion and dense-to-MoE upcycling are tested on sub-1B/1.5B before 7B; goal is build bigger models from smaller over time</summary>
+  </decision>
+
+  <decision id="slm-learning-159">
+    <title>Scaling Ledger records active/trainable/deployed paramete...</title>
+    <summary>Scaling Ledger records active/trainable/deployed parameters: every model/adapter/router/fallback addition is logged with (active_params, total_deployed_params, trainable_params, cost_per_success, fallback_rate, promotion_status) per slm-learning-160</summary>
+  </decision>
+
+  <decision id="slm-learning-160">
+    <title>GAD reports effective scale by 3 honest counts: active_pa...</title>
+    <summary>GAD reports effective scale by 3 honest counts: active_params (per call), total_deployed_params (everything available), trainable_params (last run); '7B+LoRA' is NOT '9B dense' — language must be precise</summary>
+  </decision>
+
+  <decision id="slm-learning-161">
+    <title>Adapter graph growth is primary continuous upscaling mech...</title>
+    <summary>Adapter graph growth is primary continuous upscaling mechanism: every cycle adds at least one specialist LoRA or removes one rejected; fallback rate drop is the success metric</summary>
+  </decision>
+
+  <decision id="slm-learning-162">
+    <title>Bigger bases added first as fallback/teacher routes: 32B ...</title>
+    <summary>Bigger bases added first as fallback/teacher routes: 32B base brought online via gateway as fallback (not always-on default) before any 32B LoRA training; teaches smaller models via correction-pair capture</summary>
+  </decision>
+
+  <decision id="slm-learning-163">
+    <title>Function-preserving expansion is active research: identit...</title>
+    <summary>Function-preserving expansion is active research: identity-init projection layers, Net2Net widening/deepening, dense-to-MoE upcycling tested at sub-1B before any 7B morphism; lowest cost per signal mandate</summary>
+  </decision>
+
 </decisions>

@@ -1,0 +1,35 @@
+{
+  "run_id": "ladder-3b-ocr-fn-norm-2026-05-08",
+  "exp_id": "EXP-fn-norm-3b-specialist",
+  "purpose": "Test whether 3B is the sweet spot for fn_normalized OCR. 1.5B lifted +6.7pp HE / +3.0pp MBPP; 7B was neutral/-3.7pp. Hypothesis: 3B is between 1.5B's room-to-grow and 7B's saturation. If 3B + fn_norm lifts, ship as small coder specialist (slm-learning-118 + 110). Decision refs: slm-learning-118.",
+  "base_model": "Qwen/Qwen2.5-Coder-3B-Instruct",
+  "dataset_volume_path": "/data/processed/ocr-variants-2026-05-08/ocr_function_normalized/rows.jsonl",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "target",
+  "max_length": 1024,
+  "lora": {
+    "r": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "target_modules": [
+      "q_proj", "k_proj", "v_proj", "o_proj",
+      "gate_proj", "up_proj", "down_proj"
+    ]
+  },
+  "training": {
+    "epochs": 1,
+    "lr": 2e-4,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "seed": 42,
+    "logging_steps": 50
+  },
+  "gpu": "A10G",
+  "timeout_seconds": 5400,
+  "hub_repo": "scrubster/dr-stein-ladder-3b-ocr-fn-norm",
+  "decision_refs": ["slm-learning-097", "slm-learning-103", "slm-learning-107", "slm-learning-110", "slm-learning-118", "slm-learning-126"]
+}

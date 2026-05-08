@@ -652,4 +652,59 @@
     <summary>fn_normalized OCR is a 1.5B benefit not a scale recipe: lifts +6.7pp HE / +3.0pp MBPP at 1.5B but is neutral/-3.7pp at 7B. Active candidate for 1.5B+3B coder specialists; NOT a 7B+ recipe. $50 32B+fn_norm shot HELD.</summary>
   </decision>
 
+  <decision id="slm-learning-118">
+    <title>Tiny and small rungs become recipe scouts: sub-1B/1.5B/3B...</title>
+    <summary>Tiny and small rungs become recipe scouts: sub-1B/1.5B/3B runs discover contracts and specialist recipes; small-model lift is NOT sufficient to justify 32B unless 7B gate also lifts (per slm-learning-097)</summary>
+  </decision>
+
+  <decision id="slm-learning-119">
+    <title>Larger models require gap-targeted data: when a larger ba...</title>
+    <summary>Larger models require gap-targeted data: when a larger base is already strong, train only on verified failure/gap examples before increasing rank, epochs, or model size</summary>
+  </decision>
+
+  <decision id="slm-learning-120">
+    <title>Tool use target is structured action not prose: tool-use ...</title>
+    <summary>Tool use target is structured action not prose: tool-use specialists must emit tool_action_json or exact rendered commands; natural language reserved for user-facing Kael/assistant responses</summary>
+  </decision>
+
+  <decision id="slm-learning-121">
+    <title>System-level MoE becomes a first-class architecture: GAD ...</title>
+    <summary>System-level MoE becomes a first-class architecture: GAD evaluates router-selected specialists against dense 7B/32B baselines; first MoE is orchestration-level not token-level internal MoE</summary>
+  </decision>
+
+  <decision id="slm-learning-122">
+    <title>Durable transfer artifacts outrank cross-size weight tran...</title>
+    <summary>Durable transfer artifacts outrank cross-size weight transfer: LoRA weights do NOT generally transfer across model sizes; GAD preserves contracts, datasets, failure taxonomies, preferences, curricula, routes, evals</summary>
+  </decision>
+
+  <decision id="slm-learning-123">
+    <title>Internal MoE is tracked, system MoE is built now: true in...</title>
+    <summary>Internal MoE is tracked, system MoE is built now: true internal MoE remains research/funding path; GAD immediately builds system-level routing among specialists, adapters, and dense fallbacks</summary>
+  </decision>
+
+  <decision id="slm-learning-124">
+    <title>System-level MoE can serve as teacher: router+specialists...</title>
+    <summary>System-level MoE can serve as teacher: router+specialists+verifier+fallback+human produces final accepted output; the system becomes the teacher distilled into smaller models via SFT/DPO</summary>
+  </decision>
+
+  <decision id="slm-learning-125">
+    <title>Optimize cost per successful task not cost per token: com...</title>
+    <summary>Optimize cost per successful task not cost per token: comparison metric for system architecture is end-to-end accepted-task economics including routing, fallback rate, and human edit distance</summary>
+  </decision>
+
+  <decision id="slm-learning-126">
+    <title>Smallest salvageable piece first: always start with small...</title>
+    <summary>Smallest salvageable piece first: always start with smallest model/component that can reveal the signal; never spend big compute until smaller rung extracted every useful artifact</summary>
+  </decision>
+
+  <decision id="slm-learning-127">
+    <title>Big models are teachers/fallbacks unless cost-performance...</title>
+    <summary>Big models are teachers/fallbacks unless cost-performance proves otherwise: 32B/frontier models route only when small specialists miss; cost-per-success determines always-on status</summary>
+  </decision>
+
+  <decision id="slm-learning-128">
+    <title>Skills must generate measurable learning signal or get sh...</title>
+    <summary>Skills must generate measurable learning signal or get shed: skill invocations correlated with downstream outcomes (eval lift, fallback drop, contract pass) and pressure stats; skills with no signal are sheddable per gad evolution shed</summary>
+  </decision>
+
 </decisions>

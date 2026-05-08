@@ -1,0 +1,13 @@
+{
+  "dataset": "7b-hard-fn-norm",
+  "source_results": "tmp/diag-2026-05-08/base_he_chat_full.json",
+  "n_rows": 58,
+  "target_format": "function_definition",
+  "avg_target_chars": 535.0,
+  "avg_input_chars": 380.5,
+  "language": "python",
+  "data_contract": "docs/data-contracts/coding_sft.md",
+  "decision_refs": [
+    "slm-learning-119"
+  ]
+}

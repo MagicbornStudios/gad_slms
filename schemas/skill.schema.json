@@ -1,0 +1,210 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Skill Schema",
+  "description": "A skill is a reusable, measurable, first-class training artifact. Skills encode domain knowledge, procedures, and learning signals for SLM evolution.",
+  "type": "object",
+  "required": [
+    "skill_id",
+    "version",
+    "purpose",
+    "applies_when",
+    "procedure",
+    "tools_allowed",
+    "output_contract",
+    "prohibitions",
+    "evals",
+    "decision_refs"
+  ],
+  "properties": {
+    "skill_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$",
+      "description": "Unique skill identifier in kebab-case (e.g., benchmark-gated-training)"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Integer version number; increment on procedure or output changes"
+    },
+    "purpose": {
+      "type": "string",
+      "description": "1-2 sentence summary of what the skill does and why it matters",
+      "minLength": 20,
+      "maxLength": 500
+    },
+    "applies_when": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "Conditions under which this skill should fire (e.g., 'before scaling beyond 1B params', 'when a dataset is prepared for training')"
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Input name"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["dataset", "model", "checkpoint", "config", "decision_record", "eval_result", "artifact", "string", "file"]
+          },
+          "description": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": ["name", "type"]
+      },
+      "description": "Array of input specifications"
+    },
+    "procedure": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "Ordered steps that constitute the skill execution"
+    },
+    "tools_allowed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of allowed tools/CLI names (e.g., 'python', 'gad snapshot', 'validat_output_contract.py')"
+    },
+    "output_contract": {
+      "type": "string",
+      "enum": [
+        "natural_language",
+        "gad_cli_command",
+        "tool_action_json",
+        "code_completion",
+        "function_definition",
+        "full_script",
+        "patch_diff",
+        "email_draft",
+        "classification_label",
+        "decision_record",
+        "eval_result_json",
+        "training_manifest",
+        "checkpoint_status"
+      ],
+      "description": "References an entry in docs/data-contracts/output_contracts.md; defines the shape of skill outputs"
+    },
+    "prohibitions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of forbidden actions or patterns (e.g., 'Do NOT scale based on loss alone')"
+    },
+    "evals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "How to judge whether the skill succeeded (e.g., 'eval_lift >= 2pp on public benchmarks')"
+    },
+    "failure_modes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "recovery": {
+            "type": "string"
+          }
+        },
+        "required": ["name", "description"]
+      },
+      "description": "Known failure modes and recovery paths"
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "type": "object",
+            "description": "Example input state"
+          },
+          "expected_output": {
+            "type": "object",
+            "description": "Expected skill output"
+          },
+          "label": {
+            "type": "string",
+            "description": "Short label (e.g., 'success', 'gate_pass', 'gate_fail')"
+          }
+        },
+        "required": ["input", "expected_output", "label"]
+      },
+      "description": "Concrete examples drawn from actual execution traces"
+    },
+    "trace_labels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Semantic tags for execution traces (e.g., 'training', 'eval', 'gate_decision', 'lora_regression')"
+    },
+    "preference_pair_policy": {
+      "type": "string",
+      "enum": [
+        "none",
+        "binary_pass_fail",
+        "scalar_lift",
+        "ranking",
+        "trace_annotation",
+        "contrasts"
+      ],
+      "description": "How to mine chosen/rejected preference pairs from this skill's execution"
+    },
+    "pressure_signals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "signal": {
+            "type": "string",
+            "description": "The observable condition"
+          },
+          "pressure_level": {
+            "type": "string",
+            "enum": ["blocks", "high", "medium", "low", "info"]
+          },
+          "action": {
+            "type": "string",
+            "description": "What to do when this signal fires"
+          }
+        },
+        "required": ["signal", "pressure_level"]
+      },
+      "description": "Signals that indicate learning value or risk"
+    },
+    "decision_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^slm-learning-[0-9]{3}$"
+      },
+      "minItems": 1,
+      "description": "References to decisions (slm-learning-NNN) that justify this skill"
+    }
+  },
+  "additionalProperties": false
+}

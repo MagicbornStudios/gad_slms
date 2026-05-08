@@ -1,0 +1,256 @@
+skill_id: benchmark-gated-training
+version: 1
+purpose: >-
+  Validate candidate model training before scaling. Ensures scaling decisions are
+  backed by held-out eval lift, not loss curves alone. Prevents catastrophic
+  regressions and failed checkpoint continuation.
+
+applies_when:
+  - "Before scaling a trained LoRA from 1B to 3B+ parameters"
+  - "Before promoting a LoRA to a larger base model"
+  - "Before committing $50+ on a full-scale training shot (32B+)"
+  - "After a dataset variant is prepared"
+  - "When a new training recipe is proposed"
+
+inputs:
+  - name: dataset
+    type: dataset
+    description: "JSONL or parquet file; must have target_contract field"
+    required: true
+  - name: base_model
+    type: model
+    description: "Pre-trained base (e.g., Qwen2.5-1.5B-Instruct)"
+    required: true
+  - name: target_scale
+    type: string
+    description: "Size in parameters (e.g., '3B', '7B', '32B') that we are gating"
+    required: true
+  - name: eval_suite
+    type: artifact
+    description: "Benchmark configs (HumanEval, MBPP, gad_tools, etc.)"
+    required: true
+  - name: previous_decisions
+    type: decision_record
+    description: "Recent promotion or scaling decisions for context"
+    required: false
+
+procedure:
+  - "VALIDATE: Run contract validator on dataset. If strict match < 95%, BLOCK training (exit 2)."
+  - "PROBE: Train LoRA on small scale (1.5B or 3B). Set max_new_tokens, EOS early-stop ON, temp=0.0 greedy."
+  - "BASELINE: Evaluate base model (no LoRA) at same harness mode on same eval suite. Lock baseline scores."
+  - "LORA_EVAL: Evaluate LoRA at same harness mode. Collect full results (pass/fail per sample)."
+  - "BUILD_TAXONOMY: From full results, classify failures into categories (syntax, logic, contract, hallucination, etc.)."
+  - "COMPARE: Compute delta (LoRA - base) for each benchmark. Check: is there lift on AT LEAST ONE benchmark? Any major regression?"
+  - "GATE_DECISION: Apply decision rule (see prohibitions + evals below). Outputs: promote / hold / salvage / reject."
+  - "LOG_DECISION: Record outcome in .planning/DECISIONS.xml with checkpoint status, eval scores, failure taxonomy."
+  - "COMMIT: If promote, tag checkpoint and update models/REGISTRY.json. If reject/hold, log to rejected/ and note next experiment."
+
+tools_allowed:
+  - "python (TRL, PEFT, transformers)"
+  - "scripts/data/validate_output_contract.py"
+  - "scripts/eval/*.py (harnesses)"
+  - "gad snapshot"
+  - "gad decisions add"
+  - "gad note add"
+
+output_contract: decision_record
+prohibitions:
+  - "Do NOT scale based on loss alone. Loss may decrease while eval regresses (happened: fn_norm 7B)."
+  - "Do NOT compare to leaderboard without documenting harness mode (temp, EOS, max_tokens, device)."
+  - "Do NOT continue from a failed checkpoint without running a fresh-vs-continued A/B test first."
+  - "Do NOT promote to 32B+ without held-out eval (private benchmark minimum; public preferred)."
+  - "Do NOT skip the contract validator. Contract mismatch is silent—evals fail, hypothesis is wrong, ship regresses."
+  - "Do NOT cherry-pick benchmarks. Report ALL benchmarks in eval_suite, not just the winners."
+
+evals:
+  - "GATE_PASS: Lift on at least one benchmark >= 2pp AND no single regression > 5pp"
+  - "GATE_PASS_STRICT: Lift on primary benchmark >= 3pp AND secondary benchmarks stable (±2pp)"
+  - "GATE_HOLD: Lift observed at small scale (1.5B) but neutral/regress at larger scale (3B, 7B); holds candidate for stacking/specialized composition"
+  - "GATE_FAIL: Loss decreases but evals regress across board, OR contract validation fails, OR failure taxonomy shows systematic issue"
+  - "GATE_REJECT: Candidate shows no path to recovery; add to negative_teacher pool or quarantine"
+
+failure_modes:
+  - name: "contract_mismatch"
+    description: >-
+      Dataset contract does not match eval expectations (e.g., natural_language targets
+      evaluated on gad_cli_command harness). Validator catch rate ~95%.
+    recovery: "Re-run validator with infer mode. Filter or relabel dataset. Restart training with filtered data."
+  - name: "loss_eval_divergence"
+    description: >-
+      Loss decreases cleanly but evals regress (happened: fn_norm 7B, HE -34pp despite clean 1.012 loss).
+      Root cause: distribution shift or incompatible target formats in corpus.
+    recovery: "Inspect failure taxonomy. Check for output-style mixing. Run SFT on format-tagged corpus; restart from base."
+  - name: "scale_cliff"
+    description: >-
+      LoRA lifts at 1.5B (+6.7pp HE) but is neutral/negative at 7B (-3.7pp HE).
+      Suggests dataset too narrow or LoRA rank insufficient for larger capacity.
+    recovery: "Increase rank (r=32 vs r=8). Mix with broader corpus. Or accept as 1.5B specialist; plan for composition via Branch-Train-Merge."
+  - name: "contract_validator_false_negative"
+    description: >-
+      Validator passes (>95% match) but downstream eval harness encounters unexpected output format.
+      Usually: validator heuristic is weaker than harness checker.
+    recovery: "Strengthen validator regex or parser. Add test case to validator suite. Rerun with fixed validator."
+  - name: "eval_harness_broken"
+    description: >-
+      Harness crashes, hangs, or produces wrong baseline scores. Blocks decision gate.
+    recovery: "Debug harness on fresh base model. Verify dataset samples are valid. Check for path issues on target device."
+
+examples:
+  - label: "gate_pass"
+    input:
+      dataset: "ocr_function_normalized"
+      base_model: "Qwen2.5-1.5B-Instruct"
+      target_scale: "3B"
+      baseline_he: 64.6
+      baseline_mbpp: 80.5
+    expected_output:
+      lora_he: 71.3
+      lora_mbpp: 83.5
+      contract_pass_rate: 0.97
+      decision: "PROMOTE"
+      reason: "HE +6.7pp, MBPP +3.0pp. Contract >95%. No regression. Gate PASS."
+      next_step: "Confirm at 3B scale. Then gate 7B confirmation."
+    trace:
+      - step: 1
+        action: "validate_contract"
+        result: "97% match, PASS"
+      - step: 2
+        action: "train_1p5b_probe"
+        result: "loss 1.187, saved checkpoint"
+      - step: 3
+        action: "eval_baseline"
+        result: "HE 106/164, MBPP 132/164"
+      - step: 4
+        action: "eval_lora"
+        result: "HE 117/164 (+6.7pp), MBPP 137/164 (+3.0pp)"
+      - step: 5
+        action: "build_taxonomy"
+        result: "Failures: 47 syntax errors, 0 contracts. No new failure mode."
+      - step: 6
+        action: "gate_check"
+        result: "Lift >= 2pp on both? Yes. Regression > 5pp? No. PASS."
+      - step: 7
+        action: "decide"
+        result: "PROMOTE to 3B confirmation eval"
+
+  - label: "gate_fail_scale_cliff"
+    input:
+      dataset: "ocr_function_normalized"
+      base_model: "Qwen2.5-7B-Instruct"
+      target_scale: "7B_confirmation"
+      baseline_he: 64.6
+      baseline_mbpp: 80.5
+      prior_1p5b_he: 71.3
+      prior_1p5b_mbpp: 83.5
+    expected_output:
+      lora_he: 30.5
+      lora_mbpp: 75.6
+      contract_pass_rate: 0.98
+      decision: "HOLD"
+      reason: "1.5B: HE +6.7pp (PASS). 7B: HE -34.1pp (FAIL). Scale cliff detected. Do NOT scale to 32B with this recipe."
+      next_step: "Move fn_norm to 1.5B+3B specialist composition. Reject 32B shot per slm-learning-097."
+    trace:
+      - step: 1
+        action: "validate_contract"
+        result: "98% match, PASS"
+      - step: 2
+        action: "train_7b_probe"
+        result: "loss 1.012 (clean), saved checkpoint"
+      - step: 3
+        action: "eval_baseline"
+        result: "HE 106/164, MBPP 132/164"
+      - step: 4
+        action: "eval_lora"
+        result: "HE 50/164 (-34.1pp), MBPP 124/164 (-4.9pp)"
+      - step: 5
+        action: "build_taxonomy"
+        result: "Failures: 114 samples. No single dominant pattern. Output format mixing suspected."
+      - step: 6
+        action: "gate_check"
+        result: "Lift >= 2pp on ANY benchmark? No. Regression > 5pp on both. FAIL."
+      - step: 7
+        action: "decide"
+        result: "HOLD + REJECT 32B shot. Move to composition lane. slm-learning-110 logged."
+
+  - label: "gate_fail_contract_mismatch"
+    input:
+      dataset: "tooluse_v2_raw"
+      base_model: "Qwen2.5-1.5B-Instruct"
+      target_scale: "1.5B_verification"
+      eval_contract: "gad_cli_command"
+      dataset_has_contract_field: false
+    expected_output:
+      decision: "BLOCK"
+      reason: "Contract validator detected 46% natural_language, 54% gad_cli_command in training data. Expected: 100% gad_cli_command. Strict match 54% < threshold 95%. Training BLOCKED (exit 2)."
+      next_step: "Filter dataset to gad_cli_command only, or relabel natural_language targets. Restart validator."
+    trace:
+      - step: 1
+        action: "validate_contract"
+        result: "54% strict match, FAIL (threshold 95%)"
+        detail: "46% targets are natural_language responses like 'Note: Build is broken on Windows.' Expected: gad_cli_command only."
+      - step: 2
+        action: "exit_code_2"
+        result: "Training blocked per output_contracts.md decision slm-learning-108"
+      - step: 3
+        action: "next_move"
+        result: "Filter tooluse_v2 to gad_cli_command only (~2000 pairs remain). Create tooluse_v2_filtered. Restart validator."
+
+trace_labels:
+  - "benchmark-gated-training"
+  - "gate-pass"
+  - "gate-hold"
+  - "gate-fail"
+  - "scale-cliff"
+  - "contract-mismatch"
+  - "eval-divergence"
+  - "lora-regression"
+
+preference_pair_policy: contrasts
+# Policy: Mine chosen/rejected pairs by comparing successful gate-pass runs with gate-fail runs.
+# Chosen: (dataset, base, train_procedure, eval_results_pass)
+# Rejected: (same dataset, base, train_procedure, eval_results_fail)
+# Contrast: The difference in eval scores teaches why the gate matters.
+# Example: fn_norm at 1.5B (CHOSEN, HE +6.7pp) vs fn_norm at 7B (REJECTED, HE -34pp).
+
+pressure_signals:
+  - signal: "Loss decreases but eval regresses"
+    pressure_level: "high"
+    action: >-
+      Investigate immediately. This is the fn_norm 7B pattern. Check: output format mixing?
+      Dataset too narrow? LoRA insufficient rank? Do NOT scale further until root cause found.
+  - signal: "Eval lift at 1.5B but neutral/flat at larger scales"
+    pressure_level: "high"
+    action: >-
+      Do NOT continue to 32B. Move candidate to 1.5B specialist pool or composition (Branch-Train-Merge).
+      This is a valid outcome—specialization is fine. But it blocks scaling decisions.
+  - signal: "Contract validator pass rate < 95%"
+    pressure_level: "blocks"
+    action: "BLOCK training immediately (exit 2). This is non-negotiable per slm-learning-108."
+  - signal: "Baseline eval on held-out set shows floor (< 50% accuracy)"
+    pressure_level: "medium"
+    action: "Check harness and base model. If base is legitimately weak, LoRA lift is still meaningful. If harness broken, fix and rerun."
+  - signal: "LoRA lift > 10pp on primary benchmark"
+    pressure_level: "info"
+    action: "Investigate if this is real or if data leakage occurred. If real, this is exceptional; flag for paper."
+
+decision_refs:
+  - "slm-learning-097"  # Two-shot $50 discipline: benchmark-gated scaling
+  - "slm-learning-103"  # Compare-and-compete discipline: 4 eval rows required
+  - "slm-learning-107"  # Benchmark-gated scaling: 32B requires 7B public lift
+  - "slm-learning-108"  # Output contracts mandatory: strict match < 95% blocks training
+  - "slm-learning-110"  # fn_norm is 1.5B benefit, not scale recipe
+  - "slm-learning-113"  # fn_norm 7B gate failure: -34pp HE despite clean loss
+  - "slm-learning-119"  # Tooluse-v2 contract mismatch: natural_language vs gad_cli_command
+  - "slm-learning-126"  # Contract validator blocks training gate
+
+# Implementation Notes:
+#
+# This skill captures the actual procedure we followed in 2026-05-07/08:
+#
+# 1. fn_norm 1.5B success (example 1): Dataset passed validation (97%), LoRA trained, both HE and MBPP lifted. Gate PASS. Promoted to 3B confirmation.
+#
+# 2. fn_norm 7B failure (example 2): Same dataset, clean loss curve (1.012), but massive eval regression (HE -34.1pp, MBPP -4.9pp). Triggered scale-cliff hypothesis. Gate FAIL. Blocked 32B shot per slm-learning-097.
+#
+# 3. tooluse-v2 contract mismatch (example 3): Dataset had 46% natural_language targets (e.g., "Note: Build is broken on Windows."). Validator caught it at 54% strict match. Training BLOCKED (exit 2). Required relabeling.
+#
+# All three examples are grounded in actual decisions logged in this session's DECISIONS.xml and STATE.xml. The skill faithfully captures what we learned.

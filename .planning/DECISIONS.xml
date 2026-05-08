@@ -707,4 +707,9 @@
     <summary>Skills must generate measurable learning signal or get shed: skill invocations correlated with downstream outcomes (eval lift, fallback drop, contract pass) and pressure stats; skills with no signal are sheddable per gad evolution shed</summary>
   </decision>
 
+  <decision id="slm-learning-129">
+    <title>Pressure is gated not assumed: evolutionary actions requi...</title>
+    <summary>Pressure is gated not assumed: evolutionary actions require pressure score above threshold from a composite formula (eval delta + failure rate + SLM-judged pressure J_SLM + correction rate + skill lift); formula calibrated against actual outcomes; skills with low pressure-produced signal are sheddable</summary>
+  </decision>
+
 </decisions>

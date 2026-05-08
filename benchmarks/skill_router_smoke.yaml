@@ -1,0 +1,101 @@
+description: "Skill Router Smoke Test (10 cases)"
+
+expected_contract:
+  - classification_label
+
+decision_refs:
+  - slm-learning-128
+
+providers:
+  - id: "openai:gpt-4o-mini"
+    label: "GPT-4o-mini"
+
+prompts:
+  - |
+    You are a routing assistant that maps tasks to specialized skills.
+    Given a task description, respond with ONLY the skill_id that best applies.
+
+    Available skills:
+    - benchmark-gated-training
+    - output-contract-validation
+    - training-salvage
+    - failure-taxonomy
+    - tool-action-generation
+    - codebase-attention-check
+    - skeleton-archaeology
+    - modal-eval-run
+
+    Task: {{instruction}}
+
+    Respond with only the skill_id, nothing else.
+
+tests:
+  - description: "Loss decreased but HumanEval regressed — benchmark gating"
+    vars:
+      instruction: "We trained a LoRA and loss went down but HumanEval regressed. What do we do next?"
+    assert:
+      - type: icontains
+        value: "benchmark-gated-training"
+
+  - description: "Model outputs natural language instead of tool calls — contract validation"
+    vars:
+      instruction: "tooluse-v2 outputs natural language instead of gad commands."
+    assert:
+      - type: icontains
+        value: "output-contract-validation"
+
+  - description: "Low adapter score — training salvage"
+    vars:
+      instruction: "Adapter scored 14/30; should we throw it out?"
+    assert:
+      - type: icontains
+        value: "training-salvage"
+
+  - description: "Taxonomy of failure modes — failure analysis"
+    vars:
+      instruction: "We have 50 failed eval cases. How do we categorize them?"
+    assert:
+      - type: icontains
+        value: "failure-taxonomy"
+
+  - description: "Generate gad command from task — tool action generation"
+    vars:
+      instruction: "Convert this intent to a gad CLI command: 'snapshot the project state'"
+    assert:
+      - type: icontains
+        value: "tool-action-generation"
+
+  - description: "Check imports and dependencies — codebase attention"
+    vars:
+      instruction: "Does this codebase have all required dependencies imported?"
+    assert:
+      - type: icontains
+        value: "codebase-attention-check"
+
+  - description: "Find unused code artifacts — skeleton archaeology"
+    vars:
+      instruction: "There's an old adapter checkpoint from 2025. Is it still referenced anywhere?"
+    assert:
+      - type: icontains
+        value: "skeleton-archaeology"
+
+  - description: "Submit eval job to modal — modal orchestration"
+    vars:
+      instruction: "We need to run a 7B eval on Modal. How do we submit the job?"
+    assert:
+      - type: icontains
+        value: "modal-eval-run"
+
+  - description: "Decision boundary: gating vs salvage (high ambiguity)"
+    vars:
+      instruction: "3B model hit 75% on HumanEval, but training crashed halfway. Retry or salvage?"
+    assert:
+      - type: icontains
+        value: "training-salvage"
+
+  - description: "Decision boundary: failure analysis vs contract validation"
+    vars:
+      instruction: "Some outputs have malformed JSON. Is this a contract or a model bug?"
+    assert:
+      - type: icontains
+        value: "output-contract-validation"

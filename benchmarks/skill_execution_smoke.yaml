@@ -1,0 +1,100 @@
+description: "Skill Execution Smoke Test (10 cases)"
+
+expected_contract:
+  - natural_language
+
+decision_refs:
+  - slm-learning-128
+
+providers:
+  - id: "openai:gpt-4o-mini"
+    label: "GPT-4o-mini"
+
+prompts:
+  - |
+    You are a specialized execution agent for the benchmark-gated-training skill.
+    This skill ensures that new adapters meet quality gates before promotion.
+
+    Benchmark-gated-training procedure:
+    1. After training, run base + LoRA evals at same harness mode
+    2. Compare metrics: loss, HumanEval, code benchmarks
+    3. If HumanEval regresses >5pp, build failure taxonomy
+    4. If loss < 1.0 but metrics plateau, hold scale and pivot recipe
+    5. If all gates pass, promote to HF Hub
+
+    Given a situation and current state, respond with the exact next step.
+
+    Situation: {{instruction}}
+
+    Respond with ONLY the next action (one sentence, concise).
+
+tests:
+  - description: "State: just trained LoRA. Next?"
+    vars:
+      instruction: "Skill: benchmark-gated-training. We just completed LoRA training on the 1.5B base. Current state: training_complete. Next step?"
+    assert:
+      - type: icontains
+        value: "eval"
+
+  - description: "State: loss=1.0 but HumanEval regressed -10pp. Next?"
+    vars:
+      instruction: "Skill: benchmark-gated-training. Metrics: loss=1.0 (good), but HumanEval went from 60% → 50% (-10pp). Current state: metric_regression_detected. Next step?"
+    assert:
+      - type: icontains
+        value: "taxonomy"
+
+  - description: "State: 7B base saturated, loss=0.8. Next?"
+    vars:
+      instruction: "Skill: benchmark-gated-training. The 7B base has loss=0.8 but metrics are flat. We've trained 3 adapters and hit diminishing returns. Current state: saturation_detected. Next step?"
+    assert:
+      - type: icontains
+        value: "pivot"
+
+  - description: "State: all gates pass, ready for promotion. Next?"
+    vars:
+      instruction: "Skill: benchmark-gated-training. All eval gates passed: loss improved, HumanEval +3pp, no regressions. Current state: gates_pass. Next step?"
+    assert:
+      - type: icontains
+        value: "promot"
+
+  - description: "State: HumanEval regressed but loss improved. Next?"
+    vars:
+      instruction: "Skill: benchmark-gated-training. Loss dropped from 1.5 → 1.1 (good), but HumanEval: 55% → 48% (bad). Current state: mixed_metrics. Next step?"
+    assert:
+      - type: icontains
+        value: "classif"
+
+  - description: "State: comparing base vs LoRA. Next?"
+    vars:
+      instruction: "Skill: benchmark-gated-training. Running evals now. Base model: 50% HumanEval, 0.5 perplexity. LoRA: 52% HumanEval, 0.48 perplexity. Current state: eval_complete. Next step?"
+    assert:
+      - type: icontains
+        value: "compar"
+
+  - description: "State: training failed partway. Next?"
+    vars:
+      instruction: "Skill: benchmark-gated-training. Training crashed at epoch 8/12 with OOM. We have a checkpoint at epoch 7. Current state: training_crash. Next step?"
+    assert:
+      - type: icontains
+        value: "salvag"
+
+  - description: "State: collected failure examples. Next?"
+    vars:
+      instruction: "Skill: benchmark-gated-training. We built a failure taxonomy with 12 categories (type_error, logic_error, timeout, etc.). Current state: taxonomy_ready. Next step?"
+    assert:
+      - type: icontains
+        value: "analyz"
+
+  - description: "State: adapter ready but dependencies missing. Next?"
+    vars:
+      instruction: "Skill: benchmark-gated-training. Metrics pass, but the adapter references a missing dataset in its config. Current state: config_invalid. Next step?"
+    assert:
+      - type: icontains
+        value: "validat"
+
+  - description: "State: decision on whether to retry or hold. Next?"
+    vars:
+      instruction: "Skill: benchmark-gated-training. 3B model: loss=1.2, HumanEval=62% (baseline 60%), but we're near VRAM ceiling. Do we retry at higher LR or hold and pivot? Current state: hyperparameter_decision. Next step?"
+    assert:
+      - type: icontains
+        value: "hold"

@@ -3,7 +3,7 @@
 Authoritative record of system growth: base models, adapters, and assemblies.
 Each entry records honest parameter counts, evaluation results, and promotion status.
 
-**Last updated:** 2026-05-08T16:04:52.302604Z
+**Last updated:** 2026-05-08T16:31:52.341259Z
 
 ## Active Assemblies
 
@@ -58,6 +58,12 @@ Awaiting promotion decision:
 - **Status:** rejected
 - **Evals:** humaneval: 0.226, mbpp: 0.427
 
+#### ladder-0p5b-hard-fn-norm-morphism-lr5e5-rejected
+- **Base:** Qwen/Qwen2.5-Coder-0.5B-Instruct
+- **Adapter params:** 804,608
+- **Status:** rejected
+- **Evals:** humaneval: 0.116, mbpp: 0.415
+
 #### ladder-0p5b-hard-fn-norm-morphism-rejected
 - **Base:** Qwen/Qwen2.5-Coder-0.5B-Instruct
 - **Adapter params:** 804,608
@@ -106,6 +112,7 @@ Awaiting promotion decision:
 | ladder-1p5b-ocr-no-think-skeleton | 45.7% |
 | ladder-0p5b-hard-fn-norm-morphism-rejected | 27.4% |
 | ladder-0p5b-hard-fn-norm-lora-rejected | 22.6% |
+| ladder-0p5b-hard-fn-norm-morphism-lr5e5-rejected | 11.6% |
 
 ### MBPP
 
@@ -122,6 +129,7 @@ Awaiting promotion decision:
 | ladder-1p5b-ocr-no-think-skeleton | 58.5% |
 | qwen25-coder-0p5b-base-2026-05-08 | 51.8% |
 | ladder-0p5b-hard-fn-norm-lora-rejected | 42.7% |
+| ladder-0p5b-hard-fn-norm-morphism-lr5e5-rejected | 41.5% |
 | ladder-0p5b-hard-fn-norm-morphism-rejected | 37.8% |
 
 ## Total Deployed Parameters Over Time

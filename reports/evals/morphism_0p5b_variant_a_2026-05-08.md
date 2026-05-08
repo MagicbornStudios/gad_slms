@@ -98,11 +98,52 @@ of scope for this prototype; a candidate for the next morphism cycle.
 | Variant A produces benchmark lift in this regime | **FALSIFIED** — HE -28pp, MBPP -14pp |
 | The gap-targeted recipe scales down to 0.5B | **FALSIFIED for this hyperparameter envelope** |
 
+## Follow-up: lr=5e-5 re-fire (2026-05-08, same day)
+
+**Hypothesis tested:** the lr=2e-4 falsification was hyperparameter-
+driven, not architectural; the +4.8pp morphism-over-LoRA HE delta in
+the first run hinted that the architecture itself wasn't broken. A
+4× smaller learning rate (5e-5) was applied to Variant A; everything
+else identical. Init agreement = 1.0000 again. Training: 33.9s,
+final loss 1.0449 (higher than lr=2e-4's 0.9153, expected).
+
+**Result:** hypothesis **partially falsified**.
+
+| Arm | HE | MBPP |
+|---|---|---|
+| 0.5B base | 55.5% | 51.8% |
+| Morphism @ lr=2e-4 | 27.4% (−28.1pp) | 37.8% (−14.0pp) |
+| **Morphism @ lr=5e-5** | **11.6% (−43.9pp)** ⬇⬇⬇ | **41.5% (−10.3pp)** |
+
+**Interpretation:**
+
+- Lower lr **HELPED MBPP** (+3.7pp recovery vs lr=2e-4) — partial
+  evidence that hyperparameter tuning matters.
+- Lower lr **HURT HE** (−15.8pp further regression) — the HE failure
+  is NOT primarily hyperparameter-driven.
+- The asymmetric effect (helps MBPP, hurts HE) suggests the
+  projection layer's residual-stream perturbation interacts
+  differently with HE-shaped vs MBPP-shaped tasks. Lower lr ≠
+  smaller perturbation in a useful direction; it's just a smaller
+  step in whatever direction the gradient pointed.
+- The simple "lr was too high" explanation is FALSIFIED. The real
+  failure mode is **base capacity at 0.5B + a single high-leverage
+  chokepoint trained on too few rows**.
+
+This sharpens the slm-learning-170 narrative: the falsification is
+not "hyperparameters were wrong" — it's "0.5B doesn't have the
+weight capacity to absorb 73 base-failure rows without breaking
+unrelated patterns, regardless of whether the absorption mechanism
+is LoRA's distributed deltas or morphism's single chokepoint."
+
+The right next experiment is NOT another lr sweep at 0.5B. It's
+**laddering up to 1.5B**, where the base has more capacity to
+absorb training without forgetting.
+
 ## Recommended next moves (operator-decision)
 
-1. **Re-fire morphism Variant A at lower lr** (5e-5 or 1e-5) on the
-   same 73-row dataset to test whether the regression is hyperparameter-
-   driven rather than architectural. ~$0.30 single arm.
+1. ~~Re-fire morphism Variant A at lower lr~~ **DONE 2026-05-08** —
+   FALSIFIED the hyperparameter hypothesis on HE. See above.
 2. **Re-fire LoRA control at lower lr** to match. ~$0.30.
 3. **Skip 0.5B as a morphism testbed entirely** and ladder up to 1.5B
    where generic fn_norm is known to lift. Build a 1.5B-base-failure

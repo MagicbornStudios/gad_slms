@@ -43,6 +43,22 @@
     "decision_refs": []
   },
   {
+    "entry_id": "ladder-0p5b-hard-fn-norm-morphism-lr5e5-rejected",
+    "entry_type": "adapter",
+    "model_or_system_id": "morphism-0p5b-variant-a-lr5e5-2026-05-08",
+    "ts_added": "2026-05-08T16:31:52.319883Z",
+    "base_model": "Qwen/Qwen2.5-Coder-0.5B-Instruct",
+    "base_params": 494032768,
+    "adapter_params": 804608,
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.116,
+      "mbpp": 0.415
+    },
+    "promotion_status": "rejected",
+    "decision_refs": []
+  },
+  {
     "entry_id": "ladder-0p5b-hard-fn-norm-morphism-rejected",
     "entry_type": "adapter",
     "model_or_system_id": "morphism-0p5b-variant-a-2026-05-08",

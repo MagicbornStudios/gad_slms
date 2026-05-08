@@ -647,4 +647,9 @@
     <summary>Inference gateway feedback becomes preference data: every fallback, correction, and human edit from SLM usage logged as training/eval data (DPO/KTO/SimPO source)</summary>
   </decision>
 
+  <decision id="slm-learning-113">
+    <title>fn_normalized OCR is a 1.5B benefit not a scale recipe: l...</title>
+    <summary>fn_normalized OCR is a 1.5B benefit not a scale recipe: lifts +6.7pp HE / +3.0pp MBPP at 1.5B but is neutral/-3.7pp at 7B. Active candidate for 1.5B+3B coder specialists; NOT a 7B+ recipe. $50 32B+fn_norm shot HELD.</summary>
+  </decision>
+
 </decisions>

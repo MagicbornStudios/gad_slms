@@ -622,4 +622,29 @@
     <summary>Benchmark-gated scaling: 32B scaling requires public-benchmark or GAD-owned benchmark lift at 7B; training-loss decrease alone is insufficient</summary>
   </decision>
 
+  <decision id="slm-learning-108">
+    <title>Output contracts are mandatory: every dataset row and ben...</title>
+    <summary>Output contracts are mandatory: every dataset row and benchmark must declare expected output contract; strict-contract training blocked when sampled match below 95%</summary>
+  </decision>
+
+  <decision id="slm-learning-109">
+    <title>Failed checkpoints become classified assets: salvage_cand...</title>
+    <summary>Failed checkpoints become classified assets: salvage_candidate, negative_teacher, skeleton_adapter, or quarantined; no failed checkpoint continued without fresh-vs-continued comparison</summary>
+  </decision>
+
+  <decision id="slm-learning-110">
+    <title>fn_normalized OCR is active coding recipe candidate; raw ...</title>
+    <summary>fn_normalized OCR is active coding recipe candidate; raw OCR + no_think rejected as scale recipes; fn_normalized passed at 1.5B (+6.7pp HE / +3.0pp MBPP) and requires 7B confirmation before 32B shot</summary>
+  </decision>
+
+  <decision id="slm-learning-111">
+    <title>GAD tool-use targets structured action first: tool_action...</title>
+    <summary>GAD tool-use targets structured action first: tool_action_json or exact GAD CLI commands for gad_tools eval; natural language is user-facing not tool-action target</summary>
+  </decision>
+
+  <decision id="slm-learning-112">
+    <title>Inference gateway feedback becomes preference data: every...</title>
+    <summary>Inference gateway feedback becomes preference data: every fallback, correction, and human edit from SLM usage logged as training/eval data (DPO/KTO/SimPO source)</summary>
+  </decision>
+
 </decisions>

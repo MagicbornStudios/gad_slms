@@ -1,0 +1,51 @@
+{
+  "dataset": "data\\processed\\gad-telemetry-2026-05-06\\sft_tooluse.jsonl",
+  "n_sampled": 200,
+  "declared_contracts": {},
+  "inferred_contracts": {
+    "tool_action_json": 200
+  },
+  "pass_by_contract": {},
+  "fail_by_contract": {
+    "tool_action_json": 200
+  },
+  "strict_pass": 0,
+  "strict_total": 200,
+  "strict_match_rate": 0.0,
+  "strict_min_threshold": 0.95,
+  "blocks_training": true,
+  "examples": {
+    "tool_action_json": [
+      {
+        "id": null,
+        "target_preview": "{\"type\": \"tool_call\", \"tool\": \"Bash\", \"input_summary\": \"ls /c/Users/benja/Documents/custom_portfolio/apps/platform/ 2>&1 | head -20; echo \\\"---\\\"; cat /c/Users/benja/Documents/custom_portfolio/apps/pl",
+        "reason": "missing 'args' dict"
+      },
+      {
+        "id": null,
+        "target_preview": "{\"type\": \"tool_call\", \"tool\": \"Bash\", \"input_summary\": \"ls /c/Users/benja/Documents/custom_portfolio/apps/desktop/ 2>&1 | head -20; echo \\\"---\\\"; cat /c/Users/benja/Documents/custom_portfolio/apps/des",
+        "reason": "missing 'args' dict"
+      },
+      {
+        "id": null,
+        "target_preview": "{\"type\": \"tool_call\", \"tool\": \"Bash\", \"input_summary\": \"git diff packages/visual-context/package.json | head -30\", \"output_length\": 0}",
+        "reason": "missing 'args' dict"
+      },
+      {
+        "id": null,
+        "target_preview": "{\"type\": \"tool_call\", \"tool\": \"Bash\", \"input_summary\": \"git status -s | head -20\", \"output_length\": 0}",
+        "reason": "missing 'args' dict"
+      },
+      {
+        "id": null,
+        "target_preview": "{\"type\": \"tool_call\", \"tool\": \"Bash\", \"input_summary\": \"ls packages/visual-context/dist/ 2>&1 | head -5; echo \\\"---\\\"; cat packages/visual-context/package.json | grep -E '\\\"(main|types|exports|files)\\",
+        "reason": "missing 'args' dict"
+      }
+    ]
+  },
+  "force_train": false,
+  "decision_refs": [
+    "slm-learning-108",
+    "slm-learning-111"
+  ]
+}

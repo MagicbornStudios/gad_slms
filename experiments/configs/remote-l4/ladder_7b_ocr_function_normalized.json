@@ -1,0 +1,35 @@
+{
+  "run_id": "ladder-7b-ocr-fn-norm-2026-05-08",
+  "exp_id": "EXP-ocr-variant-fn-norm-7b",
+  "purpose": "GATE TEST for $50 32B shot. 1.5B fn_normalized lifted +6.7pp HE / +3.0pp MBPP over 1.5B base. If 7B fn_normalized also lifts over 7B base v3 (81.7% HE / 80.5% MBPP), the slm-learning-097 + slm-learning-107 gate is fully met and 32B + fn_normalized becomes eligible. Per slm-learning-110.",
+  "base_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "dataset_volume_path": "/data/processed/ocr-variants-2026-05-08/ocr_function_normalized/rows.jsonl",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "target",
+  "max_length": 1024,
+  "lora": {
+    "r": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "target_modules": [
+      "q_proj", "k_proj", "v_proj", "o_proj",
+      "gate_proj", "up_proj", "down_proj"
+    ]
+  },
+  "training": {
+    "epochs": 1,
+    "lr": 2e-4,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "seed": 42,
+    "logging_steps": 50
+  },
+  "gpu": "A100",
+  "timeout_seconds": 7200,
+  "hub_repo": "scrubster/dr-stein-ladder-7b-ocr-fn-norm",
+  "decision_refs": ["slm-learning-097", "slm-learning-103", "slm-learning-107", "slm-learning-110"]
+}

@@ -1,0 +1,51 @@
+{
+  "schema_v": 1,
+  "decision_refs": ["slm-learning-108", "slm-learning-111"],
+  "benchmarks": {
+    "humaneval": {
+      "n": 164,
+      "expected_contract": ["code_completion", "function_definition"],
+      "scoring": "code_execution",
+      "judge": "python_subprocess",
+      "harness_modes": ["chat", "completion"],
+      "notes": "function-completion benchmark; model output is appended to the prompt's def signature. See modal_app/eval_adapter.py _judge() for the exact contract assembly."
+    },
+    "mbpp": {
+      "n": 974,
+      "expected_contract": ["function_definition"],
+      "scoring": "code_execution",
+      "judge": "python_subprocess",
+      "harness_modes": ["chat"],
+      "notes": "model emits complete def; judge concatenates model_output + test_list and runs as Python."
+    },
+    "code_smoke": {
+      "n": 5,
+      "expected_contract": ["function_definition"],
+      "scoring": "code_execution",
+      "judge": "python_subprocess",
+      "harness_modes": ["chat"],
+      "notes": "5 hand-curated tasks for fast pass/fail signal."
+    },
+    "gad_tools": {
+      "n": 30,
+      "expected_contract": ["gad_cli_command", "tool_action_json"],
+      "scoring": "assertion_or_schema",
+      "judge": "icontains_or_schema",
+      "harness_modes": ["chat"],
+      "forbidden_contracts": ["natural_language", "code_completion", "function_definition"],
+      "notes": "model must emit either an exact gad CLI invocation OR a tool_action_json that renders to one. natural-language descriptions like 'Note: Build is broken' are explicit FAILURES."
+    },
+    "gad_tools_hard": {
+      "n": 100,
+      "expected_contract": ["gad_cli_command", "tool_action_json"],
+      "scoring": "schema_strict",
+      "judge": "structured_validator",
+      "harness_modes": ["chat"],
+      "forbidden_contracts": ["natural_language"],
+      "notes": "PLANNED — extends gad_tools with ambiguous, missing-projectid, multi-command, quoting, Windows-path, and negative cases. Scoring is schema-strict (projectid correct, args present, action exists in gad CLI surface).",
+      "status": "scaffold"
+    }
+  },
+  "contract_definitions_ref": "docs/data-contracts/output_contracts.md",
+  "validation_ref": "scripts/data/validate_output_contract.py"
+}

@@ -1,0 +1,53 @@
+{
+  "dataset": "data\\processed\\ocr-variants-2026-05-08\\ocr_function_normalized\\rows.jsonl",
+  "n_sampled": 200,
+  "declared_contracts": {
+    "full_function_definition": 200
+  },
+  "inferred_contracts": {},
+  "pass_by_contract": {
+    "full_function_definition": 193
+  },
+  "fail_by_contract": {
+    "full_function_definition": 7
+  },
+  "strict_pass": 193,
+  "strict_total": 200,
+  "strict_match_rate": 0.965,
+  "strict_min_threshold": 0.95,
+  "blocks_training": false,
+  "examples": {
+    "full_function_definition": [
+      {
+        "id": "ocr-fn-norm-f431f15bdc5c9df6ee3e6f699fb4015b",
+        "target_preview": "def __init__(self, n):\n        self.parent = list(range(n + 1))\n        self.size = [1] * (n + 1)\n        self.diameter = [0] * (n + 1)\n    \n    def find(self, x):\n        if self.parent[x] != x:\n    ",
+        "reason": "syntax error: unindent does not match any outer indentation level"
+      },
+      {
+        "id": "ocr-fn-norm-c3a6fc7b6a026fef37867619c93b12af",
+        "target_preview": "def __init__(self, size):\n        self.parent = list(range(size))\n        self.rank = [1] * size\n    \n    def find(self, x):\n        if self.parent[x] != x:\n            self.parent[x] = self.find(self",
+        "reason": "syntax error: unindent does not match any outer indentation level"
+      },
+      {
+        "id": "ocr-fn-norm-1ac8a1fd7d0152bf7483fc3ff0c2b72e",
+        "target_preview": "def main():\n    input = sys.stdin.read().split()\n    ptr = 0\n    n = int(input[ptr]); ptr +=1\n    m = int(input[ptr]); ptr +=1\n    L = int(input[ptr]); ptr +=1\n    s = int(input[ptr]); ptr +=1\n    t =",
+        "reason": "syntax error: unindent does not match any outer indentation level"
+      },
+      {
+        "id": "ocr-fn-norm-50b4896e203ad690abba4de6a7038269",
+        "target_preview": "def __init__(self, size):\n        self.n = size\n        self.tree = [0] * (self.n + 1)\n    \n    def update(self, idx, delta):\n        while idx <= self.n:\n            self.tree[idx] += delta\n         ",
+        "reason": "syntax error: unindent does not match any outer indentation level"
+      },
+      {
+        "id": "ocr-fn-norm-1b2c544513d98c60f9ade47e5720084f",
+        "target_preview": "def main():\n    sys.setrecursionlimit(1 << 25)\n    n = int(sys.stdin.readline())\n    edges = []\n    adj = [[] for _ in range(n+1)]\n    initial_t = [0] * (n)  # 1-based to n-1\n    for i in range(n-1):\n",
+        "reason": "syntax error: unindent does not match any outer indentation level"
+      }
+    ]
+  },
+  "force_train": false,
+  "decision_refs": [
+    "slm-learning-108",
+    "slm-learning-111"
+  ]
+}

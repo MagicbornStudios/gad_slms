@@ -1,0 +1,166 @@
+description: "gad_tools_hard — n=100, contract-strict, edge-case heavy"
+status: scaffold
+schema_v: 1
+decision_refs: ["slm-learning-108", "slm-learning-111"]
+expected_contract: ["gad_cli_command", "tool_action_json"]
+forbidden_contracts: ["natural_language", "code_completion"]
+
+# This is a SCAFFOLD. Each test below is a category seed; populate
+# with 8-12 cases per category to reach n=100 total. Tests must
+# assert STRICT contract conformance, not just substring matches.
+
+scoring:
+  judge: structured_validator
+  validators:
+    - schema_valid           # JSON parses or CLI is well-formed
+    - contract_in_expected   # observed contract is in expected list
+    - contains_required_args # projectid where mandatory, etc.
+    - rejects_forbidden      # no natural_language for tool tasks
+
+categories:
+  - name: ambiguous_request
+    n_target: 8
+    description: User intent is unclear; model must pick the most likely command OR ask for clarification (latter is allowed but flagged)
+    seed_tests:
+      - description: ambiguous note vs task
+        vars:
+          instruction: "Track that the deploy broke."
+        # Either `gad note add ...` or `gad tasks add ...` is acceptable;
+        # natural-language description is NOT
+        assert:
+          - type: contains-any
+            value: ["gad note", "gad tasks", "gad task"]
+          - type: not-contains
+            value: "Note:"
+
+  - name: missing_projectid
+    n_target: 10
+    description: User's request is in a multi-project workspace; model must include --projectid
+    seed_tests:
+      - description: note add without explicit project — must add projectid
+        vars:
+          instruction: "Take a note that the build is broken on Windows."
+        assert:
+          - type: icontains
+            value: "gad note"
+          - type: icontains
+            value: "--projectid"
+
+  - name: wrong_project_trap
+    n_target: 8
+    description: User mentions a project name; model must use the correct projectid (kebab-case slug, not display name)
+    seed_tests:
+      - description: project mentioned by display name, must convert to slug
+        vars:
+          instruction: "Add a task in SLM Learning to fix the eval harness."
+        assert:
+          - type: icontains
+            value: "--projectid slm-learning"
+
+  - name: negative_no_command
+    n_target: 8
+    description: User's intent does NOT map to a gad command; model should refuse / clarify
+    seed_tests:
+      - description: chitchat — should not emit a gad command
+        vars:
+          instruction: "Hey, how was your day?"
+        assert:
+          - type: not-contains
+            value: "gad "
+
+  - name: multi_command_request
+    n_target: 8
+    description: User asks for multiple actions; model must emit all (chained or numbered)
+    seed_tests:
+      - description: take note AND add task
+        vars:
+          instruction: "Note that the build is broken AND add a task to fix it."
+        assert:
+          - type: icontains
+            value: "gad note"
+          - type: icontains
+            value: "gad tasks"
+
+  - name: quoting_edge
+    n_target: 10
+    description: Body contains quotes, special chars, paths
+    seed_tests:
+      - description: body with double quotes
+        vars:
+          instruction: 'Note: the error message is "permission denied" on /tmp/foo'
+        assert:
+          - type: icontains
+            value: "gad note"
+          - type: icontains
+            value: "permission denied"
+
+  - name: windows_path
+    n_target: 8
+    description: User mentions a Windows path (backslashes)
+    seed_tests:
+      - description: log a path with backslashes
+        vars:
+          instruction: "Take a note that C:\\Users\\benja\\Documents\\slm-learning is the project root"
+        assert:
+          - type: icontains
+            value: "gad note"
+
+  - name: gad_command_categories
+    n_target: 24
+    description: Coverage across decision/task/note/handoff/snapshot/state-log/projects/handoffs
+    seed_tests:
+      - description: decision add
+        vars:
+          instruction: "Record a decision that we will use Modal A100 for the 32B shot."
+        assert:
+          - type: icontains
+            value: "gad decisions"
+          - type: icontains
+            value: "add"
+      - description: handoff create
+        vars:
+          instruction: "Create a handoff for phase 04 about the eval harness fix."
+        assert:
+          - type: icontains
+            value: "gad handoff"
+          - type: icontains
+            value: "phase"
+      - description: state log
+        vars:
+          instruction: "Log that we just shipped the harness fix."
+        assert:
+          - type: icontains
+            value: "gad state log"
+
+  - name: tool_action_json
+    n_target: 8
+    description: Cases where the contract should be tool_action_json instead of CLI
+    seed_tests:
+      - description: emit JSON action for a note
+        vars:
+          instruction: "Output a tool_action JSON to take a note that the build is broken."
+        assert:
+          - type: is-json
+          - type: icontains
+            value: "tool"
+          - type: icontains
+            value: "args"
+
+  - name: multi_args
+    n_target: 8
+    description: Commands requiring multiple flags (e.g. note add with --title AND --body AND --tags)
+    seed_tests:
+      - description: note with title and body and tags
+        vars:
+          instruction: "Take a note titled 'eval harness' with body 'fixed the prefix-merge bug' and tag it diagnostics."
+        assert:
+          - type: icontains
+            value: "gad note"
+          - type: icontains
+            value: "--title"
+          - type: icontains
+            value: "--body"
+
+# When this scaffold is populated to n=100, this file becomes the
+# canonical gad_tools_hard. Until then the eval refuses to run with
+# n>=10 unless --scaffold-mode is passed.

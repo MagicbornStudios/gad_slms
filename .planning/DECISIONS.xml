@@ -712,4 +712,9 @@
     <summary>Pressure is gated not assumed: evolutionary actions require pressure score above threshold from a composite formula (eval delta + failure rate + SLM-judged pressure J_SLM + correction rate + skill lift); formula calibrated against actual outcomes; skills with low pressure-produced signal are sheddable</summary>
   </decision>
 
+  <decision id="slm-learning-130">
+    <title>Gap-targeted training is the canonical scale recipe: when...</title>
+    <summary>Gap-targeted training is the canonical scale recipe: when base scores &gt;70% on target eval, train ONLY on rows the base fails on with canonical solutions; produces lift where generic data saturates. 7B+hard_fn_norm: +3.1pp HE / +1.8pp MBPP at 58 rows / 2.4min / $0.14. The recipe transfers (HE-failures lifted MBPP), the weights do not.</summary>
+  </decision>
+
 </decisions>

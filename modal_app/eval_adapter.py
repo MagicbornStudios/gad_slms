@@ -361,14 +361,23 @@ def _judge(case: dict, completion: str) -> tuple[bool, str]:
         # First strip trailing test/check noise.
         code = _strip_post_answer_pollution(code)
 
-        # If code starts at column 0 (no leading whitespace), assume it's
-        # body-only and indent every line by 4 spaces before merging with
-        # the prefix. If already indented, leave it alone.
+        # If code starts at column 0, distinguish two cases:
+        #   1. Full function definition (`def name(...):`) — leave alone;
+        #      Python takes the second def (model's) over the prefix's.
+        #   2. Body-only (`return x`, `for i in...`, etc.) — indent every
+        #      line by 4 spaces so it falls under the prefix's def.
         first_nonblank = next((line for line in code.split("\n")
                                if line.strip()), "")
         if first_nonblank and not first_nonblank[0].isspace():
-            # Column 0: indent all lines by 4 spaces
-            code = "\n".join("    " + line for line in code.split("\n"))
+            stripped = first_nonblank.lstrip()
+            is_full_def = (stripped.startswith("def ") or
+                           stripped.startswith("async def ") or
+                           stripped.startswith("from ") or
+                           stripped.startswith("import "))
+            if not is_full_def:
+                # Column 0 + body-only: indent under prefix's def
+                code = "\n".join("    " + line if line.strip() else line
+                                  for line in code.split("\n"))
 
         program = imports + prefix + code + "\n\n" + textwrap.dedent(test_block) + "\n"
     else:

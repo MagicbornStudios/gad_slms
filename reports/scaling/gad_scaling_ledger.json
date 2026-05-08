@@ -75,6 +75,70 @@
     "decision_refs": []
   },
   {
+    "entry_id": "ladder-1p5b-hard-only-rejected",
+    "entry_type": "adapter",
+    "model_or_system_id": "lora-1p5b-hard-2026-05-08",
+    "ts_added": "2026-05-08T17:32:46.945061Z",
+    "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_params": 1543714304,
+    "adapter_params": 18460000,
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.482,
+      "mbpp": 0.573
+    },
+    "promotion_status": "rejected",
+    "decision_refs": []
+  },
+  {
+    "entry_id": "ladder-1p5b-hard-retain-canonical",
+    "entry_type": "adapter",
+    "model_or_system_id": "lora-1p5b-hard-retain-2026-05-08",
+    "ts_added": "2026-05-08T17:32:46.461646Z",
+    "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_params": 1543714304,
+    "adapter_params": 18460000,
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.64,
+      "mbpp": 0.64
+    },
+    "promotion_status": "canonical",
+    "decision_refs": []
+  },
+  {
+    "entry_id": "ladder-1p5b-morphism-a-rejected",
+    "entry_type": "adapter",
+    "model_or_system_id": "morphism-a-1p5b-hard-2026-05-08",
+    "ts_added": "2026-05-08T17:32:47.416734Z",
+    "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_params": 1543714304,
+    "adapter_params": 2362400,
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.329,
+      "mbpp": 0.402
+    },
+    "promotion_status": "rejected",
+    "decision_refs": []
+  },
+  {
+    "entry_id": "ladder-1p5b-morphism-b-staging",
+    "entry_type": "adapter",
+    "model_or_system_id": "morphism-b-1p5b-hard-2026-05-08",
+    "ts_added": "2026-05-08T17:32:47.864452Z",
+    "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_params": 1543714304,
+    "adapter_params": 1183100,
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.549,
+      "mbpp": 0.61
+    },
+    "promotion_status": "staging",
+    "decision_refs": []
+  },
+  {
     "entry_id": "ladder-1p5b-ocr-fn-norm-canonical",
     "entry_type": "adapter",
     "model_or_system_id": "ladder-1p5b-ocr-fn-norm",
@@ -216,6 +280,21 @@
     "evals": {
       "humaneval": 0.555,
       "mbpp": 0.518
+    },
+    "promotion_status": "canonical",
+    "decision_refs": []
+  },
+  {
+    "entry_id": "qwen25-coder-1p5b-base-2026-05-08",
+    "entry_type": "base_model",
+    "model_or_system_id": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "ts_added": "2026-05-08T17:32:45.931806Z",
+    "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+    "base_params": 1543714304,
+    "fallback_models": [],
+    "evals": {
+      "humaneval": 0.549,
+      "mbpp": 0.61
     },
     "promotion_status": "canonical",
     "decision_refs": []

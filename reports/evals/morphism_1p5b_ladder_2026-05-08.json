@@ -1,0 +1,92 @@
+{
+  "ts": "2026-05-08T17:31:45.172194Z",
+  "report": "morphism_1p5b_ladder",
+  "rows": [
+    {
+      "label": "1.5B base",
+      "he_score": 0.5488,
+      "he_passed": 90,
+      "he_n": 164,
+      "mbpp_score": 0.6098,
+      "mbpp_passed": 100,
+      "mbpp_n": 164,
+      "trainable_params_M": null,
+      "wall_seconds": null,
+      "training_loss": null,
+      "cost_usd_estimate": null,
+      "init_agreement": null,
+      "n_train_rows": null
+    },
+    {
+      "label": "1.5B + LoRA r=16 hard (74)",
+      "he_score": 0.4817,
+      "he_passed": 79,
+      "he_n": 164,
+      "mbpp_score": 0.5732,
+      "mbpp_passed": 94,
+      "mbpp_n": 164,
+      "trainable_params_M": 18.46,
+      "wall_seconds": 72.7,
+      "training_loss": 0.6679328441619873,
+      "cost_usd_estimate": 0.0168,
+      "init_agreement": null,
+      "n_train_rows": 74
+    },
+    {
+      "label": "1.5B + LoRA r=16 hard+retain (164)",
+      "he_score": 0.6402,
+      "he_passed": 105,
+      "he_n": 164,
+      "mbpp_score": 0.6402,
+      "mbpp_passed": 105,
+      "mbpp_n": 164,
+      "trainable_params_M": 18.46,
+      "wall_seconds": 148.2,
+      "training_loss": 0.4994291157433481,
+      "cost_usd_estimate": 0.0342,
+      "init_agreement": null,
+      "n_train_rows": 164
+    },
+    {
+      "label": "1.5B + Morphism A hard (74)",
+      "he_score": 0.3293,
+      "he_passed": 54,
+      "he_n": 164,
+      "mbpp_score": 0.4024,
+      "mbpp_passed": 66,
+      "mbpp_n": 164,
+      "trainable_params_M": 2.3624,
+      "wall_seconds": 77.1,
+      "training_loss": 0.7582302729288737,
+      "cost_usd_estimate": 0.0178,
+      "init_agreement": 1.0,
+      "n_train_rows": 74
+    },
+    {
+      "label": "1.5B + Morphism B hard (74)",
+      "he_score": 0.5488,
+      "he_passed": 90,
+      "he_n": 164,
+      "mbpp_score": 0.6098,
+      "mbpp_passed": 100,
+      "mbpp_n": 164,
+      "trainable_params_M": 1.1831,
+      "wall_seconds": 76.8,
+      "training_loss": 1.0401873906453452,
+      "cost_usd_estimate": 0.0177,
+      "init_agreement": 1.0,
+      "n_train_rows": 74
+    }
+  ],
+  "verdict": "MIXED \u2014 at least one arm lifts but at least one regresses; arm-by-arm story",
+  "interpretation": "**Best arm by combined HE+MBPP**: 1.5B + LoRA r=16 hard+retain (164) (HE 64.0%, MBPP 64.0%).\n\nAt least one arm beat the bare 1.5B base \u2014 the 0.5B falsification did not generalize. Capacity matters.\n\nAt least one arm regressed vs base. Recipe is still not universally safe at 1.5B; specific arm choice matters.",
+  "decision_refs": [
+    "slm-learning-126",
+    "slm-learning-130",
+    "slm-learning-158",
+    "slm-learning-165",
+    "slm-learning-170",
+    "slm-learning-171",
+    "slm-learning-172"
+  ]
+}

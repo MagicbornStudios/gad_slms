@@ -43,14 +43,52 @@ class IdentityProjectionLayer(nn.Module):
         return hidden_states + self.proj(self.norm(hidden_states))
 
 
-def expand_with_identity(model, insert_after_layer: int):
+class GatedBottleneckLayer(nn.Module):
+    """Variant B: y = x + gate * up(silu(down(norm(x))))."""
+
+    def __init__(self, hidden_size: int, bottleneck_size: int,
+                 eps: float = 1e-6):
+        super().__init__()
+        self.hidden_size = hidden_size
+        self.bottleneck_size = bottleneck_size
+        self.norm = Qwen2RMSNorm(hidden_size, eps=eps)
+        self.down = nn.Linear(hidden_size, bottleneck_size, bias=True)
+        self.up = nn.Linear(bottleneck_size, hidden_size, bias=True)
+        self.gate = nn.Parameter(torch.zeros(1))
+        self.act = nn.SiLU()
+        nn.init.kaiming_uniform_(self.down.weight, a=5**0.5)
+        nn.init.zeros_(self.down.bias)
+        nn.init.zeros_(self.up.weight)
+        nn.init.zeros_(self.up.bias)
+
+    def forward(
+        self, hidden_states, attention_mask=None, position_ids=None,
+        past_key_values=None, use_cache=False, cache_position=None,
+        position_embeddings=None, **kwargs,
+    ):
+        h = self.norm(hidden_states)
+        h = self.up(self.act(self.down(h)))
+        return hidden_states + self.gate * h
+
+
+def expand_with_identity(model, insert_after_layer: int,
+                           variant: str = "A_identity_projection",
+                           bottleneck_size: int | None = None):
     inner = model.model
     cfg = inner.config
     target_device = next(inner.parameters()).device
     target_dtype = next(inner.parameters()).dtype
-    new_layer = IdentityProjectionLayer(cfg.hidden_size, cfg.rms_norm_eps).to(
-        device=target_device, dtype=target_dtype
-    )
+    if variant == "A_identity_projection":
+        new_layer = IdentityProjectionLayer(
+            cfg.hidden_size, cfg.rms_norm_eps
+        ).to(device=target_device, dtype=target_dtype)
+    elif variant == "B_gated_bottleneck":
+        bn = bottleneck_size or max(64, cfg.hidden_size // 4)
+        new_layer = GatedBottleneckLayer(
+            cfg.hidden_size, bn, cfg.rms_norm_eps
+        ).to(device=target_device, dtype=target_dtype)
+    else:
+        raise ValueError(f"unknown variant {variant!r}")
     insert_pos = insert_after_layer + 1
     layers = list(inner.layers)
     layers.insert(insert_pos, new_layer)
@@ -64,22 +102,35 @@ def expand_with_identity(model, insert_after_layer: int):
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--variant", default="A_identity_projection",
+                    choices=["A_identity_projection", "B_gated_bottleneck"])
+    ap.add_argument("--insert-after", type=int, default=11)
+    ap.add_argument("--bottleneck-size", type=int, default=None)
+    ap.add_argument("--base", default=BASE_ID)
+    args = ap.parse_args()
+
     use_cuda = torch.cuda.is_available()
     device = torch.device("cuda" if use_cuda else "cpu")
     dtype = torch.bfloat16 if use_cuda else torch.float32
-    print(f"[smoke] device={device} dtype={dtype}")
+    print(f"[smoke] device={device} dtype={dtype} variant={args.variant} "
+          f"insert_after={args.insert_after}")
 
-    print(f"[smoke] loading base {BASE_ID} (this may take 30s) ...")
-    tok = AutoTokenizer.from_pretrained(BASE_ID)
+    print(f"[smoke] loading base {args.base} (this may take 30s) ...")
+    tok = AutoTokenizer.from_pretrained(args.base)
     if tok.pad_token_id is None:
         tok.pad_token = tok.eos_token
 
-    base = AutoModelForCausalLM.from_pretrained(BASE_ID, dtype=dtype).to(device)
+    base = AutoModelForCausalLM.from_pretrained(args.base, dtype=dtype).to(device)
     base.eval()
 
     print(f"[smoke] loading second copy for expansion ...")
-    expanded = AutoModelForCausalLM.from_pretrained(BASE_ID, dtype=dtype).to(device)
-    new_layer, insert_pos = expand_with_identity(expanded, insert_after_layer=11)
+    expanded = AutoModelForCausalLM.from_pretrained(args.base, dtype=dtype).to(device)
+    new_layer, insert_pos = expand_with_identity(
+        expanded, insert_after_layer=args.insert_after,
+        variant=args.variant, bottleneck_size=args.bottleneck_size,
+    )
     expanded.eval()
     print(f"[smoke] expanded num_hidden_layers={expanded.config.num_hidden_layers} "
           f"(inserted at {insert_pos})")

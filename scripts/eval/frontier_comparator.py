@@ -106,29 +106,55 @@ def call_anthropic(model: str, prompt: str, max_tokens: int = 512) -> str:
     return "".join(block.text for block in msg.content if hasattr(block, "text"))
 
 
-def call_openrouter(model: str, prompt: str, max_tokens: int = 512) -> str:
-    """Call OpenRouter chat completion. Requires OPENROUTER_API_KEY in env."""
+def call_openrouter(model: str, prompt: str, max_tokens: int = 512,
+                     max_retries: int = 5) -> str:
+    """Call OpenRouter chat completion with retry-on-429.
+
+    Free-tier models have ~20 req/min limits. We retry on 429 with exponential
+    backoff (5s, 10s, 20s, 40s, 80s) before giving up.
+    """
     import requests  # type: ignore
     api_key = os.environ["OPENROUTER_API_KEY"]
-    resp = requests.post(
-        "https://openrouter.ai/api/v1/chat/completions",
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-            "HTTP-Referer": "https://github.com/slm-learning",
-            "X-Title": "slm-learning frontier comparator",
-        },
-        json={
-            "model": model,
-            "messages": [{"role": "user", "content": prompt}],
-            "max_tokens": max_tokens,
-            "temperature": 0.0,
-        },
-        timeout=60,
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    return data["choices"][0]["message"]["content"]
+    backoff = 5.0
+    last_err: Exception | None = None
+    for attempt in range(max_retries):
+        try:
+            resp = requests.post(
+                "https://openrouter.ai/api/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "https://github.com/slm-learning",
+                    "X-Title": "slm-learning frontier comparator",
+                },
+                json={
+                    "model": model,
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": max_tokens,
+                    "temperature": 0.0,
+                },
+                timeout=120,
+            )
+            if resp.status_code == 429:
+                last_err = requests.HTTPError(f"429 attempt {attempt+1}")
+                time.sleep(backoff)
+                backoff = min(backoff * 2, 120)
+                continue
+            resp.raise_for_status()
+            data = resp.json()
+            return data["choices"][0]["message"]["content"]
+        except requests.HTTPError as e:
+            last_err = e
+            if e.response is not None and 500 <= e.response.status_code < 600:
+                time.sleep(backoff)
+                backoff = min(backoff * 2, 120)
+                continue
+            raise
+        except (requests.ConnectionError, requests.Timeout) as e:
+            last_err = e
+            time.sleep(backoff)
+            backoff = min(backoff * 2, 120)
+    raise last_err if last_err else RuntimeError("openrouter exhausted retries")
 
 
 def judge_he_or_mbpp(case: dict, completion: str) -> tuple[bool, str]:
@@ -220,6 +246,9 @@ def run_one(model_spec: str, benchmark: str, limit: int, out_dir: Path) -> dict:
 
     results = []
     passed = 0
+    # Free-tier OpenRouter is rate-limited (~20 req/min). We add a small floor
+    # delay between calls to stay within limits even when retries don't fire.
+    pace_delay = 3.5 if backend == "openrouter" else 0.0
     for i, case in enumerate(cases):
         t0 = time.time()
         try:
@@ -227,6 +256,8 @@ def run_one(model_spec: str, benchmark: str, limit: int, out_dir: Path) -> dict:
         except Exception as e:
             completion = ""
             print(f"[warn] case {i} api error: {e!r}", file=sys.stderr)
+        if pace_delay:
+            time.sleep(pace_delay)
         ok, why = judge_he_or_mbpp(case, completion)
         if ok:
             passed += 1
@@ -269,6 +300,13 @@ def run_one(model_spec: str, benchmark: str, limit: int, out_dir: Path) -> dict:
 
 
 def main():
+    # Load .env if present (no-op if file missing or keys already in env)
+    try:
+        from _load_env import load_env  # type: ignore
+        load_env()
+    except Exception:
+        pass
+
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", required=True,
                     help="anthropic:<model> or openrouter:<vendor/model[:tag]>")

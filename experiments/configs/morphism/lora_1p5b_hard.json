@@ -1,0 +1,33 @@
+{
+  "run_id": "lora-1p5b-hard-2026-05-08",
+  "exp_id": "EXP-1p5b-ladder-arm-1",
+  "purpose": "Arm 1 of the 1.5B ladder per slm-learning-172. LoRA r=16 on Qwen2.5-Coder-1.5B-Instruct, trained on 1.5B-base-failure rows. Direct comparison vs 0.5B+LoRA (catastrophic regress) — does the same recipe lift at 1.5B where the base has more capacity to absorb without forgetting?",
+  "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "dataset_volume_path": "/data/processed/1p5b-hard-fn-norm-2026-05-08/rows.jsonl",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "target",
+  "max_length": 1024,
+  "lora": {
+    "r": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+  },
+  "training": {
+    "epochs": 3,
+    "lr": 2e-4,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "seed": 42,
+    "logging_steps": 5
+  },
+  "gpu": "A10G",
+  "timeout_seconds": 7200,
+  "hub_repo": null,
+  "decision_refs": ["slm-learning-130", "slm-learning-172"],
+  "notes": "If lifts: confirms scale floor is below 1.5B for hard recipe. If regresses: pushes scale floor up to 7B."
+}

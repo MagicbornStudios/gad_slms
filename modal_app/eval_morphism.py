@@ -138,10 +138,46 @@ def _score_morphism_inner(args: dict) -> dict:
         ):
             return hidden_states + self.proj(self.norm(hidden_states))
 
+    class GatedBottleneckLayer(nn.Module):
+        """Variant B at eval: structurally identical to train_morphism.py."""
+
+        def __init__(self, hidden_size: int, bottleneck_size: int,
+                     eps: float = 1e-6):
+            super().__init__()
+            self.hidden_size = hidden_size
+            self.bottleneck_size = bottleneck_size
+            self.norm = Qwen2RMSNorm(hidden_size, eps=eps)
+            self.down = nn.Linear(hidden_size, bottleneck_size, bias=True)
+            self.up = nn.Linear(bottleneck_size, hidden_size, bias=True)
+            self.gate = nn.Parameter(torch.zeros(1))
+            self.act = nn.SiLU()
+            nn.init.kaiming_uniform_(self.down.weight, a=5**0.5)
+            nn.init.zeros_(self.down.bias)
+            nn.init.zeros_(self.up.weight)
+            nn.init.zeros_(self.up.bias)
+
+        def forward(
+            self, hidden_states, attention_mask=None, position_ids=None,
+            past_key_values=None, use_cache=False, cache_position=None,
+            position_embeddings=None, **kwargs,
+        ):
+            h = self.norm(hidden_states)
+            h = self.up(self.act(self.down(h)))
+            return hidden_states + self.gate * h
+
     target_device = next(inner.parameters()).device
-    new_layer = IdentityProjectionLayer(hidden_size, cfg.rms_norm_eps).to(
-        device=target_device, dtype=dtype
-    )
+    variant = args.get("variant", "A_identity_projection")
+    if variant == "A_identity_projection":
+        new_layer = IdentityProjectionLayer(hidden_size, cfg.rms_norm_eps).to(
+            device=target_device, dtype=dtype
+        )
+    elif variant == "B_gated_bottleneck":
+        bottleneck_size = args.get("bottleneck_size") or max(64, hidden_size // 4)
+        new_layer = GatedBottleneckLayer(
+            hidden_size, bottleneck_size, cfg.rms_norm_eps
+        ).to(device=target_device, dtype=dtype)
+    else:
+        return {"status": "error", "error": f"unknown variant {variant!r}"}
 
     insert_pos = insert_after_layer + 1
     layers = list(inner.layers)
@@ -253,7 +289,9 @@ def _score_morphism_inner(args: dict) -> dict:
 def main(run_id: str, base_model: str, insert_after_layer: int = 11,
          benchmark: str = "humaneval", limit: int = 20, gpu: str = "A10G",
          max_new_tokens: int = 384, mode: str = "chat",
-         persist_run_id: str = "") -> None:
+         persist_run_id: str = "",
+         variant: str = "A_identity_projection",
+         bottleneck_size: int = 0) -> None:
     args = {
         "run_id": run_id,
         "base_model": base_model,
@@ -263,6 +301,8 @@ def main(run_id: str, base_model: str, insert_after_layer: int = 11,
         "max_new_tokens": max_new_tokens,
         "mode": mode,
         "persist_run_id": persist_run_id or None,
+        "variant": variant,
+        "bottleneck_size": bottleneck_size or None,
     }
     fn = {"A10G": score_morphism_a10g, "A100": score_morphism_a100}.get(
         gpu, score_morphism_a10g)

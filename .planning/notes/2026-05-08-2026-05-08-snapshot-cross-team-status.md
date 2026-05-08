@@ -1,0 +1,3 @@
+# Feature request: gad snapshot should surface cross-project handoffs targeting current session
+
+gad snapshot --projectid X currently lists handoffs filed FROM project X. It does not surface handoffs filed BY OTHER projects whose recipient field targets X (or X's team). Result: cross-project handoffs are invisible on snapshot until the recipient explicitly walks the source project's queue. Needed for the trigger_skill envelope handoff (h-2026-05-08T11-50-00-monorepo-trigger-skill-envelope) and any future cross-project work to actually be picked up without out-of-band 'go look in slm-learning's queue' nudges.

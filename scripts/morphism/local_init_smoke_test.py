@@ -16,124 +16,22 @@ Decision refs: slm-learning-165, slm-learning-169.
 from __future__ import annotations
 
 import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import torch
-import torch.nn as nn
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from transformers.models.qwen2.modeling_qwen2 import Qwen2RMSNorm
+
+from modal_app.morphism_layers import (  # noqa: F401
+    GatedBottleneckLayer,
+    GatedResidualLayerC,
+    IdentityProjectionLayer,
+)
+from modal_app.morphism_insertion import expand_with_identity
 
 
 BASE_ID = "Qwen/Qwen2.5-Coder-0.5B-Instruct"
-
-
-class IdentityProjectionLayer(nn.Module):
-    def __init__(self, hidden_size: int, eps: float = 1e-6):
-        super().__init__()
-        self.hidden_size = hidden_size
-        self.norm = Qwen2RMSNorm(hidden_size, eps=eps)
-        self.proj = nn.Linear(hidden_size, hidden_size, bias=True)
-        nn.init.zeros_(self.proj.weight)
-        nn.init.zeros_(self.proj.bias)
-
-    def forward(
-        self, hidden_states, attention_mask=None, position_ids=None,
-        past_key_values=None, use_cache=False, cache_position=None,
-        position_embeddings=None, **kwargs,
-    ):
-        return hidden_states + self.proj(self.norm(hidden_states))
-
-
-class GatedResidualLayerC(nn.Module):
-    """Variant C: small-nonzero init throughout."""
-    def __init__(self, hidden_size: int, bottleneck_size: int,
-                 eps: float = 1e-6, gate_init: float = 0.01,
-                 up_scale: float = 0.01):
-        super().__init__()
-        self.hidden_size = hidden_size
-        self.bottleneck_size = bottleneck_size
-        self.norm = Qwen2RMSNorm(hidden_size, eps=eps)
-        self.down = nn.Linear(hidden_size, bottleneck_size, bias=True)
-        self.up = nn.Linear(bottleneck_size, hidden_size, bias=True)
-        self.gate = nn.Parameter(torch.full((1,), float(gate_init)))
-        self.act = nn.SiLU()
-        nn.init.kaiming_uniform_(self.down.weight, a=5**0.5)
-        nn.init.zeros_(self.down.bias)
-        nn.init.kaiming_uniform_(self.up.weight, a=5**0.5)
-        with torch.no_grad():
-            self.up.weight.mul_(float(up_scale))
-        nn.init.zeros_(self.up.bias)
-
-    def forward(
-        self, hidden_states, attention_mask=None, position_ids=None,
-        past_key_values=None, use_cache=False, cache_position=None,
-        position_embeddings=None, **kwargs,
-    ):
-        h = self.norm(hidden_states)
-        h = self.up(self.act(self.down(h)))
-        return hidden_states + self.gate * h
-
-
-class GatedBottleneckLayer(nn.Module):
-    """Variant B: y = x + gate * up(silu(down(norm(x))))."""
-
-    def __init__(self, hidden_size: int, bottleneck_size: int,
-                 eps: float = 1e-6):
-        super().__init__()
-        self.hidden_size = hidden_size
-        self.bottleneck_size = bottleneck_size
-        self.norm = Qwen2RMSNorm(hidden_size, eps=eps)
-        self.down = nn.Linear(hidden_size, bottleneck_size, bias=True)
-        self.up = nn.Linear(bottleneck_size, hidden_size, bias=True)
-        self.gate = nn.Parameter(torch.zeros(1))
-        self.act = nn.SiLU()
-        nn.init.kaiming_uniform_(self.down.weight, a=5**0.5)
-        nn.init.zeros_(self.down.bias)
-        nn.init.zeros_(self.up.weight)
-        nn.init.zeros_(self.up.bias)
-
-    def forward(
-        self, hidden_states, attention_mask=None, position_ids=None,
-        past_key_values=None, use_cache=False, cache_position=None,
-        position_embeddings=None, **kwargs,
-    ):
-        h = self.norm(hidden_states)
-        h = self.up(self.act(self.down(h)))
-        return hidden_states + self.gate * h
-
-
-def expand_with_identity(model, insert_after_layer: int,
-                           variant: str = "A_identity_projection",
-                           bottleneck_size: int | None = None):
-    inner = model.model
-    cfg = inner.config
-    target_device = next(inner.parameters()).device
-    target_dtype = next(inner.parameters()).dtype
-    if variant == "A_identity_projection":
-        new_layer = IdentityProjectionLayer(
-            cfg.hidden_size, cfg.rms_norm_eps
-        ).to(device=target_device, dtype=target_dtype)
-    elif variant == "B_gated_bottleneck":
-        bn = bottleneck_size or max(64, cfg.hidden_size // 4)
-        new_layer = GatedBottleneckLayer(
-            cfg.hidden_size, bn, cfg.rms_norm_eps
-        ).to(device=target_device, dtype=target_dtype)
-    elif variant == "C_gated_residual":
-        bn = bottleneck_size or max(64, cfg.hidden_size // 4)
-        new_layer = GatedResidualLayerC(
-            cfg.hidden_size, bn, cfg.rms_norm_eps,
-        ).to(device=target_device, dtype=target_dtype)
-    else:
-        raise ValueError(f"unknown variant {variant!r}")
-    insert_pos = insert_after_layer + 1
-    layers = list(inner.layers)
-    layers.insert(insert_pos, new_layer)
-    inner.layers = nn.ModuleList(layers)
-    cfg.num_hidden_layers = cfg.num_hidden_layers + 1
-    if hasattr(cfg, "layer_types") and cfg.layer_types is not None:
-        new_layer_types = list(cfg.layer_types)
-        new_layer_types.insert(insert_pos, "full_attention")
-        cfg.layer_types = new_layer_types
-    return new_layer, insert_pos
 
 
 def main():

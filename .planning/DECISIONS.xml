@@ -867,4 +867,19 @@
     <summary>Consolidation runs become first-class scaling events. Per the incremental latent consolidation framework (reports/research/incremental_latent_consolidation.md): each consolidation run produces a structured record per schemas/consolidation_run.schema.json including base_model, delta_type (lora/morphism_a/morphism_b/morphism_c/adapter/router/skill_model), hard_rows, retain_rows, hard_retain_ratio, curriculum_schedule, trainable_params, eval_before, eval_after, retain_pass_rate_before/after, regression_score, promotion_verdict (canonical/staging/skeleton/negative_teacher/quarantined/rejected). The scaling ledger is extended with one entry per consolidation run; the GAD evolution loop becomes 10 explicit steps from observe-pressure to serve-through-router with telemetry feedback. Pressure-gated training (slm-learning-129/166) gates step 2; this decision makes the rest of the pipeline first-class infrastructure. Refs: slm-learning-122, 125, 129, 166, 172, 173, 178, 179, 180, 181.</summary>
   </decision>
 
+  <decision id="slm-learning-183">
+    <title>3B + LoRA hard+retain at 27/63 ratio (90 rows total) FAIL...</title>
+    <summary>3B + LoRA hard+retain at 27/63 ratio (90 rows total) FAILED to lift. HE 77.4 (-6.1pp vs 3B base 83.5), MBPP 69.5 (-3.7pp vs base 73.2). Same recipe that LIFTED at 1.5B (slm-learning-173: 74 hard + 90 retain = 164 rows, +9.1 HE / +3.0 MBPP) regressed at 3B. Hypotheses: (a) only 27 hard rows because 3B base passes 137/164 cases — saturated regime; (b) 30/70 ratio is wrong for saturated bases (more retain may be needed); (c) larger absolute dataset needed. Recipe parameters (hard count, hard:retain ratio, lr, epochs) are base-size-sensitive; 1.5B's parameters do not transfer up to 3B unchanged. Lift zone is currently at 1.5B; bases above and below need different parameter tuning. 7B succeeds with hard-only because of different absorption capacity (slm-learning-130). Next: vary 3B's hard:retain ratio (e.g. 15/85), augment 3B-hard via paraphrase (slm-learning-093 calls for variance), or extend hard set with multi-source failures (HE+MBPP base failures combined).</summary>
+  </decision>
+
+  <decision id="slm-learning-184">
+    <title>Variant C with init=1e-3 (gate=0.001, up_scale=0.001) is ...</title>
+    <summary>Variant C with init=1e-3 (gate=0.001, up_scale=0.001) is effectively inert despite passing init check. HE 54.9 FLAT vs base, MBPP 61.6 (+1 case = noise). Same outcome shape as Variant B (gate=0+up=0). Init too small to drive useful gradients. Init=1e-2 was too noisy in bf16 (failed init check at 0.8906). The right range is between 1e-3 and 1e-2 — likely 5e-3. Next test: gate_init=5e-3, up_scale=5e-3 OR gate_init=1e-2 with up_scale=1e-3 (asymmetric init to balance preservation vs trainability). Loss 1.0571 ~ Variant B's 1.0583 confirms inertness. Refs: slm-learning-174, 176, 181.</summary>
+  </decision>
+
+  <decision id="slm-learning-185">
+    <title>Variant A late+retain at 1.5B asymmetric: HE 50.0 (-4.9pp...</title>
+    <summary>Variant A late+retain at 1.5B asymmetric: HE 50.0 (-4.9pp vs base 54.9) MBPP 61.0 (FLAT). Adding retain to Variant A late HURT HE compared to late+hard-only (52.4 HE -2.5pp). For LoRA, retain HELPED both axes. For Variant A, retain helps MBPP +2.5pp but hurts HE -2.4pp. Mechanism difference: Variant A's residual-rotation perturbation interacts with retain rows differently than LoRA's distributed deltas. Implication: retain-mix is NOT a universal smoother — it works for distributed-delta mechanisms (LoRA) but can hurt single-chokepoint mechanisms (Variant A). Variant A late on hard-only remains the best-staged morphism arm at 1.5B. Refs: slm-learning-173, 175, 178, 180.</summary>
+  </decision>
+
 </decisions>

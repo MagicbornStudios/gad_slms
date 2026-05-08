@@ -5,9 +5,9 @@ phase: 04
 task_id: SL-T-04-kael-house-dataset
 created_at: 2026-05-08T13:30:00.000Z
 created_by: dr-stein-slm-learning
-claimed_by:
-claimed_at:
-completed_at:
+claimed_by: unknown
+claimed_at: 2026-05-08T22:36:43.654Z
+completed_at: 
 priority: high
 estimated_context: large
 risk: safe

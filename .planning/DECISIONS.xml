@@ -937,4 +937,24 @@
     <summary>Reuse + one-file-per-concern audit landed. 6 duplications + 1 multi-concern violation found across 15 files. Proposed canonical homes: modal_app/morphism_layers.py (3 layer classes ~190 LOC), scripts/data/_eval_dataset_loaders.py (HE/MBPP loaders ~200 LOC across 6 files), scripts/eval/_judge.py (judge+strip ~130 LOC), modal_app/morphism_insertion.py (expand_with_identity ~40 LOC), scripts/data/_extraction.py (extract helpers ~25 LOC). eval_adapter.py 520-LOC multi-concern file split into eval_common.py + slim eval_adapter.py. Total LOC eliminated: ~585. build_0p5b_hard*/build_7b_hard*/build_retain_mix_dataset.py marked SUPERSEDED by build_delta_packets.py + build_consolidation_mix.py. Refactor DEFERRED to Lane B/D execution time (do not refactor before 1.5B+retain canonical is fully wired into houses framework). Audit doc: reports/research/reuse_one_file_per_concern_audit.md.</summary>
   </decision>
 
+  <decision id="slm-learning-197">
+    <title>Claude Opus is THE teacher; open Qwen is comparator/label...</title>
+    <summary>Claude Opus is THE teacher; open Qwen is comparator/labeler/inspector, not teacher rival</summary>
+  </decision>
+
+  <decision id="slm-learning-198">
+    <title>Registry of datasets / model_families / teachers / news i...</title>
+    <summary>Registry of datasets / model_families / teachers / news is a first-class research artifact</summary>
+  </decision>
+
+  <decision id="slm-learning-199">
+    <title>Kael's moat is integration depth × speed × cost, NOT benc...</title>
+    <summary>Kael's moat is integration depth × speed × cost, NOT benchmark parity with Opus</summary>
+  </decision>
+
+  <decision id="slm-learning-200">
+    <title>Teacher rows require provenance + accepted_by metadata or...</title>
+    <summary>Teacher rows require provenance + accepted_by metadata or they are not teacher rows</summary>
+  </decision>
+
 </decisions>

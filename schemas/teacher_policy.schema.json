@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/teacher_policy.schema.json",
+  "title": "Teacher Policy Entry",
+  "description": "Mapping from task shape to recommended models per role: teacher (gold labels, hard reasoning, judge), bulk_labeler (cheap volume), comparator (open-weight reproducibility row), inspector (logit/hidden-state research). Decisions: slm-learning-197 (Opus is THE teacher; open Qwen is comparator/labeler/inspector, not teacher rival), slm-learning-204 (teacher rows require provenance/cost/acceptance/license metadata).",
+  "type": "object",
+  "required": ["task_shape", "primary_teacher", "comparator"],
+  "properties": {
+    "task_shape": {
+      "type": "string",
+      "description": "Short label that maps to delta_packet.task_shape or eval task category"
+    },
+    "primary_teacher": {
+      "type": "string",
+      "description": "Model registry id for the gold-label teacher"
+    },
+    "fallback_teacher": {
+      "type": "string",
+      "description": "Use when primary is rate-limited / over budget"
+    },
+    "bulk_labeler": {
+      "type": "string",
+      "description": "Cheap-per-row labeler when scale matters more than peak quality"
+    },
+    "comparator": {
+      "type": "string",
+      "description": "Open-weight comparator for paper-row reproducibility (Charter Row 8)"
+    },
+    "inspector": {
+      "type": "string",
+      "description": "Open-weight model for logit/hidden-state research probes"
+    },
+    "verifier": {
+      "type": "string",
+      "description": "Test runner / executor / contract checker that produces objective truth"
+    },
+    "rationale": { "type": "string" },
+    "cost_class": {
+      "type": "string",
+      "enum": ["premium", "standard", "bulk", "free"]
+    },
+    "expected_cost_per_row_usd": { "type": "number" },
+    "decision_refs": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" }
+  }
+}

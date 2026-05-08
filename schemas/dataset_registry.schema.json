@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/dataset_registry.schema.json",
+  "title": "Dataset Registry Entry",
+  "description": "An open dataset slm-learning may train on, evaluate against, or compare to. Companion to schemas/context_root.schema.json + schemas/delta_packet.schema.json. Decision: slm-learning-198.",
+  "type": "object",
+  "required": ["id", "license", "size_class", "task_shape", "our_usage"],
+  "properties": {
+    "id": { "type": "string", "description": "Slug (e.g. 'opencodereasoning')" },
+    "hf_id": { "type": "string", "description": "HuggingFace datasets path" },
+    "name": { "type": "string" },
+    "vendor": { "type": "string", "description": "NVIDIA / HuggingFace / BigCode / Microsoft / etc." },
+    "license": {
+      "type": "string",
+      "enum": ["apache-2.0", "mit", "cc-by-4.0", "cc-by-sa-4.0", "cc-by-nc-4.0", "odc-by", "llama-3-community", "qwen", "gemma", "research-only", "other", "unknown"]
+    },
+    "size_class": {
+      "type": "string",
+      "enum": ["tiny", "small", "medium", "large", "xlarge"],
+      "description": "tiny <10K, small 10K-1M, medium 1M-10M, large 10M-100M, xlarge >100M rows OR equivalent token count"
+    },
+    "n_rows_estimate": { "type": "integer" },
+    "n_tokens_estimate": { "type": "integer" },
+    "task_shape": {
+      "type": "string",
+      "enum": [
+        "code", "code_eval", "code_repair", "code_reasoning",
+        "math", "math_eval", "math_reasoning",
+        "reasoning", "reasoning_eval", "chain_of_thought",
+        "tool_action", "tool_action_eval", "function_calling",
+        "trajectory", "agentic_eval", "swe_eval",
+        "dialogue", "instruction_tuning", "preference",
+        "text", "long_context", "mixed"
+      ]
+    },
+    "splits": { "type": "array", "items": { "type": "string" } },
+    "language": { "type": "string", "default": "en" },
+    "url": { "type": "string", "format": "uri" },
+    "paper": { "type": "string" },
+    "our_usage": {
+      "type": "string",
+      "enum": ["untested", "considered", "active_train", "active_eval", "retain_bank", "comparator", "deprecated"]
+    },
+    "vram_class": {
+      "type": "string",
+      "enum": ["streamable", "fits_local", "modal_only"],
+      "description": "streamable=use HF streaming, fits_local=cache OK, modal_only=stream from Modal volume"
+    },
+    "decision_refs": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" }
+  }
+}

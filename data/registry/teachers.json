@@ -1,0 +1,107 @@
+{
+  "schema_v": 1,
+  "schema_ref": "schemas/teacher_policy.schema.json",
+  "updated_at": "2026-05-08",
+  "decision_refs": ["slm-learning-197", "slm-learning-198", "slm-learning-199"],
+  "policy": {
+    "principle": "Claude Opus is THE teacher (gold labels, hard reasoning, judge). Open Qwen is comparator + bulk_labeler + inspector — not a teacher rival. Verifiers (tests/executors/contract checkers) are the strictest teacher of all because they produce objective truth.",
+    "kael_moat": "Kael competes on integration depth × speed × cost — NOT on benchmark parity with Opus. A 7-14B model will not match Opus on hard reasoning, and trying to is the wrong target. Kael wins by knowing GAD's planning surface cold, by emitting clean tool-actions, by escalating to Opus only when needed, and by being an order of magnitude faster + cheaper.",
+    "fallback_chain": "primary_teacher → fallback_teacher (Sonnet when Opus rate-limited) → bulk_labeler (Haiku for cheap volume; Qwen-Coder-32B for offline) → comparator (open-weight reproducibility row) → verifier (tests, always)"
+  },
+  "policies": [
+    {
+      "task_shape": "code_function_completion",
+      "primary_teacher": "claude-opus-4-5",
+      "fallback_teacher": "claude-sonnet-4-6",
+      "bulk_labeler": "qwen2.5-coder-32b-instruct",
+      "comparator": "qwen2.5-coder-7b-instruct",
+      "inspector": "qwen2.5-coder-7b-instruct",
+      "verifier": "humaneval+_test_suite",
+      "rationale": "Opus emits cleaner Python with fewer hallucinated APIs; tests provide objective truth.",
+      "cost_class": "premium",
+      "decision_refs": ["slm-learning-197"]
+    },
+    {
+      "task_shape": "code_repair",
+      "primary_teacher": "claude-opus-4-5",
+      "fallback_teacher": "claude-sonnet-4-6",
+      "bulk_labeler": "qwen2.5-coder-32b-instruct",
+      "comparator": "deepseek-r1-distill-qwen-32b",
+      "inspector": "qwen2.5-coder-7b-instruct",
+      "verifier": "test_suite_diff_runner",
+      "rationale": "Opus follows error traces and reproduces failure cases best; verifier is the project's actual test suite.",
+      "cost_class": "premium",
+      "decision_refs": ["slm-learning-197"]
+    },
+    {
+      "task_shape": "tool_action_json",
+      "primary_teacher": "claude-sonnet-4-6",
+      "fallback_teacher": "claude-haiku-4-5",
+      "bulk_labeler": "qwen2.5-coder-7b-instruct",
+      "comparator": "gpt-oss-20b",
+      "verifier": "json_schema_validator + contract_runner",
+      "rationale": "Tool-action emission rarely needs Opus-tier reasoning; Sonnet emits clean JSON cheaply. Schema validators are the truth.",
+      "cost_class": "standard",
+      "decision_refs": ["slm-learning-197", "slm-learning-103"]
+    },
+    {
+      "task_shape": "math_reasoning",
+      "primary_teacher": "claude-opus-4-5",
+      "fallback_teacher": "deepseek-r1-distill-qwen-32b",
+      "bulk_labeler": "claude-haiku-4-5",
+      "comparator": "qwen3-next-80b-a3b-instruct",
+      "verifier": "symbolic_solver + numeric_check",
+      "rationale": "Opus + R1 distill are the two strongest math reasoners we can route to.",
+      "cost_class": "premium"
+    },
+    {
+      "task_shape": "trajectory_completion",
+      "primary_teacher": "claude-opus-4-5",
+      "fallback_teacher": "claude-sonnet-4-6",
+      "bulk_labeler": "claude-haiku-4-5",
+      "comparator": "qwen3-next-80b-a3b-instruct",
+      "verifier": "trace_replay + game_state_invariants",
+      "rationale": "Multi-step game/agent trajectories need Opus's planning depth; Kael learns from corrected trajectories. Note Anthropic-output IP review required before training (per Kael-house scoping report).",
+      "cost_class": "premium",
+      "decision_refs": ["slm-learning-167", "slm-learning-186", "slm-learning-189"]
+    },
+    {
+      "task_shape": "bulk_paraphrase",
+      "primary_teacher": "claude-haiku-4-5",
+      "fallback_teacher": "qwen2.5-coder-7b-instruct",
+      "bulk_labeler": "claude-haiku-4-5",
+      "comparator": null,
+      "rationale": "Paraphrase quality is fungible; Haiku is the best cost/quality tradeoff. Augmentation requires variance per memory project_augmentation_requires_variance.md.",
+      "cost_class": "bulk",
+      "decision_refs": ["slm-learning-093"]
+    },
+    {
+      "task_shape": "chain_of_thought_synth",
+      "primary_teacher": "claude-opus-4-5",
+      "fallback_teacher": "deepseek-r1-distill-qwen-32b",
+      "bulk_labeler": "claude-sonnet-4-6",
+      "comparator": "openthoughts-114k_samples",
+      "verifier": "final_answer_check",
+      "rationale": "CoT trace quality is a teacher capability; Opus emits the strongest reasoning traces, R1-distill provides open-weight comparator.",
+      "cost_class": "premium"
+    },
+    {
+      "task_shape": "frontier_judge_panel",
+      "primary_teacher": "claude-opus-4-5",
+      "fallback_teacher": "gpt-5",
+      "bulk_labeler": null,
+      "comparator": "gemini-2.5-pro",
+      "rationale": "Cross-vendor judge panel: Opus + GPT-5 + Gemini disagreement signal flags ambiguous rows. Per slm-learning-103 frontier comparator row.",
+      "cost_class": "premium",
+      "decision_refs": ["slm-learning-103"]
+    },
+    {
+      "task_shape": "logit_inspection",
+      "primary_teacher": "qwen2.5-coder-7b-instruct",
+      "fallback_teacher": "qwen3-next-80b-a3b-instruct",
+      "comparator": null,
+      "rationale": "Inspection requires open weights; closed APIs cannot expose hidden states. Same-family with Kael backbone preferred.",
+      "cost_class": "free"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/model_family_registry.schema.json",
+  "title": "Model Family Registry Entry",
+  "description": "A model family slm-learning may train on, distill from, judge with, or compare against. Decision: slm-learning-198.",
+  "type": "object",
+  "required": ["id", "vendor", "license_class", "role"],
+  "properties": {
+    "id": { "type": "string", "description": "Slug (e.g. 'qwen2.5-coder-7b-instruct')" },
+    "name": { "type": "string" },
+    "vendor": {
+      "type": "string",
+      "enum": ["Anthropic", "OpenAI", "Google", "Meta", "Alibaba", "DeepSeek", "Mistral", "Microsoft", "NVIDIA", "Cohere", "AI21", "Allen AI", "Zhipu", "01.AI", "Stability", "xAI", "BAAI", "Other"]
+    },
+    "license_class": {
+      "type": "string",
+      "enum": [
+        "open_apache_2_0", "open_mit", "open_cc_by", "open_other_permissive",
+        "open_research_only", "open_community_license",
+        "closed_api", "closed_research"
+      ]
+    },
+    "roles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "teacher", "frontier_judge", "premium_judge",
+          "bulk_labeler", "paraphrase_labeler",
+          "backbone", "fine_tune_target",
+          "comparator", "frontier_comparator", "open_weight_comparator",
+          "inspector", "research_probe",
+          "verifier"
+        ]
+      }
+    },
+    "sizes_b": {
+      "type": "array",
+      "items": { "type": "number" },
+      "description": "Total params (B) per available size; for MoE include total + active"
+    },
+    "moe_active_b": { "type": "number", "description": "Active params per token if MoE" },
+    "context_window": { "type": "integer" },
+    "hf_id": { "type": "string", "description": "HF Hub repo id" },
+    "openrouter_id": { "type": "string" },
+    "anthropic_model_id": { "type": "string" },
+    "openai_model_id": { "type": "string" },
+    "google_model_id": { "type": "string" },
+    "vllm_supported": { "type": "boolean" },
+    "approx_vram_gb_inference_bf16": { "type": "number" },
+    "cost_per_mtok_input_usd": { "type": "number" },
+    "cost_per_mtok_output_usd": { "type": "number" },
+    "release_date": { "type": "string" },
+    "highlights": { "type": "array", "items": { "type": "string" } },
+    "our_usage": {
+      "type": "string",
+      "enum": ["active_backbone", "active_teacher", "active_judge", "active_labeler", "active_comparator", "considered", "deprecated", "untested"]
+    },
+    "decision_refs": { "type": "array", "items": { "type": "string" } },
+    "notes": { "type": "string" }
+  }
+}

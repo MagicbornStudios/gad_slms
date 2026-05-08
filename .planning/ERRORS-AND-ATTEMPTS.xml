@@ -21,4 +21,37 @@
     <reference>scripts/17_dpo_training.py</reference>
   </entry>
 
+
+  <entry id="subagent-committed-143mb-ocr-raw-2026-05-08" date="2026-05-08" phase="04" task="SL-T-04-scaling-ledger" status="open">
+    <summary>Haiku subagent committed 143MB OCR raw rows.jsonl, violating slm-learning-105 (data &gt;100MB to Modal volume not git); push rejected by GitHub LFS limit</summary>
+    <context>Built scaling ledger via haiku subagent. Subagent ran 'git add' broadly and the OCR variant prep output (data/processed/ocr-variants-2026-05-08/ocr_raw/rows.jsonl, 143MB of competitive-programming targets with &lt;think&gt; blocks) was already on disk from the earlier prepare_ocr_variants.py run. Subagent committed it.</context>
+    <failure>Two commits ad18643 + 733cfb3 had to be soft-reset; .gitignore added for OCR variants; clean re-commit as d072cbf. Cost: ~5 min wall + minor context spend; NO data loss but the trust cost matters because a non-canonical-repo team member could have pushed it through and hit a GitHub LFS bill.</failure>
+    <rule>Subagents that commit MUST be told the repo's data-residency policy explicitly OR be restricted to small file paths only. Add to subagent-dispatch checklist: large data goes to Modal volume per slm-learning-105; never commit files &gt;5MB without explicit authorization. .gitignore must list data/processed/, data/external/, and tmp/ unconditionally.</rule>
+  </entry>
+
+  <entry id="eval-judge-strip-killed-body-indent-2026-05-08" date="2026-05-08" phase="04" task="SL-T-04-eval-harness" status="open">
+    <summary>modal_app/eval_adapter.py _judge() used .strip() which killed leading 4-space body indent in HumanEval completions, deflating BASE eval scores by ~14pp</summary>
+    <context>Initial harness: code = m.group(1).strip() after code-fence regex. For HumanEval body-only completions like '    return False', .strip() removes the leading 4 spaces, making prefix-merge produce module-level statements instead of indented function body.</context>
+    <failure>7B base × HE chat reported as 64.6% (broken) → actually 81.7% (correct) after rstrip + skip-blank-leading-lines fix. ~14pp of the apparent OCR-LoRA regression was harness noise. Caught via failure taxonomy classifier showing 71% of LoRA failures in G_indentation_prefix_bug.</failure>
+    <rule>Code-fence stripping in eval judges must use rstrip() not strip(); never lose leading whitespace because Python depends on it. Add unit test: judge_strip_preserves_body_indent.</rule>
+    <reference>modal_app/eval_adapter.py</reference>
+    <reference>reports/diagnostics/ocr_lora_humaneval_failure_taxonomy.md</reference>
+  </entry>
+
+  <entry id="msys-pathconv-translates-modal-volume-paths-2026-05-08" date="2026-05-08" phase="04" task="SL-T-04-modal-cli" status="open">
+    <summary>Git Bash MSYS path translation rewrites /models/... to C:/Program Files/Git/models/... breaking Modal CLI volume paths on Windows</summary>
+    <context>Modal CLI on Windows via Git Bash. /models/runs/... arg gets MSYS-translated before reaching modal client because MSYS thinks any leading-slash arg is a Unix path.</context>
+    <failure>5 fast eval failures + ~/usr/bin/bash.05 wasted compute. Required env-var workaround in every modal run/volume-put invocation.</failure>
+    <rule>Set MSYS_NO_PATHCONV=1 in every Modal CLI invocation on Windows. Bake into a wrapper script (gad eval modal-fire) so future operators don't re-discover this. See .planning/cli/extensions.json for the planned wrapper.</rule>
+    <reference>modal_app/eval_adapter.py</reference>
+    <reference>.planning/cli/extensions.json</reference>
+  </entry>
+
+  <entry id="persist-path-no-slug-collision-2026-05-08" date="2026-05-08" phase="04" task="SL-T-04-eval-persist" status="open">
+    <summary>eval_adapter persist_run_id wrote all adapters to humaneval_chat_n164.json without adapter slug; second run overwrote first</summary>
+    <context>v2 of the persistence patch wrote /models/eval-runs/&lt;run_id&gt;/&lt;benchmark&gt;_&lt;mode&gt;_n&lt;N&gt;.json — no adapter_id in path. Multiple adapters writing to same persist_run_id collided.</context>
+    <failure>7B LoRA chat results overwrote 7B base chat full data on volume; recovered by re-firing 7B base with the slug fix. ~/usr/bin/bash.40 of redundant compute.</failure>
+    <rule>Persist paths must include EVERY dimension that varies across runs in the same run_id: benchmark, mode, base_model_slug, adapter_slug, n, seed. Test: two adapters with same benchmark+mode write to DIFFERENT files.</rule>
+    <reference>modal_app/eval_adapter.py</reference>
+  </entry>
 </errors-and-attempts>

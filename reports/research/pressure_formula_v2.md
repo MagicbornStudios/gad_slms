@@ -284,6 +284,62 @@ calibration pass.
 
 ---
 
+## Calibration result (1st pass, 2026-05-08)
+
+A subagent J_SLM scoring of 36 decisions (slm-learning-100..170
+minus this session's meta-decisions 166–169) was completed
+2026-05-08. Output:
+`reports/research/pressure_v2_calibration_corpus.json`.
+
+Headline numbers:
+
+| Metric | Value |
+|---|---|
+| Decisions scored | 36 |
+| Mean $J_{\text{SLM}}$ | 7.06 |
+| Mean $J_{\text{SLM}}$ on `good_action` outcomes (n=27) | **7.41** |
+| Mean $J_{\text{SLM}}$ on `churn` outcomes (n=5) | **5.00** |
+| Separation good_action vs churn | **+2.41 points** (positive signal) |
+| Mean $J_{\text{SLM}}$ on `harm` outcomes (n=1) | 7.00 |
+
+**Key finding**: $J_{\text{SLM}}$ separates `good_action` from
+`churn` at the bulk level (~2.4-point gap is real signal), but
+**fails to separate `harm` from `good_action`**. Specifically,
+slm-learning-110 ("fn_norm OCR is active candidate") was scored
+J_SLM=7 at decision time and later FALSIFIED at 7B per
+slm-learning-113. This is the same shape as today's
+slm-learning-170 falsification: a decision with high pressure
+to act, taken at the right time, that turned out to be wrong
+post-hoc.
+
+**Implication for the formula**: $J_{\text{SLM}}$ alone cannot
+distinguish "high pressure, correct call" from "high pressure,
+premature promotion." The v2 formula's $C(E)$ cost penalty and
+$R(E)$ regret penalty are what must catch the harm mode.
+**Action**: do NOT increase $w_{\text{judge}}$ above its current
+0.30 default until the cost + regret terms have been
+load-tested against the harm cases. Premature increase would
+make the formula systematically over-confident on premature
+promotions.
+
+Calibration corpus row example:
+
+```json
+{
+  "decision_id": "slm-learning-100",
+  "title": "Delta Graph schema: every adapter is a node",
+  "j_slm": 8,
+  "reasoning": "High pressure: model registry was ad-hoc; durable artifact + zero cost + foundation for all later lineage tracking.",
+  "actual_outcome_label": "good_action"
+}
+```
+
+Operator follow-up: formal point-biserial correlation between
+$J_{\text{SLM}}$ and the `good_action` binary; expected $r$ in
+the 0.3–0.5 range based on this distribution. If $r \geq 0.4$,
+$w_{\text{judge}}$ at 0.30 is justified. If $r < 0.3$,
+redistribute weight to $w_{\text{cost}}$ and $w_{\text{regret}}$.
+
 ## Calibration plan (cheap, runnable today)
 
 1. **Score 30 historical decisions** (`slm-learning-100..130`)

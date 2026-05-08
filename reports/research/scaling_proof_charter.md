@@ -335,7 +335,7 @@ metric is currently dominated by less-frameworked species. The
 hybrid Arm 4b experiment is the cleanest way to test whether our
 SLM-in-the-loop closes that gap.
 
-### Cost-backfill estimates (Q3 — token-count method)
+### Cost-backfill estimates (Q3 — token-count method, verified 2026-05-08)
 
 Per Q3 above, USD estimates derived from `total_tokens` ×
 estimated claude-cli pricing at run date. Two columns: lower
@@ -347,23 +347,47 @@ knowing which model claude-cli was using on each run date.
 Going forward, real cost logging is added to row-7 traces per
 Q3.
 
-| Species/version | Tokens | $ at $8/M (Sonnet) | $ at $30/M (Opus) | Composite | Hr |
-|---|---|---|---|---|---|
-| gad/v4 | 136,930 | $1.10 | $4.11 | 0.916 | n/a |
-| gad/v5 | 92,278 | $0.74 | $2.77 | 0.812 | 0.00 |
-| gad/v6 | 138,835 | $1.11 | $4.17 | 0.347 | 0.00 |
-| gad/v7 | 93,632 | $0.75 | $2.81 | 0.668 | 0.30 |
-| gad/v8 | 1,291 | $0.01 | $0.04 | 0.177 | 0.20 |
-| gad/v9 | 3,238 | $0.03 | $0.10 | null | 0.05 |
-| gad/v10 | 1,216 | $0.01 | $0.04 | null | 0.02 |
-| gad/v11 | 107,228 | $0.86 | $3.22 | null | n/a |
-| bare/v2 | 87,661 | $0.70 | $2.63 | 0.601 | 0.50 |
+All numbers below verified directly from each version's
+TRACE.json on 2026-05-08 (same source as composite +
+human_review). Tool-uses included to anchor budget-discipline
+analysis (the v8/v9/v10 runs were all cut short by tool-use
+limits, not token limits).
 
-**Best $/successful-task to date** (using composite ≥ 0.6 as
-"successful" floor): gad/v4 at ~$1.10–$4.11 (1 successful run).
-bare/v2 at ~$0.70–$2.63. Direct comparison: bare/v2 is **~36%
-cheaper** for a 0.601 composite. This is the cost baseline our
-hybrid Arm 4b must beat.
+| Species/version | Tokens | Tool uses | Wall (min) | $ at $8/M (Sonnet) | $ at $30/M (Opus) | Composite | Human-review | Status |
+|---|---|---|---|---|---|---|---|---|
+| gad/v4 | 136,930 | n/a | 38 | $1.10 | $4.11 | 0.916 | n/a | complete |
+| gad/v5 | 92,278 | 110 | 18 | $0.74 | $2.77 | 0.8123 | 0.00 | blank-screen gate-fail |
+| gad/v6 | 138,835 | 150 | 20 | $1.11 | $4.17 | 0.347 | 0.00 | blank-screen gate-fail |
+| gad/v7 | 93,632 | 137 | 24 | $0.75 | $2.81 | 0.668 | 0.30 | combat softlock |
+| gad/v8 | 1,291 | 62 | 16 | $0.010 | $0.039 | 0.177 | 0.20 | crafting broke game (low-token; aborted) |
+| gad/v9 | 3,238 | 81 | 14 | $0.026 | $0.097 | null | 0.05 | rate-limited at tool_uses=81 |
+| gad/v10 | 1,216 | 55 | 9 | $0.010 | $0.036 | null | 0.02 | API 529 overload at tool_uses=55 |
+| gad/v11 | 107,228 | 70 | 24 | $0.86 | $3.22 | null | null | unscored / incomplete trace |
+| bare/v2 | 87,661 | 110 | n/a | $0.70 | $2.63 | 0.601 | 0.50 | playable vertical slice |
+
+**Best $/playable-game to date** (using composite ≥ 0.6 + human-
+review > 0 as "ships a game" floor):
+
+| Run | Composite | Human-review | $ (Sonnet–Opus) | Notes |
+|---|---|---|---|---|
+| **bare/v2** | **0.601** | **0.50** | **$0.70–$2.63** | playable, framework-light |
+| gad/v4 | 0.916 | n/a | $1.10–$4.11 | composite-only, no human-playability score |
+| gad/v7 | 0.668 | 0.30 | $0.75–$2.81 | partly playable, combat softlock |
+
+**Direct comparison.** Within paired benchmark cost, bare/v2
+beats gad/v7 on human-review playability (0.50 vs 0.30) at
+similar cost. The hybrid Arm 4b experiment (claude-cli + GAD +
+our adapter via vLLM) needs to beat bare/v2's
+$0.70–$2.63-per-playable-vertical-slice baseline OR gad/v7's
+0.30-playability-at-$0.75–$2.81 to be a real win.
+
+**v8/v9/v10 are tool-use-limited, not token-limited.** All three
+spent <$0.10 on tokens but burned tool-use quota on planning XML
+authoring before reaching scene implementation. This is the
+"GAD framework overhead consumes budget" failure mode the
+charter Q1 hybrid arm is designed to test against — an adapter
+that cuts per-task tokens has direct row-7 leverage on these
+budget-constrained runs.
 
 **Source-of-truth note (corrected 2026-05-08):** the
 authoritative composite + human-review score lives in each

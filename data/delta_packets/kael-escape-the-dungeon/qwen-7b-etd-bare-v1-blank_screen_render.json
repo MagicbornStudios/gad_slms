@@ -1,0 +1,43 @@
+{
+  "packet_id": "qwen-7b-etd-bare-v1-blank_screen_render",
+  "root_context_id": "qwen-7b-escape-the-dungeon-trajectory",
+  "base_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "task_shape": "decision_correction",
+  "skill_id": "kael_game_implementation_step",
+  "pressure_source": "tool_action_failure",
+  "failure_type": "blank_screen_render",
+  "base_output_ref": "sha256:0327a7471d86dfe4",
+  "minimal_prompt": "You are building an escape-the-dungeon browser game in TypeScript with KAPLAY. Your task is to implement the next phase or fix the current failing phase.\n\nPRIOR PROGRESS:\nPrior steps: 7 phases completed, 21 tasks completed. Requirement coverage so far: fully_met=0, partially_met=0, not_met=12, coverage_ratio=0.0.\n\nFAILURE EVIDENCE:\nGate notes: Build exists but renders blank screen on file:// open. Same ES module issue as GAD version.\n\nHuman review: Main menu renders with New Game button visible. Cannot start game — clicking New Game does not progress. Broken build. Score 0.10 for rendering menu only.",
+  "correction": "MANUAL_REVIEW_REQUIRED — see retain peer at bare/v2",
+  "tests": [],
+  "retain_tags": [
+    "kael-escape-the-dungeon",
+    "failure_blank_screen_render",
+    "species_bare"
+  ],
+  "target_contract": "game_implementation_step",
+  "provenance": {
+    "captured_at": "2026-05-08T23:08:40.538103Z",
+    "from_run_id": "bare/v1",
+    "captured_by": "build_kael_house_dataset.py",
+    "review_status": "unreviewed"
+  },
+  "token_budget": 4096,
+  "schema_v": 1,
+  "peer_hint": "bare/v2",
+  "failure_evidence": "Gate notes: Build exists but renders blank screen on file:// open. Same ES module issue as GAD version.\n\nHuman review: Main menu renders with New Game button visible. Cannot start game — clicking New Game does not progress. Broken build. Score 0.10 for rendering menu only.",
+  "trajectory_context": "game_loop_recovery",
+  "trace_schema_version_source": 3,
+  "requirements_version": null,
+  "trace_composite": 0.198,
+  "trace_human_review": 0.1,
+  "decision_refs": [
+    "slm-learning-167",
+    "slm-learning-186",
+    "slm-learning-189",
+    "slm-learning-191",
+    "slm-learning-193",
+    "slm-learning-197",
+    "slm-learning-198"
+  ]
+}

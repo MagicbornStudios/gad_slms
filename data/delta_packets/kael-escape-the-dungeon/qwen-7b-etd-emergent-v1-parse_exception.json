@@ -1,0 +1,43 @@
+{
+  "packet_id": "qwen-7b-etd-emergent-v1-parse_exception",
+  "root_context_id": "qwen-7b-escape-the-dungeon-trajectory",
+  "base_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "task_shape": "decision_correction",
+  "skill_id": "kael_game_implementation_step",
+  "pressure_source": "tool_action_failure",
+  "failure_type": "parse_exception",
+  "base_output_ref": "sha256:f3e1de3766ca3a7a",
+  "minimal_prompt": "You are building an escape-the-dungeon browser game in TypeScript with KAPLAY. Your task is to implement the next phase or fix the current failing phase.\n\nPRIOR PROGRESS:\nPrior steps: 7 phases completed, 0 tasks completed. Requirement coverage so far: fully_met=2, partially_met=1, not_met=9, coverage_ratio=0.208.\n\nFAILURE EVIDENCE:\nGate notes: Main menu renders, recognized saved game. But entering game gives error: 'Styled text error: unclosed tags START'. Cannot progress past main menu.\n\nHuman review: Main menu renders and recognizes saved game state (improvement over bare v1). But game crashes with 'Styled text error: unclosed tags START' when entering gameplay. Cannot play. Score 0.10: better than blank screen, menu works, but game is broken.",
+  "correction": "MANUAL_REVIEW_REQUIRED — see retain peer at bare/v2",
+  "tests": [],
+  "retain_tags": [
+    "kael-escape-the-dungeon",
+    "failure_parse_exception",
+    "species_emergent"
+  ],
+  "target_contract": "game_implementation_step",
+  "provenance": {
+    "captured_at": "2026-05-08T23:08:40.659199Z",
+    "from_run_id": "emergent/v1",
+    "captured_by": "build_kael_house_dataset.py",
+    "review_status": "unreviewed"
+  },
+  "token_budget": 4096,
+  "schema_v": 1,
+  "peer_hint": "bare/v2",
+  "failure_evidence": "Gate notes: Main menu renders, recognized saved game. But entering game gives error: 'Styled text error: unclosed tags START'. Cannot progress past main menu.\n\nHuman review: Main menu renders and recognizes saved game state (improvement over bare v1). But game crashes with 'Styled text error: unclosed tags START' when entering gameplay. Cannot play. Score 0.10: better than blank screen, menu works, but game is broken.",
+  "trajectory_context": "game_loop_recovery",
+  "trace_schema_version_source": 3,
+  "requirements_version": null,
+  "trace_composite": 0.303,
+  "trace_human_review": 0.1,
+  "decision_refs": [
+    "slm-learning-167",
+    "slm-learning-186",
+    "slm-learning-189",
+    "slm-learning-191",
+    "slm-learning-193",
+    "slm-learning-197",
+    "slm-learning-198"
+  ]
+}

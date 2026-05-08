@@ -1,0 +1,21 @@
+{
+  "root_context_id": "qwen-7b-escape-the-dungeon-trajectory",
+  "project": "slm-learning",
+  "benchmark": "kael-escape-the-dungeon",
+  "model_family": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "target_contract": "game_implementation_step",
+  "shared_instruction": "You are building an escape-the-dungeon browser game in TypeScript with KAPLAY. Your task is to implement one phase or fix one failing phase. Read the current state (test failures, phase requirements, or user feedback), then emit complete, working code that makes the phase pass verification. Emit either a full file (```typescript ... ```) or a focused patch with diff context.",
+  "tokenizer_family": "qwen2",
+  "schema_version": 1,
+  "allowed_tools": ["code_generation", "file_write", "test_execution"],
+  "eval_refs": ["escape-the-dungeon", "kael-escape-the-dungeon"],
+  "decision_refs": [
+    "slm-learning-167",
+    "slm-learning-186",
+    "slm-learning-189",
+    "slm-learning-191",
+    "slm-learning-193",
+    "slm-learning-197",
+    "slm-learning-198"
+  ]
+}

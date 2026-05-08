@@ -1,0 +1,43 @@
+{
+  "packet_id": "qwen-7b-etd-bare-v3-content_missing",
+  "root_context_id": "qwen-7b-escape-the-dungeon-trajectory",
+  "base_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "task_shape": "decision_correction",
+  "skill_id": "kael_game_implementation_step",
+  "pressure_source": "operator_curated",
+  "failure_type": "content_missing",
+  "base_output_ref": "sha256:71bc4f25b25211ce",
+  "minimal_prompt": "You are building an escape-the-dungeon browser game in TypeScript with KAPLAY. Your task is to implement the next phase or fix the current failing phase.\n\nPRIOR PROGRESS:\nPrior steps: 0 phases completed, 0 tasks completed. Requirement coverage so far: fully_met=8, partially_met=3, not_met=1, coverage_ratio=0.792.\n\nFAILURE EVIDENCE:\nGate notes: G1 (game-loop) partial — playable but no floor progression after boss. G2 (spell-crafting) not clearly implemented. G3 (ui-quality) BEST of round 3 — best UI/UX by far.\n\nHuman review: Best UI/UX of all eval runs by far. Most enjoyable and playable. Functional game loop with combat and dialogue. Missing: floor progression after boss (can grind same floor), no clear spell crafting path. Regressed on commit discipline under pressure (1 giant commit vs v2's 6). Score 0.70: most enjoyable game across all experiments.",
+  "correction": "MANUAL_REVIEW_REQUIRED — see retain peer at bare/v5",
+  "tests": [],
+  "retain_tags": [
+    "kael-escape-the-dungeon",
+    "failure_content_missing",
+    "species_bare"
+  ],
+  "target_contract": "game_implementation_step",
+  "provenance": {
+    "captured_at": "2026-05-08T23:08:40.604512Z",
+    "from_run_id": "bare/v3",
+    "captured_by": "build_kael_house_dataset.py",
+    "review_status": "unreviewed"
+  },
+  "token_budget": 4096,
+  "schema_v": 1,
+  "peer_hint": "bare/v5",
+  "failure_evidence": "Gate notes: G1 (game-loop) partial — playable but no floor progression after boss. G2 (spell-crafting) not clearly implemented. G3 (ui-quality) BEST of round 3 — best UI/UX by far.\n\nHuman review: Best UI/UX of all eval runs by far. Most enjoyable and playable. Functional game loop with combat and dialogue. Missing: floor progression after boss (can grind same floor), no clear spell crafting path. Regressed on commit discipline under pressure (1 giant commit vs v2's 6). Score 0.70: most enjoyable game across all experiments.",
+  "trajectory_context": "game_loop_recovery",
+  "trace_schema_version_source": 3,
+  "requirements_version": "v3",
+  "trace_composite": 0.526,
+  "trace_human_review": 0.7,
+  "decision_refs": [
+    "slm-learning-167",
+    "slm-learning-186",
+    "slm-learning-189",
+    "slm-learning-191",
+    "slm-learning-193",
+    "slm-learning-197",
+    "slm-learning-198"
+  ]
+}

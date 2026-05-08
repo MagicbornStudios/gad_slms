@@ -54,4 +54,11 @@
     <rule>Persist paths must include EVERY dimension that varies across runs in the same run_id: benchmark, mode, base_model_slug, adapter_slug, n, seed. Test: two adapters with same benchmark+mode write to DIFFERENT files.</rule>
     <reference>modal_app/eval_adapter.py</reference>
   </entry>
+
+  <entry id="refactor-introduced-modal-import-bug-2026-05-08" date="2026-05-08" status="open">
+    <summary>Refactor wave 1 missed Modal runtime: train_morphism.py needed add_local_python_source</summary>
+    <context>Refactor wave 1 (commit f8bd6bb) extracted morphism layers + insertion helper into modal_app/morphism_layers.py + modal_app/morphism_insertion.py. train_morphism.py + eval_morphism.py + local_init_smoke_test.py updated to import from the new modules. Local smoke test PASSED bit-identical for all 3 variants. But on Modal, train_morphism.py raised ModuleNotFoundError: No module named 'modal_app' because the image config did not include .add_local_python_source('modal_app') — eval_morphism.py already had it (which is why the eval path would have worked). Two Variant C arms fired with PYTHONIOENCODING=utf-8 set, exited fast with the import error.</context>
+    <failure>Local smoke test verifies LOCAL python imports + bit-identical layer construction. It does NOT verify that the refactored imports survive the Modal package boundary. Cost: ~2 min compute charged to start failed containers.</failure>
+    <rule>Whenever a Modal app file imports from a sibling module in modal_app/, the @app.function image MUST have .add_local_python_source('modal_app') OR the imports must be inlined OR done inside the function via deferred-import. Add a Modal-runtime check to the post-refactor smoke battery: a tiny @app.function that just does the import + returns 'OK', fired before refactor PRs land.</rule>
+  </entry>
 </errors-and-attempts>

@@ -1,0 +1,43 @@
+{
+  "packet_id": "qwen-7b-etd-gad-v2-budget_exhaustion",
+  "root_context_id": "qwen-7b-escape-the-dungeon-trajectory",
+  "base_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "task_shape": "decision_correction",
+  "skill_id": "kael_game_implementation_step",
+  "pressure_source": "recurring_error",
+  "failure_type": "budget_exhaustion",
+  "base_output_ref": "sha256:4823c78819f4632f",
+  "minimal_prompt": "You are building an escape-the-dungeon browser game in TypeScript with KAPLAY. Your task is to implement the next phase or fix the current failing phase.\n\nPRIOR PROGRESS:\nPrior steps: 0 phases completed, 34 tasks completed.\n\nFAILURE EVIDENCE:\nNo evidence captured in trace; manual review required.",
+  "correction": "MANUAL_REVIEW_REQUIRED — see retain peer at gad/v4",
+  "tests": [],
+  "retain_tags": [
+    "kael-escape-the-dungeon",
+    "failure_budget_exhaustion",
+    "species_gad"
+  ],
+  "target_contract": "game_implementation_step",
+  "provenance": {
+    "captured_at": "2026-05-08T23:08:40.740198Z",
+    "from_run_id": "gad/v2",
+    "captured_by": "build_kael_house_dataset.py",
+    "review_status": "unreviewed"
+  },
+  "token_budget": 4096,
+  "schema_v": 1,
+  "peer_hint": "gad/v4",
+  "failure_evidence": "No evidence captured in trace; manual review required.",
+  "trajectory_context": "game_loop_recovery",
+  "trace_schema_version_source": null,
+  "requirements_version": null,
+  "trace_composite": 0.28485294117647053,
+  "trace_human_review": null,
+  "decision_refs": [
+    "slm-learning-167",
+    "slm-learning-186",
+    "slm-learning-189",
+    "slm-learning-191",
+    "slm-learning-193",
+    "slm-learning-197",
+    "slm-learning-198"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "packet_id": "qwen-7b-etd-gad-v7-game_loop_stuck",
+  "root_context_id": "qwen-7b-escape-the-dungeon-trajectory",
+  "base_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "task_shape": "decision_correction",
+  "skill_id": "kael_game_implementation_step",
+  "pressure_source": "operator_curated",
+  "failure_type": "game_loop_stuck",
+  "base_output_ref": "sha256:25ead7d93b8a9b5e",
+  "minimal_prompt": "You are building an escape-the-dungeon browser game in TypeScript with KAPLAY. Your task is to implement the next phase or fix the current failing phase.\n\nPRIOR PROGRESS:\nPrior steps: 9 phases completed, 17 tasks completed. Requirement coverage so far: fully_met=7, partially_met=3, not_met=2, coverage_ratio=0.708.\n\nFAILURE EVIDENCE:\nGate notes: Game renders, title screen works, combat works. But game loop breaks — after combat, player is stuck with no route back to room navigation.\n\nHuman review: Game renders, better UI/layout than other evals. But game loop is broken — after combat, player gets stuck with no navigation. Cannot progress past first encounter. UI is bland but structured. Has fallback data (good defensive coding). Score 0.30: renders and partially playable but broken core loop.",
+  "correction": "MANUAL_REVIEW_REQUIRED — see retain peer at bare/v2",
+  "tests": [],
+  "retain_tags": [
+    "kael-escape-the-dungeon",
+    "failure_game_loop_stuck",
+    "species_gad"
+  ],
+  "target_contract": "game_implementation_step",
+  "provenance": {
+    "captured_at": "2026-05-08T23:08:40.854416Z",
+    "from_run_id": "gad/v7",
+    "captured_by": "build_kael_house_dataset.py",
+    "review_status": "unreviewed"
+  },
+  "token_budget": 4096,
+  "schema_v": 1,
+  "peer_hint": "bare/v2",
+  "failure_evidence": "Gate notes: Game renders, title screen works, combat works. But game loop breaks — after combat, player is stuck with no route back to room navigation.\n\nHuman review: Game renders, better UI/layout than other evals. But game loop is broken — after combat, player gets stuck with no navigation. Cannot progress past first encounter. UI is bland but structured. Has fallback data (good defensive coding). Score 0.30: renders and partially playable but broken core loop.",
+  "trajectory_context": "game_loop_recovery",
+  "trace_schema_version_source": 3,
+  "requirements_version": null,
+  "trace_composite": 0.668,
+  "trace_human_review": 0.3,
+  "decision_refs": [
+    "slm-learning-167",
+    "slm-learning-186",
+    "slm-learning-189",
+    "slm-learning-191",
+    "slm-learning-193",
+    "slm-learning-197",
+    "slm-learning-198"
+  ]
+}

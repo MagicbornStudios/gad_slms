@@ -1,0 +1,43 @@
+{
+  "packet_id": "qwen-7b-etd-emergent-v2-game_loop_stuck",
+  "root_context_id": "qwen-7b-escape-the-dungeon-trajectory",
+  "base_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "task_shape": "decision_correction",
+  "skill_id": "kael_game_implementation_step",
+  "pressure_source": "operator_curated",
+  "failure_type": "game_loop_stuck",
+  "base_output_ref": "sha256:37adcd06292ef329",
+  "minimal_prompt": "You are building an escape-the-dungeon browser game in TypeScript with KAPLAY. Your task is to implement the next phase or fix the current failing phase.\n\nPRIOR PROGRESS:\nPrior steps: 2 phases completed, 0 tasks completed. Requirement coverage so far: fully_met=6, partially_met=4, not_met=2, coverage_ratio=0.667.\n\nFAILURE EVIDENCE:\nGate notes: G1 (game-loop) partial — playable but no floor progression. G2 (spell-crafting) MET — forge added and functional, has authored content. G3 (ui-quality) medium — better than GAD, worse than bare v3.\n\nHuman review: Solid crafting system — forge functional with more authored content than other runs. Playable but no floor progression after boss. No way to train or test crafted spells. Maintained 2 phase commits even under rate limit pressure (the only condition that did). UI is medium quality — better than GAD v8, worse than bare v3. Score 0.50: most disciplined under pressure with functional crafting.",
+  "correction": "MANUAL_REVIEW_REQUIRED — see retain peer at bare/v2",
+  "tests": [],
+  "retain_tags": [
+    "kael-escape-the-dungeon",
+    "failure_game_loop_stuck",
+    "species_emergent"
+  ],
+  "target_contract": "game_implementation_step",
+  "provenance": {
+    "captured_at": "2026-05-08T23:08:40.698721Z",
+    "from_run_id": "emergent/v2",
+    "captured_by": "build_kael_house_dataset.py",
+    "review_status": "unreviewed"
+  },
+  "token_budget": 4096,
+  "schema_v": 1,
+  "peer_hint": "bare/v2",
+  "failure_evidence": "Gate notes: G1 (game-loop) partial — playable but no floor progression. G2 (spell-crafting) MET — forge added and functional, has authored content. G3 (ui-quality) medium — better than GAD, worse than bare v3.\n\nHuman review: Solid crafting system — forge functional with more authored content than other runs. Playable but no floor progression after boss. No way to train or test crafted spells. Maintained 2 phase commits even under rate limit pressure (the only condition that did). UI is medium quality — better than GAD v8, worse than bare v3. Score 0.50: most disciplined under pressure with functional crafting.",
+  "trajectory_context": "game_loop_recovery",
+  "trace_schema_version_source": 3,
+  "requirements_version": "v3",
+  "trace_composite": 0.478,
+  "trace_human_review": 0.5,
+  "decision_refs": [
+    "slm-learning-167",
+    "slm-learning-186",
+    "slm-learning-189",
+    "slm-learning-191",
+    "slm-learning-193",
+    "slm-learning-197",
+    "slm-learning-198"
+  ]
+}

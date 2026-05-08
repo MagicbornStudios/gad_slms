@@ -1,0 +1,43 @@
+{
+  "packet_id": "qwen-7b-etd-gad-v6-blank_screen_render",
+  "root_context_id": "qwen-7b-escape-the-dungeon-trajectory",
+  "base_model": "Qwen/Qwen2.5-Coder-7B-Instruct",
+  "task_shape": "decision_correction",
+  "skill_id": "kael_game_implementation_step",
+  "pressure_source": "tool_action_failure",
+  "failure_type": "blank_screen_render",
+  "base_output_ref": "sha256:596d11d71f841692",
+  "minimal_prompt": "You are building an escape-the-dungeon browser game in TypeScript with KAPLAY. Your task is to implement the next phase or fix the current failing phase.\n\nPRIOR PROGRESS:\nPrior steps: 8 phases completed, 13 tasks completed. Requirement coverage so far: fully_met=0, partially_met=0, not_met=12, coverage_ratio=0.0.\n\nFAILURE EVIDENCE:\nGate notes: Build exists but renders blank screen on file:// open. ES module + KAPLAY canvas requires web server.\n\nHuman review: Blank screen on file:// open. KAPLAY canvas game with ES module script requires web server. Gate criterion failed. Same failure mode as v5.",
+  "correction": "MANUAL_REVIEW_REQUIRED — see retain peer at bare/v2",
+  "tests": [],
+  "retain_tags": [
+    "kael-escape-the-dungeon",
+    "failure_blank_screen_render",
+    "species_gad"
+  ],
+  "target_contract": "game_implementation_step",
+  "provenance": {
+    "captured_at": "2026-05-08T23:08:40.820423Z",
+    "from_run_id": "gad/v6",
+    "captured_by": "build_kael_house_dataset.py",
+    "review_status": "unreviewed"
+  },
+  "token_budget": 4096,
+  "schema_v": 1,
+  "peer_hint": "bare/v2",
+  "failure_evidence": "Gate notes: Build exists but renders blank screen on file:// open. ES module + KAPLAY canvas requires web server.\n\nHuman review: Blank screen on file:// open. KAPLAY canvas game with ES module script requires web server. Gate criterion failed. Same failure mode as v5.",
+  "trajectory_context": "game_loop_recovery",
+  "trace_schema_version_source": 3,
+  "requirements_version": null,
+  "trace_composite": 0.347,
+  "trace_human_review": 0.0,
+  "decision_refs": [
+    "slm-learning-167",
+    "slm-learning-186",
+    "slm-learning-189",
+    "slm-learning-191",
+    "slm-learning-193",
+    "slm-learning-197",
+    "slm-learning-198"
+  ]
+}

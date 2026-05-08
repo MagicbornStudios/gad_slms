@@ -1,0 +1,27 @@
+{
+  "retain_bank_id": "kael-escape-the-dungeon",
+  "ts": "2026-05-08T23:08:40.946094Z",
+  "source_root": "C:/Users/benja/Documents/custom_portfolio/vendor/get-anything-done/evals/escape-the-dungeon",
+  "source_traces": [
+    "bare/v2",
+    "bare/v3",
+    "bare/v5",
+    "emergent/v4"
+  ],
+  "n_retain_rows": 4,
+  "tags": [
+    "kael-escape-the-dungeon",
+    "retain_positive",
+    "trajectory_step"
+  ],
+  "decision_refs": [
+    "slm-learning-167",
+    "slm-learning-186",
+    "slm-learning-189",
+    "slm-learning-191",
+    "slm-learning-193",
+    "slm-learning-197",
+    "slm-learning-198"
+  ],
+  "schema_v": 1
+}

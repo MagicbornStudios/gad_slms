@@ -1,0 +1,32 @@
+{
+  "run_id": "lora-3b-hard-retain-70-30-2026-05-08",
+  "exp_id": "EXP-3b-ratio-sweep-arm-c",
+  "purpose": "3B retain-ratio sweep arm C (70/30). 3B + LoRA r=16 on consolidation mix with 70% hard ratio (27 hard + 12 retain = 39 rows; actual 0.692). Per slm-learning-178/183/187. Pass: clears 3B base 83.5/73.2.",
+  "base_model": "Qwen/Qwen2.5-Coder-3B-Instruct",
+  "dataset_volume_path": "/data/processed/3b-consolidation-mix-70-30-2026-05-08/rows.jsonl",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "target",
+  "max_length": 1024,
+  "lora": {
+    "r": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+  },
+  "training": {
+    "epochs": 3,
+    "lr": 2e-4,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "seed": 42,
+    "logging_steps": 5
+  },
+  "gpu": "A10G",
+  "timeout_seconds": 7200,
+  "hub_repo": null,
+  "decision_refs": ["slm-learning-178", "slm-learning-183", "slm-learning-187"]
+}

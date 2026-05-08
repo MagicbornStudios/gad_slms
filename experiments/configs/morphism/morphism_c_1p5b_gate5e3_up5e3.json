@@ -1,0 +1,48 @@
+{
+  "run_id": "morphism-c-1p5b-gate5e3-up5e3-2026-05-08",
+  "exp_id": "EXP-1p5b-variant-c-tuned-arm-a",
+  "purpose": "Variant C tuned arm A (gate=5e-3, up_scale=5e-3). Per slm-learning-184: 1e-3 was inert; 1e-2 was noisy. Sweet spot test at 5e-3. Layer 21 (~75% depth, position-sensitive per slm-learning-175). Trained on 1.5B-hard+retain-mix (slm-learning-173). Pass: clears 1.5B base on HE/MBPP, OR clean falsification (init agreement < threshold or no lift after 3 epochs).",
+  "base_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "dataset_volume_path": "/data/processed/1p5b-retain-mix-30-70-2026-05-08/rows.jsonl",
+  "system_prompt": "You are a coding assistant. Solve the problem in clean Python.",
+  "instruction_field": "input",
+  "response_field": "target",
+  "max_length": 1024,
+  "morphism": {
+    "variant": "C_gated_residual",
+    "insert_after_layer": 21,
+    "bottleneck_size": 384,
+    "gate_init": 0.005,
+    "up_scale": 0.005,
+    "init_check": {
+      "min_agreement": 0.99,
+      "max_new_tokens": 16,
+      "prompts": [
+        "def hello():",
+        "import math\nfrom typing import List",
+        "def fibonacci(n: int) -> int:",
+        "class Stack:",
+        "for i in range(10):",
+        "def is_prime(n):",
+        "x = [1, 2, 3]",
+        "def reverse_string(s: str) -> str:"
+      ]
+    }
+  },
+  "training": {
+    "epochs": 3,
+    "lr": 2e-4,
+    "batch_size": 4,
+    "grad_accum": 4,
+    "warmup_ratio": 0.05,
+    "bf16": true,
+    "gradient_checkpointing": false,
+    "seed": 42,
+    "logging_steps": 5,
+    "max_grad_norm": 1.0
+  },
+  "gpu": "A10G",
+  "timeout_seconds": 7200,
+  "hub_repo": null,
+  "decision_refs": ["slm-learning-172", "slm-learning-173", "slm-learning-175", "slm-learning-176", "slm-learning-181", "slm-learning-184", "slm-learning-192"]
+}

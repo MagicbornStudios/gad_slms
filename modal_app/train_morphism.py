@@ -44,6 +44,7 @@ image = (
         "huggingface_hub>=0.30",
         "pyarrow",
     )
+    .add_local_python_source("modal_app")
 )
 
 data_volume = modal.Volume.from_name("slm-data", create_if_missing=True)

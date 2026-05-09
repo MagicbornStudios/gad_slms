@@ -1045,4 +1045,19 @@
     <summary>GAD Gateway is THE next infrastructure priority; gates decisions 214-217 + 207 + 205</summary>
   </decision>
 
+  <decision id="slm-learning-209">
+    <title>Project-level proto-skill promotion MUST award project XP...</title>
+    <summary>Project-level proto-skill promotion MUST award project XP; framework promotion is a separate event</summary>
+  </decision>
+
+  <decision id="slm-learning-210">
+    <title>Scaling ladder extends to 14B / 32B / Qwen3-Next-80B-A3B;...</title>
+    <summary>Scaling ladder extends to 14B / 32B / Qwen3-Next-80B-A3B; 7B is NOT the ceiling</summary>
+  </decision>
+
+  <decision id="slm-learning-211">
+    <title>slm-learning is bidirectional with the framework — not a ...</title>
+    <summary>slm-learning is bidirectional with the framework — not a consumer; a producer of framework-level insights</summary>
+  </decision>
+
 </decisions>

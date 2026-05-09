@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/retain_bank.schema.json",
+  "title": "Retain Bank",
+  "description": "A curated set of golden (prompt, expected_output) pairs that the model must NOT regress on during fine-tuning. Retained via DPO negative anchors or supervised replay. One bank = one model × one purpose. Run validator_eval_id after every fine-tune pass; fail = rollback.",
+  "type": "object",
+  "required": [
+    "bank_id",
+    "model_target",
+    "purpose",
+    "rows",
+    "row_count"
+  ],
+  "properties": {
+    "bank_id": {
+      "type": "string",
+      "description": "Unique slug. Format: '<model_target_short>-<purpose>'. Example: 'qwen-1p5b-hard-failures', 'kael-7b-format-canonical'."
+    },
+    "model_target": {
+      "type": "string",
+      "description": "HF model ID or internal alias this bank is guarding. Example: 'Qwen/Qwen2.5-Coder-1.5B-Instruct' or 'kael-7b-v2'."
+    },
+    "purpose": {
+      "type": "string",
+      "enum": [
+        "hard_failures",
+        "behavior_anchor",
+        "format_canonical",
+        "domain_facts"
+      ],
+      "description": "'hard_failures' = behaviors the model has failed before that must not resurface; 'behavior_anchor' = personality/style invariants; 'format_canonical' = exact output format the ecosystem depends on; 'domain_facts' = factual claims the model must hold."
+    },
+    "rows": {
+      "type": "array",
+      "description": "The golden examples. Each row is a (prompt, expected_output) pair with optional provenance.",
+      "items": {
+        "type": "object",
+        "required": ["prompt", "expected_output"],
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "description": "Full system + user prompt to replay."
+          },
+          "expected_output": {
+            "type": "string",
+            "description": "The output the model must reproduce (or match semantically, per validator_eval_id definition)."
+          },
+          "evidence": {
+            "type": "string",
+            "description": "Optional: citation for why this row was added. Example: 'GLOBAL-E-08: agent fabricated attribution 2026-04-21'."
+          },
+          "source_dataset_id": {
+            "type": "string",
+            "description": "Optional: dataset_block.dataset_id this row was extracted from."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "row_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Must equal rows.length. Maintained by the curation pipeline."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_validated_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "default": null,
+      "description": "Timestamp of the most recent successful validator_eval_id pass."
+    },
+    "validator_eval_id": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "Eval ID that runs this bank as a regression suite post-fine-tune. Failure = rollback signal."
+    },
+    "license_class": {
+      "type": "string",
+      "enum": ["owned", "open", "restricted"],
+      "default": "owned",
+      "description": "'customer_private' rows do not belong in a retain bank — keep them in customer_soul adapters."
+    }
+  },
+  "examples": [
+    {
+      "bank_id": "qwen-1p5b-hard-failures",
+      "model_target": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+      "purpose": "hard_failures",
+      "rows": [
+        {
+          "prompt": "You are a GAD agent. Stamp task GLOBAL-T-80-04 as done with runtime codex-cli.",
+          "expected_output": "gad tasks stamp GLOBAL-T-80-04 --projectid global --status done --agent qwen-agent --runtime codex-cli",
+          "evidence": "GLOBAL-E-08: agent fabricated codex attribution without running gad runtime launch"
+        }
+      ],
+      "row_count": 1,
+      "created_at": "2026-05-09T00:00:00Z",
+      "last_validated_at": null,
+      "validator_eval_id": "retain-hard-failures-eval-v1",
+      "license_class": "owned"
+    }
+  ],
+  "additionalProperties": false
+}

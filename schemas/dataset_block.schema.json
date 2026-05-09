@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/dataset_block.schema.json",
+  "title": "Dataset Block",
+  "description": "Top-level metadata record for a named dataset unit in the GAD training tower. One block = one promotable dataset (train, eval, retain, or preference). Consumed by evolution_dataset_manifest to compose training runs.",
+  "type": "object",
+  "required": [
+    "dataset_id",
+    "layer",
+    "source",
+    "row_count",
+    "license_class",
+    "promotion_status",
+    "created_at"
+  ],
+  "properties": {
+    "dataset_id": {
+      "type": "string",
+      "description": "Stable slug. Kebab-case. Example: 'kael-sft-v1', 'tool-action-json-v1', 'gad-decision-handoff-v1'."
+    },
+    "layer": {
+      "type": "string",
+      "enum": [
+        "pretrain",
+        "domain",
+        "sft",
+        "reasoning",
+        "dpo",
+        "tool_action",
+        "agent_trace",
+        "delta_packet",
+        "retain",
+        "eval",
+        "customer_soul"
+      ],
+      "description": "Tower layer this dataset targets. Maps to training phase in the fine-tuning recipe."
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "gad_trace",
+        "opus_teacher",
+        "qwen_teacher",
+        "human",
+        "benchmark",
+        "customer",
+        "distilled"
+      ],
+      "description": "Primary production channel. 'gad_trace' = curated from .planning/.gad-log; 'opus_teacher' = Opus-generated SFT pairs; 'distilled' = smaller model distilling Opus/GPT-5-class output."
+    },
+    "task_shape": {
+      "type": "string",
+      "description": "Short slug describing the task type this dataset trains. Examples: 'planning', 'tool_call', 'preference_pair', 'hard_failure_correction'."
+    },
+    "row_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Number of training examples currently in the dataset."
+    },
+    "token_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Estimated total token count across all rows (prompt + completion). Optional until measured."
+    },
+    "license_class": {
+      "type": "string",
+      "enum": [
+        "owned",
+        "open",
+        "restricted",
+        "customer_private"
+      ],
+      "description": "'owned' = fully GAD-generated or operator-authored; 'open' = permissive-licensed public data; 'restricted' = open but non-commercial; 'customer_private' = tenant-scoped, never shared."
+    },
+    "quality_gate": {
+      "type": "string",
+      "description": "Human-readable pass criterion that must hold before promotion. Example: 'schema_valid >= 0.99 AND human_spot_check >= 50 rows'."
+    },
+    "evals": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Eval IDs (from the eval registry) that must pass before this dataset is promoted. Blocking.",
+      "default": []
+    },
+    "promotion_status": {
+      "type": "string",
+      "enum": [
+        "candidate",
+        "promoted",
+        "deprecated",
+        "frozen"
+      ],
+      "description": "'candidate' = under construction; 'promoted' = cleared all gates, in active recipe; 'deprecated' = superseded; 'frozen' = locked for eval reproducibility."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 creation timestamp."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 last-modified timestamp."
+    },
+    "parent_dataset_id": {
+      "type": ["string", "null"],
+      "description": "dataset_id of the dataset this was derived from. Null for ground-truth originals.",
+      "default": null
+    },
+    "producer_agent_id": {
+      "type": ["string", "null"],
+      "description": "Agent ID (from gad agent registry) that produced or curated this dataset.",
+      "default": null
+    },
+    "producer_runtime": {
+      "type": ["string", "null"],
+      "enum": ["claude-code", "codex-cli", "gemini-cli", "opencode", "human", null],
+      "description": "Runtime that ran the producing agent.",
+      "default": null
+    }
+  },
+  "examples": [
+    {
+      "dataset_id": "kael-sft-v1",
+      "layer": "sft",
+      "source": "opus_teacher",
+      "task_shape": "planning",
+      "row_count": 0,
+      "license_class": "owned",
+      "quality_gate": "schema_valid >= 0.99 AND human_spot_check >= 50 rows",
+      "evals": ["kael-sft-eval-v1"],
+      "promotion_status": "candidate",
+      "created_at": "2026-05-09T00:00:00Z",
+      "parent_dataset_id": null,
+      "producer_agent_id": null,
+      "producer_runtime": "claude-code"
+    }
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/preference_pair.schema.json",
+  "title": "Preference Pair",
+  "description": "DPO training record. One pair = one prompt + one picked response + one or more rejected responses. Matches the output shape of `gad feedback record` (shipped 2026-05-09). Human-validated pairs are worth 5-10x model-judged pairs — track the signal in human_validated.",
+  "type": "object",
+  "required": [
+    "pair_id",
+    "ts",
+    "question",
+    "picked"
+  ],
+  "properties": {
+    "pair_id": {
+      "type": "string",
+      "description": "Unique ID. Format: 'pref-<projectid>-<YYYYMMDD>-<seq>'. Example: 'pref-global-20260509-001'."
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the preference was recorded."
+    },
+    "projectid": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "gad project scope. Allows per-project DPO fine-tuning."
+    },
+    "turn_id": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "Turn identifier from the originating session, for trace linkage."
+    },
+    "question": {
+      "type": "string",
+      "description": "The prompt or user message the responses answer. Full text."
+    },
+    "picked": {
+      "type": "object",
+      "required": ["label", "index"],
+      "description": "The response chosen as preferred.",
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Display label shown to the human rater. Example: 'Response A'."
+        },
+        "index": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Zero-indexed position in the original candidate list."
+        },
+        "preview": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "First 200 chars of the response for quick audit."
+        },
+        "response_text": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Full response text. Include when dataset_block.row_count < 10k; omit and link by turn_id for large datasets."
+        }
+      },
+      "additionalProperties": false
+    },
+    "rejected": {
+      "type": "array",
+      "description": "All non-preferred responses. One or more.",
+      "default": [],
+      "items": {
+        "type": "object",
+        "required": ["label", "index"],
+        "properties": {
+          "label": { "type": "string" },
+          "index": { "type": "integer", "minimum": 0 },
+          "response_text": { "type": ["string", "null"], "default": null }
+        },
+        "additionalProperties": false
+      }
+    },
+    "reason": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "Free-text rationale from the human rater. High-value signal for curriculum design."
+    },
+    "fragment_content": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "The specific sub-fragment that drove the preference decision, if identified."
+    },
+    "agent_id": {
+      "type": ["string", "null"],
+      "default": null
+    },
+    "runtime": {
+      "type": ["string", "null"],
+      "enum": ["claude-code", "codex-cli", "gemini-cli", "opencode", "human", null],
+      "default": null
+    },
+    "session_id": {
+      "type": ["string", "null"],
+      "default": null
+    },
+    "model_at_capture": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "Model that generated the candidates. Example: 'claude-sonnet-4-6'."
+    },
+    "human_validated": {
+      "type": "boolean",
+      "default": false,
+      "description": "True = a human made this preference choice. False = model-judged (automated). Human-validated rows weigh more in DPO training."
+    },
+    "score_signal": {
+      "type": ["number", "null"],
+      "default": null,
+      "description": "Optional continuous reward signal [0, 1] if the rater provided a numeric score alongside the binary pick."
+    }
+  },
+  "examples": [
+    {
+      "pair_id": "pref-global-20260509-001",
+      "ts": "2026-05-09T10:15:00Z",
+      "projectid": "global",
+      "turn_id": "turn-a3f-019",
+      "question": "Stamp GLOBAL-T-173-20 as done with agent claude-code and runtime claude-code.",
+      "picked": {
+        "label": "Response A",
+        "index": 0,
+        "preview": "gad tasks stamp GLOBAL-T-173-20 --projectid global --status done",
+        "response_text": "gad tasks stamp GLOBAL-T-173-20 --projectid global --status done --agent claude-code --runtime claude-code --skill frontend-design"
+      },
+      "rejected": [
+        {
+          "label": "Response B",
+          "index": 1,
+          "response_text": "I'll stamp that task for you now."
+        }
+      ],
+      "reason": "Response B is narration, not the required CLI invocation.",
+      "human_validated": true,
+      "score_signal": null,
+      "model_at_capture": "claude-sonnet-4-6",
+      "runtime": "claude-code"
+    }
+  ],
+  "additionalProperties": false
+}

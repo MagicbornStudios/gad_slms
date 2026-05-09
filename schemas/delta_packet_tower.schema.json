@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/delta_packet_tower.schema.json",
+  "title": "Delta Packet (GAD Tower Layer 8)",
+  "description": "Captures a single agent action and its outcome, anchored to a context root. Tower Layer 8 variant — distinct from delta_packet.schema.json (slm model-correction packets). The context root supplies the shared prompt prefix; this packet supplies only the delta. High signal density: log correction-worthy divergences, not ambient telemetry.",
+  "type": "object",
+  "required": [
+    "packet_id",
+    "root_id",
+    "ts",
+    "input_summary",
+    "action_taken",
+    "outcome"
+  ],
+  "properties": {
+    "packet_id": {
+      "type": "string",
+      "description": "Unique ID for this packet. Format: '<agent>-<session_short>-<seq>'. Example: 'cc-a3f-042'."
+    },
+    "root_id": {
+      "type": "string",
+      "description": "ID of the context_root record this packet attaches to. Composes with root.shared_instruction at load time to form the full prompt."
+    },
+    "runtime_at_capture": {
+      "type": "string",
+      "enum": ["claude-code", "codex-cli", "gemini-cli", "opencode", "human"],
+      "description": "Runtime that produced action_taken."
+    },
+    "model_at_capture": {
+      "type": ["string", "null"],
+      "description": "Model slug active when the action was taken. Example: 'claude-sonnet-4-6'.",
+      "default": null
+    },
+    "agent_id_at_capture": {
+      "type": ["string", "null"],
+      "description": "Agent or worker ID from gad team registry, if dispatched.",
+      "default": null
+    },
+    "session_id": {
+      "type": ["string", "null"],
+      "description": "gad session ID for cross-referencing .planning/sessions/.",
+      "default": null
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the action was captured."
+    },
+    "input_summary": {
+      "type": "string",
+      "description": "Compressed description of what triggered the action. Not the full prompt — that lives in the context_root. One or two sentences max."
+    },
+    "action_taken": {
+      "type": "string",
+      "description": "What the agent did. Tool call, code edit, decision, message — captured verbatim or summarized depending on size."
+    },
+    "outcome": {
+      "type": "string",
+      "enum": ["success", "failure", "partial"],
+      "description": "'success' = operator accepted with no correction; 'failure' = correction required; 'partial' = partial correction applied."
+    },
+    "tokens_in": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "default": null
+    },
+    "tokens_out": {
+      "type": ["integer", "null"],
+      "minimum": 0,
+      "default": null
+    },
+    "cost_usd": {
+      "type": ["number", "null"],
+      "minimum": 0,
+      "default": null,
+      "description": "API cost in USD at time of capture."
+    },
+    "correction": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "The corrected output if outcome != success. Null for clean runs. This is the SFT target."
+    },
+    "correction_source": {
+      "type": ["string", "null"],
+      "enum": ["opus", "human", "qwen", "verifier", null],
+      "default": null,
+      "description": "Who or what authored the correction. 'verifier' = automated test harness."
+    },
+    "quality_label": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "Curator label applied during promotion pipeline. Examples: 'approved', 'rejected', 'MANUAL_REVIEW_REQUIRED'."
+    },
+    "project_scope": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "gad projectid this packet belongs to. 'global', 'slm-learning', 'magicborn', etc."
+    },
+    "task_shape": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "Task category slug matching dataset_block.task_shape."
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": [],
+      "description": "Free-form tags for filtering during curation. Examples: ['windows', 'tauri', 'test-repair']."
+    }
+  },
+  "examples": [
+    {
+      "packet_id": "cc-a3f-042",
+      "root_id": "root-global-kael-onboarding-001",
+      "runtime_at_capture": "claude-code",
+      "model_at_capture": "claude-sonnet-4-6",
+      "agent_id_at_capture": null,
+      "session_id": "ses-2026-05-09-001",
+      "ts": "2026-05-09T14:22:00Z",
+      "input_summary": "Operator asked agent to wire BYOK inline component into Kael chat stream.",
+      "action_taken": "Edited apps/desktop/src/components/kael/KaelFocusMode.tsx to render InlineByokRequest inside assistant-ui message stream.",
+      "outcome": "success",
+      "tokens_in": 8400,
+      "tokens_out": 620,
+      "cost_usd": 0.009,
+      "correction": null,
+      "correction_source": null,
+      "quality_label": "approved",
+      "project_scope": "global",
+      "task_shape": "tool_call",
+      "tags": ["byok", "kael", "inline-component"]
+    }
+  ],
+  "additionalProperties": false
+}

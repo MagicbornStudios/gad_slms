@@ -1,6 +1,10 @@
 torch>=2.2.0
 numpy>=1.24.0
 
+# Gateway backends (slm-learning-214..217)
+anthropic>=0.30.0       # Anthropic SDK — real _call_anthropic backend
+requests>=2.28.0        # HTTP calls for Modal vLLM + local vLLM endpoints
+
 # Stage 2.5+ TRL/PEFT fine-tune stack (decision slm-learning-013)
 transformers>=4.40.0
 datasets>=2.18.0

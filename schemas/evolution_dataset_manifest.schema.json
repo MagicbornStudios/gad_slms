@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/evolution_dataset_manifest.schema.json",
+  "title": "Evolution Dataset Manifest",
+  "description": "Declares which dataset_blocks feed a single evolution run, which models are targeted, and what the training recipe looks like. One manifest = one coherent fine-tuning campaign. Produced by the evolution pipeline (gad evolution evolve) before training begins. Glues dataset_block + retain_bank + preference_pair + agent_trace into a single auditable unit.",
+  "type": "object",
+  "required": [
+    "manifest_id",
+    "evolution_id",
+    "projectid",
+    "generated_at",
+    "dataset_blocks",
+    "target_models"
+  ],
+  "properties": {
+    "manifest_id": {
+      "type": "string",
+      "description": "Unique manifest ID. Format: 'evoman-<projectid>-<YYYYMMDD>-<seq>'. Example: 'evoman-global-20260509-001'."
+    },
+    "evolution_id": {
+      "type": "string",
+      "description": "ID of the gad evolution evolve session that produced this manifest. Links to .planning/phases/<phase>/evolution/ artifacts."
+    },
+    "projectid": {
+      "type": "string",
+      "description": "gad project scope. 'slm-learning' for training campaigns; 'global' when monorepo traces are the primary source."
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "dataset_blocks": {
+      "type": "array",
+      "minItems": 1,
+      "description": "All dataset_block entries participating in this evolution, with their role in the recipe.",
+      "items": {
+        "type": "object",
+        "required": ["dataset_id", "layer", "role"],
+        "properties": {
+          "dataset_id": {
+            "type": "string",
+            "description": "Matches dataset_block.dataset_id."
+          },
+          "layer": {
+            "type": "string",
+            "enum": [
+              "pretrain",
+              "domain",
+              "sft",
+              "reasoning",
+              "dpo",
+              "tool_action",
+              "agent_trace",
+              "delta_packet",
+              "retain",
+              "eval",
+              "customer_soul"
+            ]
+          },
+          "role": {
+            "type": "string",
+            "enum": ["train", "eval", "retain", "preference"],
+            "description": "'train' = SFT source; 'eval' = held-out evaluation; 'retain' = retain_bank replayed against; 'preference' = DPO pairs."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "target_models": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Models this evolution campaign produces or fine-tunes.",
+      "items": {
+        "type": "object",
+        "required": ["model_id", "base"],
+        "properties": {
+          "model_id": {
+            "type": "string",
+            "description": "Internal alias for the output model. Example: 'kael-1p5b-v2'."
+          },
+          "base": {
+            "type": "string",
+            "description": "HF base model ID. Example: 'Qwen/Qwen2.5-Coder-1.5B-Instruct'."
+          },
+          "lane": {
+            "type": "string",
+            "enum": ["1.5b", "3b", "7b", "14b", "32b", "72b", "frontier"],
+            "description": "Size lane. Determines which retain banks and eval suites apply."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "training_recipe": {
+      "type": "object",
+      "description": "Ordered pointers to which dataset_blocks fill each training slot.",
+      "properties": {
+        "sft_blocks": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "dataset_ids used in supervised fine-tuning phase.",
+          "default": []
+        },
+        "dpo_blocks": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "dataset_ids used in DPO preference-tuning phase.",
+          "default": []
+        },
+        "retain_blocks": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "retain_bank IDs replayed to prevent catastrophic forgetting.",
+          "default": []
+        },
+        "eval_gates": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Eval IDs that must all pass before the evolution is promoted.",
+          "default": []
+        }
+      },
+      "additionalProperties": false,
+      "default": {}
+    },
+    "expected_promotion_criteria": {
+      "type": "string",
+      "description": "Human-readable statement of what 'done' looks like for this evolution. Example: 'kael-1p5b-v2 scores >= 0.72 on kael-sft-eval-v1 AND all retain bank rows pass'."
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "Free-form notes on this manifest: experiments tried, risks, operator instructions."
+    }
+  },
+  "examples": [
+    {
+      "manifest_id": "evoman-global-20260509-001",
+      "evolution_id": "evo-global-2026-05-09",
+      "projectid": "slm-learning",
+      "generated_at": "2026-05-09T16:00:00Z",
+      "dataset_blocks": [
+        { "dataset_id": "kael-sft-v1", "layer": "sft", "role": "train" },
+        { "dataset_id": "kael-dpo-v1", "layer": "dpo", "role": "preference" },
+        { "dataset_id": "gad-decision-handoff-v1", "layer": "agent_trace", "role": "train" },
+        { "dataset_id": "kael-sft-eval-v1", "layer": "eval", "role": "eval" },
+        { "dataset_id": "qwen-1p5b-hard-failures", "layer": "retain", "role": "retain" }
+      ],
+      "target_models": [
+        {
+          "model_id": "kael-1p5b-v1",
+          "base": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+          "lane": "1.5b"
+        }
+      ],
+      "training_recipe": {
+        "sft_blocks": ["kael-sft-v1", "gad-decision-handoff-v1"],
+        "dpo_blocks": ["kael-dpo-v1"],
+        "retain_blocks": ["qwen-1p5b-hard-failures"],
+        "eval_gates": ["kael-sft-eval-v1"]
+      },
+      "expected_promotion_criteria": "kael-1p5b-v1 scores >= 0.72 on kael-sft-eval-v1 AND all retain bank rows pass",
+      "notes": "First evolution. SFT data is sparse; treat as pilot. Expand kael-sft-v1 to 200+ rows before next evolution."
+    }
+  ],
+  "additionalProperties": false
+}

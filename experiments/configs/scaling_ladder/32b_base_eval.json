@@ -1,0 +1,41 @@
+{
+  "rung_id": "scaling-ladder-32b-2026-05-09",
+  "exp_id": "EXP-scaling-ladder-rung-32b-base",
+  "purpose": "Base capability measurement at 32B for slm-learning ladder extension. Per slm-learning-210, the operator pushed back on capping at 7B (we are building novel work). This rung measures unmodified Qwen2.5-Coder-32B-Instruct on HE/MBPP/gad_tools to establish the upper anchor of the open Qwen 2.5 coder line before considering 80B-A3B.",
+  "base_model": "Qwen/Qwen2.5-Coder-32B-Instruct",
+  "model_family_id": "qwen2.5-coder-32b-instruct",
+  "adapter_id": "BASE",
+  "benchmarks": ["humaneval", "mbpp", "gad_tools"],
+  "limit": 164,
+  "mode": "chat",
+  "max_new_tokens": 384,
+  "gpu": "A100",
+  "preferred_precision": "bf16",
+  "approx_vram_gb_inference_bf16": 70,
+  "estimated_cost_usd": 4.0,
+  "estimated_wall_minutes": 60,
+  "fire_command_template": "MSYS_NO_PATHCONV=1 PYTHONIOENCODING=utf-8 modal run modal_app/eval_adapter.py::main --adapter-id BASE --base-model Qwen/Qwen2.5-Coder-32B-Instruct --benchmark {benchmark} --limit 164 --gpu A100 --persist-run-id eval-base-qwen-32b-coder-2026-05-09",
+  "persist_run_id": "eval-base-qwen-32b-coder-2026-05-09",
+  "fallback_quant": "INT4 (~24GB) fits A10G but introduces quality skew; if A100-80GB blocked, prefer H100 over INT4 for comparison cleanliness. INT4 is a last resort and MUST be footnoted in the comparator row.",
+  "comparator_anchors": {
+    "7b_stein_canonical": {"humaneval": 0.848, "mbpp": 0.823},
+    "14b_base": "to_be_measured_by_14b_base_eval",
+    "3b_base": {"humaneval": 0.835, "mbpp": 0.732}
+  },
+  "pass_criteria": {
+    "knee_candidate": "HE >= 0.890 AND MBPP >= 0.860 (>= 7B Stein +4pp on both axes)",
+    "promote_to_training_target": "knee_candidate AND wall-clock inference latency under 5s/task on A100 chat-mode",
+    "reject_rung": "HE delta vs 14B base < +2pp (no clear lift over 14B = 32B is not worth its cost)"
+  },
+  "charter_rows_filled": ["public_leaderboard_subset", "frontier_comparator_subset_base"],
+  "decision_refs": [
+    "slm-learning-097",
+    "slm-learning-100",
+    "slm-learning-103",
+    "slm-learning-105",
+    "slm-learning-202",
+    "slm-learning-210"
+  ],
+  "preflight_required": true,
+  "preflight_notes": "DO NOT FIRE without Dr. Stein authorization. 32B BF16 requires A100-80GB; verify Modal A100-80GB availability before launch. 32B BF16 weights are ~64GB on disk; confirm slm-models volume free space."
+}

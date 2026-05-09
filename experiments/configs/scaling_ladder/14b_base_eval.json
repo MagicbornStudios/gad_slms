@@ -1,0 +1,41 @@
+{
+  "rung_id": "scaling-ladder-14b-2026-05-09",
+  "exp_id": "EXP-scaling-ladder-rung-14b-base",
+  "purpose": "Base capability measurement at 14B for slm-learning ladder extension. Per slm-learning-210, 3B regression (slm-learning-202) was a LoRA-recipe failure, not a base-capability failure; this rung measures the unmodified 14B base on the public-leaderboard slice (HE/MBPP) plus owned-domain (gad_tools) before any training spend is authorized.",
+  "base_model": "Qwen/Qwen2.5-Coder-14B-Instruct",
+  "model_family_id": "qwen2.5-coder-14b-instruct",
+  "adapter_id": "BASE",
+  "benchmarks": ["humaneval", "mbpp", "gad_tools"],
+  "limit": 164,
+  "mode": "chat",
+  "max_new_tokens": 384,
+  "gpu": "A100",
+  "preferred_precision": "bf16",
+  "approx_vram_gb_inference_bf16": 32,
+  "estimated_cost_usd": 2.0,
+  "estimated_wall_minutes": 35,
+  "fire_command_template": "MSYS_NO_PATHCONV=1 PYTHONIOENCODING=utf-8 modal run modal_app/eval_adapter.py::main --adapter-id BASE --base-model Qwen/Qwen2.5-Coder-14B-Instruct --benchmark {benchmark} --limit 164 --gpu A100 --persist-run-id eval-base-qwen-14b-coder-2026-05-09",
+  "persist_run_id": "eval-base-qwen-14b-coder-2026-05-09",
+  "fallback_quant": "INT4 if A100-80GB unavailable on Modal; flag quality skew in the report and DO NOT compare INT4-vs-BF16 across rungs without footnote",
+  "comparator_anchors": {
+    "7b_stein_canonical": {"humaneval": 0.848, "mbpp": 0.823},
+    "3b_base": {"humaneval": 0.835, "mbpp": 0.732},
+    "1p5b_stein_canonical": {"humaneval": 0.640, "mbpp": 0.640}
+  },
+  "pass_criteria": {
+    "knee_candidate": "HE >= 0.870 AND MBPP >= 0.840 (>= 7B Stein +2pp on both axes)",
+    "promote_to_training_target": "knee_candidate AND inference cost-per-task <= 1/4 of Opus on owned-domain row",
+    "reject_rung": "HE delta vs 7B base < +1pp"
+  },
+  "charter_rows_filled": ["public_leaderboard_subset", "frontier_comparator_subset_base"],
+  "decision_refs": [
+    "slm-learning-097",
+    "slm-learning-100",
+    "slm-learning-103",
+    "slm-learning-105",
+    "slm-learning-202",
+    "slm-learning-210"
+  ],
+  "preflight_required": true,
+  "preflight_notes": "DO NOT FIRE without Dr. Stein authorization. Modal A100-80GB pricing must be reconfirmed before launch (Modal pricing drift). Confirm slm-models volume has free space; 14B BF16 weights are ~28GB on disk."
+}

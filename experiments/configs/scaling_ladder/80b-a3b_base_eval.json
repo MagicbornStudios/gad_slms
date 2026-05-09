@@ -1,0 +1,43 @@
+{
+  "rung_id": "scaling-ladder-80b-a3b-2026-05-09",
+  "exp_id": "EXP-scaling-ladder-rung-80b-a3b-base",
+  "purpose": "Base capability measurement at Qwen3-Next-80B-A3B-Instruct for slm-learning ladder extension. Per slm-learning-210 + teacher_species_policy.md, this is the strongest open-weight rung we plan to evaluate as a backbone candidate — 80B total / 3.9B active per token (MoE, hybrid Transformer-Mamba) gives ~7B-equivalent inference latency at H100-class memory. Owned-domain delta vs 7B Stein canonical is the key signal.",
+  "base_model": "Qwen/Qwen3-Next-80B-A3B-Instruct",
+  "model_family_id": "qwen3-next-80b-a3b-instruct",
+  "adapter_id": "BASE",
+  "benchmarks": ["humaneval", "mbpp", "gad_tools"],
+  "limit": 164,
+  "mode": "chat",
+  "max_new_tokens": 384,
+  "gpu": "H100",
+  "preferred_precision": "bf16",
+  "approx_vram_gb_inference_bf16": 180,
+  "moe_active_b": 3.9,
+  "estimated_cost_usd": 8.0,
+  "estimated_wall_minutes": 75,
+  "fire_command_template": "MSYS_NO_PATHCONV=1 PYTHONIOENCODING=utf-8 modal run modal_app/eval_adapter.py::main --adapter-id BASE --base-model Qwen/Qwen3-Next-80B-A3B-Instruct --benchmark {benchmark} --limit 164 --gpu H100 --persist-run-id eval-base-qwen3-next-80b-a3b-2026-05-09",
+  "persist_run_id": "eval-base-qwen3-next-80b-a3b-2026-05-09",
+  "fallback_quant": "FP8 if H100 capacity-constrained on Modal; INT4 introduces quality skew that breaks the comparison and is REJECTED. If neither H100 nor FP8 path is available, defer this rung.",
+  "comparator_anchors": {
+    "7b_stein_canonical": {"humaneval": 0.848, "mbpp": 0.823},
+    "32b_base": "to_be_measured_by_32b_base_eval",
+    "14b_base": "to_be_measured_by_14b_base_eval"
+  },
+  "pass_criteria": {
+    "knee_candidate": "HE >= 0.910 AND MBPP >= 0.880 AND gad_tools delta vs 7B Stein > +5pp",
+    "promote_to_training_target": "knee_candidate AND active-param latency demonstrably < 1.5x 7B-dense at chat-mode N=164",
+    "reject_rung": "HE delta vs 32B base < +2pp OR gad_tools regression vs 7B Stein"
+  },
+  "charter_rows_filled": ["public_leaderboard_subset", "frontier_comparator_subset_base", "owned_domain_partial"],
+  "decision_refs": [
+    "slm-learning-097",
+    "slm-learning-100",
+    "slm-learning-103",
+    "slm-learning-105",
+    "slm-learning-197",
+    "slm-learning-202",
+    "slm-learning-210"
+  ],
+  "preflight_required": true,
+  "preflight_notes": "DO NOT FIRE without Dr. Stein authorization. H100 availability on Modal must be verified live (capacity is bursty). 80B-A3B BF16 weights are ~160GB on disk; slm-models volume MUST be checked first or the download alone will burn budget. Hybrid Transformer-Mamba MoE may need a recent vLLM/transformers pin — verify modal_app eval image transformers>=4.50 actually supports the architecture before firing."
+}

@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/soul_route.schema.json",
+  "title": "Soul Route",
+  "description": "Dispatch record coupling a GAD narrative soul to a concrete base model, adapter stack, and inference endpoint. Decoupled from gad narrative (which owns personality/voice/in-world facts); this schema owns 'which model serves this soul today'. Lives in slm_learning/data/registry/soul_routes.toml and is referenced by apps/desktop, apps/platform, and any runtime that resolves a soul at inference time.",
+  "type": "object",
+  "required": ["soul_id", "soul_name", "project_scope", "default_project", "base_model", "endpoint"],
+  "additionalProperties": false,
+  "properties": {
+    "soul_id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "description": "Kebab-case unique identifier. Must match the soul slug in the narrative system (e.g. 'kael-of-tarro', 'gilgamesh-of-uruk', 'dr-stein')."
+    },
+    "soul_name": {
+      "type": "string",
+      "description": "Human-readable display name (e.g. 'Kael of Tarro')."
+    },
+    "project_scope": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1,
+      "description": "GAD project IDs where this soul is active. A soul can span multiple projects; transfer is a metadata edit only — the adapter stack travels with the soul, not the project."
+    },
+    "default_project": {
+      "type": "string",
+      "description": "Primary home project ID. Used when resolving the soul without an explicit project context."
+    },
+    "base_model": {
+      "type": "object",
+      "required": ["provider", "model_id"],
+      "additionalProperties": false,
+      "description": "Foundation model before any adapters are applied.",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["anthropic", "openai", "google", "modal", "openrouter", "gad-owned", "huggingface", "other"],
+          "description": "Inference provider. 'gad-owned' = a model trained and served by this org."
+        },
+        "model_id": {
+          "type": "string",
+          "description": "Provider-canonical model identifier. E.g. 'claude-sonnet-4-6', 'gpt-5.4', 'qwen2.5-coder-7b-instruct', 'kael-7b-v3'."
+        },
+        "version": {
+          "type": "string",
+          "description": "Optional pinned version or snapshot tag."
+        }
+      }
+    },
+    "adapter_stack": {
+      "type": "array",
+      "description": "Ordered list of adapters applied on top of base_model. Applied sequentially; empty = base model with soul prompt only.",
+      "items": {
+        "type": "object",
+        "required": ["adapter_id", "layer", "version", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "adapter_id": {
+            "type": "string",
+            "description": "Unique adapter slug, e.g. 'lora-1p5b-stein-2026-05-08'."
+          },
+          "layer": {
+            "type": "string",
+            "enum": ["sft", "dpo", "continual", "skill", "domain"],
+            "description": "Training regime that produced this adapter."
+          },
+          "version": {
+            "type": "string",
+            "description": "Adapter version or consolidation run ID."
+          },
+          "source_dataset_id": {
+            "type": "string",
+            "description": "Dataset registry ID that produced this adapter (references datasets.json)."
+          },
+          "status": {
+            "type": "string",
+            "enum": ["experimental", "staging", "canonical", "deprecated"],
+            "description": "Promotion status per the consolidation pipeline (schemas/consolidation_run.schema.json)."
+          }
+        }
+      }
+    },
+    "endpoint": {
+      "type": "object",
+      "required": ["kind", "auth_ref"],
+      "additionalProperties": false,
+      "description": "Inference endpoint configuration.",
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["api", "self-hosted", "local"],
+          "description": "'api' = managed cloud API; 'self-hosted' = vLLM/Modal serve; 'local' = llama.cpp / ollama on-device."
+        },
+        "url": {
+          "type": ["string", "null"],
+          "format": "uri",
+          "description": "Base URL. Null when not yet deployed (flag with notes)."
+        },
+        "region": {
+          "type": "string",
+          "description": "Cloud region or datacenter hint for latency routing."
+        },
+        "auth_ref": {
+          "type": "string",
+          "description": "Environment variable name or BYOK key reference that holds the credential. Never inline the secret here."
+        }
+      }
+    },
+    "routing_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "How the router dispatches calls to this soul's route.",
+      "properties": {
+        "task_shapes": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Task-shape tags this soul handles (e.g. 'code-generation', 'narrative', 'planning', 'tool-action'). Empty = catch-all."
+        },
+        "fallback_soul_id": {
+          "type": ["string", "null"],
+          "description": "Soul to try if this route is unavailable or over budget. Null = hard fail."
+        },
+        "cost_cap_usd_per_call": {
+          "type": ["number", "null"],
+          "description": "Maximum cost per inference call in USD. Null = no cap."
+        },
+        "latency_budget_ms": {
+          "type": ["integer", "null"],
+          "description": "Target latency ceiling in milliseconds. Null = no budget enforced."
+        }
+      }
+    },
+    "evolution_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Tracks the soul's progression through the training ladder. Mirrors the project-level evolution system but is per-soul.",
+      "properties": {
+        "current_level": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Current evolution level. 0 = prompt-only; 1 = first canonical adapter; N = Nth promotion."
+        },
+        "promotion_history": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["from_level", "to_level", "ts"],
+            "additionalProperties": false,
+            "properties": {
+              "from_level": { "type": "integer" },
+              "to_level": { "type": "integer" },
+              "ts": { "type": "string", "format": "date-time" },
+              "evidence_eval_id": { "type": "string" },
+              "decision_ref": { "type": "string" }
+            }
+          }
+        },
+        "last_evolved_at": {
+          "type": ["string", "null"],
+          "format": "date-time"
+        }
+      }
+    },
+    "skill_adapters": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "GAD skill IDs this soul has loaded at inference time. These are prompt-layer skills, not model adapters."
+    },
+    "license_class": {
+      "type": "string",
+      "enum": ["owned", "open", "restricted", "customer_private"],
+      "description": "'owned' = trained and owned by this org; 'open' = open-weight model (MIT/Apache); 'restricted' = API with usage terms; 'customer_private' = customer-specific adapter (see customer_soul_adapter.schema.json for extended fields)."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Free-form notes for operator context. Flag deployment gaps, WIP states, etc."
+    }
+  },
+  "examples": [
+    {
+      "soul_id": "kael-of-tarro",
+      "soul_name": "Kael of Tarro",
+      "project_scope": ["global", "apps-desktop"],
+      "default_project": "global",
+      "base_model": {
+        "provider": "anthropic",
+        "model_id": "claude-sonnet-4-6",
+        "version": "latest"
+      },
+      "adapter_stack": [],
+      "endpoint": {
+        "kind": "api",
+        "url": "https://api.anthropic.com",
+        "auth_ref": "ANTHROPIC_API_KEY"
+      },
+      "routing_policy": {
+        "task_shapes": ["code-generation", "tool-action", "narrative", "planning", "computer-use"],
+        "fallback_soul_id": "gilgamesh-of-uruk",
+        "cost_cap_usd_per_call": 0.10,
+        "latency_budget_ms": 8000
+      },
+      "evolution_state": {
+        "current_level": 0,
+        "promotion_history": [],
+        "last_evolved_at": null
+      },
+      "skill_adapters": ["frontend-design", "gad-visual-context-system"],
+      "license_class": "restricted",
+      "created_at": "2026-05-09T00:00:00Z",
+      "updated_at": "2026-05-09T00:00:00Z",
+      "notes": "Anthropic-base fallback while Kael-house dataset capture pipeline is built. Intended route: gad-owned kael-7b-v1 when Kael-house 1.5B/3B canonical adapter clears trajectory composite > 0.601 gate (souls_houses_factions_framework.md)."
+    },
+    {
+      "soul_id": "gilgamesh-of-uruk",
+      "soul_name": "Gilgamesh of Uruk",
+      "project_scope": ["global", "get-anything-done"],
+      "default_project": "global",
+      "base_model": {
+        "provider": "anthropic",
+        "model_id": "claude-opus-4-7",
+        "version": "latest"
+      },
+      "adapter_stack": [],
+      "endpoint": {
+        "kind": "api",
+        "url": "https://api.anthropic.com",
+        "auth_ref": "ANTHROPIC_API_KEY"
+      },
+      "routing_policy": {
+        "task_shapes": ["planning", "architecture", "decision", "multi-agent-coordination"],
+        "fallback_soul_id": null,
+        "cost_cap_usd_per_call": 0.50,
+        "latency_budget_ms": 15000
+      },
+      "evolution_state": {
+        "current_level": 0,
+        "promotion_history": [],
+        "last_evolved_at": null
+      },
+      "skill_adapters": [],
+      "license_class": "restricted",
+      "created_at": "2026-05-09T00:00:00Z",
+      "updated_at": "2026-05-09T00:00:00Z",
+      "notes": "Prompt-only today. Gilgamesh-house is a future specialist lane (GAD-strategy faction). No fine-tune gate defined yet — strategy tasks are harder to eval than code."
+    },
+    {
+      "soul_id": "dr-stein",
+      "soul_name": "Dr. Stein",
+      "project_scope": ["slm-learning"],
+      "default_project": "slm-learning",
+      "base_model": {
+        "provider": "modal",
+        "model_id": "qwen2.5-coder-7b-instruct",
+        "version": "2026-05-08"
+      },
+      "adapter_stack": [
+        {
+          "adapter_id": "lora-1p5b-hard-retain-2026-05-08",
+          "layer": "sft",
+          "version": "canonical",
+          "source_dataset_id": "stein-house-delta-1p5b-2026-05-08",
+          "status": "canonical"
+        }
+      ],
+      "endpoint": {
+        "kind": "self-hosted",
+        "url": null,
+        "region": "us-east",
+        "auth_ref": "MODAL_TOKEN"
+      },
+      "routing_policy": {
+        "task_shapes": ["code-generation", "eval-scoring", "scientific-reasoning"],
+        "fallback_soul_id": "gilgamesh-of-uruk",
+        "cost_cap_usd_per_call": 0.02,
+        "latency_budget_ms": 5000
+      },
+      "evolution_state": {
+        "current_level": 1,
+        "promotion_history": [
+          {
+            "from_level": 0,
+            "to_level": 1,
+            "ts": "2026-05-08T00:00:00Z",
+            "evidence_eval_id": "lora-1p5b-hard-retain-2026-05-08",
+            "decision_ref": "slm-learning-173"
+          }
+        ],
+        "last_evolved_at": "2026-05-08T00:00:00Z"
+      },
+      "skill_adapters": [],
+      "license_class": "open",
+      "created_at": "2026-05-09T00:00:00Z",
+      "updated_at": "2026-05-09T00:00:00Z",
+      "notes": "ENDPOINT GAP: Modal vLLM serve config (Lane D in pressure_to_training_research_agenda.md) not yet deployed. Canonical adapter exists at models/runs/lora-1p5b-hard-retain-2026-05-08/. HE 64.0 / MBPP 64.0 on n=164. Upgrade path: 7B rung (scaling_ladder_gates.json anchor: HE 84.8/MBPP 82.3) when 7B base eval fires."
+    }
+  ]
+}

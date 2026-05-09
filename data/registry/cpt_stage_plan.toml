@@ -1,0 +1,285 @@
+# CPT Stage Plan — Kael 7B Chain, First 5 Stages
+# Schema: slm_learning/schemas/cpt_stage.schema.json
+# Report:  slm_learning/reports/research/staged_continual_pretraining.md
+# Date:    2026-05-09
+# Status:  All stages planned. v1 fires first; each subsequent stage requires
+#          parent status=promoted before authorizing.
+
+[[stages]]
+stage_id                    = "kael-7b-cpt-v1"
+parent_stage_id             = null
+status                      = "planned"
+expansion_dataset_block_id  = "gad-trace-recent-60d-v1"
+expansion_token_count       = 1_000_000
+expansion_token_budget_max  = 1_500_000
+expected_outcome            = "Smoke-test the LoRA-CPT recipe on 7B. Encode recent gad CLI patterns from the last 60 days of gad-trace curator output. Validate the gad_tools_v1 judge on 20 held-out rows before declaring done. Budget is tight by design — if the recipe fails here it costs $2-3, not $50."
+retain_banks_enforced       = ["hard-fn-norm-v1"]
+
+[stages.target_model]
+soul_id              = "kael"
+base_model_id        = "Qwen/Qwen2.5-Coder-7B-Instruct"
+current_lane         = "7b"
+cumulative_adapter_path = null
+
+[stages.training_recipe]
+mode                  = "lora_cpt"
+lr                    = 2e-5
+batch_size            = 4
+gradient_accumulation = 8
+sequence_length       = 8192
+epochs                = 1
+lora_rank             = 16
+lora_alpha            = 16
+lora_dropout          = 0.05
+warmup_steps          = 50
+scheduler             = "cosine"
+bf16                  = true
+
+[stages.eval_gates]
+[stages.eval_gates.regression_thresholds]
+"hard-fn-norm-v1" = 1.0
+
+[stages.eval_gates.promotion_thresholds]
+"gad-tools-v1" = 2.0
+
+cost_per_success_target_usd = 5.0
+
+[stages.eval_gates.hard_floor]
+"humaneval-clean-v1" = 80.0
+
+[stages.run_meta]
+runtime               = "modal"
+authorization_required = false
+planned_start         = null
+planned_complete      = null
+
+[stages.run_meta.compute_estimate]
+gpu_hours    = 1.5
+gpu_type     = "A100-80GB"
+est_cost_usd = 3.00
+
+# ---------------------------------------------------------------------------
+
+[[stages]]
+stage_id                    = "kael-7b-cpt-v2"
+parent_stage_id             = "kael-7b-cpt-v1"
+status                      = "planned"
+expansion_dataset_block_id  = "decisions-handoffs-corpus-v1"
+expansion_token_count       = 3_000_000
+expansion_token_budget_max  = 4_000_000
+expected_outcome            = "Encode planning artifact vocabulary: decisions, handoffs, task stamps, phase summaries. Expect improvement on decision_writing_v1 eval (structured prose about technical rationale). No regression on code-completion retain banks."
+retain_banks_enforced       = ["hard-fn-norm-v1", "humaneval-clean-v1"]
+
+[stages.target_model]
+soul_id              = "kael"
+base_model_id        = "Qwen/Qwen2.5-Coder-7B-Instruct"
+current_lane         = "7b"
+cumulative_adapter_path = "slm_learning/runs/pretrained/kael-7b-cpt-v1/adapter_merged/"
+
+[stages.training_recipe]
+mode                  = "lora_cpt"
+lr                    = 2e-5
+batch_size            = 4
+gradient_accumulation = 8
+sequence_length       = 8192
+epochs                = 1
+lora_rank             = 16
+lora_alpha            = 16
+lora_dropout          = 0.05
+warmup_steps          = 100
+scheduler             = "cosine"
+bf16                  = true
+
+[stages.eval_gates]
+[stages.eval_gates.regression_thresholds]
+"hard-fn-norm-v1"     = 1.0
+"humaneval-clean-v1"  = 2.0
+
+[stages.eval_gates.promotion_thresholds]
+"decision-writing-v1" = 3.0
+
+cost_per_success_target_usd = 10.0
+
+[stages.eval_gates.hard_floor]
+"humaneval-clean-v1" = 80.0
+
+[stages.run_meta]
+runtime               = "modal"
+authorization_required = false
+planned_start         = null
+planned_complete      = null
+
+[stages.run_meta.compute_estimate]
+gpu_hours    = 4.0
+gpu_type     = "A100-80GB"
+est_cost_usd = 9.00
+
+# ---------------------------------------------------------------------------
+
+[[stages]]
+stage_id                    = "kael-7b-cpt-v3"
+parent_stage_id             = "kael-7b-cpt-v2"
+status                      = "planned"
+expansion_dataset_block_id  = "tool-action-json-v1"
+expansion_token_count       = 5_000_000
+expansion_token_budget_max  = 6_500_000
+expected_outcome            = "Encode tool_call/tool_result JSON patterns from gad-log curator. Reduce schema-validation errors on live inference. Expect tool_action_v1 eval to lift 3+ pp. Retain banks must hold — this corpus is structurally different from code and can cause interference."
+retain_banks_enforced       = ["hard-fn-norm-v1", "humaneval-clean-v1"]
+
+[stages.target_model]
+soul_id              = "kael"
+base_model_id        = "Qwen/Qwen2.5-Coder-7B-Instruct"
+current_lane         = "7b"
+cumulative_adapter_path = "slm_learning/runs/pretrained/kael-7b-cpt-v2/adapter_merged/"
+
+[stages.training_recipe]
+mode                  = "lora_cpt"
+lr                    = 2e-5
+batch_size            = 4
+gradient_accumulation = 8
+sequence_length       = 8192
+epochs                = 1
+lora_rank             = 16
+lora_alpha            = 16
+lora_dropout          = 0.05
+warmup_steps          = 100
+scheduler             = "cosine"
+bf16                  = true
+
+[stages.eval_gates]
+[stages.eval_gates.regression_thresholds]
+"hard-fn-norm-v1"    = 1.0
+"humaneval-clean-v1" = 2.0
+
+[stages.eval_gates.promotion_thresholds]
+"tool-action-v1" = 3.0
+
+cost_per_success_target_usd = 15.0
+
+[stages.eval_gates.hard_floor]
+"humaneval-clean-v1" = 80.0
+
+[stages.run_meta]
+runtime               = "modal"
+authorization_required = false
+planned_start         = null
+planned_complete      = null
+
+[stages.run_meta.compute_estimate]
+gpu_hours    = 6.5
+gpu_type     = "A100-80GB"
+est_cost_usd = 14.00
+
+# ---------------------------------------------------------------------------
+
+[[stages]]
+stage_id                    = "kael-7b-cpt-v4"
+parent_stage_id             = "kael-7b-cpt-v3"
+status                      = "planned"
+expansion_dataset_block_id  = "delta-packets-corrected-v1"
+expansion_token_count       = 5_000_000
+expansion_token_budget_max  = 7_000_000
+expected_outcome            = "Encode correction signals from ERRORS-AND-ATTEMPTS.xml distillations via Opus teacher. Should lift on kael_task_v1 multi-step task eval and reduce known failure modes catalogued in planning. This is the highest-signal stage of the five — delta packets encode exactly where the model went wrong and what the correction was."
+retain_banks_enforced       = ["hard-fn-norm-v1", "humaneval-clean-v1", "tool-action-v1"]
+
+[stages.target_model]
+soul_id              = "kael"
+base_model_id        = "Qwen/Qwen2.5-Coder-7B-Instruct"
+current_lane         = "7b"
+cumulative_adapter_path = "slm_learning/runs/pretrained/kael-7b-cpt-v3/adapter_merged/"
+
+[stages.training_recipe]
+mode                  = "lora_cpt"
+lr                    = 1.5e-5
+batch_size            = 4
+gradient_accumulation = 8
+sequence_length       = 8192
+epochs                = 1
+lora_rank             = 16
+lora_alpha            = 16
+lora_dropout          = 0.05
+warmup_steps          = 100
+scheduler             = "cosine"
+bf16                  = true
+
+[stages.eval_gates]
+[stages.eval_gates.regression_thresholds]
+"hard-fn-norm-v1"    = 1.0
+"humaneval-clean-v1" = 2.0
+"tool-action-v1"     = 1.5
+
+[stages.eval_gates.promotion_thresholds]
+"kael-task-v1" = 3.0
+
+cost_per_success_target_usd = 20.0
+
+[stages.eval_gates.hard_floor]
+"humaneval-clean-v1" = 80.0
+
+[stages.run_meta]
+runtime               = "modal"
+authorization_required = true
+planned_start         = null
+planned_complete      = null
+
+[stages.run_meta.compute_estimate]
+gpu_hours    = 7.0
+gpu_type     = "A100-80GB"
+est_cost_usd = 20.00
+
+# NOTE: authorization_required=true because est_cost_usd = $20 (at threshold).
+# Operator sign-off required before this stage fires even if v3 promotes successfully.
+
+# ---------------------------------------------------------------------------
+
+[[stages]]
+stage_id                    = "kael-7b-cpt-v5"
+parent_stage_id             = "kael-7b-cpt-v4"
+status                      = "planned"
+expansion_dataset_block_id  = "rebaseline-validation-pass"
+expansion_token_count       = 0
+expansion_token_budget_max  = 0
+expected_outcome            = "Full rebaseline validation pass. No gradient updates. Evaluate cumulative adapter against all retain banks from scratch (not delta). Compare against raw base model on same banks. Record cumulative drift. If any bank has drifted more than 3pp from base, pause the chain and investigate before authorizing v6. This stage is a checkpoint, not a training run."
+retain_banks_enforced       = ["hard-fn-norm-v1", "humaneval-clean-v1", "tool-action-v1", "kael-task-v1"]
+
+[stages.target_model]
+soul_id              = "kael"
+base_model_id        = "Qwen/Qwen2.5-Coder-7B-Instruct"
+current_lane         = "7b"
+cumulative_adapter_path = "slm_learning/runs/pretrained/kael-7b-cpt-v4/adapter_merged/"
+
+[stages.training_recipe]
+mode                  = "adapter_merge"
+lr                    = 0.0
+batch_size            = 1
+gradient_accumulation = 1
+sequence_length       = 8192
+epochs                = 0
+
+[stages.eval_gates]
+[stages.eval_gates.regression_thresholds]
+"hard-fn-norm-v1"    = 1.0
+"humaneval-clean-v1" = 1.0
+"tool-action-v1"     = 1.0
+"kael-task-v1"       = 1.0
+
+[stages.eval_gates.promotion_thresholds]
+# No promotion target — this is a validation pass.
+# Passes if regression gate clears. Use result to set the baseline for the
+# next 5-stage window.
+
+cost_per_success_target_usd = 5.0
+
+[stages.eval_gates.hard_floor]
+"humaneval-clean-v1" = 80.0
+
+[stages.run_meta]
+runtime               = "modal"
+authorization_required = false
+planned_start         = null
+planned_complete      = null
+
+[stages.run_meta.compute_estimate]
+gpu_hours    = 1.0
+gpu_type     = "A100-80GB"
+est_cost_usd = 3.00

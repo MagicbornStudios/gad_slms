@@ -1,0 +1,179 @@
+# soul_routes.toml
+# Dispatch table: GAD soul -> base model + adapter stack + endpoint.
+# Schema: slm_learning/schemas/soul_route.schema.json (JSON Schema 2020-12)
+# Decoupled from gad narrative (personality/voice): narrative owns WHO the soul is;
+# this file owns WHICH MODEL serves it today.
+# Updated: 2026-05-09
+# Decision refs: souls_houses_factions_framework.md (slm-learning-193 proposed)
+
+# ---------------------------------------------------------------------------
+# KAEL OF TARRO
+# Primary: apps/desktop chat shell, Magicborn narrative work.
+# Faction: GAD-artifact + GAD-tool-action (Kael-house, per framework doc).
+# Today: Anthropic Sonnet fallback — Kael-house dataset capture not yet built.
+# Target: gad-owned kael-7b-v1 when Kael-house 1.5B/3B adapter clears
+#         trajectory composite > 0.601 gate (souls_houses_factions_framework.md).
+# ---------------------------------------------------------------------------
+[[souls]]
+soul_id        = "kael-of-tarro"
+soul_name      = "Kael of Tarro"
+project_scope  = ["global", "apps-desktop"]
+default_project = "global"
+license_class  = "restricted"
+created_at     = "2026-05-09T00:00:00Z"
+updated_at     = "2026-05-09T00:00:00Z"
+notes          = "Anthropic-base fallback. Intended route: gad-owned kael-7b-v1 post Kael-house adapter canonical. See intended route entry below."
+
+[souls.base_model]
+provider  = "anthropic"
+model_id  = "claude-sonnet-4-6"
+version   = "latest"
+
+[souls.endpoint]
+kind     = "api"
+url      = "https://api.anthropic.com"
+auth_ref = "ANTHROPIC_API_KEY"
+
+[souls.routing_policy]
+task_shapes            = ["code-generation", "tool-action", "narrative", "planning", "computer-use"]
+fallback_soul_id       = "gilgamesh-of-uruk"
+cost_cap_usd_per_call  = 0.10
+latency_budget_ms      = 8000
+
+[souls.evolution_state]
+current_level   = 0
+last_evolved_at = ""    # not yet promoted
+
+skill_adapters = ["frontend-design", "gad-visual-context-system"]
+
+# ---------------------------------------------------------------------------
+# KAEL-INTENDED-ROUTE (future state — adapter not trained yet)
+# Route after Kael-house 1.5B canonical consolidation run ships.
+# Wired via 'adapter_stack' once lora-kael-1p5b-v1 clears eval gate.
+# ---------------------------------------------------------------------------
+[[souls]]
+soul_id        = "kael-of-tarro-v1-intended"
+soul_name      = "Kael of Tarro (intended: gad-owned adapter route)"
+project_scope  = ["global", "apps-desktop"]
+default_project = "global"
+license_class  = "owned"
+created_at     = "2026-05-09T00:00:00Z"
+updated_at     = "2026-05-09T00:00:00Z"
+notes          = "DRAFT/PLANNED — not active. Represents the target route post Kael-house canonical. adapter_stack entry is skeleton until consolidation run ships. Eval gate: trajectory composite > 0.601 (Kael-house flagship run per souls_houses_factions_framework.md)."
+
+[souls.base_model]
+provider  = "modal"
+model_id  = "qwen2.5-coder-7b-instruct"
+version   = "TBD"
+
+[souls.endpoint]
+kind     = "self-hosted"
+url      = ""            # GAP: Modal vLLM serve config (Lane D) not deployed
+auth_ref = "MODAL_TOKEN"
+
+[souls.routing_policy]
+task_shapes            = ["code-generation", "tool-action", "narrative", "planning", "computer-use"]
+fallback_soul_id       = "kael-of-tarro"    # fallback to Anthropic-base if gad-owned is unavailable
+cost_cap_usd_per_call  = 0.02
+latency_budget_ms      = 5000
+
+[souls.evolution_state]
+current_level   = 0
+last_evolved_at = ""
+
+[[souls.adapter_stack]]
+adapter_id        = "lora-kael-1p5b-v1"    # placeholder — not yet trained
+layer             = "sft"
+version           = "TBD"
+source_dataset_id = "kael-house-trajectory-v1"   # dataset capture pipeline pending
+status            = "experimental"
+
+skill_adapters = ["frontend-design", "gad-visual-context-system"]
+
+# ---------------------------------------------------------------------------
+# GILGAMESH OF URUK
+# Primary: global planning, cross-cutting framework/platform direction,
+#          apps/platform, marketing surfaces, get-anything-done corp.
+# Faction: GAD-strategy (Gilgamesh-house, prompt-only today).
+# No fine-tune gate defined yet — strategy tasks harder to eval than code.
+# ---------------------------------------------------------------------------
+[[souls]]
+soul_id        = "gilgamesh-of-uruk"
+soul_name      = "Gilgamesh of Uruk"
+project_scope  = ["global", "get-anything-done"]
+default_project = "global"
+license_class  = "restricted"
+created_at     = "2026-05-09T00:00:00Z"
+updated_at     = "2026-05-09T00:00:00Z"
+notes          = "Prompt-only. Gilgamesh-house strategy fine-tune gate not yet defined. Opus-4-7 for corp/architecture tasks; cost cap relaxed vs Kael (planning tasks earn it)."
+
+[souls.base_model]
+provider  = "anthropic"
+model_id  = "claude-opus-4-7"
+version   = "latest"
+
+[souls.endpoint]
+kind     = "api"
+url      = "https://api.anthropic.com"
+auth_ref = "ANTHROPIC_API_KEY"
+
+[souls.routing_policy]
+task_shapes            = ["planning", "architecture", "decision", "multi-agent-coordination"]
+fallback_soul_id       = ""    # no fallback — hard fail appropriate for top-level planning
+cost_cap_usd_per_call  = 0.50
+latency_budget_ms      = 15000
+
+[souls.evolution_state]
+current_level   = 0
+last_evolved_at = ""
+
+skill_adapters = []
+
+# ---------------------------------------------------------------------------
+# DR. STEIN
+# Primary: slm-learning research, model eval, scientific reasoning.
+# Faction: GAD-coder (Stein-house, canonical at 1.5B Qwen).
+# Today: lora-1p5b-hard-retain-2026-05-08 is canonical (HE 64.0/MBPP 64.0).
+# ENDPOINT GAP: Modal vLLM serve config (Lane D) not yet deployed — adapter
+#               exists at models/runs/lora-1p5b-hard-retain-2026-05-08/.
+# Upgrade path: 7B rung when scaling_ladder_gates.json anchor fires.
+# ---------------------------------------------------------------------------
+[[souls]]
+soul_id        = "dr-stein"
+soul_name      = "Dr. Stein"
+project_scope  = ["slm-learning"]
+default_project = "slm-learning"
+license_class  = "open"
+created_at     = "2026-05-09T00:00:00Z"
+updated_at     = "2026-05-09T00:00:00Z"
+notes          = "ENDPOINT GAP: Modal vLLM serve config not deployed. Canonical adapter exists. Upgrade gate: 7B base eval HE >= 86.8 AND MBPP >= 84.3 (scaling_ladder_gates.json ladder-14b-base-2026-05-09 knee criterion). Decision: slm-learning-173."
+
+[souls.base_model]
+provider  = "modal"
+model_id  = "qwen2.5-coder-7b-instruct"
+version   = "2026-05-08"
+
+[souls.endpoint]
+kind     = "self-hosted"
+url      = ""            # GAP: not yet deployed
+region   = "us-east"
+auth_ref = "MODAL_TOKEN"
+
+[souls.routing_policy]
+task_shapes            = ["code-generation", "eval-scoring", "scientific-reasoning"]
+fallback_soul_id       = "gilgamesh-of-uruk"
+cost_cap_usd_per_call  = 0.02
+latency_budget_ms      = 5000
+
+[souls.evolution_state]
+current_level   = 1
+last_evolved_at = "2026-05-08T00:00:00Z"
+
+[[souls.evolution_state.promotion_history]]
+from_level       = 0
+to_level         = 1
+ts               = "2026-05-08T00:00:00Z"
+evidence_eval_id = "lora-1p5b-hard-retain-2026-05-08"
+decision_ref     = "slm-learning-173"
+
+skill_adapters = []

@@ -1015,4 +1015,34 @@
     <summary>3B + LoRA r=16 + 27 hard + retain bank ≤137 lane CLOSED — refuted across full retain-ratio range</summary>
   </decision>
 
+  <decision id="slm-learning-203">
+    <title>3B parked as comparator; not dead, not Stein-house canoni...</title>
+    <summary>3B parked as comparator; not dead, not Stein-house canonical. Reopen criteria stated.</summary>
+  </decision>
+
+  <decision id="slm-learning-204">
+    <title>Kael correction strategy: hybrid peer-evidence + Opus-can...</title>
+    <summary>Kael correction strategy: hybrid peer-evidence + Opus-canonical with provenance + accepted_by gate</summary>
+  </decision>
+
+  <decision id="slm-learning-205">
+    <title>Claude Design handoff bundles become first-class trigger ...</title>
+    <summary>Claude Design handoff bundles become first-class trigger payloads in GAD generation pipeline</summary>
+  </decision>
+
+  <decision id="slm-learning-206">
+    <title>Production usage logging starts now: prefer own logger ov...</title>
+    <summary>Production usage logging starts now: prefer own logger over PostHog; capture every gateway call</summary>
+  </decision>
+
+  <decision id="slm-learning-207">
+    <title>Kael as main orchestration entrypoint; incremental smalle...</title>
+    <summary>Kael as main orchestration entrypoint; incremental smaller-training improvement over time, not big-bang fine-tunes</summary>
+  </decision>
+
+  <decision id="slm-learning-208">
+    <title>GAD Gateway is THE next infrastructure priority; gates de...</title>
+    <summary>GAD Gateway is THE next infrastructure priority; gates decisions 214-217 + 207 + 205</summary>
+  </decision>
+
 </decisions>

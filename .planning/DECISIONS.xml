@@ -1070,4 +1070,14 @@
     <summary>Big-Base Replacement Track authorized — $100-300 first serious big-base experiment with high-end open Qwen</summary>
   </decision>
 
+  <decision id="slm-learning-222">
+    <title>Static benchmark scores registry — published frontier/ope...</title>
+    <summary>Static benchmark scores registry — published frontier/open model scores cited per benchmark, queryable</summary>
+  </decision>
+
+  <decision id="slm-learning-223">
+    <title>SWE-bench Verified subset harness becomes the gold-standa...</title>
+    <summary>SWE-bench Verified subset harness becomes the gold-standard agentic bench; HumanEval/MBPP are saturating-narrow indicators only</summary>
+  </decision>
+
 </decisions>

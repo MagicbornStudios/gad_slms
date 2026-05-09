@@ -957,4 +957,57 @@
     <summary>Teacher rows require provenance + accepted_by metadata or they are not teacher rows</summary>
   </decision>
 
+  <decision id="slm-learning-214">
+    <title>GAD-owned inference becomes the default replacement path</title>
+    <date>2026-05-08</date>
+    <summary>Daily AI work moves OFF frontier subscriptions onto GAD-owned routing + open models + local/remote inference + continual training. Composes with GLOBAL-D-326 + GLOBAL-D-318. Frontier remains enrichment/teacher/comparator only. Day 1 = build observe-and-route gateway: every task logged with task_shape, used_model, could_local_handle, fallback_reason, value, training_candidate.</summary>
+  </decision>
+
+  <decision id="slm-learning-215">
+    <title>Frontier tools become enrichment/teacher routes, not daily defaults</title>
+    <date>2026-05-08</date>
+    <summary>Claude / ChatGPT / Gemini API + subscriptions are routed only when: small model fails confidence threshold; teacher labels needed for distillation; long-context repo work; correction pairs for DPO; paper-writing critique; sanity check before expensive run; cross-runtime disagreement panel. NEVER as default for routine tasks (GAD notes/decisions, tool_action JSON, eval summaries). Composes with GLOBAL-D-326 §Tier3, GLOBAL-D-318.</summary>
+  </decision>
+
+  <decision id="slm-learning-216">
+    <title>AI spend ledger gates subscription downgrades</title>
+    <date>2026-05-08</date>
+    <summary>Monthly ledger tracks: subscription dollars avoided, frontier calls reduced, successful tasks completed by GAD-owned models, cost per successful task, fallback rate, training data produced, promoted adapters/models. If GAD-owned stack handles 70%+ of day-to-day for 30 days, downgrade/cancel one subscription. Do NOT cancel preemptively — earn the budget. Phase budget hard caps: $150 → $250 → $500. Composes with GLOBAL-D-326 §Budget+§Metric.</summary>
+  </decision>
+
+  <decision id="slm-learning-217">
+    <title>Day-to-day replacement matrix determines training priorities</title>
+    <date>2026-05-08</date>
+    <summary>Task replacement matrix (reports/research/task_replacement_matrix.md) is the canonical priority list for training runs. Train specialists in matrix order: GAD decision summaries (1.5B/3B), tool_action JSON (tooluse-v3), simple eval summaries (3B/7B), tech-stack inference (1.5B/3B), dataset cleanup (3B/7B), simple code patches (7B), game artifact generation (3B/7B + rubric), repo repair (7B/32B + fallback), hard architecture (frontier remains). Each matrix row tracks confidence, cost-per-task, quality, fallback rate. Composes with GLOBAL-D-326.</summary>
+  </decision>
+
+  <decision id="slm-learning-218">
+    <title>Product economics center on paid evolutions subsidizing cheap daily inference</title>
+    <date>2026-05-08</date>
+    <summary>GAD's product is NOT tokens; it is ongoing model evolution + project-specific souls + workflow memory + agent behavior + artifact generation. Daily inference uses shared base + adapters + cache → low cost → bundled in subscription. Evolution = premium event: project-specific training, soul/personality tuning, artifact style tuning, workflow tuning, private retain-bank, eval suite generation, adapter training, promotion report. Charge $500-$5000+ per evolution cycle depending on data volume / private training / eval complexity / artifact generation / dedicated inference. Surplus funds teacher jobs + larger training runs + shared base improvements + inference pool capacity + eval development.</summary>
+  </decision>
+
+  <decision id="slm-learning-219">
+    <title>Customer souls are project adapters + memory + skills + evals, NOT separate full models</title>
+    <date>2026-05-08</date>
+    <summary>Default soul stack: shared base model + shared GAD skill adapters + vertical adapter (game/marketing/code/writing) + customer/project soul adapter (LoRA) + retrieval memory + style examples + project facts + accepted/rejected preference pairs + project eval rubric. Only Enterprise/Studio tier gets dedicated training/inference isolation. Two evolution tiers: PRIVATE (only their adapter improves, more expensive) vs SHARED (anonymized deltas may improve shared models, cheaper). Customer chooses.</summary>
+  </decision>
+
+  <decision id="slm-learning-220">
+    <title>Dedicated GPU hosting requires proven utilization; default is serverless/burst</title>
+    <date>2026-05-08</date>
+    <summary>Hosting tiers (per GLOBAL-D-326): (1) Serverless token API (Together-style) for high-end open model access, no infra burden, fastest launch; (2) RunPod/Modal serverless GPU for custom LoRA + evolution batch jobs, scale-to-zero billing per second; (3) vLLM/SGLang on rented GPU for shared base + multi-LoRA serving once steady traffic justifies; (4) Dedicated GPUs (Lambda) ONLY after utilization proves it. Vast.ai for cheapest experimentation, NOT consumer-production backbone. Frontier APIs for teacher/enrichment routes only.</summary>
+  </decision>
+
+  <decision id="slm-learning-221">
+    <title>Shared improvements require explicit customer data policy</title>
+    <date>2026-05-08</date>
+    <summary>Customer-specific evolution requires: explicit consent to train on their project data, tenant isolation guarantees, adapter ownership terms, data deletion policy, model export policy, explicit choice on whether their evolution improves shared models, human review for sensitive outputs. Two product modes: PRIVATE evolution (only their adapter improves, premium price, full data isolation) vs SHARED evolution (anonymized/generalized deltas may improve shared models, cheaper price, customer benefits from collective improvement). Default for new accounts: PRIVATE; SHARED requires opt-in.</summary>
+  </decision>
+
+  <decision id="slm-learning-201">
+    <title>Variant C morphism lane closed via clean falsification — ...</title>
+    <summary>Variant C morphism lane closed via clean falsification — three init points tested, all inert at 1.5B</summary>
+  </decision>
+
 </decisions>

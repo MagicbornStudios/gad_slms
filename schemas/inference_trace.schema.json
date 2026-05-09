@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/inference_trace.schema.json",
+  "title": "Inference Trace Row",
+  "description": "Per-call log emitted by the GAD inference gateway. One row per LLM/SLM call regardless of tier (Tier 0 local, Tier 1 cheap remote, Tier 2 high-end open, Tier 3 frontier enrichment). Drives routing decisions, replacement metrics, and training-candidate harvesting. Decisions: slm-learning-214 (GAD-owned inference is default), slm-learning-217 (day-to-day replacement matrix determines training priorities), slm-learning-103 (compare-and-compete discipline), slm-learning-100 (delta graph provenance).",
+  "type": "object",
+  "required": [
+    "trace_id",
+    "ts",
+    "task_shape",
+    "used_model",
+    "tier",
+    "outcome",
+    "could_local_handle",
+    "training_candidate"
+  ],
+  "properties": {
+    "trace_id": {
+      "type": "string",
+      "description": "Globally-unique id (UUID or hash)."
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Call timestamp (ISO-8601, UTC)."
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Caller session / conversation id."
+    },
+    "agent": {
+      "type": "string",
+      "description": "Agent identity (claude-code, codex-cli, kael-tooluse-v1, dr-stein-orchestrator, etc.)."
+    },
+    "runtime": {
+      "type": "string",
+      "description": "Runtime that issued the call (claude-cli, vllm, sglang, modal-fn, openai-sdk, openrouter, etc.)."
+    },
+    "projectid": {
+      "type": "string",
+      "description": "GAD project id (e.g. slm-learning, escape-the-dungeon)."
+    },
+    "task_shape": {
+      "type": "string",
+      "description": "Maps to teachers.json task_shape vocabulary (code_function_completion, code_repair, tool_action_json, math_reasoning, trajectory_completion, bulk_paraphrase, chain_of_thought_synth, frontier_judge_panel, logit_inspection) plus replacement-plan additions (gad_note, gad_decision, gad_handoff, eval_summary, tech_stack_inference, dataset_cleanup, delta_packet_creation, context_compression, classification, repo_repair, architecture_review, artifact_generation)."
+    },
+    "task_shape_confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Router's confidence the task_shape label is correct."
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["tier0_local", "tier1_workhorse", "tier2_high_end", "tier3_frontier"],
+      "description": "Which replacement tier handled the call."
+    },
+    "used_model": {
+      "type": "string",
+      "description": "Model registry id actually used (matches data/registry/model_families.json or a Kael adapter id)."
+    },
+    "candidate_models": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Other registry ids the router considered before selecting used_model."
+    },
+    "route_id": {
+      "type": "string",
+      "description": "Gateway route id (e.g. 'kael-tooluse-v1@vllm-modal-h100')."
+    },
+    "could_local_handle": {
+      "type": "boolean",
+      "description": "Router's pre-call estimate that a Tier 0/1 model could complete the task. Compared to outcome to score router calibration."
+    },
+    "fallback_reason": {
+      "type": "string",
+      "enum": [
+        "none",
+        "low_confidence",
+        "verifier_failed",
+        "schema_violation",
+        "context_too_long",
+        "rate_limit",
+        "operator_override",
+        "tier_unavailable",
+        "task_shape_unmapped"
+      ],
+      "description": "Why the call escalated past Tier 0/1 (or 'none' if it didn't)."
+    },
+    "fallback_chain": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Ordered list of model ids tried in this call (router cascade)."
+    },
+    "input_tokens": { "type": "integer", "minimum": 0 },
+    "output_tokens": { "type": "integer", "minimum": 0 },
+    "latency_ms": { "type": "integer", "minimum": 0 },
+    "cost_usd": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Resolved USD cost (API price * tokens, or compute_seconds * rate for self-hosted)."
+    },
+    "outcome": {
+      "type": "string",
+      "enum": ["accepted", "rejected", "edited", "abandoned", "verifier_failed", "verifier_passed", "unknown"],
+      "description": "Final disposition of this call's output."
+    },
+    "human_edit_distance": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Levenshtein or token edit distance between model output and final accepted text. 0 = used as-is."
+    },
+    "verifier_result": {
+      "type": "object",
+      "description": "Optional verifier signal (test_suite_diff_runner, json_schema_validator, contract_runner, etc.).",
+      "properties": {
+        "verifier_id": { "type": "string" },
+        "passed": { "type": "boolean" },
+        "details": { "type": "string" }
+      }
+    },
+    "value": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "noise"],
+      "description": "Operator/agent annotation of how valuable this output was. Drives training-candidate selection."
+    },
+    "training_candidate": {
+      "type": "boolean",
+      "description": "Whether this trace should be promoted to the delta packet pipeline (per slm-learning-100/192)."
+    },
+    "delta_packet_ref": {
+      "type": "string",
+      "description": "If promoted, the packet_id created from this trace."
+    },
+    "decision_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "schema_v": {
+      "type": "integer",
+      "default": 1
+    }
+  }
+}

@@ -1,0 +1,248 @@
+# Day-to-day replacement smoke benchmark
+#
+# Date: 2026-05-08
+# Owner: Dr. Stein (slm-learning)
+# Decision refs:
+#   - slm-learning-214 (GAD-owned inference is default)
+#   - slm-learning-215 (frontier becomes enrichment)
+#   - slm-learning-216 (this benchmark gates subscription downgrades)
+#   - slm-learning-217 (replacement matrix drives training priorities)
+#   - slm-learning-103 (compare-and-compete)
+#
+# Operator direction summary:
+#   "If GAD-owned stack handles 70% of day-to-day tasks for 30 days,
+#    downgrade/cancel one subscription." This benchmark exercises the
+#    GAD inference gateway across the priority task shapes from
+#    reports/research/task_replacement_matrix.md and emits PASS/FAIL per
+#    task_shape. The benchmark is a CONTRACT — it specifies what the
+#    gateway must do, not how to execute it. Runner implementation lives
+#    in scripts/eval/run_replacement_smoke.py (TBD).
+#
+# Pass rule (binding):
+#   Each task_shape has a per-shape pass threshold. The OVERALL
+#   benchmark passes when >= 7 of 10 task_shapes meet their threshold
+#   (the 70% gate from operator direction). Per-shape failures roll
+#   into the gate watchlist; only shapes that pass count toward the
+#   30-day local-handle window.
+
+description: "Day-to-day replacement smoke (10 task shapes)"
+schema_v: 1
+
+decision_refs:
+  - slm-learning-214
+  - slm-learning-215
+  - slm-learning-216
+  - slm-learning-217
+  - slm-learning-103
+
+# Routes the benchmark exercises against the GAD inference gateway.
+# Each route maps to a model id from data/registry/model_families.json
+# or a Kael adapter id.
+routes:
+  - id: tier0_local_classifier
+    tier: tier0_local
+    used_model: kael-1p5b-classifier-v1
+    runtime: vllm-local
+  - id: tier0_local_gad_meta
+    tier: tier0_local
+    used_model: kael-1p5b-gad-meta-v1
+    runtime: vllm-local
+  - id: tier1_workhorse_code
+    tier: tier1_workhorse
+    used_model: qwen2.5-coder-7b-instruct
+    runtime: vllm-modal-a100
+  - id: tier1_workhorse_tool_action
+    tier: tier1_workhorse
+    used_model: kael-7b-tool-action-v1
+    runtime: vllm-modal-a100
+  - id: tier2_high_end_compression
+    tier: tier2_high_end
+    used_model: qwen3-next-80b-a3b-instruct
+    runtime: vllm-modal-h100
+  - id: tier3_frontier_review
+    tier: tier3_frontier
+    used_model: claude-opus-4-5
+    runtime: anthropic-api
+
+# Comparator row (slm-learning-103). Each task_shape that promotes a
+# replacement model must record its score against these comparators
+# before the gate trips.
+comparators:
+  - claude-opus-4-5
+  - claude-cli
+  - opencode-zen-big-pickle
+  - meta-llama/llama-3.3-70b-instruct:free
+  - bare-base  # qwen2.5-coder-7b-instruct without LoRA
+
+# Smoke task shapes — minimum 7 of 10 must pass for the gate to trip.
+tasks:
+  - id: smoke-01-gad-note
+    task_shape: gad_note
+    route: tier0_local_gad_meta
+    sample_prompt: |
+      Append a planning note titled "tooluse-v2 contract drift" with
+      body covering the JSON schema regression observed on 2026-05-07.
+      Emit ONLY a single `gad note add` invocation as JSON tool_action.
+    expected_contract: gad_note_tool_action
+    pass_threshold:
+      schema_valid_rate_min: 0.90
+      operator_edit_distance_max_tokens: 10
+    verifier: json_schema_validator + gad_cli_dry_run
+    decision_refs: [slm-learning-217]
+
+  - id: smoke-02-gad-decision
+    task_shape: gad_decision
+    route: tier0_local_gad_meta
+    sample_prompt: |
+      Record decision slm-learning-218: "Per-call inference traces
+      power the replacement gate." Include summary, decision_refs,
+      and the gad CLI invocation that registers it.
+    expected_contract: gad_decision_tool_action
+    pass_threshold:
+      schema_valid_rate_min: 0.90
+      decision_id_format_match_rate_min: 1.0
+      operator_edit_distance_max_tokens: 10
+    verifier: json_schema_validator + decision_id_regex
+    decision_refs: [slm-learning-217]
+
+  - id: smoke-03-gad-handoff
+    task_shape: gad_handoff
+    route: tier0_local_gad_meta
+    sample_prompt: |
+      Write a handoff for slm-learning phase 04 covering the open
+      Kael trajectory eval. Body must include task_id, phase,
+      last_commit, what's done, what's left, what's blocked.
+    expected_contract: gad_handoff_body_md
+    pass_threshold:
+      handoff_rubric_score_min: 12  # out of 16, per docs/handoff_prompt_quality.md
+      schema_valid_rate_min: 0.90
+    verifier: handoff_rubric_runner + frontmatter_schema
+    decision_refs: [slm-learning-217]
+
+  - id: smoke-04-tool-action-json
+    task_shape: tool_action_json
+    route: tier1_workhorse_tool_action
+    sample_prompt: |
+      The user wants to mark task SL-T-04-12 done. Emit the gad CLI
+      tool_action that stamps it (status done, agent dr-stein,
+      runtime claude-cli).
+    expected_contract: tool_action_json
+    pass_threshold:
+      schema_valid_rate_min: 0.85
+      bfcl_compatible_rate_min: 0.85
+      gad_tools_owned_domain_pass_min: 0.85
+    verifier: json_schema_validator + contract_runner + gad_cli_dry_run
+    decision_refs: [slm-learning-217, slm-learning-103]
+
+  - id: smoke-05-eval-summary
+    task_shape: eval_summary
+    route: tier1_workhorse_code
+    sample_prompt: |
+      Given a humaneval JSON of 164 problems with pass/fail per item,
+      emit a 3-paragraph summary plus a JSON block with
+      `pass_at_1`, `failed_problem_ids`, and a 1-line failure mode
+      cluster summary.
+    expected_contract: eval_summary_md_plus_json
+    pass_threshold:
+      operator_accept_rate_min: 0.80
+      json_block_valid_rate_min: 0.95
+    verifier: json_schema_validator + operator_review
+    decision_refs: [slm-learning-217]
+
+  - id: smoke-06-tech-stack-inference
+    task_shape: tech_stack_inference
+    route: tier0_local_classifier
+    sample_prompt: |
+      Given a directory listing of a repo (package.json, src/,
+      tsconfig.json, .next/, prisma/), classify primary language,
+      framework, and test runner. Output STRICT JSON with keys
+      `primary_language`, `framework`, `test_runner`, `confidence`.
+    expected_contract: tech_stack_classification_json
+    pass_threshold:
+      top_1_accuracy_min: 0.90
+      schema_valid_rate_min: 0.95
+    verifier: json_schema_validator + held_out_label_set
+    decision_refs: [slm-learning-217]
+
+  - id: smoke-07-dataset-cleanup
+    task_shape: dataset_cleanup
+    route: tier1_workhorse_code
+    sample_prompt: |
+      Given 50 lines of JSONL with mixed schema violations (missing
+      `task_shape`, malformed `correction`, dangling `parents[]`),
+      emit a cleaned JSONL where every row validates against
+      schemas/delta_packet.schema.json. Drop rows that cannot be
+      repaired and report them in a `dropped_row_ids` array.
+    expected_contract: cleaned_jsonl_plus_dropped_list
+    pass_threshold:
+      schema_valid_rate_min: 0.95
+      verifier_pass_min: 0.95
+    verifier: jsonschema_batch + dropped_list_audit
+    decision_refs: [slm-learning-217]
+
+  - id: smoke-08-delta-packet-creation
+    task_shape: delta_packet_creation
+    route: tier1_workhorse_code
+    sample_prompt: |
+      Given a failed HumanEval problem with the model's wrong output,
+      the test suite, and the canonical solution, emit a delta_packet
+      JSON with `packet_id`, `root_context_id`, `base_model`,
+      `task_shape: function_repair`, `minimal_prompt`, `correction`,
+      `tests`, and `provenance`. Must validate against
+      schemas/delta_packet.schema.json.
+    expected_contract: delta_packet_json
+    pass_threshold:
+      schema_valid_rate_min: 0.95
+      verifier_pass_min: 0.95
+    verifier: jsonschema + correction_runs_test_suite
+    decision_refs: [slm-learning-217, slm-learning-100]
+
+  - id: smoke-09-simple-code-patch
+    task_shape: code_repair
+    route: tier1_workhorse_code
+    sample_prompt: |
+      Given a Python module with one off-by-one bug in
+      `range(len(lst))` and a failing pytest, emit a unified diff
+      that makes the test pass. Diff must apply cleanly with
+      `git apply`.
+    expected_contract: unified_diff
+    pass_threshold:
+      apply_clean_rate_min: 0.85
+      tests_pass_after_apply_min: 0.70
+    verifier: git_apply + pytest
+    decision_refs: [slm-learning-217]
+
+  - id: smoke-10-context-compression
+    task_shape: context_compression
+    route: tier2_high_end_compression
+    sample_prompt: |
+      Compress a 32k-token planning thread into a structured
+      summary: `goals[]`, `decisions[]`, `blockers[]`, `next_steps[]`.
+      Output strict JSON. Must preserve every decision id mentioned
+      in the source.
+    expected_contract: thread_summary_json
+    pass_threshold:
+      decision_id_recall_min: 1.0
+      compression_ratio_min: 4.0
+      operator_accept_rate_min: 0.80
+    verifier: decision_id_recall + jsonschema + operator_review
+    decision_refs: [slm-learning-217]
+
+# Gate evaluation. After every run the runner writes:
+#   reports/evals/replacement_smoke/<UTC-DATE>/results.json
+# with one row per task carrying `passed: bool` and contributing
+# observations to schemas/inference_trace.schema.json. The
+# 30-day local-handle window in the spend ledger only advances
+# for task_shapes that pass here.
+gate:
+  pass_count_min: 7  # of 10
+  cadence: weekly
+  reports_to: reports/evals/replacement_smoke/
+  spend_ledger_link: reports/costs/ai_spend_ledger.md
+  on_pass:
+    - "advance downgrade_gate_window_days for all passing task_shapes"
+    - "if window >= 30 AND replacement_target verified, set downgrade_gate_status = gate_passed"
+  on_fail:
+    - "reset window for failing task_shapes"
+    - "open delta-packet harvest for failing rows (training_candidate: true)"
+    - "no subscription downgrade until next pass"

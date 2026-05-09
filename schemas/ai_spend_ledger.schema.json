@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/ai_spend_ledger.schema.json",
+  "title": "AI Spend Ledger Row",
+  "description": "One row per AI subscription or API line, per month. Drives the subscription-replacement plan. Decisions: slm-learning-214 (GAD-owned inference becomes default replacement path), slm-learning-216 (AI spend ledger gates subscription downgrades).",
+  "type": "object",
+  "required": [
+    "row_id",
+    "period",
+    "vendor",
+    "product",
+    "tier",
+    "billing_mode",
+    "monthly_cost_usd",
+    "status",
+    "replacement_phase"
+  ],
+  "properties": {
+    "row_id": {
+      "type": "string",
+      "description": "Stable id, e.g. 'spend-2026-05-claude-max'."
+    },
+    "period": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}$",
+      "description": "Billing month in YYYY-MM."
+    },
+    "vendor": {
+      "type": "string",
+      "description": "Anthropic, OpenAI, Google, Cursor, RunPod, Together, HuggingFace, Modal, OpenRouter, etc."
+    },
+    "product": {
+      "type": "string",
+      "description": "Product name as it appears on the invoice (e.g. 'Claude Max', 'ChatGPT Plus', 'Gemini AI Pro', 'Cursor Pro', 'RunPod Flex GPU', 'Together API')."
+    },
+    "tier": {
+      "type": "string",
+      "description": "Subscription tier or plan label."
+    },
+    "billing_mode": {
+      "type": "string",
+      "enum": ["subscription", "api_usage", "compute_metered", "free_tier"],
+      "description": "How this line is charged."
+    },
+    "monthly_cost_usd": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Actual or projected USD spent in this period."
+    },
+    "monthly_cap_usd": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Cap applied for this period (used vs phase budget)."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "downgraded", "cancelled", "paused", "trial", "evaluating"],
+      "description": "Current subscription state."
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "frontier_enrichment",
+        "frontier_teacher",
+        "tier1_workhorse",
+        "tier2_high_end",
+        "tier0_local",
+        "compute_provider",
+        "tooling",
+        "other"
+      ],
+      "description": "Which replacement tier this line plays in the migration plan."
+    },
+    "replacement_phase": {
+      "type": "string",
+      "enum": ["pre_phase_1", "phase_1", "phase_2", "phase_3", "post_replacement"],
+      "description": "Phase under the subscription replacement plan."
+    },
+    "task_shapes_served": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "task_shape labels that this line currently serves (must match teachers.json vocabulary where possible)."
+    },
+    "replacement_target": {
+      "type": "string",
+      "description": "Model id / route in registry that is intended to replace this line (e.g. 'qwen2.5-coder-7b-instruct', 'kael-7b-tool-action-v1')."
+    },
+    "replacement_confidence": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "untested"],
+      "description": "How confident we are that the replacement currently handles the task shape end-to-end."
+    },
+    "successor_route": {
+      "type": "string",
+      "description": "GAD gateway route id that absorbs this line's traffic when the line is downgraded."
+    },
+    "monthly_calls_estimated": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Approximate number of inference/chat calls per month."
+    },
+    "downgrade_gate_status": {
+      "type": "string",
+      "enum": ["not_evaluated", "watching", "gate_passed", "gate_failed", "downgraded"],
+      "description": "70%-handled-for-30-days frontier downgrade gate state per slm-learning-216."
+    },
+    "downgrade_gate_window_days": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Days of consecutive >=70% local handling observed for this task shape group."
+    },
+    "notes": { "type": "string" },
+    "decision_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "schema_v": {
+      "type": "integer",
+      "default": 1
+    }
+  }
+}

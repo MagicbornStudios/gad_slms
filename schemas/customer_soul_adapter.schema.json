@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/customer_soul_adapter.schema.json",
+  "title": "Customer Soul Adapter",
+  "description": "A customer/project soul: a private LoRA + retrieval memory + skill stack + eval rubric attached to a shared base model. NOT a separate full model (slm-learning-219). Includes mandatory data-policy fields per slm-learning-221. Adapter weight metadata follows the Delta Graph schema (slm-learning-100): every adapter is a Delta Graph node with delta_id, base, parents, depends_on, dataset, rank, merge_method, training_method, evals.public + private, cost_usd, wall_hours, compute_target, status, regression_journal_uri, outputs_corpus_uri, decision_refs. Maps onto the souls/houses/factions framework — a customer soul is a tenant-private soul layered on top of the shared house adapter stack.",
+  "type": "object",
+  "required": [
+    "adapter_id",
+    "tenant_id",
+    "tier",
+    "base_model",
+    "consent_mode",
+    "tenant_isolation",
+    "data_deletion_policy",
+    "adapter_ownership",
+    "model_export_policy",
+    "human_review_policy",
+    "decision_refs"
+  ],
+  "properties": {
+    "adapter_id": {
+      "type": "string",
+      "description": "Unique adapter id; doubles as Delta Graph delta_id (slm-learning-100). Format: 'soul-<tenant>-<project>-<date>-<n>'."
+    },
+    "tenant_id": { "type": "string" },
+    "project_id": { "type": "string" },
+    "soul_name": {
+      "type": "string",
+      "description": "Operator-facing soul name (e.g. 'magicborn-bestiary', 'acme-marketing-voice'). Mirrors narrative/souls/<soul>.md when used internally."
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["creator", "studio", "enterprise"]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "training", "staging", "canonical", "deprecated", "deleted"]
+    },
+    "base_model": {
+      "type": "string",
+      "description": "HF id of the shared base model the adapter composes onto (e.g. Qwen/Qwen2.5-Coder-7B-Instruct). Maps to model_family_registry id."
+    },
+    "shared_skill_adapters": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Shared GAD skill adapter delta_ids stacked under the customer soul. Loaded from the multi-LoRA pool."
+    },
+    "vertical_adapter_id": {
+      "type": "string",
+      "description": "Optional vertical adapter (game / marketing / code / writing) delta_id."
+    },
+    "retrieval_memory": {
+      "type": "object",
+      "description": "Project root context that the adapter pulls at inference time. Adapter + memory together form the 'soul'.",
+      "properties": {
+        "vector_store_uri": { "type": "string" },
+        "doc_count": { "type": "integer" },
+        "chunk_count": { "type": "integer" },
+        "embedding_model": { "type": "string" },
+        "context_root_ids": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "References to context_root entries (schemas/context_root.schema.json)."
+        }
+      }
+    },
+    "skills": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Skill ids (schemas/skill.schema.json) the soul has installed."
+    },
+    "eval_rubric": {
+      "type": "object",
+      "description": "Operator-facing definition of 'this soul is working'. Charter Row 7 owned-domain row.",
+      "properties": {
+        "rubric_uri": { "type": "string" },
+        "owned_domain_eval_id": { "type": "string" },
+        "current_score": { "type": "number" },
+        "baseline_score": { "type": "number" },
+        "target_score": { "type": "number" }
+      }
+    },
+    "delta_graph_node": {
+      "type": "object",
+      "description": "Delta Graph fields per slm-learning-100. Required for every promoted adapter.",
+      "required": ["base", "training_method", "compute_target"],
+      "properties": {
+        "base": { "type": "string", "description": "Base model id (mirrors base_model)." },
+        "parents": { "type": "array", "items": { "type": "string" } },
+        "depends_on": { "type": "array", "items": { "type": "string" } },
+        "dataset": {
+          "type": "object",
+          "properties": {
+            "ingest_uris": { "type": "array", "items": { "type": "string" } },
+            "rows_count": { "type": "integer" },
+            "tokens_count": { "type": "integer" },
+            "task_shapes": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "rank": { "type": "integer", "minimum": 1 },
+        "merge_method": {
+          "type": "string",
+          "enum": ["none", "weighted_average", "ties", "dare", "task_arithmetic", "branch_train_merge"]
+        },
+        "training_method": {
+          "type": "string",
+          "enum": ["lora", "qlora", "full_finetune", "morphism_a", "morphism_b", "morphism_c", "merge", "distillation_sft", "dpo", "grpo_rlvr"]
+        },
+        "evals": {
+          "type": "object",
+          "properties": {
+            "public": { "type": "object", "additionalProperties": true },
+            "private": { "type": "object", "additionalProperties": true }
+          }
+        },
+        "cost_usd": { "type": "number" },
+        "wall_hours": { "type": "number" },
+        "compute_target": { "type": "string" },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "staging", "canonical", "deprecated"]
+        },
+        "regression_journal_uri": { "type": "string" },
+        "outputs_corpus_uri": { "type": "string" }
+      }
+    },
+    "weights": {
+      "type": "object",
+      "properties": {
+        "weights_uri": {
+          "type": "string",
+          "description": "HF Hub or Modal volume URI. Per slm-learning-105 anything >100MB lives on Modal volume / HF Hub, never local."
+        },
+        "size_mb": { "type": "number" },
+        "checksum_sha256": { "type": "string" }
+      }
+    },
+    "consent_mode": {
+      "type": "string",
+      "enum": ["private_evolution", "shared_evolution_optin"],
+      "description": "MANDATORY per slm-learning-221. private_evolution = only this adapter improves; shared_evolution_optin = anonymized/generalized deltas may improve shared models in exchange for a discount."
+    },
+    "tenant_isolation": {
+      "type": "object",
+      "required": ["isolation_level", "kv_cache_isolated", "training_data_isolated"],
+      "description": "MANDATORY per slm-learning-221.",
+      "properties": {
+        "isolation_level": {
+          "type": "string",
+          "enum": ["strict", "shared_evolution_only", "shared_inference_kv_optin"]
+        },
+        "kv_cache_isolated": { "type": "boolean" },
+        "training_data_isolated": { "type": "boolean" },
+        "cross_tenant_audit_uri": { "type": "string" }
+      }
+    },
+    "data_deletion_policy": {
+      "type": "object",
+      "required": ["retention_days", "deletion_sla_days"],
+      "description": "MANDATORY per slm-learning-221.",
+      "properties": {
+        "retention_days": { "type": "integer", "minimum": 0 },
+        "deletion_sla_days": { "type": "integer", "minimum": 0 },
+        "delete_request_uri": { "type": "string" },
+        "include_derived_artifacts": { "type": "boolean", "description": "Whether deletion cascades to retain bank rows / delta packets / training logs." }
+      }
+    },
+    "adapter_ownership": {
+      "type": "object",
+      "required": ["owner", "ownership_terms_uri"],
+      "description": "MANDATORY per slm-learning-221.",
+      "properties": {
+        "owner": {
+          "type": "string",
+          "enum": ["tenant", "platform", "joint"],
+          "description": "Who owns the adapter weights legally on contract end."
+        },
+        "ownership_terms_uri": { "type": "string" },
+        "transferable_on_termination": { "type": "boolean" }
+      }
+    },
+    "model_export_policy": {
+      "type": "object",
+      "required": ["exportable"],
+      "description": "MANDATORY per slm-learning-221.",
+      "properties": {
+        "exportable": { "type": "boolean", "description": "Can the customer take their adapter weights?" },
+        "export_format": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["lora_safetensors", "merged_safetensors", "gguf", "hf_repo"] }
+        },
+        "export_fee_usd": { "type": "number" },
+        "export_terms_uri": { "type": "string" }
+      }
+    },
+    "consent_to_train_on_project_data": {
+      "type": "object",
+      "required": ["granted", "granted_at", "granted_by"],
+      "description": "MANDATORY per slm-learning-221.",
+      "properties": {
+        "granted": { "type": "boolean" },
+        "granted_at": { "type": "string", "format": "date-time" },
+        "granted_by": { "type": "string", "description": "Authorized signer id at the tenant." },
+        "scope_uris": { "type": "array", "items": { "type": "string" } },
+        "revoked_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "human_review_policy": {
+      "type": "object",
+      "required": ["sensitive_outputs_require_review"],
+      "description": "MANDATORY per slm-learning-221. Game artifacts, generated marketing, customer-facing copy may require human review.",
+      "properties": {
+        "sensitive_outputs_require_review": { "type": "boolean" },
+        "sensitive_categories": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["marketing_copy", "game_artifact", "user_facing_text", "code_release", "financial", "medical", "legal", "other"] }
+        },
+        "reviewer_role": { "type": "string" },
+        "review_sla_hours": { "type": "integer" }
+      }
+    },
+    "evolution_history": {
+      "type": "array",
+      "description": "Pointer list to evolution_job records that produced or updated this adapter.",
+      "items": { "type": "string" }
+    },
+    "billing": {
+      "type": "object",
+      "properties": {
+        "monthly_inference_estimate_usd": { "type": "number" },
+        "last_evolution_cost_usd": { "type": "number" },
+        "lifetime_cost_usd": { "type": "number" },
+        "lifetime_revenue_usd": { "type": "number" },
+        "lifetime_margin_usd": { "type": "number" }
+      }
+    },
+    "decision_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "schema_v": { "type": "integer", "default": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "notes": { "type": "string" }
+  }
+}

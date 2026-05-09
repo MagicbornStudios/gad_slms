@@ -1,0 +1,291 @@
+# Cost-per-successful-task benchmark (by tenant route)
+#
+# Date: 2026-05-08
+# Owner: Dr. Stein (slm-learning)
+# Decision refs:
+#   slm-learning-218  paid evolutions subsidize cheap daily inference
+#   slm-learning-219  customer souls are adapters, not separate models
+#   slm-learning-220  dedicated GPU only after proven utilization
+#   slm-learning-221  shared improvements require explicit customer data policy
+#   slm-learning-103  compare-and-compete (every promoted candidate ships 4 rows)
+#   slm-learning-197  teacher policy
+# Companion:
+#   reports/business/hosting_cost_strategy.md
+#   reports/business/evolution_pricing_model.md
+#   reports/research/shared_base_private_adapter_architecture.md
+#   schemas/tenant_model_route.schema.json
+#   schemas/evolution_job.schema.json
+#   schemas/customer_soul_adapter.schema.json
+#
+# This benchmark is concept-level. It does not execute today; it
+# defines the contract that the gateway telemetry pipeline will
+# emit, the formulas the dashboard will compute, and the pass
+# thresholds promotion logic will gate on.
+
+benchmark_id: cost_per_success_by_tenant
+schema_v: 1
+
+# -----------------------------------------------------------------
+# Definitions
+# -----------------------------------------------------------------
+definitions:
+  successful_task: >
+    A task whose primary route returned a response that passed the
+    task's verifier (test suite, JSON schema validator, contract
+    runner, or human reviewer for the categories named in the
+    soul's human_review_policy.sensitive_categories). Fallback-chain
+    successes count as successes for the route, but are also tracked
+    separately under fallback_rate.
+
+  cost_per_successful_task: >
+    (sum of route cost over the window) / (count of successful tasks
+    over the window). Cost includes Layer A token spend, Layer B/C
+    GPU wall-time, teacher escalation cost (if any), and prorated
+    storage. Excludes one-off evolution training cost (that lives in
+    evolution_job.cost_breakdown).
+
+  margin_per_evolution: >
+    evolution_job.revenue_usd - evolution_job.cost_breakdown.total
+
+  adapter_promotion_rate: >
+    Fraction of evolution_job records over the window with
+    outcome.promoted == true.
+
+# -----------------------------------------------------------------
+# Tenant-route shapes the benchmark reports on
+# -----------------------------------------------------------------
+# Each shape names the (tenant tier, task shape, hosting layer)
+# combination and the pass threshold for cost-per-successful-task.
+# Thresholds are USD per success.
+# -----------------------------------------------------------------
+route_shapes:
+
+  - shape_id: starter_shared_code_completion
+    tier: starter
+    task_shape: code_function_completion       # matches teachers.json policy
+    primary_model_id: qwen2.5-coder-7b-instruct
+    hosting_layer: A_serverless_api
+    hosting_provider: together_ai
+    teacher_policy_ref: data/registry/teachers.json#code_function_completion
+    threshold_usd_per_success: 0.0040
+    rationale: >
+      Layer A token-priced; Together Qwen3-Coder-Next $0.50/$1.20
+      per Mtok. A successful HumanEval-style completion at ~700
+      input + ~150 output tokens lands ~$0.00053; we triple the
+      naive estimate to absorb fallbacks and retries.
+
+  - shape_id: starter_shared_tool_action
+    tier: starter
+    task_shape: tool_action_json
+    primary_model_id: claude-haiku-4-5
+    hosting_layer: A_serverless_api
+    hosting_provider: anthropic
+    teacher_policy_ref: data/registry/teachers.json#tool_action_json
+    threshold_usd_per_success: 0.0035
+    rationale: >
+      Haiku at $1/$5 per Mtok. Schema validator gates correctness.
+      Fallback to claude-haiku-4-5 fallback row in teachers.json.
+
+  - shape_id: creator_project_soul_completion
+    tier: creator
+    task_shape: code_function_completion
+    primary_model_id: qwen2.5-coder-7b-instruct
+    primary_adapter_id: <customer-soul-adapter-id>
+    hosting_layer: B_serverless_gpu
+    hosting_provider: runpod_serverless
+    hardware_class: L4_A5000_3090
+    teacher_policy_ref: data/registry/teachers.json#code_function_completion
+    threshold_usd_per_success: 0.0080
+    rationale: >
+      L4 / A5000 / 3090 at $0.00019/sec flex. ~5 sec wall-time
+      including cold start amortization on warm pool ≈ $0.001 GPU.
+      Multi-LoRA pool spreads base load across tenants. Threshold
+      doubles vs starter shared because of cold-start tail and
+      tenant-isolated KV cache.
+
+  - shape_id: studio_premium_repair
+    tier: studio
+    task_shape: code_repair
+    primary_model_id: qwen2.5-coder-32b-instruct
+    primary_adapter_id: <customer-soul-adapter-id>
+    hosting_layer: B_serverless_gpu
+    hosting_provider: modal
+    hardware_class: A100_80GB
+    teacher_policy_ref: data/registry/teachers.json#code_repair
+    threshold_usd_per_success: 0.0250
+    rationale: >
+      A100 80GB at $0.00076/sec flex (~$2.74/hr). Repair tasks
+      run longer — 10s wall is a reasonable median. Threshold sized
+      so a Studio tenant pays a pass-through margin while staying
+      under what Claude API repair would cost.
+
+  - shape_id: studio_premium_trajectory
+    tier: studio
+    task_shape: trajectory_completion
+    primary_model_id: qwen2.5-coder-32b-instruct
+    primary_adapter_id: <customer-soul-adapter-id>
+    hosting_layer: B_serverless_gpu
+    hosting_provider: modal
+    hardware_class: A100_80GB
+    teacher_policy_ref: data/registry/teachers.json#trajectory_completion
+    threshold_usd_per_success: 0.1500
+    rationale: >
+      Multi-step trajectories cost more by definition. Verifier =
+      trace_replay + game_state_invariants. Escalation to Opus
+      counts as cost; fallback budget capped at 10% of route.
+
+  - shape_id: enterprise_dedicated_completion
+    tier: enterprise
+    task_shape: code_function_completion
+    primary_model_id: qwen2.5-coder-32b-instruct
+    primary_adapter_id: <customer-soul-adapter-id>
+    hosting_layer: C_dedicated_gpu
+    hosting_provider: runpod_active
+    hardware_class: A100_80GB
+    teacher_policy_ref: data/registry/teachers.json#code_function_completion
+    threshold_usd_per_success: 0.0150
+    rationale: >
+      RunPod active worker A100 80GB at ~25% discount on $0.00076/sec
+      flex (~$2.05/hr). Dedicated only earned when 14-day
+      utilization > 50% per slm-learning-220. Dedicated targets a
+      tighter $/success vs serverless because it amortizes the
+      idle floor at high utilization.
+
+  - shape_id: enterprise_dedicated_premium_judge
+    tier: enterprise
+    task_shape: frontier_judge_panel
+    primary_model_id: claude-opus-4-5
+    hosting_layer: A_serverless_api
+    hosting_provider: anthropic
+    teacher_policy_ref: data/registry/teachers.json#frontier_judge_panel
+    threshold_usd_per_success: 0.7500
+    rationale: >
+      Opus + GPT-5 + Gemini disagreement panel is expensive by
+      design; charged-through pass-through cost. Used as a per-task
+      escalation, not a default route.
+
+# -----------------------------------------------------------------
+# Aggregation windows
+# -----------------------------------------------------------------
+windows:
+  short:
+    name: "rolling 1d"
+    duration_hours: 24
+    used_for: "live dashboard"
+  medium:
+    name: "rolling 7d"
+    duration_hours: 168
+    used_for: "fallback-rate alerting, layer demotion"
+  long:
+    name: "rolling 30d"
+    duration_hours: 720
+    used_for: "tier review, layer C eligibility per slm-learning-220"
+
+# -----------------------------------------------------------------
+# Pass / fail rules
+# -----------------------------------------------------------------
+pass_rules:
+  per_route:
+    cost_per_successful_task_usd:
+      operator: "<="
+      ref: "route_shapes[].threshold_usd_per_success"
+      window: long
+    fallback_rate:
+      operator: "<="
+      threshold: 0.20
+      window: medium
+      rationale: >
+        Fallback above 20% over 7 days means the primary model is
+        wrong for the route; rebuild before promoting.
+    cache_hit_rate:
+      operator: ">="
+      threshold: 0.30
+      window: medium
+      rationale: >
+        Below 30% means the root+delta cache is mis-keyed or the
+        prompt template is over-randomized. Investigate before
+        adding capacity.
+    p95_latency_ms:
+      operator: "<="
+      ref: "tenant_model_route.sla.target_p95_latency_ms"
+      window: short
+
+  per_evolution:
+    margin_usd:
+      operator: ">="
+      threshold: 0.0
+      rationale: >
+        slm-learning-218 — surplus subsidizes shared. A negative-
+        margin evolution must either be repriced for the next
+        cycle or refunded.
+    adapter_promotion_rate:
+      operator: ">="
+      threshold: 0.50
+      window: long
+      rationale: >
+        Below 50% promotion rate over 30 days means the evolution
+        product is not delivering; pause new evolution sales until
+        upstream fixed.
+
+  layer_promotion_eligibility:
+    A_to_B:
+      tenant_token_volume_30d_min: 5_000_000
+      cost_per_success_p95_usd_max: 0.020
+    B_to_C:
+      sustained_utilization_days_min: 14
+      sustained_utilization_pct_min: 0.50
+      tier_required: ["studio", "enterprise"]
+      decision_ref: "slm-learning-220"
+    C_to_B_demote:
+      sustained_utilization_pct_max: 0.25
+      window: medium
+
+# -----------------------------------------------------------------
+# Reported outputs
+# -----------------------------------------------------------------
+outputs:
+  per_tenant_dashboard:
+    columns:
+      - route_id
+      - tier
+      - task_shape
+      - hosting_layer
+      - cost_per_successful_task_usd_30d
+      - threshold_usd_per_success
+      - pass: "cost_per_successful_task_usd_30d <= threshold_usd_per_success"
+      - fallback_rate_7d
+      - cache_hit_rate_7d
+      - p95_latency_ms_1d
+      - tokens_in_30d
+      - tokens_out_30d
+      - gpu_utilization_pct_30d   # Layer C only
+  surplus_report:
+    columns:
+      - tenant_id
+      - tier
+      - lifetime_revenue_usd
+      - lifetime_cost_usd
+      - lifetime_margin_usd
+      - last_evolution_margin_usd
+      - shared_evolution_optin_count   # for slm-learning-221 audit
+  layer_review:
+    columns:
+      - route_id
+      - current_layer
+      - candidate_layer
+      - sustained_utilization_pct
+      - eligible_after
+      - blocked_reason
+
+# -----------------------------------------------------------------
+# Cross-references (for grep-traceability)
+# -----------------------------------------------------------------
+cross_references:
+  task_shape_vocabulary: data/registry/teachers.json
+  model_id_vocabulary: data/registry/model_families.json
+  route_record_schema: schemas/tenant_model_route.schema.json
+  evolution_record_schema: schemas/evolution_job.schema.json
+  soul_record_schema: schemas/customer_soul_adapter.schema.json
+  hosting_strategy: reports/business/hosting_cost_strategy.md
+  pricing_model: reports/business/evolution_pricing_model.md
+  architecture_doc: reports/research/shared_base_private_adapter_architecture.md

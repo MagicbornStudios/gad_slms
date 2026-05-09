@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/evolution_job.schema.json",
+  "title": "Evolution Job",
+  "description": "One billable evolution cycle for a tenant: ingest → train → eval → promotion → adapter delivery. Captures cost, revenue, margin, the produced delta, and the regression-journal pointer. Per slm-learning-218 (paid evolutions subsidize cheap daily inference), slm-learning-219 (customer souls = adapters), slm-learning-221 (consent mode required), slm-learning-097 (two-shot $50 discipline), slm-learning-100 (Delta Graph schema), slm-learning-103 (compare-and-compete: every promoted adapter ships 4 eval rows), slm-learning-096 (every training run produces 3 reusable artifacts).",
+  "type": "object",
+  "required": [
+    "job_id",
+    "tenant_id",
+    "soul_adapter_id",
+    "tier",
+    "consent_mode",
+    "status",
+    "cost_breakdown",
+    "decision_refs"
+  ],
+  "properties": {
+    "job_id": {
+      "type": "string",
+      "description": "Unique job id (e.g. 'evo-acme-magicborn-2026-05-08-001')"
+    },
+    "tenant_id": { "type": "string" },
+    "project_id": { "type": "string" },
+    "soul_adapter_id": {
+      "type": "string",
+      "description": "References customer_soul_adapter.adapter_id this job evolves."
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["creator", "studio", "enterprise"],
+      "description": "Starter tier does not run evolution jobs (slm-learning-218)."
+    },
+    "consent_mode": {
+      "type": "string",
+      "enum": ["private_evolution", "shared_evolution_optin"],
+      "description": "Whether anonymized/generalized deltas may improve shared models. Per slm-learning-221."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["queued", "ingesting", "training", "evaluating", "promoting", "delivered", "failed", "cancelled", "refunded"]
+    },
+    "submitted_at": { "type": "string", "format": "date-time" },
+    "started_at": { "type": "string", "format": "date-time" },
+    "completed_at": { "type": "string", "format": "date-time" },
+    "ingest": {
+      "type": "object",
+      "description": "Customer data ingested for this evolution.",
+      "properties": {
+        "rows_count": { "type": "integer", "minimum": 0 },
+        "tokens_count": { "type": "integer", "minimum": 0 },
+        "source_uris": { "type": "array", "items": { "type": "string" } },
+        "task_shapes": { "type": "array", "items": { "type": "string" } },
+        "pii_review_status": {
+          "type": "string",
+          "enum": ["not_required", "pending", "passed", "failed"]
+        },
+        "license_review_status": {
+          "type": "string",
+          "enum": ["not_required", "pending", "passed", "failed"]
+        }
+      }
+    },
+    "training": {
+      "type": "object",
+      "description": "Training configuration. Mirrors fields tracked in consolidation_run.schema.json + Delta Graph (slm-learning-100).",
+      "properties": {
+        "base_model": {
+          "type": "string",
+          "description": "HF id (e.g. Qwen/Qwen2.5-Coder-7B-Instruct) or registry id of the base."
+        },
+        "parents": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Delta Graph parent delta_ids the new delta builds on."
+        },
+        "depends_on": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Delta Graph depends_on links."
+        },
+        "training_method": {
+          "type": "string",
+          "enum": ["lora", "qlora", "full_finetune", "morphism_a", "morphism_b", "morphism_c", "merge", "distillation_sft", "dpo", "grpo_rlvr"]
+        },
+        "rank": { "type": "integer", "minimum": 1 },
+        "merge_method": {
+          "type": "string",
+          "enum": ["none", "weighted_average", "ties", "dare", "task_arithmetic", "branch_train_merge"]
+        },
+        "epochs": { "type": "integer", "minimum": 1 },
+        "lr": { "type": "number" },
+        "batch_size": { "type": "integer" },
+        "grad_accum": { "type": "integer" },
+        "wall_seconds": { "type": "number" },
+        "compute_target": {
+          "type": "string",
+          "enum": ["modal", "runpod_serverless", "runpod_active", "lambda", "vast_serverless", "huggingface_endpoint", "local_gpu"]
+        },
+        "hardware_class": {
+          "type": "string",
+          "enum": ["L4_A5000_3090", "A100_40GB", "A100_80GB", "H100_PCIe", "H100_SXM"]
+        },
+        "teacher_models_used": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "model_family_registry ids of teachers/labelers consulted (e.g. claude-opus-4-5, claude-haiku-4-5)."
+        }
+      }
+    },
+    "evals": {
+      "type": "object",
+      "description": "Charter Row 1-4 four-row eval set per slm-learning-103.",
+      "properties": {
+        "public": {
+          "type": "object",
+          "description": "Public-leaderboard row (HumanEval, MBPP, SWE-bench Verified subset, LiveCodeBench).",
+          "properties": {
+            "humaneval": { "type": "number" },
+            "mbpp": { "type": "number" },
+            "swe_bench_verified": { "type": "number" },
+            "livecodebench": { "type": "number" }
+          }
+        },
+        "frontier_comparator": {
+          "type": "object",
+          "description": "Same eval set vs frontier models (claude-cli, Big Pickle, OpenRouter free tier, bare-base).",
+          "additionalProperties": { "type": "number" }
+        },
+        "owned_domain": {
+          "type": "object",
+          "description": "Tenant or GAD-house owned-domain row (Charter Row 7). Custom evals defined per tenant.",
+          "properties": {
+            "rubric_uri": { "type": "string" },
+            "score": { "type": "number" },
+            "before_score": { "type": "number" },
+            "after_score": { "type": "number" }
+          }
+        },
+        "lineage": {
+          "type": "object",
+          "description": "Charter Row 4 lineage row.",
+          "properties": {
+            "regression_journal_uri": { "type": "string" },
+            "outputs_corpus_uri": { "type": "string" },
+            "parent_run_ids": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "private": {
+          "type": "object",
+          "description": "Tenant-private eval rows. Not shared even on opt-in.",
+          "additionalProperties": true
+        }
+      }
+    },
+    "regression_journal_uri": {
+      "type": "string",
+      "description": "Per slm-learning-096 — every training run produces a regression journal of failed tasks."
+    },
+    "outputs_corpus_uri": {
+      "type": "string",
+      "description": "Per slm-learning-096 — every training run produces an outputs corpus on a held-out 200-prompt bank."
+    },
+    "produced_delta": {
+      "type": "object",
+      "description": "Delta Graph node fields per slm-learning-100.",
+      "properties": {
+        "delta_id": { "type": "string" },
+        "rank": { "type": "integer" },
+        "trainable_params": { "type": "integer" },
+        "weights_uri": { "type": "string", "description": "HF Hub or Modal volume URI." },
+        "size_mb": { "type": "number" }
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "properties": {
+        "promoted": { "type": "boolean" },
+        "promotion_verdict": {
+          "type": "string",
+          "enum": ["canonical", "staging", "skeleton", "negative_teacher", "quarantined", "rejected"]
+        },
+        "promotion_reason": { "type": "string" },
+        "human_review_required": { "type": "boolean" },
+        "human_review_status": {
+          "type": "string",
+          "enum": ["not_required", "pending", "approved", "rejected"]
+        }
+      }
+    },
+    "cost_breakdown": {
+      "type": "object",
+      "required": ["total"],
+      "description": "Auditable cost roll-up. All amounts USD.",
+      "properties": {
+        "ingest_cost_usd": { "type": "number" },
+        "teacher_label_cost_usd": { "type": "number", "description": "Closed-API teacher token spend (Opus / Sonnet / Haiku)." },
+        "training_cost_usd": { "type": "number", "description": "GPU wall-time on compute_target." },
+        "eval_cost_usd": { "type": "number" },
+        "storage_cost_usd": { "type": "number" },
+        "human_review_cost_usd": { "type": "number" },
+        "total": { "type": "number" }
+      }
+    },
+    "revenue_usd": {
+      "type": "number",
+      "description": "Price charged to the tenant for this evolution cycle."
+    },
+    "margin_usd": {
+      "type": "number",
+      "description": "revenue_usd - cost_breakdown.total. Tracked for slm-learning-218 surplus reporting."
+    },
+    "shared_signal": {
+      "type": "object",
+      "description": "Only populated when consent_mode = shared_evolution_optin. Captures what generalized signal flowed back to shared models. Per slm-learning-221.",
+      "properties": {
+        "anonymization_method": {
+          "type": "string",
+          "enum": ["none", "k_anonymity", "differential_privacy", "redaction", "paraphrase_only"]
+        },
+        "shared_delta_packets": { "type": "array", "items": { "type": "string" } },
+        "shared_retain_rows_count": { "type": "integer" }
+      }
+    },
+    "decision_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "schema_v": { "type": "integer", "default": 1 },
+    "notes": { "type": "string" }
+  }
+}

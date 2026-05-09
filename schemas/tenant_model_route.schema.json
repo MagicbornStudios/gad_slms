@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/tenant_model_route.schema.json",
+  "title": "Tenant Model Route",
+  "description": "One routing row that maps a (tenant_id, project_id, task_shape) tuple to a primary model + fallback chain + hosting layer + caching policy. The GAD Gateway resolves an inbound request to exactly one of these rows. Ties to `data/registry/teachers.json` (task_shape vocabulary) and `data/registry/model_families.json` (model id space). Decisions: slm-learning-218 (paid evolutions subsidize cheap daily inference), slm-learning-219 (customer souls are adapters, not separate models), slm-learning-220 (dedicated GPU requires proven utilization), slm-learning-168 (hybrid runtime), slm-learning-197 (teacher policy).",
+  "type": "object",
+  "required": [
+    "route_id",
+    "tenant_id",
+    "task_shape",
+    "tier",
+    "primary_model_id",
+    "hosting_layer",
+    "fallback_policy"
+  ],
+  "properties": {
+    "route_id": {
+      "type": "string",
+      "description": "Unique route id (e.g. 'route-acme-magicborn-tool_action-2026-05-08')"
+    },
+    "tenant_id": {
+      "type": "string",
+      "description": "Customer / org id. 'shared' for tenant-agnostic public routes."
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Project / workspace id within the tenant. Optional — null when the route is tenant-wide."
+    },
+    "task_shape": {
+      "type": "string",
+      "description": "Task category. SHOULD match a value in data/registry/teachers.json::policies[].task_shape (code_function_completion, code_repair, tool_action_json, math_reasoning, trajectory_completion, bulk_paraphrase, chain_of_thought_synth, frontier_judge_panel, logit_inspection, ...) or be a tenant-private extension prefixed with 'custom:'."
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["starter", "creator", "studio", "enterprise"],
+      "description": "Pricing tier the route is provisioned for. Drives layer eligibility and SLA."
+    },
+    "primary_model_id": {
+      "type": "string",
+      "description": "Model registry id from data/registry/model_families.json (e.g. 'qwen2.5-coder-7b-instruct', 'claude-haiku-4-5')."
+    },
+    "primary_adapter_id": {
+      "type": "string",
+      "description": "Optional LoRA / adapter delta_id to compose with the base. Format follows Delta Graph (slm-learning-100). Null for bare-base routes."
+    },
+    "shared_skill_adapters": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Shared GAD skill adapter delta_ids stacked on top of the base. Loaded from the multi-LoRA pool."
+    },
+    "vertical_adapter_id": {
+      "type": "string",
+      "description": "Optional vertical adapter (game / marketing / code / writing) delta_id."
+    },
+    "customer_soul_adapter_id": {
+      "type": "string",
+      "description": "Optional customer/project soul adapter id; references customer_soul_adapter.adapter_id."
+    },
+    "hosting_layer": {
+      "type": "string",
+      "enum": ["A_serverless_api", "B_serverless_gpu", "C_dedicated_gpu"],
+      "description": "Hosting layer per reports/business/hosting_cost_strategy.md."
+    },
+    "hosting_provider": {
+      "type": "string",
+      "enum": [
+        "anthropic", "openai", "google",
+        "together_ai", "openrouter", "huggingface_endpoints",
+        "runpod_serverless", "runpod_active", "modal", "vast_serverless",
+        "lambda", "self_hosted_vllm", "self_hosted_sglang"
+      ]
+    },
+    "hardware_class": {
+      "type": "string",
+      "enum": ["api_only", "L4_A5000_3090", "A100_40GB", "A100_80GB", "H100_PCIe", "H100_SXM"],
+      "description": "Required GPU class when hosting_layer is B or C. 'api_only' when Layer A."
+    },
+    "fallback_policy": {
+      "type": "object",
+      "required": ["fallback_chain", "trigger"],
+      "description": "Escalation chain when the primary route fails or under-performs. Models are registry ids; aligns with teacher policy fallback_chain (slm-learning-197).",
+      "properties": {
+        "fallback_chain": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Ordered list of model_ids to try when primary fails."
+        },
+        "trigger": {
+          "type": "object",
+          "properties": {
+            "on_5xx": { "type": "boolean" },
+            "on_rate_limit": { "type": "boolean" },
+            "on_verifier_fail": { "type": "boolean" },
+            "on_low_confidence": { "type": "boolean" },
+            "confidence_threshold": { "type": "number", "minimum": 0, "maximum": 1 }
+          }
+        },
+        "max_escalations": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "caching": {
+      "type": "object",
+      "description": "Cache configuration for this route.",
+      "properties": {
+        "root_delta_cache_enabled": { "type": "boolean" },
+        "prompt_cache_enabled": { "type": "boolean" },
+        "kv_cache_share_with_tenants": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Tenant ids permitted to share KV cache. Default empty (full isolation)."
+        },
+        "ttl_seconds": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "rate_limit": {
+      "type": "object",
+      "properties": {
+        "rpm": { "type": "integer" },
+        "tpm_input": { "type": "integer" },
+        "tpm_output": { "type": "integer" }
+      }
+    },
+    "billing": {
+      "type": "object",
+      "description": "Cost accounting hooks. Numbers stamped into per-request telemetry.",
+      "properties": {
+        "cost_per_mtok_input_usd": { "type": "number" },
+        "cost_per_mtok_output_usd": { "type": "number" },
+        "cost_per_second_usd": { "type": "number", "description": "For Layer B/C wall-time billing." },
+        "tenant_pass_through_pct": { "type": "number", "description": "Margin markup vs raw cost." },
+        "minimum_charge_usd": { "type": "number" }
+      }
+    },
+    "sla": {
+      "type": "object",
+      "properties": {
+        "target_p50_latency_ms": { "type": "integer" },
+        "target_p95_latency_ms": { "type": "integer" },
+        "uptime_pct_target": { "type": "number" },
+        "support_tier": {
+          "type": "string",
+          "enum": ["community", "business_hours", "priority", "dedicated"]
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "description": "Rolling KPI snapshot. Populated by telemetry; this schema declares the slot.",
+      "properties": {
+        "cost_per_successful_task_usd": { "type": "number" },
+        "fallback_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "cache_hit_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "p50_latency_ms": { "type": "integer" },
+        "p95_latency_ms": { "type": "integer" },
+        "tokens_in_30d": { "type": "integer" },
+        "tokens_out_30d": { "type": "integer" },
+        "gpu_utilization_pct": { "type": "number", "description": "Layer C only." }
+      }
+    },
+    "promotion_eligibility": {
+      "type": "object",
+      "description": "Layer A → B → C promotion gating per slm-learning-220.",
+      "properties": {
+        "current_layer": {
+          "type": "string",
+          "enum": ["A_serverless_api", "B_serverless_gpu", "C_dedicated_gpu"]
+        },
+        "candidate_layer": {
+          "type": ["null", "string"],
+          "enum": [null, "A_serverless_api", "B_serverless_gpu", "C_dedicated_gpu"]
+        },
+        "sustained_utilization_days": { "type": "integer" },
+        "sustained_utilization_pct": { "type": "number" },
+        "eligible_after": { "type": "string", "format": "date" },
+        "blocked_reason": { "type": "string" }
+      }
+    },
+    "consent_mode": {
+      "type": "string",
+      "enum": ["public_shared", "tenant_private", "shared_evolution_optin"],
+      "description": "How tenant traffic + outputs may flow back into shared improvements. Mirrors customer_soul_adapter.consent_mode."
+    },
+    "decision_refs": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "schema_v": { "type": "integer", "default": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "notes": { "type": "string" }
+  }
+}

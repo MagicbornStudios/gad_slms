@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/decision_preference.schema.json",
+  "title": "Decision Preference Pair",
+  "description": "DPO training record for design and strategy decisions. Captures what was decided, what was considered, what was rejected, and why — including conceptual failures (not just errors). The primary reservoir is .planning/DECISIONS.xml + notes/*.md discussion threads. Each pair teaches the model the operator's actual architectural values, not just correct API usage. Trains 'design-before-code', 'opt-in not default-on', 'cheap-and-reversible over clever-and-locked-in'.",
+  "type": "object",
+  "required": [
+    "pair_id",
+    "ts",
+    "decision_id",
+    "problem_statement",
+    "chosen",
+    "considered_alternatives"
+  ],
+  "properties": {
+    "pair_id": {
+      "type": "string",
+      "description": "Unique ID. Format: 'dcpr-<projectid>-<YYYYMMDD>-<seq>'. Example: 'dcpr-global-20260509-001'."
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when this preference pair was recorded."
+    },
+    "projectid": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "gad project scope. Must match the project prefix in decision_id."
+    },
+    "decision_id": {
+      "type": "string",
+      "description": "Canonical reference to the DECISIONS.xml entry. Format: '<PROJECT-UPPER>-D-<n>'. Example: 'GLOBAL-D-330'. Use 'SLM-LEARNING-D-108' for slm-learning project decisions. This ID must exist in the corresponding .planning/DECISIONS.xml."
+    },
+    "problem_statement": {
+      "type": "string",
+      "description": "The question or scoping the decision was answering. Plain language, not the decision title. Example: 'Who should be responsible for marking a handoff complete — the worker-loop that spawned the child runtime, or the child runtime itself?' This is the prompt-equivalent for decision DPO."
+    },
+    "chosen": {
+      "type": "object",
+      "description": "The decision that was taken.",
+      "required": ["decision_text", "rationale"],
+      "properties": {
+        "decision_text": {
+          "type": "string",
+          "description": "One sentence: what was decided. Should match or summarize the DECISIONS.xml title+summary."
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why this was chosen. The operative reasoning — the evidence, constraint, or value that made this path win. Not a recap of the decision text."
+        },
+        "evidence_refs": {
+          "type": "array",
+          "default": [],
+          "description": "References to supporting artifacts: task IDs, handoff IDs, note file paths, phase numbers, error IDs. These ground the reasoning in concrete events.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "considered_alternatives": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Every alternative that was seriously considered and rejected. Operator standing rule: 'what we didnt do and why, or why we failed (not even error, but conceptually).' A conceptual failure is when an approach is technically possible but architecturally wrong for this system — e.g. it would work in isolation but breaks under multi-agent concurrency, or it's correct behavior but wrong incentive structure.",
+      "items": {
+        "type": "object",
+        "required": ["description", "why_rejected"],
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "What the alternative was. Enough detail to evaluate it independently."
+          },
+          "why_rejected": {
+            "type": "string",
+            "description": "Why this alternative was passed over. The constraint, failure mode, or value conflict that ruled it out."
+          },
+          "conceptual_failure_mode": {
+            "type": ["string", "null"],
+            "default": null,
+            "description": "The deeper architectural anti-pattern the rejected alternative represents. Optional but high-value training signal. Example: 'reactive-not-preventive: a sweeper catches orphans after they accumulate, but the root cause is the child runtime having no confirmed write path, so the sweeper treats symptoms not cause.' This is what the model should generalize from — not the specific decision, but the pattern."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "verdict_source": {
+      "type": "string",
+      "enum": ["operator_decision", "postmortem_analysis", "eval_hindsight"],
+      "default": "operator_decision",
+      "description": "How the preference was determined. operator_decision = operator made the call in real time. postmortem_analysis = decision derived from incident analysis after the fact. eval_hindsight = decision validated (or overturned) by eval results."
+    },
+    "outcome_observed": {
+      "type": ["object", "null"],
+      "default": null,
+      "description": "What actually happened after the decision was taken. Null when too early to evaluate. Include when ≥1 full sprint has passed or when a revisit decision exists.",
+      "required": ["evaluated_at", "did_chosen_hold"],
+      "properties": {
+        "evaluated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the outcome was evaluated."
+        },
+        "did_chosen_hold": {
+          "type": "boolean",
+          "description": "True = the chosen decision proved correct in practice. False = it was reversed or required significant workaround."
+        },
+        "revisit_decision_ref": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "If the decision was revisited or reversed, the ID of the follow-up decision."
+        },
+        "regret_score": {
+          "type": ["integer", "null"],
+          "default": null,
+          "minimum": 1,
+          "maximum": 5,
+          "description": "1 = no regret, correct call. 5 = high regret, should have chosen differently. Operator-assigned. Feeds curriculum weighting — high-regret pairs train more aggressively."
+        }
+      },
+      "additionalProperties": false
+    },
+    "agent_id": {
+      "type": ["string", "null"],
+      "default": null
+    },
+    "runtime": {
+      "type": ["string", "null"],
+      "enum": ["claude-code", "codex-cli", "gemini-cli", "opencode", "human", null],
+      "default": null
+    },
+    "session_id": {
+      "type": ["string", "null"],
+      "default": null
+    },
+    "license_class": {
+      "type": "string",
+      "enum": ["owned", "open", "restricted", "customer_private"],
+      "default": "owned"
+    }
+  },
+  "examples": [
+    {
+      "pair_id": "dcpr-global-20260509-001",
+      "ts": "2026-05-09T08:30:00Z",
+      "projectid": "global",
+      "decision_id": "GLOBAL-D-330",
+      "problem_statement": "Who marks a handoff complete — the worker-loop that spawned the child runtime, or the child runtime itself after it finishes?",
+      "chosen": {
+        "decision_text": "Worker-loop must call completeHandoff itself on success, not delegate to the child runtime.",
+        "rationale": "The worker-loop is the only process guaranteed to have confirmed gad CLI access and a live session. Codex sandbox policy routinely blocks outbound CLI calls from inside the child execution context. Delegating completion to the child means any sandboxed runtime produces orphaned claimed-state handoffs that accumulate indefinitely with no self-healing path.",
+        "evidence_refs": [
+          "GLOBAL-D-333",
+          ".planning/notes/2026-05-09-handoff-orphan-incident.md",
+          "incident: 66 of 264 closed handoffs had completed_at:null"
+        ]
+      },
+      "considered_alternatives": [
+        {
+          "description": "Let the child runtime call gad handoffs complete itself at the end of its execution.",
+          "why_rejected": "Codex sandbox policy blocks child-side gad CLI calls. The child may succeed at the task but fail to mark completion, leaving the handoff in claimed-but-incomplete state permanently. This was the root cause of the orphan incident.",
+          "conceptual_failure_mode": "trust-the-child-to-clean-up: delegating lifecycle management to a process whose execution environment is less controlled than the parent. The parent always knows more about whether the child is alive or dead — it's the right place to own completion semantics."
+        },
+        {
+          "description": "Add a separate sweeper daemon as the primary mechanism to close orphaned handoffs.",
+          "why_rejected": "A sweeper is reactive not preventive. It only runs on a schedule and cannot distinguish 'child is still working' from 'child died silently'. The sweeper would also require its own liveness guarantees. Correct completion on the worker side eliminates the orphan category entirely rather than cleaning it up after.",
+          "conceptual_failure_mode": "reactive-not-preventive: treating accumulated orphans as a normal condition to be cleaned rather than an invariant to be prevented. The sweeper masks the root cause and adds a second failure mode (sweeper itself dying silently)."
+        }
+      ],
+      "verdict_source": "postmortem_analysis",
+      "outcome_observed": null,
+      "agent_id": "a3973ddf1eea37526",
+      "runtime": "claude-code",
+      "session_id": "bdb04eed-afd3-452f-bfa8-581a346cf0d4",
+      "license_class": "owned"
+    },
+    {
+      "pair_id": "dcpr-global-20260509-002",
+      "ts": "2026-05-09T09:00:00Z",
+      "projectid": "global",
+      "decision_id": "GLOBAL-D-332",
+      "problem_statement": "How do we stop Kael dual-generate and the SLM health probe from bleeding tokens when they are not explicitly requested by the operator?",
+      "chosen": {
+        "decision_text": "Disable Kael dual-generate via VITE_KAEL_DUAL_GENERATE=0 env flag; features that multiply token spend per user action must be opt-in, never default-on.",
+        "rationale": "Fastest, safest change during an active incident. Env flag cuts the bleed in one deploy without touching architecture. The architectural rule (opt-in for multiplicative spend) is durable and generalizes to all future premium features.",
+        "evidence_refs": [
+          "apps/desktop/src/lib/kael-toolkit/dual-response.ts",
+          "GLOBAL-D-331",
+          ".planning/.env.local.tmp",
+          "incident: token-drain 2026-05-09 burned ~37M codex + ~1.9M sonnet tokens"
+        ]
+      },
+      "considered_alternatives": [
+        {
+          "description": "Add a daily per-model token cap that cuts off dual-generate after N tokens are spent.",
+          "why_rejected": "Scope creep during an active incident. A cap requires tracking state, defining thresholds, handling cap-exceeded UX, and testing the counter logic. None of that existed. An env flag is a one-line change that resolves the incident in minutes. The cap can be implemented as a follow-up when not under fire.",
+          "conceptual_failure_mode": "clever-when-simple-is-right: reaching for a sophisticated metered solution while the building is on fire. Env flag is reversible and leaves architectural options open. A cap implemented under pressure tends to have off-by-one edge cases."
+        },
+        {
+          "description": "Leave dual-generate on but rate-limit the health probe to once per 10 minutes.",
+          "why_rejected": "The health probe falling back to claude-sonnet is wrong regardless of frequency — it should never hit the paid API as a health check. Rate-limiting would reduce the bleed but not eliminate it. The real fix is eliminating the silent paid fallback entirely.",
+          "conceptual_failure_mode": "rate-limit-as-band-aid: reducing the frequency of an incorrect behavior rather than eliminating it. The behavior is architecturally wrong; the right fix is removal, not throttling."
+        }
+      ],
+      "verdict_source": "operator_decision",
+      "outcome_observed": null,
+      "agent_id": null,
+      "runtime": "claude-code",
+      "session_id": null,
+      "license_class": "owned"
+    },
+    {
+      "pair_id": "dcpr-global-20260509-003",
+      "ts": "2026-05-09T09:30:00Z",
+      "projectid": "global",
+      "decision_id": "GLOBAL-D-331",
+      "problem_statement": "How do we prevent retry-rotation loops from draining token budgets when a premium API runtime is parked or degraded?",
+      "chosen": {
+        "decision_text": "All retry-rotation logic against premium APIs requires three guards: hard ceiling on spawns per work-unit (MAX_INNER_ROTATIONS=3), parked-runtime check before every spawn including mid-rotation, and every retry recorded in unclaim_history so per-handoff filters can trip.",
+        "rationale": "The token-drain incident burned ~37M tokens because rotation had no ceiling, no parked-check, and no per-handoff record. Three independent guards mean any one failure (ceiling miss, parked-check skip, unclaim miss) is caught by the remaining two. Defense in depth is correct here because the cost of a single guard miss is catastrophic.",
+        "evidence_refs": [
+          "GLOBAL-D-330",
+          "GLOBAL-D-333",
+          ".planning/team/runtime-cooldown.json",
+          "incident: ~37M codex + ~1.9M sonnet tokens burned 2026-05-09"
+        ]
+      },
+      "considered_alternatives": [
+        {
+          "description": "Add only the MAX_INNER_ROTATIONS ceiling and rely on that as the sole guard.",
+          "why_rejected": "A single ceiling allows a rotation loop to run MAX_INNER_ROTATIONS times against a parked runtime that will never succeed, burning tokens up to the ceiling with zero probability of success. The ceiling must be paired with an early-exit condition (parked-check) to avoid deterministic waste.",
+          "conceptual_failure_mode": "single-guard-single-failure: one guard with one failure mode. Under the parked condition, the ceiling drains tokens predictably to the ceiling value. Defense in depth exists precisely because individual guards have known failure modes."
+        },
+        {
+          "description": "Remove rotation entirely and fail fast on any premium API error.",
+          "why_rejected": "Rotation is load-bearing for multi-account setups where one account hits a rate limit but others are available. Removing it would permanently degrade throughput on teams with multiple credentials. The problem is unguarded rotation, not rotation itself.",
+          "conceptual_failure_mode": "remove-the-feature-not-the-bug: conflating 'rotation had a bug' with 'rotation is wrong'. The correct surgical fix adds guards; removing the feature trades one failure mode (token drain) for another (throughput collapse on multi-account setups)."
+        }
+      ],
+      "verdict_source": "postmortem_analysis",
+      "outcome_observed": null,
+      "agent_id": null,
+      "runtime": "claude-code",
+      "session_id": null,
+      "license_class": "owned"
+    }
+  ],
+  "additionalProperties": false
+}

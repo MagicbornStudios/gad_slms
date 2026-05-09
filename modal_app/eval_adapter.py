@@ -118,6 +118,18 @@ def score_a100(args: dict) -> dict:
     return _score_inner(args)
 
 
+@app.function(
+    image=image,
+    gpu="H100",
+    volumes={"/data": data_volume, "/models": models_volume},
+    timeout=10800,
+    cpu=8,
+    memory=98304,
+)
+def score_h100(args: dict) -> dict:
+    return _score_inner(args)
+
+
 def _score_inner(args: dict) -> dict:
     import datetime as dt
     import time
@@ -516,8 +528,8 @@ def main(adapter_id: str, base_model: str, benchmark: str = "code_smoke",
         "mode": mode,
         "persist_run_id": persist_run_id or None,
     }
-    fn = {"L4": score_l4, "A10G": score_a10g, "A100": score_a100}.get(
-        gpu, score_l4)
+    fn = {"L4": score_l4, "A10G": score_a10g, "A100": score_a100,
+          "H100": score_h100}.get(gpu, score_l4)
     print(f"[main] firing eval on Modal {gpu} for {adapter_id} "
           f"on {benchmark} (n={limit}, mode={mode})")
     result = fn.remote(args)

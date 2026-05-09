@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state project="slm-learning" schema="1">
+  <level value="2" xp="0" xp_to_next="400" loaded_skills="0"/>
+  <!-- slm-learning evolution level seeded 2026-05-09 per operator rule
+       "evolving means we go up a level". Level 2 reflects: bootstrap
+       (Phase 00), efficient training pipeline (Phase 02), eval &amp;
+       continual improvement (Phase 03 done), substrate + routing (Phase
+       04 active). Big-Base Replacement Track + soul/route registry + CPT
+       plan + DPO schemas + gad ask design just landed today (2026-05-09).
+       When v1 smoke and big-base ladder ship eval results, bump to 3. -->
   <status>active</status>
   <milestone>v1</milestone>
   <current-phase>04</current-phase>
   <last-activity>2026-05-06</last-activity>
   <next-action>Phase 04 substrate-first ordering (slm-learning-042). Substrate landed: runtime probes, vLLM serving, rule router, agent corpus extractor. Soul system v1 + skeleton-system + biology-metaphor concerns landed. Multi-task LoRA candidate training in flight (background, ~7hr). Phase 05 (Continuous Local Delta Lab) and Phase 06 (SWE-bench Integration) registered. Next: synth_doc_verifier_pairs to bootstrap doc-verifier corpus, then verifier+critic council souls done. Constitution-impact arm C eval + SWE-bench harness vendoring queued.</next-action>
   <state-log>
+    <entry agent="unknown" at="2026-05-09T16:08:40.757Z">Gateway real backends wired (Anthropic SDK real, Modal/Qwen-local explicit-failure on unavailable). Smoke verified: Anthropic hit API with real 400 credit-error (key valid, account needs credits); Modal returns 404 modal_unavailable (endpoint not deployed); Qwen-local returns ConnectionRefused local_qwen_not_running. No silent fallback. anthropic&gt;=0.30.0 added to requirements.txt.</entry>
+    <entry agent="unknown" at="2026-05-09T15:25:44.555Z">show</entry>
+    <entry agent="unknown" at="2026-05-09T15:25:29.687Z">show</entry>
     <entry agent="unknown" at="2026-05-09T02:14:31.447Z">Session close 2026-05-08/9 final: 12 commits, 14 decisions (197-208 + 214-221 canonical), 2 lanes CLOSED (Variant C + 3B sweep), 2 proto-skills drafted (modal-cli-windows-prefix + refactor-modal-runtime-import-check) ready for framework promote, GAD Gateway scaffolded (7 routes, 6/6 tests pass, backends stubbed), Claude Design pipeline scaffolded (round-trip verified, generators stubbed), Kael dataset shipped (10 packets needing Opus correction pass), business model + subscription replacement docs shipped (13 files / 2622 lines), registry shipped, refactor wave 1 -319 LOC. Self-handoff at h-2026-05-09T02-12-53 — top priority: wire real Gateway backends + run Kael Opus correction pass + train first Kael-7B adapter.</entry>
     <entry agent="unknown" at="2026-05-09T01:40:41.849Z">Session close 2026-05-08/9: 8 commits, decisions 197-202 + 214-221 canonical, Variant C + 3B sweep both lanes CLOSED via clean falsification, Kael dataset shipped (10 delta packets), business model + subscription replacement docs shipped (13 files / 2622 lines). Self-handoff at h-2026-05-09T01-39-05-slm-learning-evolution-loop for next session — top priority: fire gad evolution evolve with 7 candidates queued.</entry>
     <entry agent="unknown" at="2026-05-09T01:38:38.329Z">Discipline Evaluation Complete: Subagent audit confirms behavioral drift from GSD 'Phase-Rigor' to GAD 'Session-Flexibility'. Data curation strategy for discipline-alignment (DPO pairs) added to .planning/notes/.</entry>

@@ -177,3 +177,149 @@ evidence_eval_id = "lora-1p5b-hard-retain-2026-05-08"
 decision_ref     = "slm-learning-173"
 
 skill_adapters = []
+
+# ---------------------------------------------------------------------------
+# NOUS RESEARCH / HERMES ADAPTER TARGETS
+# These are routing TARGETS — not active souls. Referenced by fallback_soul_id
+# chains and by the kael-of-tarro-v1-intended soul once Modal endpoints deploy.
+# License: Hermes-4 series = Apache 2.0 (verify at HuggingFace per model card
+#          before any commercial use). NousCoder-14B = Apache 2.0 (Qwen-3 base).
+# Graduation gate (shared): when our gad-trained adapter's HumanEval score
+# comes within 2pp of the Nous baseline on the same eval harness, the Nous
+# model is no longer needed as fallback for that task_shape.
+# Added: 2026-05-09 — operator direction to adopt + contribute to Nous Research.
+# Reference: slm_learning/reports/research/nous_hermes_integration.md
+# ---------------------------------------------------------------------------
+
+[[souls]]
+soul_id        = "hermes-4-14b-local"
+soul_name      = "Hermes-4-14B (Nous Research, local)"
+project_scope  = ["slm-learning", "global"]
+default_project = "slm-learning"
+license_class  = "open"
+created_at     = "2026-05-09T00:00:00Z"
+updated_at     = "2026-05-09T00:00:00Z"
+notes          = "ADAPTER TARGET — not an active soul. Use as Kael fallback when gad-trained 14B adapter underperforms. Apache 2.0 (verify HF card). Deploy via Modal vLLM: NousResearch/Hermes-4-14B. Hermes-4 series supports hybrid reasoning (thinking ON/OFF switchable). OpenAI-compat /v1 endpoint when Modal-hosted."
+
+[souls.base_model]
+provider  = "nous-research"
+model_id  = "NousResearch/Hermes-4-14B"
+version   = "2025-08"
+hf_repo   = "NousResearch/Hermes-4-14B"
+
+[souls.endpoint]
+kind        = "self-hosted"
+url         = ""   # GAP: Modal vLLM serve config not yet deployed
+region      = "us-east"
+auth_ref    = "MODAL_TOKEN"
+serve_cmd   = "modal serve slm_learning/modal_app/hermes_4_14b_serve.py"
+compat_api  = "openai-v1"
+
+[souls.routing_policy]
+task_shapes            = ["code-generation", "tool-action", "instruction-following", "function-calling"]
+fallback_soul_id       = "kael-of-tarro"
+cost_cap_usd_per_call  = 0.02
+latency_budget_ms      = 5000
+
+[souls.graduation_gate]
+metric          = "humaneval_pass_at_1"
+our_adapter_id  = "lora-kael-14b-vN"
+threshold_delta = 2.0    # pp — retire this fallback when our adapter comes within 2pp
+baseline_score  = 0.0    # GAP: populate after Day-2 eval run (nous_hermes_integration.md s6)
+gate_status     = "pending-baseline"
+
+[souls.evolution_state]
+current_level   = 0
+last_evolved_at = ""
+
+skill_adapters = []
+
+# ---------------------------------------------------------------------------
+
+[[souls]]
+soul_id        = "nouscoder-14b-local"
+soul_name      = "NousCoder-14B (Nous Research, local)"
+project_scope  = ["slm-learning"]
+default_project = "slm-learning"
+license_class  = "open"
+created_at     = "2026-05-09T00:00:00Z"
+updated_at     = "2026-05-09T00:00:00Z"
+notes          = "ADAPTER TARGET — canonical 14B code-agent reference. Qwen-3-14B post-trained for olympiad coding. Apache 2.0 (verify HF card). Primary purpose: establish HumanEval/MBPP/gad_tools baseline that our kael-14b adapter must beat to graduate. HF: NousResearch/NousCoder-14B."
+
+[souls.base_model]
+provider  = "nous-research"
+model_id  = "NousResearch/NousCoder-14B"
+version   = "2026-01"
+hf_repo   = "NousResearch/NousCoder-14B"
+
+[souls.endpoint]
+kind        = "self-hosted"
+url         = ""   # GAP: Modal vLLM serve config not yet deployed
+region      = "us-east"
+auth_ref    = "MODAL_TOKEN"
+serve_cmd   = "modal serve slm_learning/modal_app/nouscoder_14b_serve.py"
+compat_api  = "openai-v1"
+
+[souls.routing_policy]
+task_shapes            = ["code-generation", "competitive-programming", "eval-scoring"]
+fallback_soul_id       = "dr-stein"
+cost_cap_usd_per_call  = 0.02
+latency_budget_ms      = 5000
+
+[souls.graduation_gate]
+metric          = "humaneval_pass_at_1"
+our_adapter_id  = "lora-kael-14b-vN"
+threshold_delta = 2.0    # pp — retire when our adapter comes within 2pp
+baseline_score  = 0.0    # GAP: populate after Day-2 eval run via scaling_ladder suite
+gate_status     = "pending-baseline"
+
+[souls.evolution_state]
+current_level   = 0
+last_evolved_at = ""
+
+skill_adapters = []
+
+# ---------------------------------------------------------------------------
+
+[[souls]]
+soul_id        = "hermes-4-70b-local"
+soul_name      = "Hermes-4-70B (Nous Research, local)"
+project_scope  = ["slm-learning", "global"]
+default_project = "slm-learning"
+license_class  = "open"
+created_at     = "2026-05-09T00:00:00Z"
+updated_at     = "2026-05-09T00:00:00Z"
+notes          = "ADAPTER TARGET — frontier-class open local, hybrid reasoning mode. Use when Gilgamesh (Anthropic Opus) is rate-limited AND task is architecture/planning-level. 140B weights; requires A100x2 or H100x1 Modal GPU class. Apache 2.0 (verify HF card). Hermes-4 hybrid reasoning supports thinking tags and switchable reasoning depth. HF: NousResearch/Hermes-4-Llama-3.1-70B."
+
+[souls.base_model]
+provider  = "nous-research"
+model_id  = "NousResearch/Hermes-4-Llama-3.1-70B"
+version   = "2025-08"
+hf_repo   = "NousResearch/Hermes-4-Llama-3.1-70B"
+
+[souls.endpoint]
+kind        = "self-hosted"
+url         = ""   # GAP: Modal vLLM serve config not yet deployed — cost-gated (H100 class)
+region      = "us-east"
+auth_ref    = "MODAL_TOKEN"
+serve_cmd   = "modal serve slm_learning/modal_app/hermes_4_70b_serve.py"
+compat_api  = "openai-v1"
+
+[souls.routing_policy]
+task_shapes            = ["planning", "architecture", "hybrid-reasoning", "multi-agent-coordination", "decision"]
+fallback_soul_id       = "gilgamesh-of-uruk"
+cost_cap_usd_per_call  = 0.15
+latency_budget_ms      = 20000
+
+[souls.graduation_gate]
+metric          = "planning_quality_composite"
+our_adapter_id  = "N/A"     # no 70B-class gad adapter planned yet
+threshold_delta = 2.0
+baseline_score  = 0.0       # GAP: no eval run yet
+gate_status     = "not-started"
+
+[souls.evolution_state]
+current_level   = 0
+last_evolved_at = ""
+
+skill_adapters = []

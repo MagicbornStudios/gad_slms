@@ -341,7 +341,12 @@ def _judge(case: dict, completion: str) -> tuple[bool, str]:
     # Strip code fences if present. Use rstrip-only — .strip() kills the
     # leading body indent which breaks prefix-merge for HumanEval body-
     # only completions like `    for i in range(...):`.
-    m = re.search(r"```(?:python)?\s*\n?(.*?)\n?```", code, re.DOTALL)
+    # The opener-trailing-whitespace must be inline-only ([ \t]*); using
+    # \s* would consume the body's leading 4-space indent on its first
+    # line (newline AND spaces are both \s), producing an
+    # IndentationError when re-composed with the prefix. Bit 14B-Instruct
+    # at 27.4% HE on 2026-05-09; fix verified against 7B-base 82.3%.
+    m = re.search(r"```(?:python)?[ \t]*\n?(.*?)\n?```", code, re.DOTALL)
     if m:
         code = m.group(1).rstrip()
         # Also drop any all-whitespace leading lines but preserve the

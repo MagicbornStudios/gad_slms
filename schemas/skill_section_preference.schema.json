@@ -1,0 +1,225 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/skill_section_preference.schema.json",
+  "title": "Skill Section Preference Pair",
+  "description": "DPO training record at section granularity. Where skill_preference.schema.json teaches the model WHICH skills to promote, skill_section_preference teaches HOW to write each section well. Every skill version diff can be mined to produce section pairs automatically: when skill A beats skill B, diff each section — the A-section is chosen, the B-section is rejected. Accumulation across many pairs shapes the skill_template.schema.json.",
+  "type": "object",
+  "required": [
+    "pair_id",
+    "ts",
+    "parent_skill_id",
+    "section_kind",
+    "chosen",
+    "rejected"
+  ],
+  "properties": {
+    "pair_id": {
+      "type": "string",
+      "description": "Unique ID. Format: 'sxpr-<projectid>-<YYYYMMDD>-<seq>'. Example: 'sxpr-global-20260509-001'."
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when this section preference was recorded."
+    },
+    "projectid": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "gad project scope. Null = cross-project / framework-level section."
+    },
+    "parent_skill_id": {
+      "type": "string",
+      "description": "Slug of the skill (installed or proto) whose section is being evaluated. Links back to a skill_preference row when derived from a promote/discard verdict."
+    },
+    "parent_skill_preference_pair_id": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "If this section pair was derived from a whole-skill verdict, the pair_id of the originating skill_preference row. Enables join-based mining."
+    },
+    "section_kind": {
+      "type": "string",
+      "enum": [
+        "description",
+        "when_to_use",
+        "triggers",
+        "success_criteria",
+        "anti_patterns",
+        "workflow_steps",
+        "failure_modes",
+        "examples",
+        "see_also"
+      ],
+      "description": "Which section of the skill is being evaluated. Maps to the heading structure used in the canonical skill template."
+    },
+    "chosen": {
+      "type": "object",
+      "description": "The preferred version of this section.",
+      "required": ["content_text", "rationale_why_chosen"],
+      "properties": {
+        "content_text": {
+          "type": "string",
+          "description": "Verbatim section content that is preferred."
+        },
+        "rationale_why_chosen": {
+          "type": "string",
+          "description": "Why this phrasing, structure, or content wins. Should name the property that makes it better: findability, executability, brevity, specificity, verifiability."
+        }
+      },
+      "additionalProperties": false
+    },
+    "rejected": {
+      "type": "array",
+      "minItems": 1,
+      "description": "One or more rejected versions of this section.",
+      "items": {
+        "type": "object",
+        "required": ["content_text", "rationale_why_rejected"],
+        "properties": {
+          "content_text": {
+            "type": "string",
+            "description": "Verbatim section content that is rejected."
+          },
+          "rationale_why_rejected": {
+            "type": "string",
+            "description": "Why this version loses. Name the specific failure mode: too generic, unmeasurable, wrong ordering, circular, agent-invisible."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "verdict_source": {
+      "type": "string",
+      "enum": [
+        "operator_pick",
+        "discovery_battery_findability_score",
+        "proto_skill_battery_supersession_score",
+        "A_B_test"
+      ],
+      "description": "How this section preference was determined. operator_pick = direct operator choice between shown options. discovery_battery_findability_score = cold-agent trigger test scored this section's phrasing. proto_skill_battery_supersession_score = battery test showed one section version caused more false-positive supersession. A_B_test = structured comparison with controlled prompt."
+    },
+    "quality_signal": {
+      "type": ["object", "null"],
+      "default": null,
+      "description": "Optional structured quality scores for the chosen section. Useful for curriculum weighting and section-template derivation.",
+      "required": ["findability_score", "execution_sufficiency_score", "brevity_score"],
+      "properties": {
+        "findability_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "How easily a cold agent (no prior context) would trigger this section's intent from realistic operator phrasing. 0 = requires exact keyword match. 1 = fires correctly on any natural paraphrase."
+        },
+        "execution_sufficiency_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Does this section give enough information to execute correctly without asking follow-up questions? 0 = missing critical steps/parameters. 1 = fully self-contained."
+        },
+        "brevity_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Token economy: is this section as short as it can be without losing essential content? 0 = heavily padded. 1 = no removable tokens."
+        }
+      },
+      "additionalProperties": false
+    },
+    "operator_id": {
+      "type": ["string", "null"],
+      "default": null
+    },
+    "runtime": {
+      "type": ["string", "null"],
+      "enum": ["claude-code", "codex-cli", "gemini-cli", "opencode", "human", null],
+      "default": null
+    },
+    "session_id": {
+      "type": ["string", "null"],
+      "default": null
+    }
+  },
+  "examples": [
+    {
+      "pair_id": "sxpr-global-20260509-001",
+      "ts": "2026-05-09T12:00:00Z",
+      "projectid": "global",
+      "parent_skill_id": "worker-side-complete-handoff",
+      "parent_skill_preference_pair_id": "skpr-global-20260509-001",
+      "section_kind": "triggers",
+      "chosen": {
+        "content_text": "- \"handoffs show completed_at null\"\n- \"claim leak review\"\n- \"worker is dispatching to codex/gemini/opencode\"\n- \"implementing a worker loop\"\n- \"reviewing claim-leak issues\"",
+        "rationale_why_chosen": "Each phrase maps to a concrete agent behavior: a status field the agent observed, a specific dispatch pattern, an explicit task. A cold agent seeing 'handoffs show completed_at null' in a trace will match this trigger exactly. Verifiable in 30 seconds by reading gad handoffs show output."
+      },
+      "rejected": [
+        {
+          "content_text": "- \"working with handoffs\"\n- \"worker queue management\"\n- \"runtime dispatch\"",
+          "rationale_why_rejected": "Too generic — 'working with handoffs' covers 40+ distinct handoff operations, most of which don't require the worker-side-complete-handoff discipline. A cold agent would over-trigger on any handoff-adjacent operation, causing false-positive skill loads that pollute context."
+        }
+      ],
+      "verdict_source": "operator_pick",
+      "quality_signal": {
+        "findability_score": 0.92,
+        "execution_sufficiency_score": 0.88,
+        "brevity_score": 0.85
+      },
+      "operator_id": "benjamingarrard5279@gmail.com",
+      "runtime": "claude-code",
+      "session_id": null
+    },
+    {
+      "pair_id": "sxpr-global-20260509-002",
+      "ts": "2026-05-09T12:15:00Z",
+      "projectid": "global",
+      "parent_skill_id": "worker-side-complete-handoff",
+      "parent_skill_preference_pair_id": "skpr-global-20260509-001",
+      "section_kind": "success_criteria",
+      "chosen": {
+        "content_text": "- Every handoff closed by a worker shows non-null `completed_at` — verifiable via `gad handoffs show <id>`\n- Worker code has explicit `completeHandoff` call after child exits, not inside the child prompt\n- `gad handoffs list --status claimed --projectid <id>` returns 0 results with `completed_at: null` older than 30 min",
+        "rationale_why_chosen": "Each criterion is verifiable with a specific CLI command in under 60 seconds. An agent can check all three without human judgment. Criteria anchor to observable system state (field value, list output count) not to internal agent confidence."
+      },
+      "rejected": [
+        {
+          "content_text": "- The handoff lifecycle is correctly implemented\n- The worker handles the completion step properly\n- The agent feels confident the child runtime cannot complete the handoff",
+          "rationale_why_rejected": "Subjective and circular: 'correctly implemented' and 'properly' require evaluating the criterion to evaluate the criterion. 'Agent feels confident' is untestable. An agent reading these criteria cannot determine pass/fail without human review, defeating the purpose of success criteria."
+        }
+      ],
+      "verdict_source": "operator_pick",
+      "quality_signal": {
+        "findability_score": 0.78,
+        "execution_sufficiency_score": 0.97,
+        "brevity_score": 0.80
+      },
+      "operator_id": "benjamingarrard5279@gmail.com",
+      "runtime": "claude-code",
+      "session_id": null
+    },
+    {
+      "pair_id": "sxpr-global-20260509-003",
+      "ts": "2026-05-09T12:30:00Z",
+      "projectid": "global",
+      "parent_skill_id": "worker-side-complete-handoff",
+      "parent_skill_preference_pair_id": "skpr-global-20260509-001",
+      "section_kind": "workflow_steps",
+      "chosen": {
+        "content_text": "1. Before dispatching to child runtime: confirm the worker loop — not the child — owns the `completeHandoff` call path.\n2. After child runtime finishes (success OR controlled failure), worker calls `gad handoffs complete --id <handoff-id> --projectid <id>` immediately.\n3. Do NOT pass the handoff ID into the child runtime prompt expecting it to call complete.\n4. If child exits with non-zero: worker calls `gad handoffs unclaim --id <handoff-id>` and logs failure to `unclaim_history`.\n5. Verify: `gad handoffs show <id>` must show `completed_at` non-null and `status: closed`.",
+        "rationale_why_chosen": "Steps follow strict causal order: confirm ownership (1) → dispatch (implicit) → complete on exit (2) → handle failure branch (4) → verify (5). Step 3 is a negative constraint that prevents the most common failure mode; placing it inline rather than in anti_patterns keeps it in the execution path where the agent sees it at action time."
+      },
+      "rejected": [
+        {
+          "content_text": "1. Verify the handoff result after the child exits.\n2. Before dispatching, review the worker loop implementation.\n3. Call `gad handoffs complete` when the child finishes.\n4. Don't pass the handoff ID to the child.",
+          "rationale_why_rejected": "Step ordering is wrong: step 1 (verify result) cannot precede step 2 (review before dispatching) — the result doesn't exist yet. Step 2 is a planning action that should precede all dispatch steps, not follow step 1. Misordered workflow steps leave a dangling state: an agent executing step 1 before step 2 would try to verify a handoff that hasn't been dispatched yet."
+        }
+      ],
+      "verdict_source": "operator_pick",
+      "quality_signal": {
+        "findability_score": 0.85,
+        "execution_sufficiency_score": 0.95,
+        "brevity_score": 0.82
+      },
+      "operator_id": "benjamingarrard5279@gmail.com",
+      "runtime": "claude-code",
+      "session_id": null
+    }
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,177 @@
+# benchmark_target_rungs.toml
+# Canonical rung table for the scaling-ladder + Hermes/NousCoder comparator evals.
+# Schema: mirrors scaling_ladder_gates.json shape; TOML format chosen per soul_routes.toml
+#         and cpt_stage_plan.toml convention.
+# Decision refs: slm-learning-097, 100, 103, 105, 202, 210
+# Operator direction: 2026-05-09 "we can do hermes model comparisons too. I want them
+#   in our evals and benchmarks"
+# Updated: 2026-05-09
+# DO NOT modify existing rung entries — extend only.
+
+# ---------------------------------------------------------------------------
+# EXISTING GAD-OWNED RUNGS (preserve; do not edit)
+# ---------------------------------------------------------------------------
+
+[[rungs]]
+slug                    = "qwen-2.5-coder-1.5b-base"
+hf_id                   = "Qwen/Qwen2.5-Coder-1.5B-Instruct"
+size                    = "1.5B"
+provenance              = "gad-owned"
+license                 = "apache-2.0"
+base                    = "Qwen-2.5-Coder-1.5B"
+serving                 = "modal_a10g"
+status                  = "promoted"
+target_evals            = ["humaneval-clean-v1", "mbpp-clean-v1", "gad_tools_v1"]
+graduation_gate         = "Anchor rung — no gate; already promoted to Stein-house 1.5B"
+estimated_eval_cost_usd = 0.3
+notes                   = "Stein-house 1.5B. Local rejudge candidate (pre-2026-05-08 artifacts)."
+
+[[rungs]]
+slug                    = "qwen-2.5-coder-3b-base"
+hf_id                   = "Qwen/Qwen2.5-Coder-3B-Instruct"
+size                    = "3B"
+provenance              = "gad-owned"
+license                 = "apache-2.0"
+base                    = "Qwen-2.5-Coder-3B"
+serving                 = "modal_a10g"
+status                  = "parked"
+target_evals            = ["humaneval-clean-v1", "mbpp-clean-v1"]
+graduation_gate         = "Parked — LoRA r=16 retain-ratio sweep regressed on HE across all arms (slm-learning-202). Revisit only if recipe changes."
+estimated_eval_cost_usd = 0.5
+notes                   = "Base scores 83.5 / 73.2 measured locally. Recipe failure, not base failure."
+
+[[rungs]]
+slug                    = "qwen-2.5-coder-7b-stein-canonical"
+hf_id                   = "Qwen/Qwen2.5-Coder-7B-Instruct"
+size                    = "7B"
+provenance              = "gad-owned"
+license                 = "apache-2.0"
+base                    = "Qwen-2.5-Coder-7B"
+serving                 = "modal_a100"
+status                  = "promoted"
+target_evals            = ["humaneval-clean-v1", "mbpp-clean-v1", "gad_tools_v1"]
+graduation_gate         = "Anchor — 84.8 HE / 82.3 MBPP canonical (slm-learning-188). All larger rungs must beat by >= 2pp on both axes."
+estimated_eval_cost_usd = 1.0
+notes                   = "Workhorse base. Every new rung delta measured vs this row."
+
+[[rungs]]
+slug                    = "qwen-2.5-coder-14b-base"
+hf_id                   = "Qwen/Qwen2.5-Coder-14B-Instruct"
+size                    = "14B"
+provenance              = "gad-owned"
+license                 = "apache-2.0"
+base                    = "Qwen-2.5-Coder-14B"
+serving                 = "modal_a100"
+status                  = "planned"
+target_evals            = ["humaneval-clean-v1", "mbpp-clean-v1", "gad_tools_v1"]
+graduation_gate         = "HE >= 86.8 AND MBPP >= 84.3 (slm-learning-210, scaling_ladder_gates.json ladder-14b-base-2026-05-09)"
+estimated_eval_cost_usd = 2.0
+notes                   = "Big-Base Ladder eval authorized 2026-05-09 ($14 budget). Predicted 89.6 / 82.3."
+
+[[rungs]]
+slug                    = "qwen-2.5-coder-32b-base"
+hf_id                   = "Qwen/Qwen2.5-Coder-32B-Instruct"
+size                    = "32B"
+provenance              = "gad-owned"
+license                 = "apache-2.0"
+base                    = "Qwen-2.5-Coder-32B"
+serving                 = "modal_a100_80gb"
+status                  = "planned"
+target_evals            = ["humaneval-clean-v1", "mbpp-clean-v1", "gad_tools_v1"]
+graduation_gate         = "HE >= 86.8 AND MBPP >= 84.3 (same knee as 14B). 32B only becomes workhorse if cost-per-successful-task is competitive vs 14B."
+estimated_eval_cost_usd = 4.0
+notes                   = "Predicted 92.7 / 83.5. VRAM: ~70GB BF16 — requires A100-80GB."
+
+[[rungs]]
+slug                    = "qwen3-next-80b-a3b-base"
+hf_id                   = "Qwen/Qwen3-Next-80B-A3B-Instruct"
+size                    = "80B-A3B"
+provenance              = "gad-owned"
+license                 = "apache-2.0"
+base                    = "Qwen3-Next-80B-A3B"
+serving                 = "modal_h100"
+status                  = "planned"
+target_evals            = ["humaneval-clean-v1", "mbpp-clean-v1", "gad_tools_v1"]
+graduation_gate         = "No upstream HE baseline; fire only to anchor MoE scaling curve. Not a workhorse candidate at this size."
+estimated_eval_cost_usd = 8.0
+notes                   = "Active param ~3.9B. MoE curve is orthogonal to dense scaling — results not directly comparable. Open-research row."
+
+# ---------------------------------------------------------------------------
+# NEW: HERMES / NOUSCODER COMPARATOR RUNGS (2026-05-09 operator direction)
+# ---------------------------------------------------------------------------
+
+[[rungs]]
+slug                    = "nous-hermes-4-14b"
+hf_id                   = "NousResearch/Hermes-3-Llama-3.1-8B"
+size                    = "14B"
+provenance              = "nous-research"
+license                 = "apache-2.0"
+base                    = "Qwen-3-14B"
+serving                 = "modal_h100"
+status                  = "comparator"
+target_evals            = ["humaneval-clean-v1", "mbpp-clean-v1", "gad_tools_v1",
+                          "tool_action_v1", "kael_task_v1"]
+graduation_gate         = "GAD-trained kael-14b adapter on Qwen-2.5-14B base must beat Hermes-4-14B HumanEval by >= 2pp before we route production 14B traffic to our own adapter."
+estimated_eval_cost_usd = 3.0
+notes                   = """Frontier-class hybrid-mode reasoning; primary 14B fallback comparator.
+Download: gad hf download NousResearch/Hermes-3-Llama-3.1-8B (verify slug vs HF hub at eval time).
+Serving: modal deploy slm_learning/modal_app/nous_hermes4_14b_serve.py (operator to write).
+Apache-2.0 — can host and benchmark without commercial restriction."""
+
+[[rungs]]
+slug                    = "nous-nouscoder-14b"
+hf_id                   = "NousResearch/NousCoder-14B"
+size                    = "14B"
+provenance              = "nous-research"
+license                 = "apache-2.0"
+base                    = "Qwen-3-14B"
+serving                 = "modal_h100"
+status                  = "comparator"
+target_evals            = ["humaneval-clean-v1", "mbpp-clean-v1", "swe-bench-verified-mini"]
+graduation_gate         = "kael-14b adapter HumanEval >= NousCoder-14B - 2pp. NousCoder is the direct code-agent bar to beat at 14B."
+estimated_eval_cost_usd = 3.0
+notes                   = """Olympiad coding post-trained on Qwen-3-14B base. Direct fit for the 14B
+code-agent lane. Complements Hermes-4-14B (NousCoder = coding specialist;
+Hermes = hybrid reasoning).
+Download: gad hf download NousResearch/NousCoder-14B
+Serving: modal deploy slm_learning/modal_app/nous_nouscoder_14b_serve.py (operator to write).
+Apache-2.0 — legal to host."""
+
+[[rungs]]
+slug                    = "nous-hermes-4-70b"
+hf_id                   = "NousResearch/Hermes-3-Llama-3.1-8B"
+size                    = "70B"
+provenance              = "nous-research"
+license                 = "llama-3.1-community"
+base                    = "Llama-3.1-70B"
+serving                 = "modal_h100x2"
+status                  = "comparator"
+target_evals            = ["humaneval-clean-v1", "mbpp-clean-v1", "tool_action_v1",
+                          "research_synthesis_v1"]
+graduation_gate         = "skip — frontier comparator only; not a replacement target for any GAD-owned rung"
+estimated_eval_cost_usd = 6.0
+notes                   = """70B hybrid-mode reasoning. Use for tier-3 reasoning tasks where Opus would
+normally fire. Reference ceiling for tool_action + research_synthesis suites.
+LEGAL FLAG: Llama 3.1 community license — commercial use permitted with attribution,
+but operator should confirm terms before production routing. Flag for legal review.
+Download: gad hf download NousResearch/Hermes-4-Llama-3.1-70B (verify slug)
+Serving: modal deploy slm_learning/modal_app/nous_hermes4_70b_serve.py (operator to write)."""
+
+[[rungs]]
+slug                    = "nous-hermes-4-405b"
+hf_id                   = "NousResearch/Hermes-3-Llama-3.1-8B"
+size                    = "405B"
+provenance              = "nous-research"
+license                 = "llama-3.1-community"
+base                    = "Llama-3.1-405B"
+serving                 = "modal_h200x4_or_external"
+status                  = "comparator-eval-only"
+target_evals            = ["humaneval-clean-v1", "mbpp-clean-v1"]
+graduation_gate         = "skip — frontier benchmark ceiling only; fire once to establish open-frontier HE/MBPP ceiling vs Opus"
+estimated_eval_cost_usd = 12.0
+notes                   = """Frontier hybrid-mode. Single reference run to anchor the open-weight ceiling
+(compare-and-compete charter row 8, slm-learning-164).
+COST WARNING: H200x4 or equivalent external serving is expensive; fire only once.
+LEGAL FLAG: Llama 3.1 community license — commercial terms apply; legal review required.
+Download: gad hf download NousResearch/Hermes-4-Llama-3.1-405B (very large; plan disk)
+Serving: external API (Together.ai / Fireworks) preferred over self-hosted at this size."""

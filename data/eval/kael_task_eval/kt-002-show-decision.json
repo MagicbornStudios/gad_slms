@@ -1,0 +1,42 @@
+{
+  "schema_v": 1,
+  "id": "kt-002",
+  "title": "Show decision GLOBAL-D-330",
+  "category": "gad-planning-query",
+  "difficulty": "easy",
+  "prompt": "What is decision GLOBAL-D-330? Show the full rationale.",
+  "expected_tool_calls": [
+    {
+      "tool": "gad",
+      "args": ["decisions", "show", "GLOBAL-D-330"],
+      "purpose": "Fetch the decision body from DECISIONS.xml",
+      "required": true,
+      "alternatives": [
+        ["gad", "ask", "GLOBAL-D-330", "--soul", "gilgamesh"]
+      ]
+    }
+  ],
+  "expected_outputs": {
+    "primary": "Decision title, rationale body, and references printed to stdout",
+    "fallback": "gad ask with --soul gilgamesh is acceptable when gad decisions show is not available"
+  },
+  "eval_rubric": {
+    "tool_call_correctness": {
+      "weight": 0.6,
+      "criteria": [
+        "Must use canonical ID GLOBAL-D-330 — not bare integer 330",
+        "Must invoke gad CLI (not grep planning files manually)",
+        "gad decisions show or gad ask are both correct; manual file read is partial credit (0.3)"
+      ]
+    },
+    "output_relevance": {
+      "weight": 0.4,
+      "criteria": [
+        "Relays the decision rationale (not just the title)",
+        "Does not hallucinate decision content"
+      ]
+    }
+  },
+  "decision_refs": ["slm-learning-103"],
+  "created_at": "2026-05-09"
+}

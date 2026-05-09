@@ -1,0 +1,47 @@
+{
+  "schema_v": 1,
+  "id": "kt-003",
+  "title": "Deploy Hermes-4-14B to Modal",
+  "category": "gad-mlops",
+  "difficulty": "medium",
+  "prompt": "Deploy the NousResearch Hermes-4-14B model to Modal for inference. The model should be served as a vLLM endpoint compatible with the OpenAI chat-completions API. Assume gad hf download and modal deploy are available.",
+  "expected_tool_calls": [
+    {
+      "tool": "gad",
+      "args": ["hf", "download", "NousResearch/Hermes-3-Llama-3.1-8B"],
+      "purpose": "Download model weights from HuggingFace Hub to Modal volume",
+      "required": true,
+      "note": "Exact HF slug TBD at eval time — model may be at Hermes-4-14B or similar; accept any plausible NousResearch/Hermes-4-* slug"
+    },
+    {
+      "tool": "modal",
+      "args": ["deploy", "slm_learning/modal_app/nous_hermes4_14b_serve.py"],
+      "purpose": "Deploy vLLM serving app to Modal",
+      "required": true
+    }
+  ],
+  "expected_outputs": {
+    "download": "Model weights cached to Modal volume; gad hf download exits 0",
+    "deploy": "Modal endpoint URL printed; vLLM server starts on H100"
+  },
+  "eval_rubric": {
+    "tool_call_correctness": {
+      "weight": 0.6,
+      "criteria": [
+        "gad hf download called before modal deploy (order matters)",
+        "Correct serve script path under modal_app/",
+        "Does not suggest pip install transformers + manual download — gad hf download is the registered path"
+      ]
+    },
+    "output_relevance": {
+      "weight": 0.4,
+      "criteria": [
+        "Notes H100 GPU requirement for 14B BF16",
+        "Mentions OpenAI-compat endpoint for gateway router integration",
+        "Does not recommend INT4 quantization unless operator approves (quant skew breaks ladder comparison)"
+      ]
+    }
+  },
+  "decision_refs": ["slm-learning-103", "slm-learning-214"],
+  "created_at": "2026-05-09"
+}

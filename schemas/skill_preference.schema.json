@@ -1,0 +1,345 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/skill_preference.schema.json",
+  "title": "Skill Preference Pair",
+  "description": "DPO training record for whole-skill promote/discard/merge/edit verdicts. Every operator decision on a proto-skill is a high-quality preference signal: the chosen skill encoding beats all alternatives. Feeds the skill-writer model and the evolution recommender. Pair with skill_section_preference.schema.json for section-level granularity.",
+  "type": "object",
+  "required": [
+    "pair_id",
+    "ts",
+    "candidate_slug",
+    "skill_under_review",
+    "verdict",
+    "rationale"
+  ],
+  "properties": {
+    "pair_id": {
+      "type": "string",
+      "description": "Unique ID. Format: 'skpr-<projectid>-<YYYYMMDD>-<seq>'. Example: 'skpr-global-20260509-001'."
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the verdict was recorded."
+    },
+    "projectid": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "gad project scope. Null = framework-level candidate (in vendor/get-anything-done .planning/proto-skills/)."
+    },
+    "decision_kind": {
+      "type": "string",
+      "enum": ["promote", "discard", "merge", "edit_then_promote"],
+      "description": "The operator's top-level action on the proto-skill. Determines which conditional block is required."
+    },
+    "candidate_slug": {
+      "type": "string",
+      "description": "The proto-skill slug being reviewed. Must match a directory name in .planning/proto-skills/ at review time."
+    },
+    "verdict_source": {
+      "type": "string",
+      "enum": [
+        "operator_review",
+        "discovery_battery",
+        "shed_audit",
+        "proto_skill_battery"
+      ],
+      "description": "What triggered this verdict. operator_review = direct operator decision. discovery_battery = findability test surfaced it. shed_audit = evolution shed scan selected/rejected it. proto_skill_battery = battery supersession test drove decision."
+    },
+    "skill_under_review": {
+      "type": "object",
+      "description": "Full content of the proto-skill at review time. Verbatim capture enables section-diff mining downstream.",
+      "required": ["slug", "draft_path", "skill_md_content"],
+      "properties": {
+        "slug": {
+          "type": "string",
+          "description": "Proto-skill slug. Matches candidate_slug."
+        },
+        "draft_path": {
+          "type": "string",
+          "description": "Absolute or repo-relative path to the proto-skill directory at capture time."
+        },
+        "skill_md_content": {
+          "type": "string",
+          "description": "Full verbatim content of SKILL.md at review time."
+        },
+        "workflow_md_content": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Full verbatim content of workflow.md if present."
+        },
+        "candidate_md_content": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Full verbatim content of CANDIDATE.md — the source signal that triggered drafting."
+        }
+      },
+      "additionalProperties": false
+    },
+    "verdict": {
+      "type": "string",
+      "enum": ["promoted", "discarded", "merged_with", "needs_edit"],
+      "description": "Outcome of the operator review."
+    },
+    "rationale": {
+      "type": "string",
+      "description": "Operator's plain-language reason. Even one sentence is valuable training signal. Explains why this verdict beats alternatives."
+    },
+    "promoted_to": {
+      "type": ["string", "null"],
+      "enum": ["framework", "project", null],
+      "default": null,
+      "description": "Required when verdict=promoted. framework = promoted into canonical vendor/get-anything-done/skills/. project = promoted into <projectRoot>/skills/."
+    },
+    "promoted_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "default": null,
+      "description": "Required when verdict=promoted. ISO timestamp of actual promotion (gad evolution promote ran)."
+    },
+    "expected_trigger_patterns": {
+      "type": ["array", "null"],
+      "default": null,
+      "description": "Required when verdict=promoted. Operator-confirmed phrases that should fire this skill. High-value for trigger-DPO.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "expected_anti_patterns": {
+      "type": ["array", "null"],
+      "default": null,
+      "description": "Required when verdict=promoted. Phrases or contexts this skill should refuse to fire on — scoping signal.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "discard_reason": {
+      "type": ["string", "null"],
+      "enum": [
+        "redundant_with_existing",
+        "content_inadequate",
+        "trigger_too_narrow",
+        "failure_mode_already_covered",
+        "not_battle_tested",
+        "other",
+        null
+      ],
+      "default": null,
+      "description": "Required when verdict=discarded. Categorical reason. redundant_with_existing = superseded_by_skill_id covers it. not_battle_tested = concept is right but the skill hasn't been exercised enough to promote confidently."
+    },
+    "superseded_by_skill_id": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "Required when discard_reason=redundant_with_existing. The slug of the existing installed skill that already covers this content."
+    },
+    "merged_into_skill_id": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "Required when verdict=merged_with. Slug of the target skill that absorbed this proto-skill's content."
+    },
+    "retained_sections": {
+      "type": ["array", "null"],
+      "default": null,
+      "description": "Required when verdict=merged_with. Which section_kind values from the proto-skill survived into the merged skill.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "required_changes": {
+      "type": ["array", "null"],
+      "default": null,
+      "description": "Required when verdict=needs_edit. Array of per-section change requests.",
+      "items": {
+        "type": "object",
+        "required": ["section", "change", "reason"],
+        "properties": {
+          "section": {
+            "type": "string",
+            "description": "Which section of the skill needs changing. Use section_kind values from skill_section_preference.schema.json."
+          },
+          "change": {
+            "type": "string",
+            "description": "What change is required. Specific enough that an agent can execute it without operator follow-up."
+          },
+          "reason": {
+            "type": "string",
+            "description": "Why this change is required. Training signal for section_preference rows derived from the edit."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "re_review_after_edit": {
+      "type": ["boolean", "null"],
+      "default": null,
+      "description": "Required when verdict=needs_edit. True = operator wants to review again after changes. False = changes are mechanical and can auto-promote after edit."
+    },
+    "operator_id": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "Operator email or handle. Used for per-operator DPO weighting."
+    },
+    "runtime": {
+      "type": ["string", "null"],
+      "enum": ["claude-code", "codex-cli", "gemini-cli", "opencode", "human", null],
+      "default": null,
+      "description": "Runtime that captured the verdict."
+    },
+    "session_id": {
+      "type": ["string", "null"],
+      "default": null
+    },
+    "license_class": {
+      "type": "string",
+      "enum": ["owned", "open", "restricted", "customer_private"],
+      "default": "owned"
+    }
+  },
+  "examples": [
+    {
+      "pair_id": "skpr-global-20260509-001",
+      "ts": "2026-05-09T11:00:00Z",
+      "projectid": "global",
+      "decision_kind": "promote",
+      "candidate_slug": "worker-side-complete-handoff",
+      "verdict_source": "operator_review",
+      "skill_under_review": {
+        "slug": "worker-side-complete-handoff",
+        "draft_path": "vendor/get-anything-done/.planning/proto-skills/worker-side-complete-handoff",
+        "skill_md_content": "---\nstatus: proto\nworkflow: ./workflow.md\ndescription: Workers must call completeHandoff themselves — never delegate to the child runtime\ntriggers:\n  - implementing a worker loop\n  - reviewing claim-leak issues\n  - designing handoff lifecycle\n  - handoffs stuck with completed_at null\n---\n\n# Worker-Side Complete Handoff\n\n## When to use\nAny time you are writing, reviewing, or debugging a worker loop that dispatches work to a child runtime...",
+        "workflow_md_content": "# Workflow: Worker-Side Complete Handoff\n\n## Steps\n1. Before dispatching to child runtime: confirm the worker loop owns the completeHandoff call...",
+        "candidate_md_content": null
+      },
+      "verdict": "promoted",
+      "rationale": "Captures the dominant root cause of today's claim leak — 66 of 264 handoffs had completed_at null because workers delegated to codex children that silently dropped the call. Trigger phrases match real agent behaviors observed this session. Battle-tested.",
+      "promoted_to": "framework",
+      "promoted_at": "2026-05-09T11:05:00Z",
+      "expected_trigger_patterns": [
+        "implementing a worker loop",
+        "handoffs show completed_at null",
+        "claim leak review",
+        "building handoff lifecycle",
+        "worker is dispatching to codex"
+      ],
+      "expected_anti_patterns": [
+        "asking how to structure a child runtime prompt",
+        "questions about handoff schema fields unrelated to completion"
+      ],
+      "discard_reason": null,
+      "superseded_by_skill_id": null,
+      "merged_into_skill_id": null,
+      "retained_sections": null,
+      "required_changes": null,
+      "re_review_after_edit": null,
+      "operator_id": "benjamingarrard5279@gmail.com",
+      "runtime": "claude-code",
+      "session_id": null,
+      "license_class": "owned"
+    },
+    {
+      "pair_id": "skpr-global-20260509-002",
+      "ts": "2026-05-09T11:15:00Z",
+      "projectid": "global",
+      "decision_kind": "discard",
+      "candidate_slug": "phase-task-skill-attribution-discipline",
+      "verdict_source": "shed_audit",
+      "skill_under_review": {
+        "slug": "phase-task-skill-attribution-discipline",
+        "draft_path": "vendor/get-anything-done/.planning/proto-skills/phase-task-skill-attribution-discipline",
+        "skill_md_content": "---\nstatus: proto\ndescription: Every task close must stamp the skill that closed it so the curator can assign training weight\ntriggers:\n  - closing a task\n  - stamping task done\n  - phase completion review\n---\n\n# Phase Task Skill Attribution Discipline\n\n## When to use\nEvery time you close a task. No exceptions...",
+        "workflow_md_content": null,
+        "candidate_md_content": null
+      },
+      "verdict": "discarded",
+      "rationale": "gad-task-checkpoint already covers task-close ritual including --skill attribution requirement. This proto-skill duplicates the attribution section without adding new failure mode coverage or trigger surface area.",
+      "promoted_to": null,
+      "promoted_at": null,
+      "expected_trigger_patterns": null,
+      "expected_anti_patterns": null,
+      "discard_reason": "redundant_with_existing",
+      "superseded_by_skill_id": "gad-task-checkpoint",
+      "merged_into_skill_id": null,
+      "retained_sections": null,
+      "required_changes": null,
+      "re_review_after_edit": null,
+      "operator_id": "benjamingarrard5279@gmail.com",
+      "runtime": "claude-code",
+      "session_id": null,
+      "license_class": "owned"
+    },
+    {
+      "pair_id": "skpr-global-20260509-003",
+      "ts": "2026-05-09T11:30:00Z",
+      "projectid": "global",
+      "decision_kind": "merge",
+      "candidate_slug": "evolution-loop-discipline",
+      "verdict_source": "operator_review",
+      "skill_under_review": {
+        "slug": "evolution-loop-discipline",
+        "draft_path": "vendor/get-anything-done/.planning/proto-skills/evolution-loop-discipline",
+        "skill_md_content": "---\nstatus: proto\ndescription: Fire gad evolution evolve at every milestone close and incident response\ntriggers:\n  - milestone close\n  - incident response complete\n  - decisions added without corresponding proto-skills\n---\n\n# Evolution Loop Discipline\n\n## When to use\nAt the end of every milestone and after every incident-response session...",
+        "workflow_md_content": "# Workflow: Evolution Loop Discipline\n\n## Steps\n1. Trigger: at the end of any milestone close...",
+        "candidate_md_content": null
+      },
+      "verdict": "merged_with",
+      "rationale": "gad-evolution-evolve already defines when to run the evolution sweep. The proto-skill adds valuable discipline framing (standing trigger, not optional) and the failure mode list. Merge those sections in; don't create a second skill on the same concept.",
+      "promoted_to": null,
+      "promoted_at": null,
+      "expected_trigger_patterns": null,
+      "expected_anti_patterns": null,
+      "discard_reason": null,
+      "superseded_by_skill_id": null,
+      "merged_into_skill_id": "gad-evolution-evolve",
+      "retained_sections": ["when_to_use", "failure_modes", "anti_patterns"],
+      "required_changes": null,
+      "re_review_after_edit": null,
+      "operator_id": "benjamingarrard5279@gmail.com",
+      "runtime": "claude-code",
+      "session_id": null,
+      "license_class": "owned"
+    },
+    {
+      "pair_id": "skpr-global-20260509-004",
+      "ts": "2026-05-09T11:45:00Z",
+      "projectid": "global",
+      "decision_kind": "edit_then_promote",
+      "candidate_slug": "gad-cli-over-file-foraging",
+      "verdict_source": "operator_review",
+      "skill_under_review": {
+        "slug": "gad-cli-over-file-foraging",
+        "draft_path": "vendor/get-anything-done/.planning/proto-skills/gad-cli-over-file-foraging",
+        "skill_md_content": "---\nstatus: proto\ndescription: Reach for gad ask / gad subcommands before Glob+Read+Grep cascades on planning data\ntriggers:\n  - seeking GAD ecosystem state\n  - questions about decisions/tasks/errors/handoffs\n---\n\n# GAD CLI Over File Foraging\n...",
+        "workflow_md_content": null,
+        "candidate_md_content": null
+      },
+      "verdict": "needs_edit",
+      "rationale": "Core concept is right and battle-tested. Trigger phrases are too abstract — 'seeking GAD ecosystem state' will not match real agent phrasing. Needs concrete phrases that map to actual agent behaviors observed in traces.",
+      "promoted_to": null,
+      "promoted_at": null,
+      "expected_trigger_patterns": null,
+      "expected_anti_patterns": null,
+      "discard_reason": null,
+      "superseded_by_skill_id": null,
+      "merged_into_skill_id": null,
+      "retained_sections": null,
+      "required_changes": [
+        {
+          "section": "triggers",
+          "change": "Replace generic phrases with concrete agent action phrases: 'reading TASK-REGISTRY.xml', 'grep on DECISION-REGISTRY.xml', 'looking up handoff state', 'checking what phase N contains', 'what errors were logged this session'",
+          "reason": "Trigger matching runs against raw agent utterances; abstract phrases like 'seeking GAD ecosystem state' don't match how agents actually phrase information lookups."
+        },
+        {
+          "section": "examples",
+          "change": "Add a token-cost comparison table: gad ask (1 call, ~400 tokens) vs Glob+Grep+Read cascade (6 calls, ~8400 tokens) for the same planning query.",
+          "reason": "Concrete cost delta is the strongest reinforcement for behavior change; the prose explanation alone is not sufficient."
+        }
+      ],
+      "re_review_after_edit": false,
+      "operator_id": "benjamingarrard5279@gmail.com",
+      "runtime": "claude-code",
+      "session_id": null,
+      "license_class": "owned"
+    }
+  ],
+  "additionalProperties": false
+}

@@ -1010,4 +1010,9 @@
     <summary>Variant C morphism lane closed via clean falsification — three init points tested, all inert at 1.5B</summary>
   </decision>
 
+  <decision id="slm-learning-202">
+    <title>3B + LoRA r=16 + 27 hard + retain bank ≤137 lane CLOSED —...</title>
+    <summary>3B + LoRA r=16 + 27 hard + retain bank ≤137 lane CLOSED — refuted across full retain-ratio range</summary>
+  </decision>
+
 </decisions>

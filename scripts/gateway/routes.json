@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "schema_ref": "schemas/teacher_policy.schema.json",
+  "decision_refs": ["slm-learning-208", "slm-learning-197", "slm-learning-103"],
+  "updated_at": "2026-05-08",
+  "notes": "Initial 7 routes seeded from data/registry/teachers.json. The 'default_general' row uses task_shape '*' as catchall for unknown shapes. Verifier integration is future work; v1 sets accepted_by='unverified' on every trace row.",
+  "routes": [
+    {
+      "id": "gad_note",
+      "task_shape": "gad_note",
+      "tier": 0,
+      "primary": "qwen2.5-coder-1.5b-instruct",
+      "fallback_chain": ["claude-haiku-4-5"],
+      "verifier": "json_schema_validator"
+    },
+    {
+      "id": "gad_decision",
+      "task_shape": "gad_decision",
+      "tier": 0,
+      "primary": "qwen2.5-coder-1.5b-instruct",
+      "fallback_chain": ["claude-haiku-4-5", "claude-sonnet-4-6"]
+    },
+    {
+      "id": "gad_handoff",
+      "task_shape": "gad_handoff",
+      "tier": 1,
+      "primary": "qwen2.5-coder-3b-instruct",
+      "fallback_chain": ["claude-sonnet-4-6"]
+    },
+    {
+      "id": "tool_action_json",
+      "task_shape": "tool_action_json",
+      "tier": 1,
+      "primary": "qwen2.5-coder-7b-instruct",
+      "fallback_chain": ["claude-sonnet-4-6"],
+      "verifier": "json_schema_validator"
+    },
+    {
+      "id": "code_function_completion",
+      "task_shape": "code_function_completion",
+      "tier": 1,
+      "primary": "qwen2.5-coder-7b-instruct",
+      "fallback_chain": ["claude-opus-4-5"],
+      "verifier": "humaneval_test_suite"
+    },
+    {
+      "id": "code_repair",
+      "task_shape": "code_repair",
+      "tier": 2,
+      "primary": "qwen2.5-coder-32b-instruct",
+      "fallback_chain": ["claude-opus-4-5"],
+      "verifier": "test_suite_diff_runner"
+    },
+    {
+      "id": "default_general",
+      "task_shape": "*",
+      "tier": 2,
+      "primary": "qwen2.5-coder-32b-instruct",
+      "fallback_chain": ["claude-sonnet-4-6", "claude-opus-4-5"]
+    }
+  ]
+}

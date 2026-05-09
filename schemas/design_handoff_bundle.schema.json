@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/design_handoff_bundle.schema.json",
+  "title": "Claude Design Handoff Bundle",
+  "description": "Trigger payload exported by Claude Design and consumed by the GAD generation engine. A bundle is a self-describing snapshot of a design system version: tokens (color/spacing/typography/radius/shadow/motion), pages (routes + composition), components (props + structure + states + a11y), constraints (target frameworks + a11y target), and provenance (tenant + consent per slm-learning-219 + slm-learning-221). Decisions: slm-learning-205 (design-handoff-as-trigger), slm-learning-219 (per-tenant adapter routing), slm-learning-221 (private-vs-shared consent).",
+  "type": "object",
+  "required": [
+    "bundle_id",
+    "exported_at",
+    "design_system_version",
+    "tokens",
+    "pages",
+    "components",
+    "provenance"
+  ],
+  "properties": {
+    "bundle_id": {
+      "type": "string",
+      "description": "Stable, unique id for this export. Format: 'cd-<tenant>-<yyyymmdd>-<seq>' suggested."
+    },
+    "exported_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp the bundle was emitted by Claude Design."
+    },
+    "exported_by": {
+      "type": "string",
+      "description": "Source tool tag. Defaults to 'claude-design'.",
+      "default": "claude-design"
+    },
+    "design_system_version": {
+      "type": "string",
+      "description": "Semver of the design system snapshot (e.g. '1.4.0'). Drives generator cache invalidation."
+    },
+    "tokens": {
+      "type": "object",
+      "description": "Design tokens grouped by category. Each subgroup is a flat name->value map. Generators translate to CSS vars / ThemeData / Tailwind config / etc.",
+      "properties": {
+        "color": {
+          "type": "object",
+          "description": "Named color tokens. Values are hex (#RRGGBB[AA]) or rgba()/hsl().",
+          "additionalProperties": { "type": "string" }
+        },
+        "spacing": {
+          "type": "object",
+          "description": "Named spacing tokens. Values are px/rem/em strings.",
+          "additionalProperties": { "type": "string" }
+        },
+        "typography": {
+          "type": "object",
+          "description": "Named typography tokens. Each entry is an object with font_family, size, weight, line_height.",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "font_family": { "type": "string" },
+              "size": { "type": "string" },
+              "weight": { "type": ["string", "integer"] },
+              "line_height": { "type": ["string", "number"] },
+              "letter_spacing": { "type": "string" }
+            }
+          }
+        },
+        "radius": {
+          "type": "object",
+          "description": "Named border-radius tokens.",
+          "additionalProperties": { "type": "string" }
+        },
+        "shadow": {
+          "type": "object",
+          "description": "Named shadow tokens. Values are CSS box-shadow strings.",
+          "additionalProperties": { "type": "string" }
+        },
+        "motion": {
+          "type": "object",
+          "description": "Named motion tokens. Each entry is {duration, easing}.",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "duration": { "type": "string" },
+              "easing": { "type": "string" }
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "pages": {
+      "type": "array",
+      "description": "Routable pages. Each page references a layout component_id and the components it composes.",
+      "items": {
+        "type": "object",
+        "required": ["page_id", "route", "layout", "components_used"],
+        "properties": {
+          "page_id": { "type": "string" },
+          "route": { "type": "string", "description": "URL path (e.g. '/pricing')." },
+          "title": { "type": "string" },
+          "layout": {
+            "type": "string",
+            "description": "component_id of the page-level layout component."
+          },
+          "components_used": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["component_id"],
+              "properties": {
+                "component_id": { "type": "string" },
+                "props": {
+                  "type": "object",
+                  "description": "Concrete prop values for this instance."
+                },
+                "slot": {
+                  "type": "string",
+                  "description": "Named slot in the layout (e.g. 'header', 'main', 'footer')."
+                }
+              }
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "SEO + analytics hints. Free-form."
+          }
+        }
+      }
+    },
+    "components": {
+      "type": "array",
+      "description": "Reusable component definitions. Generators emit one file per component.",
+      "items": {
+        "type": "object",
+        "required": ["component_id", "name", "category", "props_schema", "structure"],
+        "properties": {
+          "component_id": { "type": "string" },
+          "name": {
+            "type": "string",
+            "description": "PascalCase name. Drives generated symbol + filename."
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "page",
+              "layout",
+              "input",
+              "display",
+              "navigation",
+              "feedback",
+              "overlay"
+            ]
+          },
+          "description": { "type": "string" },
+          "props_schema": {
+            "type": "object",
+            "description": "JSON-schema-style props definition. Top-level type is 'object'.",
+            "properties": {
+              "type": { "type": "string" },
+              "required": { "type": "array", "items": { "type": "string" } },
+              "properties": { "type": "object" }
+            }
+          },
+          "structure": {
+            "type": "object",
+            "description": "Nested element tree. {tag, attrs, token_refs, children:[]}. Generators walk this tree.",
+            "properties": {
+              "tag": { "type": "string" },
+              "attrs": { "type": "object" },
+              "token_refs": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "Token paths consumed (e.g. 'color.primary', 'typography.body')."
+              },
+              "children": {
+                "type": "array",
+                "items": { "type": "object" }
+              },
+              "text": { "type": "string" }
+            }
+          },
+          "states": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["default", "hover", "active", "disabled", "focus", "loading", "error"]
+            }
+          },
+          "a11y": {
+            "type": "object",
+            "description": "Accessibility hints.",
+            "properties": {
+              "role": { "type": "string" },
+              "aria": { "type": "object" },
+              "keyboard": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "description": "Target framework + browser/a11y envelope. Drives generator selection.",
+      "properties": {
+        "framework_targets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["react", "vue", "flutter", "html-css", "svelte"]
+          }
+        },
+        "browser_support": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "accessibility_target": {
+          "type": "string",
+          "description": "e.g. 'wcag-2.2-aa'."
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["source", "exported_from"],
+      "description": "Where the bundle came from. tenant_id + consent gate routing into private vs shared evolution.",
+      "properties": {
+        "source": {
+          "type": "string",
+          "description": "Always 'claude-design' for v1.",
+          "default": "claude-design"
+        },
+        "exported_from": {
+          "type": "string",
+          "description": "Project id or workspace ref the design lived in."
+        },
+        "tenant_id": {
+          "type": "string",
+          "description": "Customer tenant id. Routes to per-tenant vertical adapter (slm-learning-219)."
+        },
+        "consent": {
+          "type": "object",
+          "description": "Consent flags per slm-learning-221.",
+          "properties": {
+            "private": {
+              "type": "boolean",
+              "description": "If true, generated artifacts and traces are tenant-scoped only.",
+              "default": true
+            },
+            "shared": {
+              "type": "boolean",
+              "description": "If true, the bundle may contribute to shared retain-bank / shared adapter improvement.",
+              "default": false
+            },
+            "notes": { "type": "string" }
+          }
+        },
+        "captured_by": { "type": "string" },
+        "captured_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "schema_v": {
+      "type": "integer",
+      "default": 1
+    },
+    "decision_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["slm-learning-205", "slm-learning-219", "slm-learning-221"]
+    }
+  },
+  "additionalProperties": false
+}

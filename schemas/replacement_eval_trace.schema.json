@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/replacement_eval_trace.schema.json",
+  "title": "Replacement Eval Trace",
+  "description": "Per-call eval row for the Big-Base Replacement Track matrix (benchmarks/frontier_open_replacement_matrix.yaml). Composes with schemas/inference_trace.schema.json (Gateway production calls) and schemas/teacher_policy.schema.json (teacher row provenance contract). One trace row = one (model, task, eval_row) cell evaluation. Decisions: slm-learning-103 (compare-and-compete), slm-learning-197 (teacher policy), slm-learning-210 (scaling ladder), slm-learning-212 (7B is not destination), slm-learning-213 (Big-Base Track authorized).",
+  "type": "object",
+  "required": [
+    "trace_id",
+    "ts",
+    "matrix_run_id",
+    "model_id",
+    "task_id",
+    "row_id",
+    "pass",
+    "input_tokens",
+    "output_tokens",
+    "latency_seconds",
+    "cost_usd"
+  ],
+  "properties": {
+    "trace_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique id for this single evaluation call."
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Wall-clock timestamp at call start (ISO-8601 UTC)."
+    },
+    "matrix_run_id": {
+      "type": "string",
+      "description": "Identifier for the larger matrix-fire run that grouped this call. Multiple trace rows share a matrix_run_id; the run aggregates them into the cell-level row in benchmarks/frontier_open_replacement_matrix.yaml."
+    },
+    "model_id": {
+      "type": "string",
+      "description": "Model registry id from data/registry/model_families.json (e.g. 'qwen3-coder-next-80b-a3b' or 'opus-4-5')."
+    },
+    "task_id": {
+      "type": "string",
+      "description": "task_shape id from benchmarks/frontier_open_replacement_matrix.yaml task_shapes section (e.g. 'humaneval', 'swe_bench_verified_subset', 'gad_tools')."
+    },
+    "row_id": {
+      "type": "string",
+      "description": "Eval row id within the task. For HumanEval this is the problem id (e.g. 'HumanEval/42'); for owned-domain corpora it's the corpus row id."
+    },
+    "prompt_chars": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Character count of the rendered prompt (post-template, pre-tokenization). Useful as a model-agnostic length proxy."
+    },
+    "completion_chars": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Character count of the completion."
+    },
+    "pass": {
+      "type": "boolean",
+      "description": "Did this row pass the task's pass_metric? Single boolean per row; pass@k aggregation happens at the matrix-cell level, not here."
+    },
+    "judge": {
+      "type": "string",
+      "description": "Verifier identifier. Examples: 'humaneval_test_runner', 'mbpp_test_runner', 'json_schema_validator', 'opus_judge_panel', 'rubric_v1_handoff', 'trajectory_replay'. Maps to teacher_policy.schema.json verifier field."
+    },
+    "judge_reason": {
+      "type": "string",
+      "description": "Optional free-text reason from the judge. For test runners: the failed assertion or stack trace. For rubric judges: the rubric breakdown."
+    },
+    "input_tokens": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Tokens consumed at input. For closed-API calls (Opus, Sonnet, Haiku, Together) this is the API-reported value. For local/Modal it's the tokenizer count."
+    },
+    "output_tokens": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Tokens emitted as output."
+    },
+    "latency_seconds": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Wall-clock time from call start to completion-end. Excludes harness setup. Used in cost-per-success rollups."
+    },
+    "cost_usd": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Computed cost: (input_tokens / 1e6) * cost_input_per_mtok + (output_tokens / 1e6) * cost_output_per_mtok for API calls; or (latency_seconds / 3600) * cost_per_hour for Modal hosted. Pricing constants live in data/registry/model_families.json."
+    },
+    "fallback_used": {
+      "type": "boolean",
+      "default": false,
+      "description": "True if the call escalated through a fallback chain (e.g. local 7B failed, escalated to Opus). Fallback chain detail goes in fallback_chain."
+    },
+    "fallback_chain": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Ordered list of model_ids actually invoked for this row. Length 1 = no fallback. The model_id top-level field is the model whose row this trace counts toward (the LAST model in the chain, the one that produced the scored output)."
+    },
+    "human_edit_distance": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Optional post-hoc measurement of the edit distance between the model's output and the human-corrected output (when a human reviewed). Higher = more human work needed. Used for the rubric-shaped task shapes (gad_decision, gad_handoff)."
+    },
+    "regression_vs_baseline_pp": {
+      "type": "number",
+      "description": "Optional: percentage-point delta vs the canonical 7B Stein anchor on the same task. Negative = regression; positive = lift. Computed at aggregation time, stored here for fast querying."
+    },
+    "task_shape_charter_row": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 4,
+      "description": "Charter row classification from slm-learning-103: 1=public-leaderboard, 2=frontier-comparator, 3=owned-domain, 4=lineage. A single trace row counts toward at most one charter row."
+    },
+    "verifier_class": {
+      "type": "string",
+      "enum": [
+        "test_runner",
+        "schema_validator",
+        "rubric_judge",
+        "panel_judge",
+        "trajectory_replay",
+        "contract_runner",
+        "human"
+      ],
+      "description": "Coarse verifier class for aggregation."
+    },
+    "tenant_id": {
+      "type": "string",
+      "description": "Optional: tenant_id when the eval was triggered as part of a customer-soul evolution (slm-learning-218). Composes with schemas/customer_soul_adapter.schema.json."
+    },
+    "adapter_id": {
+      "type": "string",
+      "description": "Optional: LoRA adapter id if the model was a base+adapter composition. Anchors to schemas/delta_checkpoint.schema.json."
+    },
+    "adapter_lineage": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional: ordered list of parent adapter ids. Used for Charter Row 4 lineage rows."
+    },
+    "via": {
+      "type": "string",
+      "enum": [
+        "anthropic_api",
+        "openai_api",
+        "google_api",
+        "openrouter",
+        "together",
+        "modal_a10g",
+        "modal_a100",
+        "modal_a100_80gb",
+        "modal_h100",
+        "local_cpu",
+        "local_gpu_1660ti",
+        "huggingface_inference"
+      ],
+      "description": "Delivery channel; sets the cost model and capacity envelope."
+    },
+    "promptable_root_context_id": {
+      "type": "string",
+      "description": "Optional: id of the context_root active at the time of the call. Composes with schemas/context_root.schema.json."
+    },
+    "delta_packet_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional: delta_packet ids active during the call. Composes with schemas/delta_packet.schema.json."
+    },
+    "decision_refs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Decisions this row composes with (e.g. ['slm-learning-103', 'slm-learning-213'])."
+    },
+    "schema_v": {
+      "type": "integer",
+      "default": 1,
+      "minimum": 1
+    }
+  },
+  "additionalProperties": false
+}

@@ -1060,4 +1060,14 @@
     <summary>slm-learning is bidirectional with the framework — not a consumer; a producer of framework-level insights</summary>
   </decision>
 
+  <decision id="slm-learning-212">
+    <title>7B is cheap gate / workhorse, NOT destination.</title>
+    <summary>7B is cheap gate / workhorse, NOT destination. High-end open base + Opus teacher hybrid is the replacement target.</summary>
+  </decision>
+
+  <decision id="slm-learning-213">
+    <title>Big-Base Replacement Track authorized — $100-300 first se...</title>
+    <summary>Big-Base Replacement Track authorized — $100-300 first serious big-base experiment with high-end open Qwen</summary>
+  </decision>
+
 </decisions>

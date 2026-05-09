@@ -1,0 +1,251 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/gad_ask_permission_tiers.schema.json",
+  "title": "gad ask Permission Tier Registry",
+  "description": "Canonical definition of the three permission tiers governing what actions a gad ask --mode=agent invocation may take. The tier is set per-invocation via --permissions=readonly|safe|dangerous. Each tier is a superset of the tier below it — safe includes all of readonly's allowed_tool_kinds, dangerous includes all of safe's. The forbidden lists are hard floors that no tier override can lift. See gad_ask_invocation.schema.json for the invocation record that references these tiers.",
+  "type": "object",
+  "required": ["tiers", "$defs"],
+  "properties": {
+    "tiers": {
+      "type": "object",
+      "description": "The three permission tiers, keyed by tier name.",
+      "required": ["readonly", "safe", "dangerous"],
+      "properties": {
+        "readonly": {
+          "$ref": "#/$defs/tier_definition",
+          "description": "Pure read. Cannot modify any state. Default for shared workspaces and customer-owned projects. Default when --permissions is omitted.",
+          "properties": {
+            "tier_id": { "const": "readonly" },
+            "label": { "const": "Read-Only" },
+            "description": {
+              "const": "Pure read. Cannot modify any state. Default for shared workspaces and customer-owned projects. Any attempt by an agent to invoke a write, edit, shell-exec, or spend action aborts the invocation with status=aborted_permission_violation and emits a permission_check_result with decision=deny."
+            },
+            "allowed_tool_kinds": {
+              "const": ["read", "list", "lookup", "search", "show", "describe", "diff"]
+            },
+            "forbidden_tool_kinds": {
+              "const": [
+                "edit",
+                "write",
+                "delete",
+                "rename",
+                "shell-exec",
+                "git-commit",
+                "git-add",
+                "git-push",
+                "deploy",
+                "spawn-process",
+                "spend",
+                "delete-irreversible",
+                "modify-credentials",
+                "external-api-call"
+              ]
+            },
+            "examples": {
+              "const": [
+                "gad snapshot --projectid global",
+                "gad tasks list",
+                "gad ask (default, no --mode flag)",
+                "file Read",
+                "Grep",
+                "gad decisions show GLOBAL-D-330",
+                "dns-lookup (read-only resolution)"
+              ]
+            }
+          }
+        },
+        "safe": {
+          "$ref": "#/$defs/tier_definition",
+          "description": "Local edits only. Can change files, stage, run tests, build. Cannot push, deploy, or spend. Default for solo dev work.",
+          "properties": {
+            "tier_id": { "const": "safe" },
+            "label": { "const": "Safe (Local State)" },
+            "description": {
+              "const": "Local edits only. Superset of readonly — all read actions remain allowed. Additionally allows editing files, staging git changes, running tests, and building locally. Cannot push to remote, deploy to production, spend money, delete irreversibly, or modify credentials. Suitable for solo dev work where the operator wants agent assistance without real-world side effects."
+            },
+            "allowed_tool_kinds": {
+              "const": [
+                "read", "list", "lookup", "search", "show", "describe", "diff",
+                "edit-local",
+                "write-local",
+                "git-add",
+                "git-commit-local",
+                "test-run",
+                "build-local"
+              ]
+            },
+            "forbidden_tool_kinds": {
+              "const": [
+                "delete-irreversible",
+                "shell-exec-arbitrary",
+                "git-push",
+                "deploy-prod",
+                "spend-money",
+                "delete-data",
+                "modify-credentials",
+                "external-api-call-mutating"
+              ]
+            },
+            "examples": {
+              "const": [
+                "Edit file in apps/desktop/src",
+                "git add -p",
+                "pnpm test --filter apps/desktop",
+                "pnpm build --filter apps/desktop",
+                "gad tasks stamp GLOBAL-T-173-20 --status done",
+                "gad handoffs reclaim --dry-run (dry-run is read; actual reclaim requires confirmation before write)"
+              ]
+            }
+          }
+        },
+        "dangerous": {
+          "$ref": "#/$defs/tier_definition",
+          "description": "Operator-authorized actions with real-world side effects. Requires explicit operator green-light per invocation OR operator-set GAD_PERMISSIONS_AGENT_DANGEROUS_ALLOWLIST.",
+          "properties": {
+            "tier_id": { "const": "dangerous" },
+            "label": { "const": "Dangerous (Real-World Side Effects)" },
+            "description": {
+              "const": "Operator-authorized actions with real-world side effects. Superset of safe — all local-state actions remain allowed. Additionally allows arbitrary shell execution, git push, production deployment, spending money via external APIs, deleting data, and modifying credentials. Requires explicit operator green-light per invocation (prompted before execution) OR the operator has pre-authorized specific action patterns via GAD_PERMISSIONS_AGENT_DANGEROUS_ALLOWLIST. The hard floor (forbidden_tool_kinds) cannot be lifted by any tier — destroying customer data and credential exfiltration are always denied."
+            },
+            "allowed_tool_kinds": {
+              "const": [
+                "read", "list", "lookup", "search", "show", "describe", "diff",
+                "edit-local", "write-local", "git-add", "git-commit-local", "test-run", "build-local",
+                "shell-exec",
+                "git-push",
+                "deploy",
+                "spend-money",
+                "delete-data",
+                "modify-credentials",
+                "external-api-call"
+              ]
+            },
+            "forbidden_tool_kinds": {
+              "const": [
+                "destroy-customer-data",
+                "credential-exfiltration",
+                "drop-production-database-without-backup"
+              ]
+            },
+            "examples": {
+              "const": [
+                "modal deploy modal_app/serve_vllm.py",
+                "gh release create v1.2.0 --generate-notes",
+                "ionos DNS API call to update A record",
+                "anthropic API call that spends >$0.10",
+                "gad team stop --all (terminates worker processes)",
+                "git push origin main"
+              ]
+            },
+            "authorization_policy": {
+              "const": {
+                "modes": [
+                  "per_invocation_prompt",
+                  "allowlist_env_var"
+                ],
+                "per_invocation_prompt": "Before executing any dangerous-tier action, the agent must emit a structured authorization gate prompt and wait for operator confirm-phrase. Format: 'AUTHORIZE: <action_description> [yes/no]'. Proceeding without confirmation = permission_check_result(decision=deny, rationale=no_explicit_authorize).",
+                "allowlist_env_var": "GAD_PERMISSIONS_AGENT_DANGEROUS_ALLOWLIST — comma-separated list of tool patterns the operator has pre-authorized. Example: 'modal deploy *,gh release create *'. Actions matching this list skip the per-invocation prompt. Actions NOT matching still require per-invocation prompt.",
+                "note": "Even with allowlist, the hard floor forbidden_tool_kinds are always denied regardless of env var."
+              }
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "$defs": {
+      "type": "object",
+      "properties": {
+        "tier_definition": {
+          "type": "object",
+          "description": "Base shape shared by all tier objects.",
+          "required": ["tier_id", "label", "description", "allowed_tool_kinds", "forbidden_tool_kinds", "examples"],
+          "properties": {
+            "tier_id": { "type": "string", "enum": ["readonly", "safe", "dangerous"] },
+            "label": { "type": "string" },
+            "description": { "type": "string" },
+            "allowed_tool_kinds": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "forbidden_tool_kinds": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "examples": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "permission_check_result": {
+          "title": "Permission Check Result",
+          "description": "Emitted whenever the agent evaluates a planned action against the active permission tier. Decision=deny and decision=require_explicit_authorize are DPO training signals — the model should not have planned the action without first verifying tier adequacy.",
+          "type": "object",
+          "required": ["invocation_id", "intended_action", "resolved_permission_tier", "decision", "rationale", "ts"],
+          "properties": {
+            "invocation_id": {
+              "type": "string",
+              "description": "Links back to the gad_ask_invocation.invocation_id that triggered this check."
+            },
+            "intended_action": {
+              "type": "object",
+              "description": "The action the agent planned to take.",
+              "required": ["tool", "inputs"],
+              "properties": {
+                "tool": { "type": "string" },
+                "inputs": { "type": "object" }
+              },
+              "additionalProperties": false
+            },
+            "resolved_permission_tier": {
+              "type": "string",
+              "enum": ["readonly", "safe", "dangerous"],
+              "description": "The tier active at the moment of the check."
+            },
+            "decision": {
+              "type": "string",
+              "enum": ["allow", "deny", "require_explicit_authorize"],
+              "description": "allow = action is within tier, proceed. deny = action exceeds tier hard floor or tier cap, abort. require_explicit_authorize = action is within dangerous tier but operator has not yet confirmed this specific action — prompt for confirmation before proceeding."
+            },
+            "rationale": {
+              "type": "string",
+              "description": "Human-readable reason for the decision. For deny: which forbidden_tool_kind was violated. For require_explicit_authorize: what confirmation phrase is needed. For allow: which allowed_tool_kind matched."
+            },
+            "ts": {
+              "type": "string",
+              "format": "date-time",
+              "description": "Timestamp of the check."
+            }
+          },
+          "additionalProperties": false,
+          "examples": [
+            {
+              "invocation_id": "gask-global-20260509-004",
+              "intended_action": {
+                "tool": "Bash",
+                "inputs": { "command": "rm -rf .gad-log/2026-05-09.jsonl" }
+              },
+              "resolved_permission_tier": "safe",
+              "decision": "deny",
+              "rationale": "Action tool_kind=delete-irreversible. Tier safe forbids delete-irreversible. Escalate to operator or re-invoke with --permissions=dangerous.",
+              "ts": "2026-05-09T11:15:00Z"
+            },
+            {
+              "invocation_id": "gask-global-20260509-005",
+              "intended_action": {
+                "tool": "Bash",
+                "inputs": { "command": "git push origin main" }
+              },
+              "resolved_permission_tier": "safe",
+              "decision": "deny",
+              "rationale": "Action tool_kind=git-push. Tier safe forbids git-push. Re-invoke with --permissions=dangerous and confirm the push explicitly.",
+              "ts": "2026-05-09T11:16:00Z"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,417 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://slm-learning/schemas/gad_ask_invocation.schema.json",
+  "title": "gad ask Invocation Record",
+  "description": "Captures a single invocation of `gad ask`, whether in pure-ask (readonly) or agent (action-taking) mode. Logged to .planning/.gad-log/<date>.jsonl with tool='gad ask'. Drives tool-use DPO mining via result.actions_taken and permission_check_result emissions. Sibling to tool_use_preference.schema.json.",
+  "type": "object",
+  "required": [
+    "invocation_id",
+    "ts",
+    "projectid",
+    "operator_id",
+    "mode",
+    "permissions",
+    "query",
+    "soul_route",
+    "status"
+  ],
+  "properties": {
+    "invocation_id": {
+      "type": "string",
+      "description": "Unique ID. Format: 'gask-<projectid>-<YYYYMMDD>-<seq>'. Example: 'gask-global-20260509-001'."
+    },
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the invocation was created (before inference begins)."
+    },
+    "projectid": {
+      "type": "string",
+      "description": "GAD project scope. Example: 'global', 'slm-learning'."
+    },
+    "operator_id": {
+      "type": "string",
+      "description": "Operator who initiated this invocation. For direct CLI calls this is the authenticated user. For agent-dispatched calls this is still the human operator (agent_id carries the agent attribution)."
+    },
+    "agent_id": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "ID of the agent that dispatched this invocation. Null when the operator fired it directly from their CLI. Set when a subagent or worker called `gad ask` on behalf of the operator."
+    },
+    "parent_agent_id": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "ID of the parent agent if this invocation is nested inside an agentic loop. Null for top-level invocations. Allows attribution chains to be reconstructed for DPO mining."
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["ask", "agent"],
+      "description": "Execution mode. 'ask' = pure semantic lookup, no actions taken. 'agent' = soul plans and executes tool actions subject to the permissions tier. CLI flag: --mode=ask|agent. Default: ask."
+    },
+    "permissions": {
+      "type": "string",
+      "enum": ["readonly", "safe", "dangerous"],
+      "description": "Permission tier governing what actions the agent may take. Only evaluated when mode=agent. CLI flag: --permissions=readonly|safe|dangerous. Default: readonly. See gad_ask_permission_tiers.schema.json for tier definitions."
+    },
+    "query": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The operator's natural-language query or instruction. In mode=ask this is interpreted as a question. In mode=agent this may be an imperative ('deploy modal vllm endpoint', 'reclaim stale claims')."
+    },
+    "soul_route": {
+      "type": "object",
+      "description": "Soul routing resolution at invocation time. Resolved from soul_routes.toml. Snapshot stored here so replay is stable even if routes.toml changes later.",
+      "required": ["soul_id", "base_model_id", "adapter_stack", "endpoint"],
+      "properties": {
+        "soul_id": {
+          "type": "string",
+          "description": "Name of the soul selected. Example: 'kael', 'gilgamesh'."
+        },
+        "base_model_id": {
+          "type": "string",
+          "description": "HuggingFace model ID or API model slug. Example: 'Qwen/Qwen2.5-1.5B-Instruct', 'claude-haiku-4-5'."
+        },
+        "adapter_stack": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Ordered list of LoRA/PEFT adapter paths applied on top of base_model_id. May be empty if using a fine-tuned checkpoint directly."
+        },
+        "endpoint": {
+          "type": "string",
+          "description": "Inference endpoint URI. Examples: 'local://modal/kael-sft', 'anthropic://claude-haiku-4-5', 'http://localhost:8000/v1'."
+        }
+      },
+      "additionalProperties": false
+    },
+    "context_built": {
+      "type": ["object", "null"],
+      "default": null,
+      "description": "Context window assembly report. Populated after retrieval, before inference.",
+      "required": ["sources", "total_tokens", "truncated_at_token_budget", "rag_index_version"],
+      "properties": {
+        "sources": {
+          "type": "array",
+          "description": "Ordered list of context sources injected into the prompt.",
+          "items": {
+            "type": "object",
+            "required": ["kind", "ref", "token_count"],
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "decision_dataset",
+                  "handoff_dataset",
+                  "delta_packet",
+                  "retain_bank",
+                  "repo_embedding",
+                  "gad_command_surface",
+                  "error_corpus",
+                  "soul_constitution",
+                  "inline_context"
+                ],
+                "description": "Category of context source."
+              },
+              "ref": {
+                "type": "string",
+                "description": "File path, dataset ID, or content hash identifying the source. Example: '.planning/DECISIONS.xml', 'retain-banks/kael/v3'."
+              },
+              "token_count": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Tokens contributed by this source to the final context window."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "total_tokens": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total tokens in the assembled context window."
+        },
+        "truncated_at_token_budget": {
+          "type": "boolean",
+          "description": "True if one or more sources were trimmed to fit within the token budget."
+        },
+        "rag_index_version": {
+          "type": ["string", "null"],
+          "description": "Version hash or build timestamp of the repo embedding index used for retrieval. Null if retrieval was skipped or index does not exist yet."
+        }
+      },
+      "additionalProperties": false
+    },
+    "result": {
+      "type": ["object", "null"],
+      "default": null,
+      "description": "Inference result. Null when status=pending or status=running. Populated on completion or failure.",
+      "properties": {
+        "answer_text": {
+          "type": ["string", "null"],
+          "default": null,
+          "description": "Natural-language answer returned by the soul. Present in mode=ask. May also be present in mode=agent as a preamble before or summary after actions."
+        },
+        "structured_outputs": {
+          "type": ["object", "null"],
+          "default": null,
+          "description": "Machine-readable outputs extracted from the answer. Schema is query-dependent. Example: { 'handoffs': [...] } for a stale-claims query."
+        },
+        "cost_usd": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Total cost of this invocation in USD. Includes retrieval + inference. Excludes cost of actions taken (logged separately via spend ledger)."
+        },
+        "tokens_in": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Input tokens consumed by the inference call."
+        },
+        "tokens_out": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Output tokens emitted by the inference call."
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Wall-clock time from invocation start to result delivery in milliseconds."
+        },
+        "citations": {
+          "type": "array",
+          "description": "Source references cited by the soul in its answer. Drives citation DPO signal.",
+          "items": {
+            "type": "object",
+            "required": ["source_kind", "source_ref"],
+            "properties": {
+              "source_kind": {
+                "type": "string",
+                "description": "Category matching context_built.sources[].kind."
+              },
+              "source_ref": {
+                "type": "string",
+                "description": "Specific entity reference. Example: 'GLOBAL-D-330', 'h-2026-05-05T05-10-27-global-120'."
+              },
+              "snippet": {
+                "type": ["string", "null"],
+                "default": null,
+                "description": "Short quoted excerpt from the cited source. Optional — include when the answer paraphrases rather than directly quotes."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "actions_taken": {
+          "type": "array",
+          "description": "Ordered list of tool actions executed by the agent. Populated only in mode=agent. Each entry is a candidate for tool_use_preference DPO mining — the action is the 'chosen' branch; what a worse model would have done (file-foraging, manual shell, etc.) is the 'rejected' branch derived from the query type.",
+          "items": {
+            "type": "object",
+            "required": ["tool", "inputs", "success"],
+            "properties": {
+              "tool": {
+                "type": "string",
+                "description": "Tool or CLI command invoked. Example: 'Bash', 'gad handoffs reclaim', 'modal deploy'."
+              },
+              "inputs": {
+                "type": "object",
+                "description": "Key inputs to the tool. Abbreviated — enough to reconstruct intent and drive DPO pairing."
+              },
+              "permission_tier_at_execution": {
+                "type": "string",
+                "enum": ["readonly", "safe", "dangerous"],
+                "description": "Permission tier active at the moment this action was evaluated. Inherited from invocation.permissions unless overridden by an explicit-authorize gate."
+              },
+              "success": {
+                "type": "boolean",
+                "description": "Whether the action completed successfully."
+              },
+              "output_summary": {
+                "type": ["string", "null"],
+                "default": null,
+                "description": "One-line summary of the action result. Example: '3 claims reclaimed, 0 skipped'."
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "cost_cap_usd": {
+      "type": ["number", "null"],
+      "default": null,
+      "minimum": 0,
+      "description": "Per-invocation cost cap in USD. If inference + action cost would exceed this, the invocation is aborted with status=aborted_cost_cap. Null = no cap (use gad-config.toml default). CLI flag: --cost-cap."
+    },
+    "session_id": {
+      "type": ["string", "null"],
+      "default": null,
+      "description": "GAD session ID under which this invocation was made. Allows session-level cost aggregation."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "running",
+        "completed",
+        "failed",
+        "aborted_cost_cap",
+        "aborted_permission_violation"
+      ],
+      "description": "Lifecycle state of this invocation. 'aborted_permission_violation' = agent attempted an action whose tool_kind exceeds the declared permissions tier; invocation halted and a permission_check_result record was emitted."
+    }
+  },
+  "examples": [
+    {
+      "invocation_id": "gask-global-20260509-001",
+      "ts": "2026-05-09T11:00:00Z",
+      "projectid": "global",
+      "operator_id": "benjamingarrard5279@gmail.com",
+      "agent_id": null,
+      "parent_agent_id": null,
+      "mode": "ask",
+      "permissions": "readonly",
+      "query": "where does worker-loop call rotation in vendor/get-anything-done",
+      "soul_route": {
+        "soul_id": "kael",
+        "base_model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+        "adapter_stack": ["slm_learning/models/kael-1-1.5b-sft-tooluse"],
+        "endpoint": "local://modal/kael-sft"
+      },
+      "context_built": {
+        "sources": [
+          { "kind": "soul_constitution", "ref": "retain-banks/kael/v3", "token_count": 312 },
+          { "kind": "gad_command_surface", "ref": "data/gad_command_surface.txt", "token_count": 480 },
+          { "kind": "repo_embedding", "ref": "index/vendor-gad-2026-05-09", "token_count": 740 }
+        ],
+        "total_tokens": 1532,
+        "truncated_at_token_budget": false,
+        "rag_index_version": "idx-20260509-a3f2"
+      },
+      "result": {
+        "answer_text": "worker-loop.cjs calls rotation at line 214 via `rotateRuntime(ctx)` imported from runtime-rotation-policy.cjs. The call site is inside the `tick()` function after a worker heartbeat timeout is detected.",
+        "structured_outputs": null,
+        "cost_usd": 0.00008,
+        "tokens_in": 1532,
+        "tokens_out": 62,
+        "latency_ms": 980,
+        "citations": [
+          { "source_kind": "repo_embedding", "source_ref": "vendor/get-anything-done/lib/worker-loop.cjs:214", "snippet": "rotateRuntime(ctx)" }
+        ],
+        "actions_taken": []
+      },
+      "cost_cap_usd": 0.01,
+      "session_id": null,
+      "status": "completed"
+    },
+    {
+      "invocation_id": "gask-global-20260509-002",
+      "ts": "2026-05-09T11:05:00Z",
+      "projectid": "global",
+      "operator_id": "benjamingarrard5279@gmail.com",
+      "agent_id": "subagent-claude-code-w7",
+      "parent_agent_id": null,
+      "mode": "agent",
+      "permissions": "safe",
+      "query": "what's pending in claimed/ — reclaim anything stale",
+      "soul_route": {
+        "soul_id": "kael",
+        "base_model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+        "adapter_stack": ["slm_learning/models/kael-1-1.5b-sft-tooluse"],
+        "endpoint": "local://modal/kael-sft"
+      },
+      "context_built": {
+        "sources": [
+          { "kind": "soul_constitution", "ref": "retain-banks/kael/v3", "token_count": 312 },
+          { "kind": "handoff_dataset", "ref": ".planning/handoffs/claimed/", "token_count": 2840 },
+          { "kind": "gad_command_surface", "ref": "data/gad_command_surface.txt", "token_count": 480 }
+        ],
+        "total_tokens": 3632,
+        "truncated_at_token_budget": false,
+        "rag_index_version": "idx-20260509-a3f2"
+      },
+      "result": {
+        "answer_text": "Found 2 stale claims (>4h, no heartbeat). Ran dry-run — confirmed reclaimable. Awaiting operator confirmation before committing reclaim.",
+        "structured_outputs": {
+          "stale_handoffs": [
+            "h-2026-05-09T06-00-00-global-119",
+            "h-2026-05-09T07-12-00-global-121"
+          ],
+          "action_required": "operator_confirm"
+        },
+        "cost_usd": 0.00015,
+        "tokens_in": 3632,
+        "tokens_out": 94,
+        "latency_ms": 1340,
+        "citations": [
+          { "source_kind": "handoff_dataset", "source_ref": "h-2026-05-09T06-00-00-global-119", "snippet": null },
+          { "source_kind": "handoff_dataset", "source_ref": "h-2026-05-09T07-12-00-global-121", "snippet": null }
+        ],
+        "actions_taken": [
+          {
+            "tool": "gad handoffs reclaim --dry-run",
+            "inputs": { "projectid": "global" },
+            "permission_tier_at_execution": "safe",
+            "success": true,
+            "output_summary": "dry-run: 2 claimable, 0 errors"
+          }
+        ]
+      },
+      "cost_cap_usd": 0.05,
+      "session_id": "sess-20260509-b1c2",
+      "status": "completed"
+    },
+    {
+      "invocation_id": "gask-slm-20260509-003",
+      "ts": "2026-05-09T11:10:00Z",
+      "projectid": "slm-learning",
+      "operator_id": "benjamingarrard5279@gmail.com",
+      "agent_id": null,
+      "parent_agent_id": null,
+      "mode": "agent",
+      "permissions": "dangerous",
+      "query": "deploy modal vllm endpoint",
+      "soul_route": {
+        "soul_id": "kael",
+        "base_model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+        "adapter_stack": ["slm_learning/models/kael-1-1.5b-sft-tooluse"],
+        "endpoint": "local://modal/kael-sft"
+      },
+      "context_built": {
+        "sources": [
+          { "kind": "soul_constitution", "ref": "retain-banks/kael/v3", "token_count": 312 },
+          { "kind": "repo_embedding", "ref": "index/slm-learning-2026-05-09", "token_count": 620 },
+          { "kind": "gad_command_surface", "ref": "data/gad_command_surface.txt", "token_count": 480 }
+        ],
+        "total_tokens": 1412,
+        "truncated_at_token_budget": false,
+        "rag_index_version": "idx-20260509-a3f2"
+      },
+      "result": {
+        "answer_text": "Deploying modal_app/serve_vllm.py. This action has real-world side effects (spend, public endpoint). Proceeding under permissions=dangerous with operator authorization confirmed.",
+        "structured_outputs": {
+          "deployment_url": "https://modal.run/benjamingarrard5279--kael-sft-serve",
+          "deployment_status": "live"
+        },
+        "cost_usd": 0.00022,
+        "tokens_in": 1412,
+        "tokens_out": 110,
+        "latency_ms": 18400,
+        "citations": [
+          { "source_kind": "repo_embedding", "source_ref": "slm_learning/modal_app/serve_vllm.py", "snippet": null }
+        ],
+        "actions_taken": [
+          {
+            "tool": "Bash",
+            "inputs": { "command": "modal deploy modal_app/serve_vllm.py", "cwd": "C:/Users/benja/Documents/slm_learning" },
+            "permission_tier_at_execution": "dangerous",
+            "success": true,
+            "output_summary": "deployed kael-sft-serve, endpoint live at modal.run"
+          }
+        ]
+      },
+      "cost_cap_usd": 1.00,
+      "session_id": "sess-20260509-d4e5",
+      "status": "completed"
+    }
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schema.magicbornstudios.com/dns_record",
+  "title": "DNS Record",
+  "description": "A DNS record managed by GAD — tracks planned, provisioned, and verified records across providers.",
+  "type": "object",
+  "required": ["record_id", "zone", "subdomain", "type", "value", "provider", "status", "created_at"],
+  "properties": {
+    "record_id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Kebab-case unique id — e.g. magicborn-client1-cname-shopify-2026-05-09"
+    },
+    "zone": {
+      "type": "string",
+      "description": "Apex zone — e.g. magicbornstudios.com"
+    },
+    "subdomain": {
+      "type": "string",
+      "description": "Subdomain label only, no trailing dot. Empty string = apex record."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["A", "AAAA", "CNAME", "TXT", "MX"],
+      "description": "DNS record type"
+    },
+    "value": {
+      "type": "string",
+      "description": "Record value: IP for A/AAAA, target hostname for CNAME (no trailing dot needed), text for TXT, priority+host for MX"
+    },
+    "ttl": {
+      "type": "integer",
+      "minimum": 60,
+      "default": 3600,
+      "description": "Time-to-live in seconds"
+    },
+    "provider": {
+      "type": "string",
+      "enum": ["ionos", "cloudflare", "route53", "other"],
+      "description": "DNS provider where the record is or will be provisioned"
+    },
+    "provider_record_id": {
+      "type": ["string", "null"],
+      "description": "Provider-assigned internal record id — populated after successful create. Null until provisioned."
+    },
+    "purpose": {
+      "type": "string",
+      "enum": [
+        "project_root",
+        "customer_storefront",
+        "external_platform_link",
+        "redirect",
+        "apex_redirect",
+        "mail",
+        "other"
+      ],
+      "description": "Semantic intent of this record"
+    },
+    "project_link": {
+      "oneOf": [
+        { "type": "null" },
+        {
+          "type": "object",
+          "required": ["projectid"],
+          "properties": {
+            "projectid": {
+              "type": "string",
+              "description": "GAD project id — e.g. global, magicborn, grime-time"
+            },
+            "soul_id": {
+              "type": ["string", "null"],
+              "description": "Soul id if subdomain is routed to a soul-specific serving endpoint"
+            },
+            "customer_id": {
+              "type": ["string", "null"],
+              "description": "Customer/tenant identifier if this subdomain serves a specific customer"
+            }
+          },
+          "additionalProperties": false
+        }
+      ],
+      "description": "Planning link — what GAD project/soul/customer this subdomain serves. Null for infrastructure records."
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 creation timestamp"
+    },
+    "updated_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "ISO 8601 last-updated timestamp"
+    },
+    "created_by": {
+      "type": ["string", "null"],
+      "description": "Agent id or operator slug — e.g. claude-code, operator-manual"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["planned", "provisioning", "active", "failed", "deleted"],
+      "description": "Lifecycle state of the record"
+    },
+    "last_verified_at": {
+      "type": ["string", "null"],
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of the last successful DNS resolution check. Null = never verified."
+    },
+    "notes": {
+      "type": ["string", "null"],
+      "description": "Free-form operator notes — handoff context, migration notes, etc."
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "record_id": "magicborn-framework-a-record",
+      "zone": "magicbornstudios.com",
+      "subdomain": "framework",
+      "type": "A",
+      "value": "1.2.3.4",
+      "ttl": 3600,
+      "provider": "ionos",
+      "provider_record_id": null,
+      "purpose": "project_root",
+      "project_link": {
+        "projectid": "global",
+        "soul_id": null,
+        "customer_id": null
+      },
+      "created_at": "2026-05-09T10:00:00Z",
+      "updated_at": null,
+      "created_by": "operator-manual",
+      "status": "active",
+      "last_verified_at": null,
+      "notes": "Manually created 2026-05-09 via IONOS dashboard. First project subdomain."
+    },
+    {
+      "record_id": "magicborn-client1-cname-shopify",
+      "zone": "magicbornstudios.com",
+      "subdomain": "client1",
+      "type": "CNAME",
+      "value": "client1-store.myshopify.com",
+      "ttl": 3600,
+      "provider": "ionos",
+      "provider_record_id": null,
+      "purpose": "external_platform_link",
+      "project_link": {
+        "projectid": "magicborn",
+        "soul_id": null,
+        "customer_id": "customer-001"
+      },
+      "created_at": "2026-05-09T12:00:00Z",
+      "updated_at": null,
+      "created_by": "claude-code",
+      "status": "planned",
+      "last_verified_at": null,
+      "notes": "Planned — pending customer onboarding confirmation."
+    },
+    {
+      "record_id": "magicborn-platform-a-record",
+      "zone": "magicbornstudios.com",
+      "subdomain": "platform",
+      "type": "A",
+      "value": "5.6.7.8",
+      "ttl": 3600,
+      "provider": "ionos",
+      "provider_record_id": null,
+      "purpose": "project_root",
+      "project_link": {
+        "projectid": "global",
+        "soul_id": null,
+        "customer_id": null
+      },
+      "created_at": "2026-05-09T10:30:00Z",
+      "updated_at": null,
+      "created_by": "claude-code",
+      "status": "active",
+      "last_verified_at": null,
+      "notes": "Platform server — apps/platform deployment target."
+    }
+  ]
+}

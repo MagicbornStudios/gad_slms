@@ -5,9 +5,9 @@ phase: 04
 task_id: SL-T-04-frontier-comparator
 created_at: 2026-05-08T12:30:00.000Z
 created_by: dr-stein-slm-learning
-claimed_by:
-claimed_at:
-completed_at:
+claimed_by: gemini-cli
+claimed_at: 2026-05-09T00:35:16.472Z
+completed_at: 2026-05-09T00:39:48.950Z
 priority: high
 estimated_context: bounded
 risk: safe

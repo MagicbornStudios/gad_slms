@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <state project="slm-learning" schema="1">
   <level value="2" xp="0" xp_to_next="400" loaded_skills="0"/>
+  <dispatcher last_heartbeat="" pid="" projectid="" state="DEAD"/>
   <!-- slm-learning evolution level seeded 2026-05-09 per operator rule
        "evolving means we go up a level". Level 2 reflects: bootstrap
        (Phase 00), efficient training pipeline (Phase 02), eval &amp;
@@ -14,6 +15,8 @@
   <last-activity>2026-05-06</last-activity>
   <next-action>Phase 04 substrate-first ordering (slm-learning-042). Substrate landed: runtime probes, vLLM serving, rule router, agent corpus extractor. Soul system v1 + skeleton-system + biology-metaphor concerns landed. Multi-task LoRA candidate training in flight (background, ~7hr). Phase 05 (Continuous Local Delta Lab) and Phase 06 (SWE-bench Integration) registered. Next: synth_doc_verifier_pairs to bootstrap doc-verifier corpus, then verifier+critic council souls done. Constitution-impact arm C eval + SWE-bench harness vendoring queued.</next-action>
   <state-log>
+    <entry agent="unknown" at="2026-05-12T21:19:36.925Z" tags="refactor,naming,kael">Renamed kael.py -&gt; smollm2_base.py + scaffolded modal_app/kael_serve.py placeholder. Kael namespace freed for production adapter; SmolLM2 toy now honestly named. soul_routes.toml updated.</entry>
+    <entry agent="unknown" at="2026-05-09T19:25:11.081Z">3 handoffs filed for slm-learning: vLLM endpoint + gad ask + Kael wiring (priority CRITICAL ASAP), CPT v1 smoke ($5 budget), Big-Base ladder eval ($14 budget). All runtime_preference=claude-code per operator 2026-05-09. Operator authorized via direct directive.</entry>
     <entry agent="unknown" at="2026-05-09T16:08:40.757Z">Gateway real backends wired (Anthropic SDK real, Modal/Qwen-local explicit-failure on unavailable). Smoke verified: Anthropic hit API with real 400 credit-error (key valid, account needs credits); Modal returns 404 modal_unavailable (endpoint not deployed); Qwen-local returns ConnectionRefused local_qwen_not_running. No silent fallback. anthropic&gt;=0.30.0 added to requirements.txt.</entry>
     <entry agent="unknown" at="2026-05-09T15:25:44.555Z">show</entry>
     <entry agent="unknown" at="2026-05-09T15:25:29.687Z">show</entry>

@@ -59,7 +59,7 @@ default_project = "global"
 license_class  = "owned"
 created_at     = "2026-05-09T00:00:00Z"
 updated_at     = "2026-05-09T00:00:00Z"
-notes          = "DRAFT/PLANNED — not active. Represents the target route post Kael-house canonical. adapter_stack entry is skeleton until consolidation run ships. Eval gate: trajectory composite > 0.601 (Kael-house flagship run per souls_houses_factions_framework.md)."
+notes          = "DRAFT/PLANNED — not active. Represents the target route post Kael-house canonical. adapter_stack entry is skeleton until consolidation run ships. Eval gate: trajectory composite > 0.601 (Kael-house flagship run per souls_houses_factions_framework.md). Serve placeholder lives at modal_app/kael_serve.py (raises NotImplementedError until adapter trained)."
 
 [souls.base_model]
 provider  = "modal"
@@ -67,9 +67,11 @@ model_id  = "qwen2.5-coder-7b-instruct"
 version   = "TBD"
 
 [souls.endpoint]
-kind     = "self-hosted"
-url      = ""            # GAP: Modal vLLM serve config (Lane D) not deployed
-auth_ref = "MODAL_TOKEN"
+kind        = "self-hosted"
+url         = ""            # GAP: Modal vLLM serve config (Lane D) not deployed
+auth_ref    = "MODAL_TOKEN"
+serve_cmd   = "modal serve slm_learning/modal_app/kael_serve.py"
+compat_api  = "openai-v1"
 
 [souls.routing_policy]
 task_shapes            = ["code-generation", "tool-action", "narrative", "planning", "computer-use"]

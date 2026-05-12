@@ -1080,4 +1080,9 @@
     <summary>SWE-bench Verified subset harness becomes the gold-standard agentic bench; HumanEval/MBPP are saturating-narrow indicators only</summary>
   </decision>
 
+  <decision id="slm-learning-224">
+    <title>kael.py SmolLM2 wrapper renamed to smollm2_base.py - the ...</title>
+    <summary>kael.py SmolLM2 wrapper renamed to smollm2_base.py - the local 135M research toy was misleadingly named after the Kael soul; production Kael will be a LoRA adapter served via modal_app/kael_serve.py (pending Kael-house dataset)</summary>
+  </decision>
+
 </decisions>

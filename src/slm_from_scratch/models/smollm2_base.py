@@ -11,13 +11,16 @@ def _resolve_device(device: str) -> torch.device:
     return torch.device(device)
 
 
-class KaelModel:
-    """
-    Kael: General Reasoning SLM
-    Uses HuggingFace tokenizer and MiniLlama loaded with mapped SmolLM2 135M weights.
+class SmolLM2Model:
+    """SmolLM2 135M wrapper — local SLM base architecture for slm-learning research toys.
+
+    Not connected to the Kael soul or production Kael adapter; that lives in
+    soul_routes.toml + modal_app/kael_serve.py (when deployed). This class
+    is a MiniLlama loaded with mapped HuggingFaceTB/SmolLM2-135M-Instruct
+    weights, used as a base for in-repo research subclasses (e.g. DrSteinModel).
     """
     def __init__(self, model_path: str = None, device: str = "auto"):
-        self.name = "Kael"
+        self.name = "SmolLM2-135M"
         self.device = _resolve_device(device)
 
         # SmolLM2 tokenizer — prefer local cache to avoid aiohttp session leak

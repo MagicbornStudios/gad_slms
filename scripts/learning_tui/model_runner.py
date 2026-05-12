@@ -5,7 +5,11 @@ import sys
 # Ensure we can import the models
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "src")))
 try:
-    from slm_from_scratch.models.kael import KaelModel
+    # The local "kael" TUI tab is currently backed by the SmolLM2 135M wrapper
+    # until the production Kael LoRA adapter ships (see modal_app/kael_serve.py
+    # + soul_routes.toml `kael-of-tarro-v1-intended`). Aliasing preserves the
+    # call sites; flip the import target when the real adapter is reachable.
+    from slm_from_scratch.models.smollm2_base import SmolLM2Model as KaelModel
     from slm_from_scratch.models.dr_stein import DrSteinModel
 except ImportError:
     # Fallbacks if models aren't ready

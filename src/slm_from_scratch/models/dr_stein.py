@@ -1,10 +1,10 @@
 from typing import List, Dict
-from slm_from_scratch.models.kael import KaelModel
+from slm_from_scratch.models.smollm2_base import SmolLM2Model
 
-class DrSteinModel(KaelModel):
+class DrSteinModel(SmolLM2Model):
     """
     Dr. Stein: Meta-SLM & GAD Expert
-    Extends Kael's SmolLM2 architecture base but injects GAD context.
+    Extends the SmolLM2 135M wrapper base but injects GAD context.
     """
     def __init__(self, model_path: str = None, device: str = "auto"):
         if model_path is None:

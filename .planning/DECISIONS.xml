@@ -1085,4 +1085,9 @@
     <summary>kael.py SmolLM2 wrapper renamed to smollm2_base.py - the local 135M research toy was misleadingly named after the Kael soul; production Kael will be a LoRA adapter served via modal_app/kael_serve.py (pending Kael-house dataset)</summary>
   </decision>
 
+  <decision id="slm-learning-225">
+    <title>Wave dispatch plan + pathfinder/refactor soul authoring +...</title>
+    <summary>Wave dispatch plan + pathfinder/refactor soul authoring + second-toucher rule</summary>
+  </decision>
+
 </decisions>

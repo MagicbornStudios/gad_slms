@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<state project="slm-learning" schema="1">
-  <level value="2" xp="0" xp_to_next="400" loaded_skills="0"/>
-  <dispatcher last_heartbeat="" pid="" projectid="" state="DEAD"/>
+<state project="slm-learning" schema="1">  <level value="2" xp="0.5" xp_to_next="400" loaded_skills="0"/>
+  <stamped-tasks>
+    SLM-LEARNING-T-200
+  </stamped-tasks>
+  <dispatcher last_heartbeat="2026-05-23T06:31:26.759Z" pid="19292" projectid="slm-learning" state="LIVE"/>
   <!-- slm-learning evolution level seeded 2026-05-09 per operator rule
        "evolving means we go up a level". Level 2 reflects: bootstrap
        (Phase 00), efficient training pipeline (Phase 02), eval &amp;
@@ -15,6 +17,8 @@
   <last-activity>2026-05-06</last-activity>
   <next-action>Phase 04 substrate-first ordering (slm-learning-042). Substrate landed: runtime probes, vLLM serving, rule router, agent corpus extractor. Soul system v1 + skeleton-system + biology-metaphor concerns landed. Multi-task LoRA candidate training in flight (background, ~7hr). Phase 05 (Continuous Local Delta Lab) and Phase 06 (SWE-bench Integration) registered. Next: synth_doc_verifier_pairs to bootstrap doc-verifier corpus, then verifier+critic council souls done. Constitution-impact arm C eval + SWE-bench harness vendoring queued.</next-action>
   <state-log>
+    <entry agent="unknown" at="2026-05-23T06:27:28.580Z">W1 dispatched: pathfinder scan -&gt; 3 reuse clusters (envelope, registry, cli_runner) -&gt; refactor-soul handoff + 14 mailbox enqueues across w1/w2. Souls authored: pathfinder.md + refactor.md. External-IDE knowledge cross-linked: superset + ruview from custom_portfolio. Dispatcher restarted (pid 21620). Decision slm-learning-225.</entry>
+    <entry agent="unknown" at="2026-05-19T19:50:37.596Z">Integrated academic-research-skills (ARS v3.9.4, CC-BY-NC 4.0) into slm_learning: vendored at vendor/academic-research-skills/, Dr.Stein wrapper skill at skills/dr-stein-paper-writing.skill.yaml, gad paper CLI at .planning/commands/paper.cjs, AGENTS.md updated. Task SLM-LEARNING-T-200 done.</entry>
     <entry agent="unknown" at="2026-05-12T21:19:36.925Z" tags="refactor,naming,kael">Renamed kael.py -&gt; smollm2_base.py + scaffolded modal_app/kael_serve.py placeholder. Kael namespace freed for production adapter; SmolLM2 toy now honestly named. soul_routes.toml updated.</entry>
     <entry agent="unknown" at="2026-05-09T19:25:11.081Z">3 handoffs filed for slm-learning: vLLM endpoint + gad ask + Kael wiring (priority CRITICAL ASAP), CPT v1 smoke ($5 budget), Big-Base ladder eval ($14 budget). All runtime_preference=claude-code per operator 2026-05-09. Operator authorized via direct directive.</entry>
     <entry agent="unknown" at="2026-05-09T16:08:40.757Z">Gateway real backends wired (Anthropic SDK real, Modal/Qwen-local explicit-failure on unavailable). Smoke verified: Anthropic hit API with real 400 credit-error (key valid, account needs credits); Modal returns 404 modal_unavailable (endpoint not deployed); Qwen-local returns ConnectionRefused local_qwen_not_running. No silent fallback. anthropic&gt;=0.30.0 added to requirements.txt.</entry>
@@ -84,4 +88,5 @@
     <entry agent="unknown" at="2026-05-05T01:51:49.438Z">Phase 02 task 02-01 done: gradient_checkpointing flag added to LlamaConfig + MiniLlama.forward, enabled in scripts 09/16/17. Smoke tested fwd+bwd+generate. Memory-efficiency triad complete (bfloat16 autocast + gc.collect + gradient checkpointing). Ready to re-run Stage 2 reasoning + Stage 3 DPO.</entry>
   </state-log>
   <last-updated>2026-05-09T00:33:42.190Z</last-updated>
+  <sink-compiled sink="docs/slm-learning/planning/" at="2026-05-13T17:59:32.408Z" />
 </state>

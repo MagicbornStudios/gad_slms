@@ -61,4 +61,51 @@
     <failure>Local smoke test verifies LOCAL python imports + bit-identical layer construction. It does NOT verify that the refactored imports survive the Modal package boundary. Cost: ~2 min compute charged to start failed containers.</failure>
     <rule>Whenever a Modal app file imports from a sibling module in modal_app/, the @app.function image MUST have .add_local_python_source('modal_app') OR the imports must be inlined OR done inside the function via deferred-import. Add a Modal-runtime check to the post-refactor smoke battery: a tiny @app.function that just does the import + returns 'OK', fired before refactor PRs land.</rule>
   </entry>
+
+  <entry id="framework-mismatch-runtime-substrate" date="2026-05-09" status="open">
+    <summary>Missing scripts/runtime-substrate-core.mjs in GAD framework</summary>
+    <context>Executing 'gad runtime check' after installing framework via tools/setup.mjs.</context>
+    <failure>Error: Could not locate runtime substrate scripts. Expected scripts/runtime-substrate-core.mjs.</failure>
+    <rule>Ensure the framework version (v1.35.0) and branch (main) are aligned with CLI expectations. If files are moved or renamed in the framework, update the CLI's resolution logic or provide backward-compatible stubs.</rule>
+  </entry>
+
+  <entry id="dispatcher-died-missing-accounts-registry-2026-05-23" date="2026-05-23" phase="04" status="resolved" kind="framework">
+    <summary>gad team dispatcher dies on cold start: missing vendor/get-anything-done/lib/team/accounts-registry.cjs</summary>
+    <context>C:/Users/benja/AppData/Local/Programs/gad/bin/gad.exe (canonical PATH gad) starts dispatcher via 'gad team dispatcher start --projectid slm-learning'. Dispatcher process spawns its own gad subprocess which resolves to C:/Users/benja/Documents/vendor/get-anything-done/bin/gad.cjs (a separate stale standalone vendor copy outside any project, with recent commits ba48a125 ae5cdda3 253c50af). That vendor copy's bin/commands/accounts.cjs:16 requires ../../lib/team/accounts-registry.cjs which is NOT present in its lib/team/ directory (account-poller/config/dispatcher/free-tier-review/health/io/lanes/lock/mailbox/paths/profiles/prompt/rate-limit/restart-log/spawn/status/subprocess/watchdog/worker-loop exist, accounts-registry does NOT). Dispatcher dies immediately with MODULE_NOT_FOUND. The file DOES exist at C:/Users/benja/Documents/custom_portfolio/vendor/get-anything-done/lib/team/accounts-registry.cjs (15.9KB). Workaround applied: copied accounts-registry.cjs from custom_portfolio vendor to standalone vendor; dispatcher then restarted clean (pid=19292).</context>
+    <failure>Two stale workers (w1, w2 opencode) in UNKNOWN state for full session; 14 dispatched handoffs sitting in mailboxes unprocessed; operator unable to see live team work in hub; substrate liveness gap masked as 'workers idle' in snapshot for an unknown duration before today</failure>
+    <rule>On 'Dispatcher: DEAD' in gad snapshot, FIRST check .planning/team/dispatcher.log.jsonl for MODULE_NOT_FOUND errors. The vendor copy at C:/Users/benja/Documents/vendor/get-anything-done can drift out of sync with the canonical install at C:/Users/benja/AppData/Local/Programs/gad and with project-local vendor copies (custom_portfolio/vendor/get-anything-done). Treat the standalone vendor as a known-stale fallback; pin to custom_portfolio vendor or canonical install. Long-term fix: gad should detect old vendor installs by file-set shape/version-id and auto-update or warn at startup (see related: slm-learning-no-autoupdate-detect-by-shape-2026-05-23).</rule>
+    <reference>C:/Users/benja/Documents/vendor/get-anything-done/lib/team/accounts-registry.cjs</reference>
+    <reference>C:/Users/benja/Documents/custom_portfolio/vendor/get-anything-done/lib/team/accounts-registry.cjs</reference>
+    <reference>.planning/team/dispatcher.log.jsonl</reference>
+  </entry>
+
+  <entry id="github-search-effectiveness-rule-not-noted-2026-05-23" date="2026-05-23" phase="04" status="open" kind="conversational">
+    <summary>Operator said in a previous session that we need to search GitHub more effectively for IDE/agent-orchestrator competitors; agent failed to note it as a feedback memory</summary>
+    <context>On 2026-05-23 operator named superset-sh/superset (https://github.com/superset-sh/superset) as one of two IDE-adjacent products we're building toward, but could not recall the second. Operator stated 'there are similar ones to it, which is why we would need search github more effectively and why that was stated in a previous session and should have been noted.' Memory directory has no reference_github_search_effectiveness.md or equivalent. Without this rule, every session re-discovers competitor IDE products from scratch via grep on local notes, missing repos that exist only on GitHub.</context>
+    <failure>Operator's second IDE name lost. Re-discovery cost on every session. Distillation pipeline (custom_portfolio D-485 superset port) blind to similar competitor orchestrators that should also be distilled or differentiated against.</failure>
+    <rule>When operator names a GitHub repo OR mentions 'we need to search GitHub better for X', IMMEDIATELY save a reference memory naming the search axis (e.g. 'agent-orchestrator IDEs', 'WiFi-CSI platforms') with the operator's stated rationale, AND queue a GitHub topic+keyword scan as an action item (gh api search/repositories?q=...). Operator explicitly said this should be noted — treat as a feedback memory candidate too. Action: add reference_github_search_axis.md + queue scan task. The named competitors so far: superset-sh/superset (orchestrator), B2Gdevs/RuView (WiFi spatial intel, operator-owned), [SECOND ORCHESTRATOR IDE — operator forgot name, recover next session].</rule>
+    <reference>C:/Users/benja/.claude/projects/C--Users-benja-Documents-slm-learning/memory/reference_external_ides_we_compete_with.md</reference>
+    <reference>custom_portfolio/.planning/notes/2026-05-22-superset-distillation.md</reference>
+  </entry>
+
+  <entry id="slm-learning-no-autoupdate-detect-by-shape-2026-05-23" date="2026-05-23" status="open" kind="framework">
+    <summary>Project-local statusline/install drift not auto-detected; need shape/id-based old-install detection + autoupdate prompt</summary>
+    <context>Operator on 2026-05-23: 'pretty sure this slm_learning project probably doesnt have the updated statusline, we need to be able to detect old installations by shape and/or id and try to autoupdate.' Current state: .claude/hooks/gad-statusline.js exists locally (project copy), and ~/.claude/hooks/gad-statusline.js exists globally — they may diverge. The local copy can become stale relative to the canonical compiled gad at C:/Users/benja/AppData/Local/Programs/gad/bin/gad.exe and relative to other project copies. No mechanism currently fingerprints these and warns on drift. Related substrate issue: dispatcher-died-missing-accounts-registry-2026-05-23 (vendor copy drift). All of these are facets of one root cause: GAD substrate ships as scattered file copies across .claude/, .agent/, .cursor/, vendor/, AppData/, and the global ~/.claude/, with no version-id or shape-fingerprint to detect drift.</context>
+    <failure>Stale hooks/skills/statuslines run silently; operator only notices when something visibly breaks (e.g. statusline missing fields, dispatcher dead). No proactive surfacing. Trust cost: operator has to remember 'this project is on an old version' instead of agent detecting it.</failure>
+    <rule>GAD substrate files should carry a version-id or shape-fingerprint in a header comment (or sibling .gad-fingerprint.json) so a startup hook can compare local copies against the canonical compiled gad and warn on drift. Until that lands: any session that touches a substrate file (hook, skill, statusline, vendor lib) should check git submodule status (if applicable) AND fingerprint the file against the canonical equivalent. Substrate-version awareness is a first-class concern. Candidate command: gad health --check-drift.</rule>
+    <reference>.claude\hooks\gad-statusline.js</reference>
+    <reference>~\.claude\hooks\gad-statusline.js</reference>
+    <reference>.agent\hooks\gad-statusline.js</reference>
+    <reference>C</reference>
+    <reference>C:\Program Files\Git\Users\benja\AppData\Local\Programs\gad\</reference>
+  </entry>
+
+  <entry id="gad-cli-help-unreadable-natural-language-query-gap-2026-05-23" date="2026-05-23" status="open" kind="framework">
+    <summary>gad --help is unreadable: bad spacing, ~90+ top-level commands, no intent-routing; needs natural-language query mode</summary>
+    <context>Operator on 2026-05-23: 'btw our cli help is not very readable and has horrible spacing and so many commands at the top level. honestly for the compression here it would be natural language query with the expectation that the input be natural and our output back would be the relevant commands in a list displayed like now, but selective so it gives us commands to look through based on intent.' Current state: 'gad --help' prints all ~90 top-level commands in a single dense block with ANSI cyan tokens and inconsistent column alignment, with one-line descriptions truncated mid-thought. Hard to scan; impossible to discover by intent.</context>
+    <failure>Every fresh agent (and operator) hits the wall of 90 commands and either guesses or re-runs --help on each subcommand. Token cost is high (the wall is ~3-5k tokens per print). Discovery is by memory, not by intent.</failure>
+    <rule>Build 'gad query "&lt;natural language&gt;"' that takes a free-text intent string and returns a curated short list of relevant commands (with one-line descriptions, ranked by relevance). Implementation hint: embed the gad command surface once, score user query via small classifier or via the GAD Gateway (slm-learning-208), present top N. Until that lands: 'gad --help' should at minimum group commands by category (state | team | knowledge | training | etc.) instead of a flat 90-row block. Related: skills/find-skills already does this for skills — extend the pattern to commands.</rule>
+    <reference>scripts/gateway/router.py</reference>
+    <reference>skills/find-skills/</reference>
+  </entry>
 </errors-and-attempts>
